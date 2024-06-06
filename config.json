@@ -3,7 +3,7 @@
     "subTitle":"一切皆是过程",
     "homeUrl":"http://igweek.github.io",
     "avatarUrl":"https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png",
-    "iconList":{"link":"<LinkIcon size={16} />"},
+    "iconList":{"link":"LinkIcon"},
     "exlink":{"link":"https://withpinbox.com/items","github":"https://github.com/soslane/soslane.github.io"},
     "commentLabelColor":"#006b75",
     "yearColorList":["#bc4c00", "#0969da", "#1f883d", "#A333D0"],
