@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="## Samba是什么
+Samba 是一个开源的软件套件，用于在 Linux 和类 Unix 系统上实现 SMB/CIFS 协议。">
+<meta property="og:title" content="Linux -- Samba服务器">
+<meta property="og:description" content="## Samba是什么
+Samba 是一个开源的软件套件，用于在 Linux 和类 Unix 系统上实现 SMB/CIFS 协议。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://gweek.myla.eu.org/post/Linux%20--%20Samba-fu-wu-qi.html">
+<meta property="og:image" content="https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png">
+<title>Linux -- Samba服务器</title>
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Linux -- Samba服务器</h1>
+<div class="title-right">
+    <a href="http://gweek.myla.eu.org" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/soslane/soslane.github.io/issues/20" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>Samba是什么</h2>
+<p>Samba 是一个开源的软件套件，用于在 Linux 和类 Unix 系统上实现 SMB/CIFS 协议。它允许 Linux/Unix 系统上的文件和打印资源能够被 Windows 客户端访问，实现了在不同操作系统之间共享文件和打印机的功能。</p>
+<p>Samba 使用的主要协议是 SMB（Server Message Block），它是一种在网络上共享文件、打印机和其他资源的通信协议。SMB 协议提供了一种客户端/服务器模型，客户端可以请求服务器上的共享资源，服务器则向客户端提供这些资源。</p>
+<p>Samba 默认使用以下端口：<br>
+TCP 端口 139：早期版本的 SMB 服务使用此端口，主要用于文件共享和打印机服务。<br>
+TCP 端口 445：新版本的 SMB 服务通常使用此端口，它提供了更快速和安全的数据传输。</p>
+<p>总的来说，Samba 是一个用于在 Linux 和类 Unix 系统上实现 Windows 文件和打印机共享的软件，它使用 SMB/CIFS 协议，并通常使用 TCP 端口 139 和 445。</p>
+<p>添加Samba服务器作为文件服务器，工作组名为WORKGROUP，发布共享目录/share，共享名为public，这个共享目录允许公司所有员工访问。</p>
+<h2>安装 Samba</h2>
+<p><code class="notranslate">sudo yum install samba -y</code></p>
+<h2>创建共享目录</h2>
+<p><code class="notranslate">mkdir /share</code></p>
+<h2>编辑配置文件 /etc/samba/smb.conf</h2>
+<p><code class="notranslate">vim /etc/samba/smb.conf</code></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ee54e120c29db3466e6c6948f10347c175bc25c06fb4b2a90756e13e12c9d5c3/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303532343134323534302e706e67"><img src="https://camo.githubusercontent.com/ee54e120c29db3466e6c6948f10347c175bc25c06fb4b2a90756e13e12c9d5c3/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303532343134323534302e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240524142540.png" style="max-width: 100%;"></a></p>
+<h2>设置 SELinux 上下文</h2>
+<pre class="notranslate"><code class="notranslate">chcon -t samba_share_t /share
+restorecon -R /share
+</code></pre>
+<h2>配置防火墙</h2>
+<pre class="notranslate"><code class="notranslate">firewall-cmd --permanent --add-service=samba
+firewall-cmd --reload
+</code></pre>
+<h2>重启并启用 Samba 服务</h2>
+<p><code class="notranslate">systemctl restart smb</code></p>
+<h2>测试</h2>
+<p>Windows 打开 文件管理器输入 \目标IP地址或主机名   断开已连接的用户命令：<code class="notranslate">net use * /del</code><br>
+Linux 系统 smbclient //目标IP地址或主机名/共享目录 -U 用户名%密码</p>
+<h2>Share Definitions 其他设置参数</h2>
+<p>public = yes #允许匿名访问<br>
+public = no #禁止匿名访问</p>
+<p>browseable = yes  #共享资源在网络浏览列表中可见<br>
+browseable = no   #共享资源在网络浏览列表中隐藏，如需访问通过完全路径访问</p>
+<p>hosts allow = 192.168.10.    server.hello.com   #表示允许来自192.168.10网段或server.hello.com的主机访问<br>
+hosts deny =192.168.1.    #表示不允许192.168.1网段的主机访问。 如果allow和deny冲突，allow优先</p>
+<p>valid users = username #指定哪些用户和组可以访问共享目录，多个用“,”隔开<br>
+valid users = @组名</p>
+<p>read only = yes   #只读<br>
+read only = no    #读写</p>
+<p>write list = 用户名<br>
+write list = @组名</p>
+<h2>举个栗子</h2>
+<p><strong>建立共享目录student,它的本机路径为/home/student，只有teacher组的用户可以读写该目录，student用户只能读取</strong></p>
+<p><strong>过程：</strong></p>
+<p>安装samba服务器<br>
+<code class="notranslate">yum install samba -y</code></p>
+<p>为了实验方便，关闭Selinux<br>
+<code class="notranslate">vim /etc/selinux/config</code>        改成disabled</p>
+<p>查看selinux状态<br>
+<code class="notranslate">sestatus </code></p>
+<p><strong>1.创建组别</strong></p>
+<pre class="notranslate"><code class="notranslate">groupadd teacher
+groupadd student
+</code></pre>
+<p><strong>2.新建用户并加入到组</strong></p>
+<pre class="notranslate"><code class="notranslate">useradd -G teacher user1
+useradd -G student user2
+</code></pre>
+<p><strong>3.创建目录</strong></p>
+<p><code class="notranslate">mkdir /home/student</code></p>
+<p><strong>4.更改目录所有者及权限</strong></p>
+<pre class="notranslate"><code class="notranslate">chown user1:teacher /home/student
+chmod 775 /home/student
+</code></pre>
+<p><strong>5.创建samba用户</strong></p>
+<pre class="notranslate"><code class="notranslate">smbpasswd -a user1
+smbpasswd -a user2
+</code></pre>
+<p><strong>6.编辑samba配置文件</strong></p>
+<p><code class="notranslate">vim /etc/samba/smb.conf</code></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4e8a6932a2c65109a93b4ae3962e92d610b098088211f89d64f9f2bf772ebf13/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303532353231303533362e706e67"><img src="https://camo.githubusercontent.com/4e8a6932a2c65109a93b4ae3962e92d610b098088211f89d64f9f2bf772ebf13/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303532353231303533362e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240525210536.png" style="max-width: 100%;"></a><br>
+<strong>7.设置防火墙</strong></p>
+<pre class="notranslate"><code class="notranslate">firewall-cmd --permanent --add-service=samba
+firewall-cmd --reload
+</code></pre>
+<p><strong>8.重启samba服务，并开启开机自启</strong></p>
+<pre class="notranslate"><code class="notranslate">systemctl restart smb
+systemctl enable smb
+</code></pre>
+<p><strong>9.测试</strong></p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://gweek.myla.eu.org"> Gweek Blog </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","soslane/soslane.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+<script async src='https://www.googletagmanager.com/gtag/js?id=G-S52LSTPFFC'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-S52LSTPFFC');</script>
+
+</html>

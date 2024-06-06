@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="## 一、什么是DHCP服务器
+
+DHCP（Dynamic Host Configuration Protocol）服务器是一种网络服务，用于自动分配IP地址给网络上的设备。">
+<meta property="og:title" content="Windows Server -- DHCP服务器 ">
+<meta property="og:description" content="## 一、什么是DHCP服务器
+
+DHCP（Dynamic Host Configuration Protocol）服务器是一种网络服务，用于自动分配IP地址给网络上的设备。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="http://gweek.myla.eu.org/post/Windows%20Server%20--%20DHCP-fu-wu-qi-%20.html">
+<meta property="og:image" content="https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png">
+<title>Windows Server -- DHCP服务器 </title>
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Windows Server -- DHCP服务器 </h1>
+<div class="title-right">
+    <a href="http://gweek.myla.eu.org" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/soslane/soslane.github.io/issues/16" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>一、什么是DHCP服务器</h2>
+<p>DHCP（Dynamic Host Configuration Protocol）服务器是一种网络服务，用于自动分配IP地址给网络上的设备。DHCP服务器负责管理IP地址池，并在设备加入网络时分配IP地址、子网掩码、网关地址等网络配置信息。这种自动配置的方式简化了网络管理。</p>
+<h2>二、工作原理</h2>
+<ol>
+<li><strong>客户端发现（DHCP Discover）：</strong> 当一个设备连接到网络时（例如，一台电脑启动或移动到新的网络），它会发送一个DHCP发现消息到网络上的广播地址（255.255.255.255），以寻找可用的DHCP服务器。</li>
+<li><strong>服务器提供（DHCP Offer）：</strong> DHCP服务器接收到发现消息后，会回应一个DHCP提供消息，其中包含IP地址等网络配置信息。如果有多个DHCP服务器存在，客户端会接收到多个提供消息，但通常会选择第一个到达的提供消息。</li>
+<li><strong>客户端请求（DHCP Request）：</strong> 客户端收到一个或多个DHCP提供消息后，选择其中一个提供消息，并向该DHCP服务器发送一个请求消息，请求分配网络配置信息。</li>
+<li><strong>服务器确认（DHCP Acknowledge）：</strong> DHCP服务器收到客户端的请求消息后，确认该请求，并发送一个DHCP确认消息，其中包含了所分配的IP地址等网络配置信息。</li>
+<li><strong>网络配置生效：</strong> 客户端收到DHCP确认消息后，配置所分配的IP地址等网络配置信息，并将其应用于网络连接。此时，设备就可以正常地与网络通信了。</li>
+</ol>
+<h2>三、租约更新过程</h2>
+<p>DHCP租约更新是指客户端续租其已经分配的IP地址及其他网络配置信息的过程。租约的更新是为了确保网络上的设备能够继续使用其分配的IP地址，同时也是为了网络资源的有效利用和管理。以下是DHCP租约更新的一般过程：</p>
+<ol>
+<li><strong>租约到期检查：</strong> 客户端在分配的IP地址使用期限即将到期时，会开始尝试更新租约。在租约到期之前，客户端通常会尝试向DHCP服务器发送请求以更新租约。</li>
+<li><strong>请求更新（DHCP Request）：</strong> 客户端发送一个DHCP请求消息到DHCP服务器，请求续租其当前使用的IP地址及其他网络配置信息。</li>
+<li><strong>服务器确认更新（DHCP Acknowledge）：</strong> DHCP服务器收到客户端的更新请求后，会确认该请求，并发送一个DHCP确认消息，其中包含了更新后的网络配置信息。如果DHCP服务器接受了客户端的续租请求，那么它会分配相同的IP地址给客户端，并更新租约的过期时间。</li>
+<li><strong>网络配置更新：</strong> 客户端收到DHCP确认消息后，会更新其网络配置，包括IP地址、子网掩码、网关地址等。这样，客户端就可以继续在网络上正常通信，并且不会中断其网络连接。</li>
+</ol>
+<p>通过定期的租约更新，DHCP可以确保网络上的设备持续地使用其分配的IP地址，并且有效地管理IP地址的分配和释放，从而提高网络的可用性和资源利用效率。</p>
+<h2>四、DHCP服务配置</h2>
+<p><strong>安装DHCP服务器角色</strong></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4cccaadb29ab4ec51dbeefe0cfd7fef558d0fef842ab91ce7d984b5b79cf9181/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343032382e706e67"><img src="https://camo.githubusercontent.com/4cccaadb29ab4ec51dbeefe0cfd7fef558d0fef842ab91ce7d984b5b79cf9181/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343032382e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214028.png" style="max-width: 100%;"></a></p>
+<p><strong>DHCP控制台</strong></p>
+<p>DHCP服务器安装成功后，开始菜单—管理工具—DHCP服务器，进入DHCP控制台。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a60fe4485a85ee1d6ae9a94b1d78d094c7cbce481dab84e1548c301097f641b3/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343130352e706e67"><img src="https://camo.githubusercontent.com/a60fe4485a85ee1d6ae9a94b1d78d094c7cbce481dab84e1548c301097f641b3/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343130352e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214105.png" style="max-width: 100%;"></a></p>
+<p><strong>创建作用域</strong></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1c17609c7929e9e878f18498f05c89220f198343caf7608e8c25f0c12e2e6a72/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343230362e706e67"><img src="https://camo.githubusercontent.com/1c17609c7929e9e878f18498f05c89220f198343caf7608e8c25f0c12e2e6a72/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343230362e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214206.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/87ad12a9d77fa9c36b5629afdf09cbf34f8af7f85644974850ea192f79e30d1b/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343232392e706e67"><img src="https://camo.githubusercontent.com/87ad12a9d77fa9c36b5629afdf09cbf34f8af7f85644974850ea192f79e30d1b/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343232392e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214229.png" style="max-width: 100%;"></a></p>
+<p><strong>配置作用域选项</strong></p>
+<p>配置作用域选项，DHCP服务器可以给客户机分配网关及DNS等相应的网络配置信息。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5dc8ab9ee7f53d5d14615803b91acaf5e033473eaac23327bfc1b66ad3ed1bf5/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343235302e706e67"><img src="https://camo.githubusercontent.com/5dc8ab9ee7f53d5d14615803b91acaf5e033473eaac23327bfc1b66ad3ed1bf5/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343235302e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214250.png" style="max-width: 100%;"></a></p>
+<p><strong>如何保留特定地址</strong></p>
+<p>如果用户想保留特定的IP地址给指定的客户机，以便客户机在每次启动时都获得相同的IP地址，就需要将该IP地址与客户机的MAC地址绑定。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3f2a2cefc102324878847010d6fce08a8c332231a51ab2b6685bba32c47f7017/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343331342e706e67"><img src="https://camo.githubusercontent.com/3f2a2cefc102324878847010d6fce08a8c332231a51ab2b6685bba32c47f7017/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343331342e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214314.png" style="max-width: 100%;"></a></p>
+<p>可以用客户机进行测试</p>
+<p><code class="notranslate">ipconfig /release</code> 释放现有IP</p>
+<p><code class="notranslate">ipconfig /renew</code> 重新获取IP</p>
+<p><strong>配置DHCP类别选项</strong></p>
+<p>通过策略为特定的客户端计算机分配不同的IP地址与选项时，可以通过DHCP客户端所发送的<strong>供应商类别、用户类</strong>来区分客户端计算机。<br>
+EX：通过用户类标识符来识别客户端计算机——假设客户端client1的用户类标识符为“IT”。当client1向DHCP服务器租用IP地址时，会将此标识符“IT”传递给服务器，我们希望服务器根据此标识符来分配客户端的IP地址范围为192.168.10.150/24-192.168.10.180/24，并且将客户端的DNS服务器的IP地址设置为192.168.10.1。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6397a048827bc3ea6897d757fec3d1204961e653b0d1a7ae3ed003bc191be831/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343334322e706e67"><img src="https://camo.githubusercontent.com/6397a048827bc3ea6897d757fec3d1204961e653b0d1a7ae3ed003bc191be831/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343334322e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214342.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/94b99df8a138cedaaec91658715acf74637fa1ac04c24dbc08c88417cab5db1e/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343430342e706e67"><img src="https://camo.githubusercontent.com/94b99df8a138cedaaec91658715acf74637fa1ac04c24dbc08c88417cab5db1e/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343430342e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214404.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/76dcbd20382242f3446faa54bf27cad2f12e3b0863296f7487dcf5fdf5359957/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343432302e706e67"><img src="https://camo.githubusercontent.com/76dcbd20382242f3446faa54bf27cad2f12e3b0863296f7487dcf5fdf5359957/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343432302e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214420.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2186d382c88a981c0031d08ba70bc071d5f1b1191d0a7c7302ac6403ffba7543/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343434342e706e67"><img src="https://camo.githubusercontent.com/2186d382c88a981c0031d08ba70bc071d5f1b1191d0a7c7302ac6403ffba7543/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343434342e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214444.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/bdaf072ab3b5776410861a2e46559a9fab74ee902c7258de9a9d413f70818d0c/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343530322e706e67"><img src="https://camo.githubusercontent.com/bdaf072ab3b5776410861a2e46559a9fab74ee902c7258de9a9d413f70818d0c/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343530322e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214502.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5f528cf8526dc11345726e87d3a6ae1bb9cd530f82301eaa96a4df8d6a915f28/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343532302e706e67"><img src="https://camo.githubusercontent.com/5f528cf8526dc11345726e87d3a6ae1bb9cd530f82301eaa96a4df8d6a915f28/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343532302e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214520.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/8e3e3fb7a98a00ab63afbc23b094f086ffb7202794f396b7b97741d0266a8aeb/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343535382e706e67"><img src="https://camo.githubusercontent.com/8e3e3fb7a98a00ab63afbc23b094f086ffb7202794f396b7b97741d0266a8aeb/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343535382e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214558.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c53c3f6f44e9f7d41f5aae1b1daf772d3a54f89d3ab3a6a068dba93c16202027/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343631352e706e67"><img src="https://camo.githubusercontent.com/c53c3f6f44e9f7d41f5aae1b1daf772d3a54f89d3ab3a6a068dba93c16202027/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343631352e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214615.png" style="max-width: 100%;"></a></p>
+<h2>五、DHCP中继代理</h2>
+<p>1、在网络中存在多个子网时，DHCP消息通常无法跨越子网传输，因为DHCP是基于UDP广播的。这就意味着DHCP服务器必须与DHCP客户端在同一个子网上才能收到客户端的广播消息。为了解决这个问题，可以使用DHCP中继代理。</p>
+<p>2、DHCP中继代理的工作原理如下：</p>
+<ul>
+<li>当一个DHCP客户端发送一个DHCP发现消息时，如果它位于一个子网上，而DHCP服务器位于另一个子网上，该消息会被网络上的DHCP中继代理接收。</li>
+<li>DHCP中继代理会将接收到的DHCP发现消息转发给配置的DHCP服务器。</li>
+<li>DHCP服务器收到DHCP发现消息后，会相应地回应一个DHCP提供消息，将其发送给DHCP中继代理。</li>
+<li>DHCP中继代理再将DHCP提供消息转发给原始的DHCP客户端。</li>
+</ul>
+<p>3、跨网络DHCP服务器的使用</p>
+<p><strong>符合RFC 1542规范的路由器</strong></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2bad2b51147ea6b951e4500105307f5465c186e734309a65e79b2af4b387f377/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343633352e706e67"><img src="https://camo.githubusercontent.com/2bad2b51147ea6b951e4500105307f5465c186e734309a65e79b2af4b387f377/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343633352e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214635.png" style="max-width: 100%;"></a></p>
+<p><strong>如果路由器不符合RFC 1542规范</strong></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f7283353202ac8544ae3310249248bdbd017bbd79885c1920b358cf3bf59c10a/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343635322e706e67"><img src="https://camo.githubusercontent.com/f7283353202ac8544ae3310249248bdbd017bbd79885c1920b358cf3bf59c10a/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343635322e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214652.png" style="max-width: 100%;"></a></p>
+<h2>六、无线中继配置</h2>
+<p>实验环境拓扑图</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/28ae2166741b9b1214ac2346b827863bd80ef0852bb6652d7d4adf97b38bd476/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343731342e706e67"><img src="https://camo.githubusercontent.com/28ae2166741b9b1214ac2346b827863bd80ef0852bb6652d7d4adf97b38bd476/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343731342e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214714.png" style="max-width: 100%;"></a></p>
+<p>1、在GW1上安装路由和远程访问</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a1c134a688bcdfee67353adfaf0c6befe128e48f88d2773950fcf383b0d60c27/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343733372e706e67"><img src="https://camo.githubusercontent.com/a1c134a688bcdfee67353adfaf0c6befe128e48f88d2773950fcf383b0d60c27/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343733372e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214737.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5f72dc0dab4f99d3e50078da4db03f9d6d111bda460c9b42f37299bca1875492/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343832332e706e67"><img src="https://camo.githubusercontent.com/5f72dc0dab4f99d3e50078da4db03f9d6d111bda460c9b42f37299bca1875492/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343832332e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214823.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3fff71959cf606d9205ba3fe52c51311e2899f2b8e554cab9a1cace4a7a48e5d/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343834312e706e67"><img src="https://camo.githubusercontent.com/3fff71959cf606d9205ba3fe52c51311e2899f2b8e554cab9a1cace4a7a48e5d/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343834312e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214841.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b4c0138fbbbcffb3b0271b8837a55a825962a4f08c33d0ac31f510532be0b021/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343932352e706e67"><img src="https://camo.githubusercontent.com/b4c0138fbbbcffb3b0271b8837a55a825962a4f08c33d0ac31f510532be0b021/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343932352e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214925.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5cecd5127d0c0cbbece6cdfbbba3d43e598c75fab4a9cc25a5b3542817c898f3/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343934362e706e67"><img src="https://camo.githubusercontent.com/5cecd5127d0c0cbbece6cdfbbba3d43e598c75fab4a9cc25a5b3542817c898f3/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343934362e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214946.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6b3d2a5a3e2fb3b6929f3bbefedd992e0491428d7c8c220ff42fc05dea8a2a7e/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343935392e706e67"><img src="https://camo.githubusercontent.com/6b3d2a5a3e2fb3b6929f3bbefedd992e0491428d7c8c220ff42fc05dea8a2a7e/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231343935392e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515214959.png" style="max-width: 100%;"></a></p>
+<p>2、在GW1上设置中继代理</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ebe0ca0c90c26ee80d9b44fea7959afcb00bde5afa3a7476f76638425327fd65/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231353031342e706e67"><img src="https://camo.githubusercontent.com/ebe0ca0c90c26ee80d9b44fea7959afcb00bde5afa3a7476f76638425327fd65/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231353031342e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515215014.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/8faf5b07d1fafce31e5637b5b13800c8916cb4f8695f7befcda1d82f32363ab0/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231353033302e706e67"><img src="https://camo.githubusercontent.com/8faf5b07d1fafce31e5637b5b13800c8916cb4f8695f7befcda1d82f32363ab0/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231353033302e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515215030.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/de25eb76618f3656fd3eef386ed6385875fe38b278626ca34fdbb4bc2c4671b0/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231353034332e706e67"><img src="https://camo.githubusercontent.com/de25eb76618f3656fd3eef386ed6385875fe38b278626ca34fdbb4bc2c4671b0/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231353034332e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515215043.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4cc58d7b4e6ce1cd4cf25b67260072665d91f5ca3ce5bc9fb2949c398fd8858b/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231353130302e706e67"><img src="https://camo.githubusercontent.com/4cc58d7b4e6ce1cd4cf25b67260072665d91f5ca3ce5bc9fb2949c398fd8858b/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963676f406d61696e2f706174682f32303234303531353231353130302e706e67" alt="" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picgo@main/path/20240515215100.png" style="max-width: 100%;"></a></p>
+<h2>七、超级作用域</h2>
+<p>用于组织和管理 DHCP 服务器上的配置。超级作用域实际上是一个 DHCP 服务器上的逻辑集合，包含了多个作用域（Scope）。作用域是一组 IP 地址范围及其相关的配置参数，如子网掩码、默认网关、DNS 服务器等。在一个 DHCP 服务器上，可以创建多个作用域，以便为不同的网络或子网提供不同的 IP 配置。<br>
+超级作用域的主要作用是方便管理和组织作用域。通过将作用域组织成超级作用域，管理员可以更轻松地管理大量的 DHCP 配置。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1fceb514e9c2f0fd6cdc6db34bca98b21f8b76570df81c02f48551125be5cbb9/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963782d696d616765732d686f7374696e67406d61737465722f3333323234383839332d34306364316464372d666665392d343138662d613435662d3430373362636232633632372e327275797171637331652e77656270"><img src="https://camo.githubusercontent.com/1fceb514e9c2f0fd6cdc6db34bca98b21f8b76570df81c02f48551125be5cbb9/68747470733a2f2f6a73642e63646e2e7a7a6b6f2e636e2f67682f736f736c616e652f706963782d696d616765732d686f7374696e67406d61737465722f3333323234383839332d34306364316464372d666665392d343138662d613435662d3430373362636232633632372e327275797171637331652e77656270" alt="image" data-canonical-src="https://jsd.cdn.zzko.cn/gh/soslane/picx-images-hosting@master/332248893-40cd1dd7-ffe9-418f-a45f-4073bcb2c627.2ruyqqcs1e.webp" style="max-width: 100%;"></a></p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://gweek.myla.eu.org"> Gweek Blog </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+cmButton=document.getElementById("cmButton");
+    span=document.createElement("span");
+    span.setAttribute("class","Counter");
+    span.innerHTML="2";
+    cmButton.appendChild(span);
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","soslane/soslane.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+<script async src='https://www.googletagmanager.com/gtag/js?id=G-S52LSTPFFC'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-S52LSTPFFC');</script>
+
+</html>
