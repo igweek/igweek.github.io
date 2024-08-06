@@ -1,6 +1,6 @@
-# iGweek Blog :link: https://bbs.ifoo.rr.nu 
-### :page_facing_up: [2](https://bbs.ifoo.rr.nu/tag.html) 
+# iGweek :link: https://bbs.myla.rr.nu 
+### :page_facing_up: [2](https://bbs.myla.rr.nu/tag.html) 
 ### :speech_balloon: 3 
 ### :hibiscus: 32 
-### :alarm_clock: 2024-07-15 22:15:50 
+### :alarm_clock: 2024-08-06 09:38:44 
 ### Powered by :heart: [Gmeek](https://github.com/Meekdai/Gmeek)
