@@ -1,5 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>iGweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>iGweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Tue, 27 Aug 2024 15:05:50 +0000</lastBuildDate><managingEditor>iGweek</managingEditor><ttl>60</ttl><webMaster>iGweek</webMaster><item><title>Windows server DNS服务器</title><link>https://bbs.myla.rr.nu/post/Windows%20server%20DNS-fu-wu-qi.html</link><description>### 一、什么是DNS&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>iGweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>iGweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Tue, 27 Aug 2024 15:09:36 +0000</lastBuildDate><managingEditor>iGweek</managingEditor><ttl>60</ttl><webMaster>iGweek</webMaster><item><title>Windows server 域相关命令</title><link>https://bbs.myla.rr.nu/post/Windows%20server%20-yu-xiang-guan-ming-ling.html</link><description>### 一、若遇到域服务无法安装提示Administrator无密码问题&#13;
+&#13;
+利用命令查询administrator账号信息&#13;
+&#13;
+`net user adminstrator`&#13;
+&#13;
+![](https://img.myla.eu.org/file/139476ab5567366855ec2.png)&#13;
+&#13;
+需要将需要密码位置修改为YES，命令如下&#13;
+&#13;
+```&#13;
+net user administrator /passwordreq:yes&#13;
+```&#13;
+&#13;
+再次利用 net user administrator 查询，结果如下&#13;
+&#13;
+![](https://img.myla.eu.org/file/6d4e1f58d46b41011d7c2.png)&#13;
+&#13;
+### 二、由于克隆系统，造成SID相同无法加入域&#13;
+&#13;
+右键开始菜单——&gt;运行——&gt;sysprep——&gt;双击sysprep——&gt;点击通用——&gt;重新安装&#13;
+&#13;
+![](https://img.myla.eu.org/file/85ee244d52b0d0bcc2363.png)。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/Windows%20server%20-yu-xiang-guan-ming-ling.html</guid><pubDate>Tue, 27 Aug 2024 15:09:07 +0000</pubDate></item><item><title>Windows server DNS服务器</title><link>https://bbs.myla.rr.nu/post/Windows%20server%20DNS-fu-wu-qi.html</link><description>### 一、什么是DNS&#13;
 &#13;
 DNS服务器（Domain Name System Server）是一种网络服务器，它负责将域名转换为相应的IP地址。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/Windows%20server%20DNS-fu-wu-qi.html</guid><pubDate>Tue, 27 Aug 2024 15:05:30 +0000</pubDate></item><item><title>Windows server DHCP服务器</title><link>https://bbs.myla.rr.nu/post/Windows%20server%20DHCP-fu-wu-qi.html</link><description>&#13;
 &#13;
