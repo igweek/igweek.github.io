@@ -10,30 +10,12 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="---
-layout:       post
-title:        'Windows server FTP服务器'
-author:       'Gweek'
-header-style: text
-catalog:      true
-tags:
-    - Windows server
----
-
+<meta name="description" content="
 ## 一、FTP服务器
 
 文件传输协议（File Transfer Protocol，FTP）是用来在两台计算机之间传输文件的通信协议，这两台计算机，一台是FTP服务器，一台是FTP客户端。">
 <meta property="og:title" content="Windows server FTP服务器">
-<meta property="og:description" content="---
-layout:       post
-title:        'Windows server FTP服务器'
-author:       'Gweek'
-header-style: text
-catalog:      true
-tags:
-    - Windows server
----
-
+<meta property="og:description" content="
 ## 一、FTP服务器
 
 文件传输协议（File Transfer Protocol，FTP）是用来在两台计算机之间传输文件的通信协议，这两台计算机，一台是FTP服务器，一台是FTP客户端。">
@@ -97,15 +79,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><hr>
-<h2>layout:       post<br>
-title:        "Windows server FTP服务器"<br>
-author:       "Gweek"<br>
-header-style: text<br>
-catalog:      true<br>
-tags:<br>
-- Windows server</h2>
-<h2>一、FTP服务器</h2>
+<div class="markdown-body" id="postBody"><h2>一、FTP服务器</h2>
 <p>文件传输协议（File Transfer Protocol，FTP）是用来在两台计算机之间传输文件的通信协议，这两台计算机，一台是FTP服务器，一台是FTP客户端。FTP客户端可以从FTP服务器下载文件，也可以将文件上传到FTP服务器。默认端口21。</p>
 <p>通常，用户需要使用FTP客户端软件（如FileZilla、WinSCP等）与FTP服务器建立连接，并提供有效的身份验证凭据（如用户名和密码）。一旦连接成功，用户就可以通过FTP客户端浏览服务器上的文件和目录，并执行所需的文件操作。</p>
 <h2>二、部署</h2>

@@ -1,12 +1,3 @@
----
-layout:       post
-title:        "Windows server FTP服务器"
-author:       "Gweek"
-header-style: text
-catalog:      true
-tags:
-    - Windows server
----
 
 ## 一、FTP服务器
 
