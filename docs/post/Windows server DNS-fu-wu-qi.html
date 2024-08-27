@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="### 一、什么是DNS
+
+DNS服务器（Domain Name System Server）是一种网络服务器，它负责将域名转换为相应的IP地址。">
+<meta property="og:title" content="Windows server DNS服务器">
+<meta property="og:description" content="### 一、什么是DNS
+
+DNS服务器（Domain Name System Server）是一种网络服务器，它负责将域名转换为相应的IP地址。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.myla.rr.nu/post/Windows%20server%20DNS-fu-wu-qi.html">
+<meta property="og:image" content="https://pic.imgdb.cn/item/65bc7b61871b83018a761b2e.png">
+<title>Windows server DNS服务器</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Windows server DNS服务器</h1>
+<div class="title-right">
+    <a href="https://bbs.myla.rr.nu" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/13" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h3>一、什么是DNS</h3>
+<p>DNS服务器（Domain Name System Server）是一种网络服务器，它负责将域名转换为相应的IP地址。在互联网上，每个设备都需要一个唯一的IP地址以便进行通信，但人们更倾向于记忆易懂的域名，而不是复杂的IP地址。DNS服务器充当了这个转换的中介。当您输入一个域名时，您的计算机会向DNS服务器发送请求，以获取与该域名对应的IP地址。DNS服务器然后返回相应的IP地址，使您的设备能够连接到目标服务器或资源。</p>
+<h3>二、域名空间结构</h3>
+<p>在DNS中，域名空间结构采用分层结构，包括：根域名，顶级域，二级域和主机名称。域名空间的层次结构类似一个倒置的树状，在域名层次结构中，每一层称作一个域，每个域用一个点号"."分开。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/04c5cd9b13fa496b44727b7e41b55f0e549c7527e5a9b25c76af42bd955554e1/68747470733a2f2f7777772e6e6f74696f6e2e736f2f696d6167652f687474707325334125324625324670726f642d66696c65732d7365637572652e73332e75732d776573742d322e616d617a6f6e6177732e636f6d25324630363037346462332d343266632d346138332d623062612d61356262613233623032613525324631353436646136612d656235652d343830612d613532392d393234316439636135343361253246556e7469746c65642e706e673f7461626c653d626c6f636b2669643d61623231613161622d323363642d346331622d616532362d38393663643364356636613326743d61623231613161622d323363642d346331622d616532362d3839366364336435663661332677696474683d3637322663616368653d7632"><img src="https://camo.githubusercontent.com/04c5cd9b13fa496b44727b7e41b55f0e549c7527e5a9b25c76af42bd955554e1/68747470733a2f2f7777772e6e6f74696f6e2e736f2f696d6167652f687474707325334125324625324670726f642d66696c65732d7365637572652e73332e75732d776573742d322e616d617a6f6e6177732e636f6d25324630363037346462332d343266632d346138332d623062612d61356262613233623032613525324631353436646136612d656235652d343830612d613532392d393234316439636135343361253246556e7469746c65642e706e673f7461626c653d626c6f636b2669643d61623231613161622d323363642d346331622d616532362d38393663643364356636613326743d61623231613161622d323363642d346331622d616532362d3839366364336435663661332677696474683d3637322663616368653d7632" alt="notion image" data-canonical-src="https://www.notion.so/image/https%3A%2F%2Fprod-files-secure.s3.us-west-2.amazonaws.com%2F06074db3-42fc-4a83-b0ba-a5bba23b02a5%2F1546da6a-eb5e-480a-a529-9241d9ca543a%2FUntitled.png?table=block&amp;id=ab21a1ab-23cd-4c1b-ae26-896cd3d5f6a3&amp;t=ab21a1ab-23cd-4c1b-ae26-896cd3d5f6a3&amp;width=672&amp;cache=v2" style="max-width: 100%;"></a></p>
+<ul>
+<li>
+<p>根域：</p>
+</li>
+<li>
+<ul>
+<li>根域是域名系统（DNS）中的最高级别域名，它位于所有其他域名的顶部。在域名系统中，根域用一个点（.）表示，它没有任何名称，只是一个单独的点。根域是DNS层次结构的起点，所有的顶级域名（Top-Level Domains，TLDs）都直接或间接地从根域下派生出来。</li>
+</ul>
+</li>
+<li>
+<p>顶级域</p>
+</li>
+<li>
+<ul>
+<li>DNS根域的下一级就是顶级域，顶级域大致分三种类型，表示国家和地区（cn,hk,us,uk）、表示域名的用途或类别（com,net,org,gov,edu）、新通用等级域名（top,xyz,app）</li>
+</ul>
+</li>
+<li>
+<p>子域</p>
+</li>
+<li>
+<ul>
+<li>子域是在较高级别域名下创建的一个子域名。通常，子域是用于组织和管理特定部门、项目或区域的域名，以便更好地组织和标识网络资源。</li>
+</ul>
+</li>
+<li>
+<p>主机</p>
+</li>
+<li>
+<ul>
+<li>主机名通常用于标识网络中的计算机、服务器、路由器、打印机等设备，以及提供各种网络服务的服务器，如Web服务器、邮件服务器等。主机名在网络中是唯一的，用于确保设备和服务可以被准确地标识和访问。</li>
+</ul>
+</li>
+</ul>
+<h3>三、域名解析方式</h3>
+<p><strong>递归查询</strong></p>
+<p>在递归解析中，客户端向本地DNS服务器发送域名查询请求。如果本地DNS服务器没有缓存该域名的解析结果，它会开始递归地向更高级别的DNS服务器发送查询，直到找到能够提供域名解析结果的顶级域名服务器。一旦找到，本地DNS服务器将把解析结果返回给客户端，并且将结果缓存在本地，以备将来的查询。</p>
+<p><strong>迭代查询</strong></p>
+<p>在迭代解析中，客户端向DNS服务器发送查询请求，DNS服务器要么返回所查询域名的解析结果，要么指示客户端向另一个DNS服务器发送查询。这个过程一直持续下去，直到找到能够提供域名解析结果的顶级域名服务器。客户端可以通过迭代查询逐级向下查询，直到获得所需的解析结果。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>递归查询</strong></th>
+<th><strong>迭代查询</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>谁负责执行查询</td>
+<td>服务器</td>
+<td>客户端</td>
+</tr>
+<tr>
+<td>查询次数</td>
+<td>1</td>
+<td>多个</td>
+</tr>
+<tr>
+<td>服务器负载</td>
+<td>高</td>
+<td>低</td>
+</tr>
+<tr>
+<td>客户端工作量</td>
+<td>低</td>
+<td>高</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>四、DNS资源记录</h3>
+<ul>
+<li>
+<p><strong>A记录（A Record）</strong>：将域名解析为IPv4地址。</p>
+</li>
+<li>
+<p><strong>AAAA记录（AAAA Record）</strong>：将域名解析为IPv6地址。</p>
+</li>
+<li>
+<p><strong>CNAME记录（CNAME Record）</strong>：将一个域名别名为另一个域名。</p>
+</li>
+<li>
+<p><strong>MX记录（MX Record）</strong>：指定用于处理域名的邮件服务器。</p>
+</li>
+<li>
+<p><strong>NS记录（NS Record）</strong>：指定授权的DNS服务器，用于解析该域名的域名。</p>
+</li>
+<li>
+<p><strong>PTR记录（PTR Record）</strong>：将IP地址反解析为域名。</p>
+</li>
+<li>
+<p><strong>SOA记录（SOA Record）</strong>：指定域名的权威服务器，并包含有关该域名的其他信息。</p>
+</li>
+<li>
+<p><strong>SRV记录（SRV Record）</strong>：用于指定用于特定服务的服务器，例如用于IMAP或SIP的服务器。</p>
+</li>
+<li>
+<p><strong>TXT记录（TXT Record）</strong>：存储与域名相关的其他信息，例如SPF记录或DKIM记录。</p>
+</li>
+</ul>
+<h3>五、DNS的类型</h3>
+<p><strong>唯缓存DNS服务器</strong></p>
+<p>唯缓存DNS服务器，是一种只缓存DNS查询结果的DNS服务器。它们不维护任何区域文件，也不执行区域传输。唯缓存DNS服务器通过查询其他DNS服务器（例如递归解析器或根域名服务器）来获取DNS记录。</p>
+<p>通俗来说唯缓存DNS服务器只是一个转发器，只要在唯缓存DNS服务器上设置转发器即可</p>
+<p><strong>辅助DNS服务器</strong></p>
+<p>辅助DNS服务器（Secondary DNS Server）是DNS服务器的一种，它存储主DNS服务器（Primary DNS Server）区域文件的只读副本。辅助DNS服务器的作用是在主DNS服务器出现故障时提供冗余，以便用户仍然可以访问域名。</p>
+<p>在辅助DNS服务器上新建辅助区域，在主DNS服务器上设置区域传送</p>
+<p><strong>DNS委派</strong></p>
+<p>DNS委派（DNS Delegation）是DNS服务器层次结构中的一个重要机制，它允许将一个域的管理权限委派给另一个DNS服务器。这可以将DNS解析任务分散到多个服务器上，从而提高性能和效率。</p>
+<p>DNS委派的工作原理如下：</p>
+<p>父域将子域的DNS记录委托给子域DNS服务器。 当用户查询子域的域名时，父域DNS服务器会将查询转发给子域DNS服务器。 子域DNS服务器会解析域名并返回IP地址。</p>
+<p>主DNS服务器，将客户机的DNS请求（子域的域名的所有解析），委派给子域的DNS服务器去解析。   在主DNS服务器上建立DNS委派</p>
+<p><strong>存根区域</strong></p>
+<p>存根区域（Stub Zone）是 DNS 服务器层次结构中的一种特殊区域，它仅包含指向授权 DNS 服务器的名称服务器（NS）记录。存根区域用于在单独的 DNS 命名空间之间解析名称。</p>
+<p>跟DNS委派有些类似，但是他把任务委派给其他域的DNS服务器去解析域名。在long.com的服务器上新建存根，在smile.com的DNS服务器上设置区域传送</p>
+<h3>六、相关测试命令</h3>
+<pre class="notranslate"><code class="notranslate">nslookup
+set type=MX
+set type=PTR
+set type=NS
+</code></pre>
+<p><code class="notranslate">ipconfig /displaydns</code>  查看DNS缓存</p>
+<p><code class="notranslate">ipconfig /flushdns</code>   清除DNS缓存</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.myla.rr.nu">iGweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+
+
+</html>
