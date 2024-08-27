@@ -1,4 +1,3 @@
-
 ## 一、Git是什么？
 
 Git是一种分布式版本控制系统，用于跟踪文件的更改，特别是计算机代码文件的更改。它旨在更好地协调程序员之间的工作，帮助他们管理项目中的代码修改。Git最初由Linus Torvalds于2005年开发，现在已成为最流行的版本控制系统。
@@ -59,7 +58,7 @@ Git是一种分布式版本控制系统，用于跟踪文件的更改，特别�
 
 ## 四、常用命令总结
 
-![image.png](https://img.myla.eu.org/file/63e371b896520a3973b47.png)
+![image.png](https://img.myla.eu.org/file/052ac12be8a121ae92c58.png)
 
 ```bash
 git init                                    # 初始化本地git仓库（创建新仓库）
