@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="**OpenVPN 的运行逻辑 (连接建立和数据传输流程)**
+
+OpenVPN 的运行逻辑可以概括为建立一个安全的、加密的隧道，将客户端的网络流量安全地传输到 VPN 服务器，并最终到达目标网络或互联网。">
+<meta property="og:title" content="OpenVpn概述">
+<meta property="og:description" content="**OpenVPN 的运行逻辑 (连接建立和数据传输流程)**
+
+OpenVPN 的运行逻辑可以概括为建立一个安全的、加密的隧道，将客户端的网络流量安全地传输到 VPN 服务器，并最终到达目标网络或互联网。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.myla.rr.nu/post/OpenVpn-gai-shu.html">
+<meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
+<title>OpenVpn概述</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">OpenVpn概述</h1>
+<div class="title-right">
+    <a href="https://bbs.myla.rr.nu" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/23" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p><strong>OpenVPN 的运行逻辑 (连接建立和数据传输流程)</strong></p>
+<p>OpenVPN 的运行逻辑可以概括为建立一个安全的、加密的隧道，将客户端的网络流量安全地传输到 VPN 服务器，并最终到达目标网络或互联网。 其核心流程如下：</p>
+<ol>
+<li><strong>客户端发起连接 (Client Initiates Connection):</strong>
+<ul>
+<li>OpenVPN 客户端程序启动，根据配置文件 (.ovpn 文件) 中的信息，解析服务器地址、端口、协议等。</li>
+<li>客户端向 OpenVPN 服务器的指定地址和端口发起连接请求。</li>
+</ul>
+</li>
+<li><strong>服务器监听和响应 (Server Listens and Responds):</strong>
+<ul>
+<li>OpenVPN 服务器程序在指定的端口上监听来自客户端的连接请求。</li>
+<li>接收到客户端的连接请求后，服务器开始与客户端进行握手协商。</li>
+</ul>
+</li>
+<li><strong>TLS/SSL 握手 (TLS/SSL Handshake - Key Exchange and Authentication):</strong>
+<ul>
+<li><strong>密钥交换 (Key Exchange):</strong> OpenVPN 使用 TLS/SSL 协议进行安全通信的建立。客户端和服务器之间进行密钥交换，协商出一个用于后续数据加密的 <strong>会话密钥 (Session Key)</strong>。 常用的密钥交换算法包括 Diffie-Hellman (DH) 或 Elliptic Curve Diffie-Hellman (ECDH)。</li>
+<li><strong>服务器身份验证 (Server Authentication):</strong> 客户端验证服务器的身份，确保连接的是合法的 VPN 服务器，而不是中间人攻击者。这通常通过 <strong>服务器证书 (Server Certificate)</strong> 完成。客户端会验证服务器证书的有效性，例如证书是否由受信任的 CA (Certificate Authority) 签发，证书是否过期等。</li>
+<li><strong>客户端身份验证 (Client Authentication - 可选但常用):</strong> 服务器验证客户端的身份，确保只有授权用户才能连接 VPN。常见的客户端身份验证方式包括：
+<ul>
+<li><strong>用户名/密码 (Username/Password):</strong> 客户端提供用户名和密码进行验证。</li>
+<li><strong>客户端证书 (Client Certificate):</strong> 客户端提供自己的证书进行验证，通常配合密码使用或单独使用。</li>
+<li><strong>预共享密钥 (Pre-Shared Key - PSK):</strong> 客户端和服务器预先共享一个相同的密钥，用于身份验证（安全性较低，不常用在公共 VPN 服务中）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>建立安全隧道 (Establish Secure Tunnel):</strong>
+<ul>
+<li>密钥交换和身份验证成功后，客户端和服务器之间就建立了一个安全的、加密的 TLS/SSL 连接。</li>
+<li>这个 TLS/SSL 连接就构成了 VPN 的 <strong>加密隧道 (Encrypted Tunnel)</strong>。所有后续的数据都会通过这个隧道传输，并使用协商好的会话密钥进行加密和解密。</li>
+</ul>
+</li>
+<li><strong>数据传输 (Data Transmission):</strong>
+<ul>
+<li>一旦隧道建立，客户端的所有网络流量 (或者根据配置，部分流量) 都会被 <strong>封装 (Encapsulated)</strong> 在 VPN 协议中，并通过加密隧道发送到 VPN 服务器。</li>
+<li><strong>数据封装:</strong> 原始的网络数据包 (例如 TCP/IP 数据包) 会被包装在 OpenVPN 协议头中，然后使用协商好的加密算法进行加密。</li>
+<li><strong>服务器解密和转发:</strong> VPN 服务器接收到加密的数据包后，进行解密，还原出原始的网络数据包。</li>
+<li><strong>网络地址转换 (NAT) 和路由:</strong> VPN 服务器通常会执行网络地址转换 (NAT)，将客户端的私有 IP 地址转换成服务器的公网 IP 地址，使得客户端可以访问互联网或目标网络。服务器还会根据路由配置，将解密后的数据包转发到目标网络或互联网。</li>
+<li><strong>反向过程:</strong> 从目标网络或互联网返回的数据，会先到达 VPN 服务器，服务器再进行加密和封装，通过隧道发送回客户端，客户端解密后得到原始数据。</li>
+</ul>
+</li>
+<li><strong>连接维护和断开 (Connection Maintenance and Disconnection):</strong>
+<ul>
+<li>OpenVPN 连接会保持活跃状态，直到客户端主动断开连接，或者网络出现问题导致连接中断。</li>
+<li>OpenVPN 会定期发送 <strong>心跳包 (Keep-Alive Packets)</strong> 来检测连接是否仍然有效。</li>
+<li>断开连接时，客户端和服务器会进行握手，优雅地关闭 TLS/SSL 连接和 VPN 隧道。</li>
+</ul>
+</li>
+</ol>
+<p><strong>OpenVPN 需要配置什么？</strong></p>
+<p>OpenVPN 的配置主要包括服务器端配置和客户端配置。核心配置信息通常包含在配置文件中 (server.conf 和 client.conf 或 .ovpn 文件)。</p>
+<p><strong>服务器端配置 (server.conf - 示例关键配置项):</strong></p>
+<ul>
+<li><strong>端口和协议 (Port and Protocol):</strong>
+<ul>
+<li>port 1194 (默认端口，可以修改)</li>
+<li>proto udp 或 proto tcp (选择 UDP 或 TCP 协议，UDP 速度快但可能不可靠，TCP 可靠但速度稍慢)</li>
+</ul>
+</li>
+<li><strong>设备类型 (Device Type):</strong>
+<ul>
+<li>dev tun (路由模式，创建虚拟网卡，常用) 或 dev tap (桥接模式，模拟网桥，较少用)</li>
+</ul>
+</li>
+<li><strong>服务器模式 (Server Mode):</strong>
+<ul>
+<li>server 10.8.0.0 255.255.255.0 (配置 VPN 服务器的虚拟 IP 地址范围和子网掩码)</li>
+</ul>
+</li>
+<li><strong>证书和密钥 (Certificates and Keys):</strong>
+<ul>
+<li>ca ca.crt (CA 证书文件路径)</li>
+<li>cert server.crt (服务器证书文件路径)</li>
+<li>key server.key (服务器私钥文件路径)</li>
+<li>dh dh2048.pem (Diffie-Hellman 参数文件路径)</li>
+</ul>
+</li>
+<li><strong>客户端配置推送 (Client Configuration Push):</strong>
+<ul>
+<li>push "route 192.168.1.0 255.255.255.0" (推送路由信息给客户端，例如让客户端访问服务器内网)</li>
+<li>push "dhcp-option DNS 8.8.8.8" (推送 DNS 服务器地址给客户端)</li>
+</ul>
+</li>
+<li><strong>客户端认证方式 (Client Authentication):</strong>
+<ul>
+<li>auth-user-pass (启用用户名/密码认证)</li>
+<li>client-cert-not-required (不强制要求客户端证书，如果使用用户名/密码认证) 或 client-cert-required (强制要求客户端证书)</li>
+</ul>
+</li>
+<li><strong>加密算法和哈希算法 (Cipher and Hash Algorithm):</strong>
+<ul>
+<li>cipher AES-256-CBC (选择加密算法，例如 AES-256-CBC)</li>
+<li>auth SHA256 (选择哈希算法，例如 SHA256)</li>
+</ul>
+</li>
+<li><strong>压缩 (Compression):</strong>
+<ul>
+<li>comp-lzo (启用 LZO 压缩，可以提高速度，但安全性稍有降低)</li>
+</ul>
+</li>
+</ul>
+<p><strong>客户端配置 (.ovpn 文件 - 示例关键配置项):</strong></p>
+<ul>
+<li><strong>客户端配置继承自服务器:</strong> 客户端的很多配置会从 .ovpn 文件中继承，而 .ovpn 文件通常包含服务器端配置的必要信息。</li>
+<li><strong>客户端指令 (Client Directives):</strong>
+<ul>
+<li>client (声明为客户端模式)</li>
+<li>dev tun (设备类型，与服务器端一致)</li>
+<li>proto udp (协议，与服务器端一致)</li>
+<li>remote your_server_ip 1194 (VPN 服务器的公网 IP 地址和端口)</li>
+<li>resolv-retry infinite (断线重连)</li>
+<li>nobind (不绑定本地端口)</li>
+<li>persist-key (保持密钥持久化)</li>
+<li>persist-tun (保持 tun 设备持久化)</li>
+<li>ca ca.crt (CA 证书文件内容或路径)</li>
+<li>cert client.crt (客户端证书文件内容或路径，如果使用客户端证书认证)</li>
+<li>key client.key (客户端私钥文件内容或路径，如果使用客户端证书认证)</li>
+<li>auth-user-pass (启用用户名/密码认证，并提示输入用户名和密码)</li>
+<li>cipher AES-256-CBC (加密算法，与服务器端一致)</li>
+<li>auth SHA256 (哈希算法，与服务器端一致)</li>
+<li>comp-lzo (压缩，与服务器端一致)</li>
+<li>verb 3 (日志级别，可以调整)</li>
+</ul>
+</li>
+</ul>
+<p><strong>OpenVPN 的原理 (核心技术和概念)</strong></p>
+<p>OpenVPN 的核心原理可以归纳为以下几个关键点：</p>
+<ol>
+<li><strong>VPN (Virtual Private Network) 技术:</strong> OpenVPN 本质上是一种 VPN 技术，其目的是在公共网络 (如互联网) 上建立一个私有的、安全的网络连接。</li>
+<li><strong>隧道技术 (Tunneling):</strong> OpenVPN 使用隧道技术，将客户端的网络流量封装在一个加密的隧道中进行传输。这个隧道就像一条虚拟的专用线路，保证数据传输的私密性和安全性。</li>
+<li><strong>TLS/SSL 协议 (Transport Layer Security/Secure Sockets Layer):</strong> OpenVPN 的安全基础是 TLS/SSL 协议。TLS/SSL 协议提供了以下关键功能：
+<ul>
+<li><strong>加密 (Encryption):</strong> 使用对称加密算法 (如 AES, Blowfish 等) 对数据进行加密，防止数据在传输过程中被窃听。</li>
+<li><strong>身份验证 (Authentication):</strong> 使用证书和密钥等机制验证客户端和服务器的身份，防止中间人攻击和冒充。</li>
+<li><strong>完整性 (Integrity):</strong> 使用哈希算法 (如 SHA, MD5 等) 验证数据的完整性，防止数据在传输过程中被篡改。</li>
+</ul>
+</li>
+<li><strong>虚拟网卡 (Virtual Network Interface Card):</strong> OpenVPN 在客户端和服务器端都会创建虚拟网卡 (例如 tun 或 tap 设备)。
+<ul>
+<li><strong>tun 设备 (路由模式):</strong> 工作在网络层 (IP 层)，处理 IP 数据包。OpenVPN 将原始 IP 数据包封装在 VPN 协议中，通过 tun 设备发送出去。</li>
+<li><strong>tap 设备 (桥接模式):</strong> 工作在数据链路层 (MAC 层)，处理以太网帧。OpenVPN 可以模拟一个网桥，将客户端的网络流量桥接到 VPN 服务器所在的局域网。</li>
+</ul>
+</li>
+<li><strong>路由和网络地址转换 (Routing and NAT):</strong>
+<ul>
+<li><strong>路由:</strong> OpenVPN 通过配置路由表，将需要通过 VPN 隧道的流量路由到虚拟网卡上。</li>
+<li><strong>NAT:</strong> VPN 服务器通常会执行 NAT，将连接到 VPN 的客户端的私有 IP 地址转换成服务器的公网 IP 地址，使得客户端可以访问互联网或目标网络。</li>
+</ul>
+</li>
+<li><strong>跨平台和灵活性 (Cross-Platform and Flexibility):</strong> OpenVPN 具有良好的跨平台性，支持 Windows, Linux, macOS, Android, iOS 等多种操作系统。同时，OpenVPN 的配置非常灵活，可以根据不同的需求进行定制，选择不同的协议、端口、加密算法、认证方式等。</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.myla.rr.nu">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
