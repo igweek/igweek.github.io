@@ -10,11 +10,11 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="**OpenVPN 的运行逻辑 (连接建立和数据传输流程)**
+<meta name="description" content="## **OpenVPN 的运行逻辑 (连接建立和数据传输流程)**
 
 OpenVPN 的运行逻辑可以概括为建立一个安全的、加密的隧道，将客户端的网络流量安全地传输到 VPN 服务器，并最终到达目标网络或互联网。">
 <meta property="og:title" content="OpenVpn概述">
-<meta property="og:description" content="**OpenVPN 的运行逻辑 (连接建立和数据传输流程)**
+<meta property="og:description" content="## **OpenVPN 的运行逻辑 (连接建立和数据传输流程)**
 
 OpenVPN 的运行逻辑可以概括为建立一个安全的、加密的隧道，将客户端的网络流量安全地传输到 VPN 服务器，并最终到达目标网络或互联网。">
 <meta property="og:type" content="article">
@@ -77,7 +77,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p><strong>OpenVPN 的运行逻辑 (连接建立和数据传输流程)</strong></p>
+<div class="markdown-body" id="postBody"><h2><strong>OpenVPN 的运行逻辑 (连接建立和数据传输流程)</strong></h2>
 <p>OpenVPN 的运行逻辑可以概括为建立一个安全的、加密的隧道，将客户端的网络流量安全地传输到 VPN 服务器，并最终到达目标网络或互联网。 其核心流程如下：</p>
 <ol>
 <li><strong>客户端发起连接 (Client Initiates Connection):</strong>
@@ -128,7 +128,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 </li>
 </ol>
-<p><strong>OpenVPN 需要配置什么？</strong></p>
+<h2><strong>OpenVPN 需要配置什么？</strong></h2>
 <p>OpenVPN 的配置主要包括服务器端配置和客户端配置。核心配置信息通常包含在配置文件中 (server.conf 和 client.conf 或 .ovpn 文件)。</p>
 <p><strong>服务器端配置 (server.conf - 示例关键配置项):</strong></p>
 <ul>
@@ -204,7 +204,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 </li>
 </ul>
-<p><strong>OpenVPN 的原理 (核心技术和概念)</strong></p>
+<h2><strong>OpenVPN 的原理 (核心技术和概念)</strong></h2>
 <p>OpenVPN 的核心原理可以归纳为以下几个关键点：</p>
 <ol>
 <li><strong>VPN (Virtual Private Network) 技术:</strong> OpenVPN 本质上是一种 VPN 技术，其目的是在公共网络 (如互联网) 上建立一个私有的、安全的网络连接。</li>
