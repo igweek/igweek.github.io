@@ -19,6 +19,7 @@
    - 设置分区，通常选择 **使用整个磁盘**。
    - 安装过程中，系统会提示安装 GRUB 引导程序，选择 **是**。
    - 完成后，重启虚拟机并移除安装镜像，启动 Kali Linux。
+
 ![image.png](https://pic.myla.eu.org/file/1740455995938_image.png)
 ![image.png](https://pic.myla.eu.org/file/1740456041882_image.png)
 ![image.png](https://pic.myla.eu.org/file/1740456157394_image.png)
@@ -52,7 +53,7 @@
    sudo apt upgrade -y
    ```
    
-
+![](https://pic.myla.eu.org/file/1740455995938_image.png)
 
 #### 三、安装 TOR 和 VPN
 
