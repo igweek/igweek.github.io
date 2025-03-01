@@ -231,114 +231,136 @@ sudo make install</pre></div>
 </ul>
 </li>
 </ol>
+<p>以下是您请求的 Nmap 扫描选项的详细说明汇总表：</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
-<th>参数</th>
+<th>扫描选项</th>
 <th>描述</th>
 <th>示例命令</th>
+<th>详细说明</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code class="notranslate">-sS</code></td>
+<td>-sS</td>
 <td>TCP SYN 扫描（半开放扫描）</td>
-<td><code class="notranslate">nmap -sS 192.168.1.1</code></td>
+<td>nmap -sS 192.168.1.1</td>
+<td>发送 SYN 包（握手请求），但不完成握手过程，因此目标主机不会记录到连接。它是最常见的扫描方式，具有隐蔽性，能够绕过一些防火墙和入侵检测系统（IDS）。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-sT</code></td>
+<td>-sT</td>
 <td>TCP 连接扫描（全开放扫描）</td>
-<td><code class="notranslate">nmap -sT 192.168.1.1</code></td>
+<td>nmap -sT 192.168.1.1</td>
+<td>完全建立 TCP 连接，发送 SYN 包并回应 ACK 包，完成三次握手。目标主机会记录到连接，但比 -sS 更容易被检测到，通常在目标机器未配置防火墙时使用。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-sU</code></td>
+<td>-sU</td>
 <td>UDP 扫描</td>
-<td><code class="notranslate">nmap -sU 192.168.1.1</code></td>
+<td>nmap -sU 192.168.1.1</td>
+<td>扫描 UDP 服务，类似于 TCP 扫描，但因 UDP 是无连接的协议，响应的检测比较复杂，通常通过发送特定请求来判断端口是否开放。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-sP</code></td>
+<td>-sP</td>
 <td>Ping 扫描（主机发现）</td>
-<td><code class="notranslate">nmap -sP 192.168.1.0/24</code></td>
+<td>nmap -sP 192.168.1.0/24</td>
+<td>仅检测目标主机是否在线（即是否响应 ICMP Echo 请求）。在大规模网络中进行主机发现，扫描结果会列出哪些主机在指定的子网内处于活动状态。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-sA</code></td>
+<td>-sA</td>
 <td>TCP ACK 扫描</td>
-<td><code class="notranslate">nmap -sA 192.168.1.1</code></td>
+<td>nmap -sA 192.168.1.1</td>
+<td>发送 ACK 包，用来探测防火墙或过滤器。通过响应判断目标主机的端口是否存在过滤或 NAT（网络地址转换）。如果目标端口关闭，返回 RST 包；如果端口开放，返回 RST 或无响应。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-sW</code></td>
+<td>-sW</td>
 <td>TCP Window 扫描</td>
-<td><code class="notranslate">nmap -sW 192.168.1.1</code></td>
+<td>nmap -sW 192.168.1.1</td>
+<td>基于 TCP 窗口大小进行扫描，用来探测防火墙策略和端口状态。它通过观察 TCP 窗口大小的变化来判断端口的开放与否。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-sM</code></td>
+<td>-sM</td>
 <td>TCP Maimon 扫描</td>
-<td><code class="notranslate">nmap -sM 192.168.1.1</code></td>
+<td>nmap -sM 192.168.1.1</td>
+<td>使用 SYN/FIN 标志的组合（SYN+FIN），这是一种非常隐蔽的扫描方法，可以绕过某些防火墙或过滤系统。并非所有操作系统都支持此扫描。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-O</code></td>
+<td>-O</td>
 <td>操作系统检测</td>
-<td><code class="notranslate">nmap -O 192.168.1.1</code></td>
+<td>nmap -O 192.168.1.1</td>
+<td>通过分析目标主机的网络行为，Nmap 尝试推测其操作系统类型和版本。包括 TCP/IP 栈的特征、TTL（生存时间）值等信息，精度不一。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-sV</code></td>
+<td>-sV</td>
 <td>服务版本检测</td>
-<td><code class="notranslate">nmap -sV 192.168.1.1</code></td>
+<td>nmap -sV 192.168.1.1</td>
+<td>检测每个开放端口的服务类型及其版本信息。Nmap 会尝试通过与服务交互或分析返回的 banner 信息来获取版本号，帮助评估潜在的漏洞风险。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-p</code></td>
-<td>指定端口（如 <code class="notranslate">-p 22</code> 或 <code class="notranslate">-p 1-1000</code>）</td>
-<td><code class="notranslate">nmap -p 22,80 192.168.1.1</code></td>
+<td>-p</td>
+<td>指定端口</td>
+<td>nmap -p 22,80 192.168.1.1</td>
+<td>指定需要扫描的端口或端口范围（如 -p 1-1000 或 -p 22,80）。可以用于精确控制扫描的端口，避免扫描所有端口。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-Pn</code></td>
+<td>-Pn</td>
 <td>不进行主机发现，直接扫描指定的主机</td>
-<td><code class="notranslate">nmap -Pn 192.168.1.1</code></td>
+<td>nmap -Pn 192.168.1.1</td>
+<td>跳过主机发现步骤，直接扫描目标主机的指定端口。用于目标不可响应 ping 或防火墙阻止 ICMP 请求的情况下，强制扫描目标主机。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-T</code></td>
+<td>-T</td>
 <td>设置扫描速度（0-5，0为最慢，5为最快）</td>
-<td><code class="notranslate">nmap -T4 192.168.1.1</code></td>
+<td>nmap -T4 192.168.1.1</td>
+<td>设置扫描速度，T4 为常用的平衡速度（速度快且较为隐蔽），T0 最慢，T5 最快（非常高效，但可能会引起 IDS/IPS 警报）。根据需求选择速度。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-v</code></td>
+<td>-v</td>
 <td>增加详细输出</td>
-<td><code class="notranslate">nmap -v 192.168.1.1</code></td>
+<td>nmap -v 192.168.1.1</td>
+<td>输出更详细的扫描过程和结果，适用于分析扫描过程的细节。可以查看每个端口的扫描信息和主机状态，通常用于调试或对扫描过程进行深度分析。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-oN</code></td>
+<td>-oN</td>
 <td>将输出保存为普通文本文件</td>
-<td><code class="notranslate">nmap -oN output.txt 192.168.1.1</code></td>
+<td>nmap -oN output.txt 192.168.1.1</td>
+<td>将扫描结果保存为普通文本格式。适合查看和进一步分析结果。输出文件为 output.txt，包含标准的扫描报告。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-oG</code></td>
+<td>-oG</td>
 <td>将输出保存为 grepable 格式</td>
-<td><code class="notranslate">nmap -oG output.gnmap 192.168.1.1</code></td>
+<td>nmap -oG output.gnmap 192.168.1.1</td>
+<td>将结果保存为 grep 可处理的格式，适合用脚本进一步分析扫描结果。输出文件为 output.gnmap。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-oX</code></td>
+<td>-oX</td>
 <td>将输出保存为 XML 格式</td>
-<td><code class="notranslate">nmap -oX output.xml 192.168.1.1</code></td>
+<td>nmap -oX output.xml 192.168.1.1</td>
+<td>将结果保存为 XML 格式，适合进一步与其他工具或系统进行数据交换。输出文件为 output.xml，可以通过脚本或程序进一步处理。</td>
 </tr>
 <tr>
-<td><code class="notranslate">--script</code></td>
+<td>--script</td>
 <td>使用 Nmap 脚本引擎（NSE）执行脚本</td>
-<td><code class="notranslate">nmap --script=http-enum 192.168.1.1</code></td>
+<td>nmap --script=http-enum 192.168.1.1</td>
+<td>使用 Nmap 脚本引擎（NSE）执行指定的脚本，例如 http-enum 脚本用于列出 HTTP 服务的目录和文件。NSE 脚本可用于渗透测试、漏洞扫描等。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-iL</code></td>
+<td>-iL</td>
 <td>从文件中读取目标主机列表</td>
-<td><code class="notranslate">nmap -iL targets.txt</code></td>
+<td>nmap -iL targets.txt</td>
+<td>从指定的文件中读取多个目标 IP 地址进行扫描。适用于大规模网络扫描。文件 targets.txt 中每行列出一个目标 IP。</td>
 </tr>
 <tr>
-<td><code class="notranslate">-R</code></td>
+<td>-R</td>
 <td>反向 DNS 查找</td>
-<td><code class="notranslate">nmap -R 192.168.1.1</code></td>
+<td>nmap -R 192.168.1.1</td>
+<td>对目标 IP 地址执行反向 DNS 查找，获取其域名（如果存在的话）。有助于确定目标主机的域名信息。</td>
 </tr>
 <tr>
-<td><code class="notranslate">--traceroute</code></td>
+<td>--traceroute</td>
 <td>路由追踪</td>
-<td><code class="notranslate">nmap --traceroute 192.168.1.1</code></td>
+<td>nmap --traceroute 192.168.1.1</td>
+<td>跟踪到目标主机的路由路径，查看经过的中间节点（路由器）。这对于网络分析、诊断和性能评估很有帮助。</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
