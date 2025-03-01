@@ -1,1 +1,1 @@
-![file_384](https://pic.myla.eu.org/file/1740842957873_file_384)
+[Linux命令.pdf](https://github.com/user-attachments/files/19039494/Linux.pdf)
