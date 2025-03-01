@@ -161,18 +161,14 @@ sudo make install</pre></div>
 <li>
 <p><strong>常用扫描命令</strong></p>
 <ul>
-<li><strong>扫描单个IP地址</strong>：</li>
+<li><strong>扫描单个IP地址</strong>：默认扫描1000个端口</li>
 </ul>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">nmap 192.168.1.1</pre></div>
-<ul>
-<li>
-<p>该命令将扫描指定IP地址的开放端口。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/476a0b56b16ba1d57af50847f5ea142c5410ecb8e7d965e5f1619897da0edffd/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734303833323936333035375f696d6167652e706e67"><img src="https://camo.githubusercontent.com/476a0b56b16ba1d57af50847f5ea142c5410ecb8e7d965e5f1619897da0edffd/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734303833323936333035375f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1740832963057_image.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0817eb145b3aedf6ee5bd1d00d7856a41b3dfcd015f558f3f41c9f1771a30ace/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734303833333032373535395f696d6167652e706e67"><img src="https://camo.githubusercontent.com/0817eb145b3aedf6ee5bd1d00d7856a41b3dfcd015f558f3f41c9f1771a30ace/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734303833333032373535395f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1740833027559_image.png" style="max-width: 100%;"></a></p>
 <ul>
 <li><strong>扫描整个子网</strong>：</li>
-</ul>
-</li>
 </ul>
 <div class="highlight highlight-source-shell"><pre class="notranslate">nmap 192.168.1.0/24</pre></div>
 <ul>
@@ -191,10 +187,11 @@ sudo make install</pre></div>
 <li>
 <p><strong>扫描特定端口</strong></p>
 <ul>
-<li><strong>扫描特定端口（如80和443）</strong>：
-<div class="highlight highlight-source-shell"><pre class="notranslate">nmap -p 80,443 192.168.1.1</pre></div>
+<li><strong>扫描特定端口（如80和443）</strong>：使用 -p 参数
+<div class="highlight highlight-source-shell"><pre class="notranslate">nmap 192.168.1.1 -p 80,443 </pre></div>
 <ul>
-<li>该命令将仅扫描指定IP地址的80和443端口。</li>
+<li>该命令将仅扫描指定IP地址的80和443端口。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/fc84664ce2193b1913febf718fdf2360afc41e6479fb207907c91b0035c379cf/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734303833333138323436365f696d6167652e706e67"><img src="https://camo.githubusercontent.com/fc84664ce2193b1913febf718fdf2360afc41e6479fb207907c91b0035c379cf/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734303833333138323436365f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1740833182466_image.png" style="max-width: 100%;"></a></li>
 </ul>
 </li>
 </ul>
@@ -206,6 +203,7 @@ sudo make install</pre></div>
 <div class="highlight highlight-source-shell"><pre class="notranslate">nmap -sV 192.168.1.1</pre></div>
 <ul>
 <li>该命令将探测目标IP地址上运行的服务及其版本信息。</li>
+<li>-sV 参数告诉 Nmap 执行 服务版本检测（Service Version Detection），目的是识别目标主机上运行的服务以及这些服务的版本号。具体来说，Nmap 会扫描目标主机的开放端口，并对每个端口尝试识别正在运行的服务（如 HTTP、FTP、SSH 等），然后进一步尝试确认这些服务的版本信息。例如，可能会显示出运行的 Apache 服务器版本，或者是 OpenSSH 的版本号。</li>
 </ul>
 </li>
 </ul>
