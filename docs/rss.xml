@@ -1,5 +1,21 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Mon, 03 Mar 2025 12:53:54 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>XSS攻击</title><link>https://bbs.myla.rr.nu/post/XSS-gong-ji.html</link><description>&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/15/NWY9vIyKL3VdRMH.png' alt='file' /&gt;&lt;/p&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Mon, 03 Mar 2025 12:55:14 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>XSS靶场搭建</title><link>https://bbs.myla.rr.nu/post/XSS-ba-chang-da-jian.html</link><description>&lt;h2&gt;安装和使用&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;1. 安装宝塔面板&lt;/strong&gt;
+&lt;strong&gt;2. 安装必要环境 LNPM&lt;/strong&gt;
+&lt;strong&gt;3. 添加网站&lt;/strong&gt;
+&lt;img src='https://s2.loli.net/2024/10/15/uYQocJLIMCyq1Wg.png' alt='file' /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;做好记录&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/15/BK3OYGXCTAnw9U7.png' alt='file' /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;4. 进入文件管理器&lt;/strong&gt;
+&lt;img src='https://s2.loli.net/2024/10/15/ardUH3zX9IOMfW8.png' alt='file' /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;5. 上传xss-labs文件zhi至网站根目录下&lt;/strong&gt;
+&lt;img src='https://s2.loli.net/2024/10/15/NO9y6KxAQILwCUH.png' alt='file' /&gt;&lt;/p&gt;
+&lt;p&gt;解压xss-labs
+&lt;img src='https://s2.loli.net/2024/10/15/zamdBkqIEpZvLYT.png' alt='file' /&gt;&lt;/p&gt;
+&lt;p&gt;将解压的文件全选，并剪切到网站根目录下即可
+&lt;img src='https://s2.loli.net/2024/10/15/rORnVT29mW1jiZH.png' alt='file' /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;6. 输入网站名进行访问&lt;/strong&gt;
+&lt;img src='https://s2.loli.net/2024/10/15/enw2hBlukDN9H7R.png' alt='file' /&gt;&lt;/p&gt;。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/XSS-ba-chang-da-jian.html</guid><pubDate>Mon, 03 Mar 2025 12:54:36 +0000</pubDate></item><item><title>XSS攻击</title><link>https://bbs.myla.rr.nu/post/XSS-gong-ji.html</link><description>&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/15/NWY9vIyKL3VdRMH.png' alt='file' /&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;XSS（Cross-Site Scripting）攻击，即跨站脚本攻击，是一种常见的网络安全漏洞攻击方式。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/XSS-gong-ji.html</guid><pubDate>Mon, 03 Mar 2025 12:53:32 +0000</pubDate></item><item><title>SQL注入</title><link>https://bbs.myla.rr.nu/post/SQL-zhu-ru.html</link><description>[![](https://s2.loli.net/2024/11/21/SPFkmud9yOVBYXi.jpg)](https://s2.loli.net/2024/11/21/SPFkmud9yOVBYXi.jpg)
 
