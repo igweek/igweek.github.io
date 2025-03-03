@@ -364,6 +364,45 @@ sudo make install</pre></div>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
+<h4>端口状态</h4>
+<ol>
+<li>
+<p><strong>open (开放的)</strong>：</p>
+<ul>
+<li>端口是开放的，且可以接受外部的连接。</li>
+</ul>
+</li>
+<li>
+<p><strong>closed (关闭的)</strong>：</p>
+<ul>
+<li>端口是关闭的，目标主机明确表示它没有在该端口上提供服务。你可以与此端口建立连接，但是目标主机拒绝它。</li>
+</ul>
+</li>
+<li>
+<p><strong>filtered (被过滤的)</strong>：</p>
+<ul>
+<li>端口受到防火墙或某种过滤机制的保护，无法判断端口是否开放或关闭。Nmap通常无法得到关于该端口是否开放的明确反馈。</li>
+</ul>
+</li>
+<li>
+<p><strong>unfiltered (未被过滤的)</strong>：</p>
+<ul>
+<li>端口没有受到过滤，可以得出端口的开放或关闭状态。一般来说，Nmap能直接得到关于该端口的反馈。</li>
+</ul>
+</li>
+<li>
+<p><strong>open|filtered (开放或者被过滤的)</strong>：</p>
+<ul>
+<li>这种状态通常出现在某些TCP端口的扫描中，Nmap无法确认端口是开放还是被过滤。当目标主机没有响应（比如目标防火墙丢弃了响应）时，就会出现这种情况。Nmap无法确定端口的状态，可能是开放的，也可能是被过滤的。</li>
+</ul>
+</li>
+<li>
+<p><strong>closed|filtered (关闭或者被过滤的)</strong>：</p>
+<ul>
+<li>这通常表示Nmap无法确定端口是关闭还是被过滤，可能是由于某些特殊的网络条件，比如丢失了响应。</li>
+</ul>
+</li>
+</ol>
 <h4>五、利用Nmap进行扫描的步骤</h4>
 <ol>
 <li>
