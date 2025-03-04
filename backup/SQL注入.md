@@ -5,7 +5,7 @@ SQL 注入攻击通过篡改应用程序原本预期的 SQL 查询，将恶意�
 ```sql
 SELECT * FROM users WHERE username = 'user' AND password = 'password';
 ```
-攻击者可以输入 `username` 为` admin` --`，将` password留空。此时查询将被更改为：
+攻击者可以输入 username 为 admin` -- ，将password留空。此时查询将被更改为：
 ```sql
 SELECT * FROM users WHERE username = 'admin' --' AND password = '';
 ```

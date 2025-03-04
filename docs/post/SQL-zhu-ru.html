@@ -91,7 +91,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h2>1. SQL 注入的基本原理</h2>
 <p>SQL 注入攻击通过篡改应用程序原本预期的 SQL 查询，将恶意代码注入到数据库操作中。例如，在身份验证场景中，典型的 SQL 查询为：</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> users <span class="pl-k">WHERE</span> username <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>user<span class="pl-pds">'</span></span> <span class="pl-k">AND</span> password <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>password<span class="pl-pds">'</span></span>;</pre></div>
-<p>攻击者可以输入 <code class="notranslate">username</code> 为<code class="notranslate"> admin</code> --<code class="notranslate">，将</code> password留空。此时查询将被更改为：</p>
+<p>攻击者可以输入 username 为 admin` -- ，将password留空。此时查询将被更改为：</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> users <span class="pl-k">WHERE</span> username <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span> <span class="pl-c"><span class="pl-c">--</span>' AND password = '';</span></pre></div>
 <p>由于 <code class="notranslate">--或者#</code> 为注释符，password条件被忽略，SQL 查询实际上变为：</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> users <span class="pl-k">WHERE</span> username <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>;</pre></div>
