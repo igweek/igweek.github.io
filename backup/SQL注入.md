@@ -10,8 +10,10 @@
 <p>由于 <code>--</code> 为注释符，<code>password</code> 条件被忽略，SQL 查询实际上变为：</p>
 <pre><code class="language-sql">SELECT * FROM users WHERE username = 'admin';</code></pre>
 <p>从而绕过了身份验证，直接登录 <code>admin</code> 账户。</p>
-万能密钥：' or 1=1#
-SELECT * FROM users WHERE username = 'user' AND password = 'password';
+**万能密钥**：' or 1=1#
+```sql
+SELECT * FROM users WHERE username = '' or 1=1#'AND password = 'password';
+```
 <h3>2. 常见的 SQL 注入类型</h3>
 <h4>2.1 基于联合（Union-based）注入</h4>
 <p><strong>目的</strong>：通过 <code>UNION</code> 操作符将两个或多个查询结果合并，强制返回额外的数据。</p>
