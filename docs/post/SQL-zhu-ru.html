@@ -10,12 +10,10 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="[![](https://s2.loli.net/2024/11/21/SPFkmud9yOVBYXi.jpg)](https://s2.loli.net/2024/11/21/SPFkmud9yOVBYXi.jpg)
-
+<meta name="description" content="
 > SQL 注入（SQL Injection，SQLi）是一种利用 Web 应用程序中输入验证漏洞的攻击方法。">
 <meta property="og:title" content="SQL注入">
-<meta property="og:description" content="[![](https://s2.loli.net/2024/11/21/SPFkmud9yOVBYXi.jpg)](https://s2.loli.net/2024/11/21/SPFkmud9yOVBYXi.jpg)
-
+<meta property="og:description" content="
 > SQL 注入（SQL Injection，SQLi）是一种利用 Web 应用程序中输入验证漏洞的攻击方法。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.myla.rr.nu/post/SQL-zhu-ru.html">
@@ -87,8 +85,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p><a href="https://s2.loli.net/2024/11/21/SPFkmud9yOVBYXi.jpg" rel="nofollow"><img src="https://camo.githubusercontent.com/34a781b0539442166f826fbef91b530025fb3558287b923de636330704d49444/68747470733a2f2f73322e6c6f6c692e6e65742f323032342f31312f32312f5350466b6d756439794f56425958692e6a7067" alt="" data-canonical-src="https://s2.loli.net/2024/11/21/SPFkmud9yOVBYXi.jpg" style="max-width: 100%;"></a></p>
-<blockquote>
+<div class="markdown-body" id="postBody"><blockquote>
 <p>SQL 注入（SQL Injection，SQLi）是一种利用 Web 应用程序中输入验证漏洞的攻击方法。攻击者通过在输入字段（如登录框、搜索栏或 URL 参数）中构造恶意 SQL 语句，导致应用程序生成意外的 SQL 查询，从而获得非授权访问数据库的权限，进而获取敏感数据、篡改数据或破坏数据库。</p>
 </blockquote>
 <h2>1. SQL 注入的基本原理</h2>
@@ -99,8 +96,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>由于 <code class="notranslate">--或者#</code> 为注释符，password条件被忽略，SQL 查询实际上变为：</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> users <span class="pl-k">WHERE</span> username <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>;</pre></div>
 <p>从而绕过了身份验证，直接登录admin 账户。</p>
-<p>EX：万能密钥：' or 1=1#</p>
-<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> users <span class="pl-k">WHERE</span> username <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> <span class="pl-k">or</span> <span class="pl-c1">1</span><span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-c"><span class="pl-c">#</span>'AND password = 'password';</span></pre></div></div>
+<p>万能密钥：' or 1=1#</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> <span class="pl-k">*</span> <span class="pl-k">FROM</span> users <span class="pl-k">WHERE</span> username <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span> <span class="pl-k">or</span> <span class="pl-c1">1</span><span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-c"><span class="pl-c">#</span>'AND password = 'password';</span></pre></div>
+<h2>2.SQL注入的分类</h2>
+<ul>
+<li>根据注入位置分类<br>
+GET型、Post型、Head型</li>
+<li>根据反馈结果分类<br>
+有回显（显错注入）、无回显（盲注）</li>
+<li>根据数据类型分类<br>
+数字型、字符型</li>
+</ul></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
