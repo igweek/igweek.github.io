@@ -52,29 +52,4 @@ DVWA：[GitHub - digininja/DVWA: Damn Vulnerable Web Application (DVWA)](https:/
 ![image.png](https://pic.myla.eu.org/file/1741063302245_image.png)
 ![image.png](https://pic.myla.eu.org/file/1741063304715_image.png)
 
-## 3. 靶场使用示例
 
-在DVWA Security 中将安全等级设置为low，以sql注入为例，在左边选择sql注入(`SQL Injection`)。
-
-我们按正常的查询，输入`1`提交进行查询，同时打开F12，选择网络，查看该条请求的信息，找到请求url和请求头中的cookie。
-![image.png](https://pic.myla.eu.org/file/1741063322184_image.png)
-
-我们可以进行一个简单的sql注入，目标是查询出当前使用的数据库以及当前的数据库用户。
-
-1. 在浏览器中进行注入
-    
-    在User ID处输入`1' union select database(),user()#` 点击提交查询，我们就查到了当前使用的数据库为`dvwa`及当前的数据库用户为`root@localhost`。
-    
-
-![image.png](https://pic.myla.eu.org/file/1741063325262_image.png)
-
-1. 使用postman工具进行注入
-    
-    选择GET请求，将url复制进去，然后将参数id的值改为`1' union select database(),user()#`，然后在header中添加一个cookie参数，将刚才的cookie的值复制进去。
-    
-![image.png](https://pic.myla.eu.org/file/1741063334917_image.png)
-    
-
-​ 点击Send发送请求，在预览中就可以看到注入结果了。
-
-![image.png](https://pic.myla.eu.org/file/1741063338425_image.png)

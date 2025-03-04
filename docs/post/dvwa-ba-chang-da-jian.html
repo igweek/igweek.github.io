@@ -113,28 +113,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>至此，所有配置已经完成。在浏览器中打开<a href="http://localhost/Dvwa-master" rel="nofollow">http://localhost/Dvwa-master</a> 或者 <a href="http://127.0.0.1/DVWA-master" rel="nofollow">http://127.0.0.1/DVWA-master</a> 进入DVWA，输入账号密码，默认为admin/password，登录后点击下方的创建数据库即可。</li>
 </ol>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d39fb801b764e2432ffd0ed6cfdd905adb773750c2dd26d0af5c13a9ad707f51/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333330323234355f696d6167652e706e67"><img src="https://camo.githubusercontent.com/d39fb801b764e2432ffd0ed6cfdd905adb773750c2dd26d0af5c13a9ad707f51/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333330323234355f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1741063302245_image.png" style="max-width: 100%;"></a><br>
-<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f0211961f58853cf5a12530922ae0e02e7fbc7a2688c2cda4b5c63e1a1b79c9e/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333330343731355f696d6167652e706e67"><img src="https://camo.githubusercontent.com/f0211961f58853cf5a12530922ae0e02e7fbc7a2688c2cda4b5c63e1a1b79c9e/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333330343731355f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1741063304715_image.png" style="max-width: 100%;"></a></p>
-<h2>3. 靶场使用示例</h2>
-<p>在DVWA Security 中将安全等级设置为low，以sql注入为例，在左边选择sql注入(<code class="notranslate">SQL Injection</code>)。</p>
-<p>我们按正常的查询，输入<code class="notranslate">1</code>提交进行查询，同时打开F12，选择网络，查看该条请求的信息，找到请求url和请求头中的cookie。<br>
-<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/45835ddbf264ea111838625f6070bde238696824efa68e29888cc253280fc4b4/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333332323138345f696d6167652e706e67"><img src="https://camo.githubusercontent.com/45835ddbf264ea111838625f6070bde238696824efa68e29888cc253280fc4b4/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333332323138345f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1741063322184_image.png" style="max-width: 100%;"></a></p>
-<p>我们可以进行一个简单的sql注入，目标是查询出当前使用的数据库以及当前的数据库用户。</p>
-<ol>
-<li>
-<p>在浏览器中进行注入</p>
-<p>在User ID处输入<code class="notranslate">1' union select database(),user()#</code> 点击提交查询，我们就查到了当前使用的数据库为<code class="notranslate">dvwa</code>及当前的数据库用户为<code class="notranslate">root@localhost</code>。</p>
-</li>
-</ol>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/58dadf42a40d4224e33e27ba52b4118a07114bebad3a7ee19090b08dee71f80c/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333332353236325f696d6167652e706e67"><img src="https://camo.githubusercontent.com/58dadf42a40d4224e33e27ba52b4118a07114bebad3a7ee19090b08dee71f80c/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333332353236325f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1741063325262_image.png" style="max-width: 100%;"></a></p>
-<ol>
-<li>
-<p>使用postman工具进行注入</p>
-<p>选择GET请求，将url复制进去，然后将参数id的值改为<code class="notranslate">1' union select database(),user()#</code>，然后在header中添加一个cookie参数，将刚才的cookie的值复制进去。</p>
-</li>
-</ol>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c209a9cd9315d4575765da723a9e9e047052df602d7b19d7189845a1a0941471/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333333343931375f696d6167652e706e67"><img src="https://camo.githubusercontent.com/c209a9cd9315d4575765da723a9e9e047052df602d7b19d7189845a1a0941471/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333333343931375f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1741063334917_image.png" style="max-width: 100%;"></a></p>
-<p>​ 点击Send发送请求，在预览中就可以看到注入结果了。</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ca4f6da13f1e6f47ace86825a3fc91f25aa7c97d3c7fc571b43bf30c28c26173/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333333383432355f696d6167652e706e67"><img src="https://camo.githubusercontent.com/ca4f6da13f1e6f47ace86825a3fc91f25aa7c97d3c7fc571b43bf30c28c26173/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333333383432355f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1741063338425_image.png" style="max-width: 100%;"></a></p></div>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f0211961f58853cf5a12530922ae0e02e7fbc7a2688c2cda4b5c63e1a1b79c9e/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333330343731355f696d6167652e706e67"><img src="https://camo.githubusercontent.com/f0211961f58853cf5a12530922ae0e02e7fbc7a2688c2cda4b5c63e1a1b79c9e/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734313036333330343731355f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1741063304715_image.png" style="max-width: 100%;"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
