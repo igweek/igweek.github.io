@@ -12,7 +12,7 @@
     </script>
 <meta name="description" content="## 云服务器ECS运维管理
 
-## 思考：参照云上安全共担责任模型的说明，小云需要自己承担操作系统和其上运行的网站、用户数据以及网络访问控制等的管理，那么他要如何才能保障云服务器中个人网站能够持续良好的运行？
+**思考：参照云上安全共担责任模型的说明，小云需要自己承担操作系统和其上运行的网站、用户数据以及网络访问控制等的管理，那么他要如何才能保障云服务器中个人网站能够持续良好的运行？**
 
 小云：老王，网站我已经搭建好了，后面需要如何保障网站能够一直稳定的运行下去呢？
 
@@ -20,7 +20,7 @@
 <meta property="og:title" content="阿里云基础运维管理">
 <meta property="og:description" content="## 云服务器ECS运维管理
 
-## 思考：参照云上安全共担责任模型的说明，小云需要自己承担操作系统和其上运行的网站、用户数据以及网络访问控制等的管理，那么他要如何才能保障云服务器中个人网站能够持续良好的运行？
+**思考：参照云上安全共担责任模型的说明，小云需要自己承担操作系统和其上运行的网站、用户数据以及网络访问控制等的管理，那么他要如何才能保障云服务器中个人网站能够持续良好的运行？**
 
 小云：老王，网站我已经搭建好了，后面需要如何保障网站能够一直稳定的运行下去呢？
 
@@ -86,11 +86,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h2>云服务器ECS运维管理</h2>
-<h2>思考：参照云上安全共担责任模型的说明，小云需要自己承担操作系统和其上运行的网站、用户数据以及网络访问控制等的管理，那么他要如何才能保障云服务器中个人网站能够持续良好的运行？</h2>
+<p><strong>思考：参照云上安全共担责任模型的说明，小云需要自己承担操作系统和其上运行的网站、用户数据以及网络访问控制等的管理，那么他要如何才能保障云服务器中个人网站能够持续良好的运行？</strong></p>
 <p>小云：老王，网站我已经搭建好了，后面需要如何保障网站能够一直稳定的运行下去呢？</p>
 <p>老王：要想保证云服务器长期稳定的使用，除了依靠<strong>阿里云（云服务提供商）的技术支持，自身必要的安全维护手段</strong>也是不可少的。想要更好的维护管理云服务器ECS，就要更好的了解其组成和架构。云服务器ECS的核心架构，主要包含<strong>实例</strong>、<strong>镜像</strong>、<strong>块存储</strong>、<strong>快照</strong>、<strong>安全组</strong>、<strong>网络</strong>等功能组件，你可以利用这些功能组件保障其ECS实例中运行的个人网站稳定可靠运行。</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d334148e14a20e7f8884f388ff430e48a4597062097c0a3dc3cbca3a2a42380c/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f637361636f78717061776369646a797866666a732e706e67"><img src="https://camo.githubusercontent.com/d334148e14a20e7f8884f388ff430e48a4597062097c0a3dc3cbca3a2a42380c/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f637361636f78717061776369646a797866666a732e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/csacoxqpawcidjyxffjs.png" style="max-width: 100%;"></a></p>
-<h2><strong>思考：小云要做的云服务器ECS实例的日常管理和运维的工作主要有哪些？</strong></h2>
+<p><strong>思考：小云要做的云服务器ECS实例的日常管理和运维的工作主要有哪些？</strong></p>
 <p>小云：那我具体需要做什么日常运维的工作呢？</p>
 <p>老王：从我的经验来看，一般在通过云服务器ECS搭建完应用后，需要定期对你的ECS实例进行如下几项工作：</p>
 <ol>
@@ -108,8 +108,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><strong>安全加固</strong>，可通过定期变更<strong>ECS实例登录密码、安全组规则配置、 系统补丁</strong>管理等方式，保护ECS实例安全和ECS实例中运行的网站安全；</li>
 </ol>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e79447c6e1802e35cb7a7041f95d7d0bd55b130ebf0088be581111de954f8144/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f73776c686c796d646e786a7662657068666d75632e706e67"><img src="https://camo.githubusercontent.com/e79447c6e1802e35cb7a7041f95d7d0bd55b130ebf0088be581111de954f8144/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f73776c686c796d646e786a7662657068666d75632e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/swlhlymdnxjvbephfmuc.png" style="max-width: 100%;"></a></p>
-<h1>实例监控</h1>
-<h2>思考：小云希望实时掌握云服务器ECS实例的运行状态，应该如何做？</h2>
+<h2>实例监控</h2>
+<p>思考：小云希望实时掌握云服务器ECS实例的运行状态，应该如何做？</p>
 <p>老王：如果你使用的是传统的物理服务器，一般来说有如下两种方式实时掌握物理服务器的运行状态：</p>
 <ul>
 <li>方式一：在服务器上自行编写并定时运行（计划任务）监控脚本（shell、python），监控重要指标，配置邮件、短信、微信等接口进行以便参数异常后通知小云；</li>
@@ -125,7 +125,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>云监控用于监控各云服务资源的监控指标，探测云服务ECS和运营商站点的可用性，并针对指定监控指标设置报警。使您全面了解阿里云上资源的使用情况和业务运行状况，并及时对故障资源进行处理，保证业务正常运行。</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/080b82bb6cac012abc7032eb32cc37daa0787e7cc74f97e75acf3c4a59135755/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f66747773696f726b7477796f78786961686e68742e706e67"><img src="https://camo.githubusercontent.com/080b82bb6cac012abc7032eb32cc37daa0787e7cc74f97e75acf3c4a59135755/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f66747773696f726b7477796f78786961686e68742e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/ftwsiorktwyoxxiahnht.png" style="max-width: 100%;"></a></p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/38be90b8e199f03036f868ac89232efbe09e71309c8e0bcc74ddc340d75bd1e4/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f76676b77776a64656b79776870796c74696363642e706e67"><img src="https://camo.githubusercontent.com/38be90b8e199f03036f868ac89232efbe09e71309c8e0bcc74ddc340d75bd1e4/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f76676b77776a64656b79776870796c74696363642e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/vgkwwjdekywhpylticcd.png" style="max-width: 100%;"></a></p>
-<h2>使用云监控（CloudMonitor）监控ECS实例</h2>
+<h3>使用云监控（CloudMonitor）监控ECS实例</h3>
 <p><strong>安装插件</strong></p>
 <ol>
 <li>登录<a href="https://cloudmonitornext.console.aliyun.com/" rel="nofollow">云监控控制台</a>。在左侧导航栏，单击<strong>主机监控</strong>。</li>
@@ -185,7 +185,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>老王：没错，与传统的物理服务器升级不同，云服务器ECS实例可以通过<strong>ECS管理控制台</strong>（<a href="https://ecs.console.aliyun.com/%EF%BC%89**%E5%9C%A8%E7%BA%BF%E4%BF%AE%E6%94%B9%E5%AE%9E%E4%BE%8B%E8%A7%84%E6%A0%BC**%EF%BC%88vCPU%E5%92%8C%E5%86%85%E5%AD%98%EF%BC%89%E3%80%81**%E5%AD%98%E5%82%A8**%E5%92%8C**%E5%85%AC%E7%BD%91%E5%B8%A6%E5%AE%BD**%E7%9A%84%E9%85%8D%E7%BD%AE%EF%BC%8C%E6%9D%A5%E5%A2%9E%E5%BC%BA%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%80%A7%E8%83%BD%EF%BC%8C%E4%BB%8E%E8%80%8C%E5%A2%9E%E5%8A%A0%E5%B9%B6%E5%8F%91%E5%A4%84%E7%90%86%E8%83%BD%E5%8A%9B%EF%BC%8C%E8%BF%99%E4%BA%9B%E5%8D%87%E7%BA%A7%E7%9A%84%E5%8A%A8%E4%BD%9C%E5%8F%AF%E4%BB%A5%E5%9C%A8**%E7%A7%92%E7%BA%A7%E5%AE%8C%E6%88%90**%EF%BC%8C%E4%BD%A0%E5%8F%AA%E9%9C%80%E8%A6%81**%E6%89%BF%E6%8B%85%E5%8D%87%E7%BA%A7%E5%90%8E%E7%9A%84ECS%E5%AE%9E%E4%BE%8B%E9%85%8D%E7%BD%AE%E7%9A%84%E8%B4%B9%E7%94%A8**%EF%BC%8C%E7%9C%81%E6%97%B6%E7%9C%81%E9%92%B1%E3%80%82" rel="nofollow">https://ecs.console.aliyun.com/）**在线修改实例规格**（vCPU和内存）、**存储**和**公网带宽**的配置，来增强服务器性能，从而增加并发处理能力，这些升级的动作可以在**秒级完成**，你只需要**承担升级后的ECS实例配置的费用**，省时省钱。</a></p>
 <p>小云：好的，我现在就去控制台看下如何调整这些配置……</p>
 <hr>
-<h2>修改实例规格</h2>
+<h3>修改实例规格</h3>
 <p>一个<strong>实例规格</strong>已预定义<strong>vCPU</strong>（虚拟CPU核心数）和<strong>内存</strong>。比如 ecs.c6.large，其中c6表示计算型第6代实例，其处理器与内存配比为1:2，large表示vCPU个数为2。</p>
 <p>当ECS实例的规格（vCPU和内存）无法满足您的业务需求或配置过高时，您可以使用<strong>更改实例规格</strong>功能<strong>升配或降配</strong>实例规格。修改实例规格时，您需要选择目标实例规格，不能单独修改vCPU或内存。</p>
 <ol>
@@ -203,7 +203,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>返回<strong>实例管理</strong>页面，确认变更后的实例规格，并启动已停止的实例。</li>
 </ol>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c372d8792879eb0bf496ac3696502fa864c8712aee966bd7ca1542d335ad6e70/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f7475727163697a77616764796e696c6e6c6564702e706e67"><img src="https://camo.githubusercontent.com/c372d8792879eb0bf496ac3696502fa864c8712aee966bd7ca1542d335ad6e70/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f7475727163697a77616764796e696c6e6c6564702e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/turqcizwagdynilnledp.png" style="max-width: 100%;"></a></p>
-<h2>修改网络带宽</h2>
+<h3>修改网络带宽</h3>
 <p>对于<strong>使用固定公网IP</strong>的<strong>按量付费</strong>或<strong>包年包月</strong>实例，如果发现公网带宽无法满足或者超出业务需求，您可以修改公网带宽。</p>
 <ol>
 <li>登录<a href="https://ecs.console.aliyun.com/" rel="nofollow">ECS管理控制台</a>。在左侧导航栏，选择<strong>实例与镜像 &gt; 实例</strong>。</li>
@@ -219,10 +219,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <p>提示：调整带宽可能需要您额外支付相关费用，请慎重操作。</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4132d02702cae85c220a583b89c2943c84b3db788b0b7ea43a951b396339cb8d/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6f767466676965656a61666e756e6a74736d66752e706e67"><img src="https://camo.githubusercontent.com/4132d02702cae85c220a583b89c2943c84b3db788b0b7ea43a951b396339cb8d/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6f767466676965656a61666e756e6a74736d66752e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/ovtfgieejafnunjtsmfu.png" style="max-width: 100%;"></a></p>
-<h1>块存储管理</h1>
-<h2>思考：小云发现随着用户访问量不断增加，云服务器ECS实例的存储空间不足了，应该如何扩大存储空间呢？</h2>
+<h2>块存储管理</h2>
+<p>思考：小云发现随着用户访问量不断增加，云服务器ECS实例的存储空间不足了，应该如何扩大存储空间呢？</p>
 <p>区别于传统的物理服务器升级，小云刚刚通过<strong>ECS管理控制台</strong>（<a href="https://ecs.console.aliyun.com/%EF%BC%89%E5%9C%A8%E7%BA%BF%E5%AE%8C%E6%88%90%E4%BA%86%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8ECS**%E5%AE%9E%E4%BE%8B%E8%A7%84%E6%A0%BC**%EF%BC%88vCPU%E5%92%8C%E5%86%85%E5%AD%98%EF%BC%89%E5%92%8C**%E7%BD%91%E7%BB%9C%E5%B8%A6%E5%AE%BD**%E7%9A%84%E5%8D%87%E7%BA%A7%EF%BC%8C%E5%90%8C%E6%A0%B7%E7%9A%84ECS%E5%AE%9E%E4%BE%8B%E7%9A%84**%E5%AD%98%E5%82%A8**%E4%B9%9F%E5%90%8C%E6%A0%B7%E5%8F%AF%E4%BB%A5%E9%80%9A%E8%BF%87%E8%BF%99%E7%A7%8D%E6%96%B9%E5%BC%8F%E8%BF%9B%E8%A1%8C%E5%9C%A8%E7%BA%BF%E5%8D%87%E7%BA%A7%EF%BC%8C%E5%AD%98%E5%82%A8%E7%9A%84%E5%8D%87%E7%BA%A7%E5%90%8C%E6%A0%B7%E6%98%AF**%E7%A7%92%E7%BA%A7**%E7%94%9F%E6%95%88%E3%80%82" rel="nofollow">https://ecs.console.aliyun.com/）在线完成了云服务器ECS**实例规格**（vCPU和内存）和**网络带宽**的升级，同样的ECS实例的**存储**也同样可以通过这种方式进行在线升级，存储的升级同样是**秒级**生效。</a></p>
-<h2>块存储概念</h2>
+<p>块存储概念</p>
 <p>扩大存储空间之前，先了解一下云服务器ECS实例的存储是什么：</p>
 <p><strong>块存储</strong>是阿里云为云服务器ECS提供的块设备产品，为云服务器提供<strong>高性能、低成本、低时延、可扩展</strong>的数据存储服务。类似计算机中的硬盘，您可以像使用物理硬盘一样挂载至云服务器、格式化并建立文件系统来使用块存储。</p>
 <p>块存储可分为<strong>系统盘</strong>和<strong>数据盘</strong>，可<strong>独立购买、分别挂载</strong>至云服务器ECS实例。</p>
@@ -236,7 +236,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>⑤ 如果ECS实例中的数据非常重要，可以通过<strong>创建快照</strong>方式<strong>备份数据</strong>，当重要数据被误删除时，可以通过<strong>快照回滚</strong>，快速恢复原来的数据；</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6549acc8182551034e5cb919f1dd11efe4f902ba4f791f72bed8591610098139/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f73767a68757a6c65677465727a6b6a667a6a656b2e706e67"><img src="https://camo.githubusercontent.com/6549acc8182551034e5cb919f1dd11efe4f902ba4f791f72bed8591610098139/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f73767a68757a6c65677465727a6b6a667a6a656b2e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/svzhuzlegterzkjfzjek.png" style="max-width: 100%;"></a></p>
 <hr>
-<h2>块存储（云盘）扩容</h2>
+<h3>块存储（云盘）扩容</h3>
 <p>随着业务发展和应用数据增长，当云盘使用空间不足时，您可以扩容云盘的存储容量，即云盘扩容。您可以通过以下方式获得更多的存储空间：</p>
 <p><strong>方式一</strong>：<strong>直接扩容现有云盘</strong>，系统盘和数据盘通用</p>
 <p><strong>方式二：创建</strong>一块新<strong>数据盘</strong>，并挂载到实例上进行使用</p>
@@ -343,7 +343,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>第三步，在<strong>更换操作系统</strong>对话框，<strong>重新输入变更后的系统盘容量</strong>，完成操作系统安装的同时将<strong>更换新的系统盘</strong>。</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/99bc339d584d1b529dd78c0d940d5f03c127b548cfcae41768cd959b0d829c6a/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f617a6f677776717769716b766a756363647678782e706e67"><img src="https://camo.githubusercontent.com/99bc339d584d1b529dd78c0d940d5f03c127b548cfcae41768cd959b0d829c6a/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f617a6f677776717769716b766a756363647678782e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/azogwvqwiqkvjuccdvxx.png" style="max-width: 100%;"></a></p>
 <h2><strong>思考</strong>：小云了解到<strong>存储读写速度和IOPS越高</strong>，数据处理速度也越快，那么要如何选择<strong>块存储</strong>提升网站性能呢？</h2>
-<h2>块存储（云盘）变配</h2>
+<h3>块存储（云盘）变配</h3>
 <p>不同类型的块存储提供了不同的磁盘性能，其分类主要有<strong>ESSD 云盘、SSD云盘、高效云盘</strong>等，以满足不同业务场景需求，其中：</p>
 <ul>
 <li><strong>高效云盘</strong>：具备<strong>高性价比</strong>、中等随机读写性能、高可靠性的云盘产品。建议在开发与测试业务和系统盘等场景中使用。</li>
@@ -364,8 +364,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>弹出的对话框中选择需要变更的云盘类型和配置，点击<strong>确认</strong>后完成云盘变配。</li>
 </ol>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e3f6839f52c7c8d9c4db267416a9ad28c48a466ee9ca224ec1fda3c3c9702668/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f647a79626e736f6b7673767a657679797765637a2e706e67"><img src="https://camo.githubusercontent.com/e3f6839f52c7c8d9c4db267416a9ad28c48a466ee9ca224ec1fda3c3c9702668/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f647a79626e736f6b7673767a657679797765637a2e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/dzybnsokvsvzevyywecz.png" style="max-width: 100%;"></a></p>
-<h1>镜像管理</h1>
-<h2>思考：小云如何能够保存现有ECS实例中的所有管理配置，并利用保存的配置重新创建一台配置相同的机器？</h2>
+<h2>镜像管理</h2>
+<p>思考：小云如何能够保存现有ECS实例中的所有管理配置，并利用保存的配置重新创建一台配置相同的机器？</p>
 <p>小云：老王，我有一个朋友也想拥有一个网站但是不希望创建ECS后重新搭建配置网站环境，我的朋友是否能够使用我的ECS实例配置创建属于他的ECS实例？</p>
 <p>老王：当然可以，实际上企业应用中，某些服务需要多台配置一模一样的ECS实例，所以创建一个**“模板机”**，并复制“模板机”的配置从而创建新的ECS实例将变得非常便捷。</p>
 <p>小云：太好了，麻烦给我讲讲要如何去做？</p>
@@ -385,7 +385,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ab7efd94a77f74df17fefe46654ee5362d15bbe5a3bd31d71d53cf5ca2a8b8bf/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f78697a727765646b7578746f767073717464756e2e706e67"><img src="https://camo.githubusercontent.com/ab7efd94a77f74df17fefe46654ee5362d15bbe5a3bd31d71d53cf5ca2a8b8bf/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f78697a727765646b7578746f767073717464756e2e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/xizrwedkuxtovpsqtdun.png" style="max-width: 100%;"></a></p>
 <p><strong>镜像的基本功能：</strong></p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/af011835c9b030e502e86e7dba7c739b22284296edca9bbb9026736df8c17b61/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f65656a69776a7376716264617972637871736e6e2e706e67"><img src="https://camo.githubusercontent.com/af011835c9b030e502e86e7dba7c739b22284296edca9bbb9026736df8c17b61/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f65656a69776a7376716264617972637871736e6e2e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/eejiwjsvqbdayrcxqsnn.png" style="max-width: 100%;"></a></p>
-<h2><strong>创建自定义镜像</strong></h2>
+<h3><strong>创建自定义镜像</strong></h3>
 <p><strong>小云准备基于已经搭建好网站的ECS实例创建自定义镜像，以便于后续通过该镜像快速复制ECS实例。</strong></p>
 <p>提示：</p>
 <ul>
@@ -427,7 +427,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>创建镜像所需时间取决于实例云盘的大小，需要等待每块云盘的快照创建完成，镜像才可以使用，请您耐心等待。</li>
 </ol>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/fb4fa98775a5f622e2f45a97278b23ebdc0bd664dcf10d811cd3dfc89a69a102/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6e68746773656e787a6f6e756f7a6c75686572692e706e67"><img src="https://camo.githubusercontent.com/fb4fa98775a5f622e2f45a97278b23ebdc0bd664dcf10d811cd3dfc89a69a102/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6e68746773656e787a6f6e756f7a6c75686572692e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/nhtgsenxzonuozluheri.png" style="max-width: 100%;"></a></p>
-<h2>自定义镜像管理</h2>
+<h3>自定义镜像管理</h3>
 <p>当您成功创建或成功导入自定义镜像后，镜像的状态为<strong>可用</strong>。此时，您可以使用该镜像创建实例，可以将其共享给其他阿里云账号使用，或复制该镜像到其他地域使用，或导出该镜像到OSS存储空间（OSS Bucket）。不再需要该镜像时，您可以将其删除。</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0140292c63e07fe7885419a019d2baf839f4e1e0e088c3f46120caee0165ba6a/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6c67667562636c796268677066737664726268732e706e67"><img src="https://camo.githubusercontent.com/0140292c63e07fe7885419a019d2baf839f4e1e0e088c3f46120caee0165ba6a/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6c67667562636c796268677066737664726268732e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/lgfubclybhgpfsvdrbhs.png" style="max-width: 100%;"></a></p>
 <p><strong>自定义镜像管理方法：</strong></p>
@@ -461,7 +461,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </li>
 </ol>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f78c9046350bcbdfb270af3e57aaa2ddce23f22f789bc66e6a3b0bf23c7833fd/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6a796e626b7566646f7177726b687972696f666d2e706e67"><img src="https://camo.githubusercontent.com/f78c9046350bcbdfb270af3e57aaa2ddce23f22f789bc66e6a3b0bf23c7833fd/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6a796e626b7566646f7177726b687972696f666d2e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/jynbkufdoqwrkhyriofm.png" style="max-width: 100%;"></a></p>
-<h1>快照管理</h1>
+<h2>快照管理</h2>
 <h2>思考：小云在网站运维和管理的时候，不小心删除了ECS实例中的图片和视频数据，小云非常着急，如何找回这些数据？</h2>
 <p>小云：老王，江湖救急，我在网站运维和管理的时候，不小心删除了ECS实例中的图片和视频数据，怎么办？</p>
 <p>老王：如果已经对这些图片和视频数据做好了备份，就可以利用<strong>备份</strong>来<strong>恢复数据</strong>。</p>
@@ -480,7 +480,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/893c9811b94b7e3f449f46ec6f2e9cee2c8b4a3e594f0fed7a64f5aae0f7e862/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6e6369656f6d676271686d6e766475636e6368792e706e67"><img src="https://camo.githubusercontent.com/893c9811b94b7e3f449f46ec6f2e9cee2c8b4a3e594f0fed7a64f5aae0f7e862/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6e6369656f6d676271686d6e766475636e6368792e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/ncieomgbqhmnvducnchy.png" style="max-width: 100%;"></a></p>
 <hr>
-<h2>创建快照</h2>
+<h3>创建快照</h3>
 <h3><strong>思考：小云可以通过哪些方式创建云盘快照？</strong></h3>
 <p>云服务器ECS的云盘支持通过以下两种方式创建快照：</p>
 <ul>
@@ -553,7 +553,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </li>
 </ul>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/eb1b55a8c6ff46905dd26ea7f1cf26b8e56166b52cbbf82300b8012022a4a0e5/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f7764766a65716b777369697a616d6872797176632e706e67"><img src="https://camo.githubusercontent.com/eb1b55a8c6ff46905dd26ea7f1cf26b8e56166b52cbbf82300b8012022a4a0e5/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f7764766a65716b777369697a616d6872797176632e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/wdvjeqkwsiizamhryqvc.png" style="max-width: 100%;"></a></p>
-<h2>快照管理</h2>
+<h3>快照管理</h3>
 <p><strong>思考：小云可以如何使用和管理快照？</strong></p>
 <p>当创建好云盘快照以后，就可以通过快照恢复数据（回滚云盘）、创建镜像、创建新云盘或将快照复制到其它地域，当您不再需要某份快照或者快照数超出额度时，您可以删除一部分快照释放空间。</p>
 <ul>
@@ -578,7 +578,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>跳转至快照管理页面，找到要操作的快照，即可使用和管理快照，快照的主要操作有：</li>
 </ol>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4c2660b97950952a9bb2ab56eb70a70fd844c281bdb0cd0cfd06e73515a8ce60/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f686a68777a69687671746b7578706d6f757268752e706e67"><img src="https://camo.githubusercontent.com/4c2660b97950952a9bb2ab56eb70a70fd844c281bdb0cd0cfd06e73515a8ce60/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f686a68777a69687671746b7578706d6f757268752e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/hjhwzihvqtkuxpmourhu.png" style="max-width: 100%;"></a></p>
-<h1>安全管理</h1>
+<h2>安全管理</h2>
 <h2>思考：小云担心自己网站的安全性问题，如何能够让云服务器ECS实例上的网站更安全的运行？</h2>
 <p>小云：最近我的网站用户越来越多了，我总担心我的网站受到攻击，有哪些方式帮助保护我的网站安全？</p>
 <p>老王：如果希望保护网站安全，首先就要保护ECS实例安全，这需要对ECS实例进行<strong>安全加固</strong>，常见的云服务器ECS实例的安全加固方法有：</p>
@@ -589,7 +589,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <p>小云：明白了，我现在就去控制台逐个学习下如何操作……</p>
 <hr>
-<h2><strong>修改ECS实例登录密码</strong></h2>
+<h3><strong>修改ECS实例登录密码</strong></h3>
 <p><strong>方式一：重置ECS实例密码</strong></p>
 <ol>
 <li>登录<a href="https://ecs.console.aliyun.com/" rel="nofollow"><strong>ECS管理控制台</strong></a>。在左侧导航栏，选择<strong>实例与镜像 &gt; 实例</strong>。</li>
@@ -761,18 +761,18 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><strong>小云希望允许所有人访问他的个人网站，他对安全组规则做了如下配置：</strong></p>
 <p>提示：默认Web服务（个人网站）通过<strong>80端口</strong>对外提供服务，授权对象 0.0.0.0/0表示对所有IP生效。</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/32dc2d24ea09802ca4141c2aaed3259d81240819861be945d99a30b96b2e06b2/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6c686762776665776b676b73787069626c71797a2e706e67"><img src="https://camo.githubusercontent.com/32dc2d24ea09802ca4141c2aaed3259d81240819861be945d99a30b96b2e06b2/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6c686762776665776b676b73787069626c71797a2e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/lhgbwfewkgksxpiblqyz.png" style="max-width: 100%;"></a></p>
-<h2><strong>补丁管理</strong></h2>
+<h3><strong>补丁管理</strong></h3>
 <p><strong>小云希望他所购买的ECS实例的系统漏洞尽快修复从而避免受到安全攻击，或者需要所使用的一些软件包的版本始终保持到最新版本，这个时候需要用到补丁管理。</strong></p>
 <p>小云可以通过云服务器ECS中免费的<strong>自动升级补丁</strong>工具来自动扫描实例内的系统补丁，并完成补丁的下载和安装。</p>
 <p>提示：系统补丁升级可能会导致实例重启，请选择合适的运维窗口进行系统补丁升级。</p>
 <p><strong>使用方法：</strong></p>
 <p><strong>云服务器控制台</strong> &gt; <strong>实例</strong> &gt; 进入要操作的<strong>实例详情</strong> &gt; <strong>定时与自动化任务</strong>页签 &gt; <strong>自动升级补丁</strong>页签 &gt; 管理和升级补丁</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/cc34797478ff08726429d595b23b2fb2dfd1d676a53fd3d13686e845f6720fcc/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6d7365657268686c6d69716977636a6b6c6d61672e706e67"><img src="https://camo.githubusercontent.com/cc34797478ff08726429d595b23b2fb2dfd1d676a53fd3d13686e845f6720fcc/68747470733a2f2f73636d732d70726f642d73682d7075626c69632e6f73732d636e2d7368616e676861692e616c6979756e63732e636f6d2f636f757273655f706963747572652f6d7365657268686c6d69716977636a6b6c6d61672e706e67" alt="" data-canonical-src="https://scms-prod-sh-public.oss-cn-shanghai.aliyuncs.com/course_picture/mseerhhlmiqiwcjklmag.png" style="max-width: 100%;"></a></p>
-<h2><strong>点击如下链接，进入实验练习环节：</strong></h2>
+<h3><strong>点击如下链接，进入实验练习环节：</strong></h3>
 <p><strong><a href="https://developer.aliyun.com/adc/scenario/exp/56d2ed6b24204f109154b73e45e39aea?spm=a2cwt.28120018.317247.19.53841ee9lBNxJy" rel="nofollow">教学练习实验</a></strong></p>
 <h2><strong>如果您已经完成课程学习和实验练习，可以进入以下页面激活认证流程：</strong></h2>
 <p><strong><a href="https://edu.aliyun.com/certification/cldc18" rel="nofollow">激活认证流程</a></strong></p>
-<h2><strong>激活认证流程后，进入个人中心完成考试：</strong></h2>
+<h3><strong>激活认证流程后，进入个人中心完成考试：</strong></h3>
 <p><a href="https://edu.aliyun.com/clouder/my/clouderpackage" rel="nofollow"><strong>https://edu.aliyun.com/clouder/my/clouderpackage</strong></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
