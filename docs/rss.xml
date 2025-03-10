@@ -1,5 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Wed, 05 Mar 2025 12:59:29 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>SQLi-Labs靶场搭建</title><link>https://bbs.myla.rr.nu/post/SQLi-Labs-ba-chang-da-jian.html</link><description>## 一、SQLi-Labs
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Mon, 10 Mar 2025 05:27:14 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>阿里云ECS云上创建博客</title><link>https://bbs.myla.rr.nu/post/a-li-yun-ECS-yun-shang-chuang-jian-bo-ke.html</link><description>
+| 配置项    | 示例                                         |
+| ------ | ------------------------------------------ |
+| 地域及可用区 | 地域：华东1（杭州）&lt;br&gt;&lt;br&gt;可用区：随机分配                 |
+| 实例规格   | 规格族：共享标准型 s6&lt;br&gt;&lt;br&gt;实例规格：ecs.s6-c1m1.small |
+| 镜像     | 类型：公共镜像&lt;br&gt;&lt;br&gt;版本：CentOS 7.7 64位           |
+3. 安装并配置Apache服务
+
+Apache是Web服务器软件。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/a-li-yun-ECS-yun-shang-chuang-jian-bo-ke.html</guid><pubDate>Mon, 10 Mar 2025 05:26:44 +0000</pubDate></item><item><title>SQLi-Labs靶场搭建</title><link>https://bbs.myla.rr.nu/post/SQLi-Labs-ba-chang-da-jian.html</link><description>## 一、SQLi-Labs
 SQLi-Labs是一个专业的SQL注入练习平台，适用于GET和POST场景。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/SQLi-Labs-ba-chang-da-jian.html</guid><pubDate>Wed, 05 Mar 2025 12:58:53 +0000</pubDate></item><item><title>dvwa靶场搭建</title><link>https://bbs.myla.rr.nu/post/dvwa-ba-chang-da-jian.html</link><description>##  DVWA安装
 
 DVWA是PHP/MYSQL的源码环境，我们可以将DVWA安装在PHPStudy中，PHPStudy是一个PHP调试环境集成包，集成了我们所需的环境。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/dvwa-ba-chang-da-jian.html</guid><pubDate>Tue, 04 Mar 2025 04:47:44 +0000</pubDate></item><item><title>XSS靶场搭建</title><link>https://bbs.myla.rr.nu/post/XSS-ba-chang-da-jian.html</link><description>&lt;h2&gt;安装和使用&lt;/h2&gt;
