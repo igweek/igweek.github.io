@@ -1,5 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Mon, 10 Mar 2025 06:49:09 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>阿里云基础运维管理</title><link>https://bbs.myla.rr.nu/post/a-li-yun-ji-chu-yun-wei-guan-li.html</link><description>## 云服务器ECS运维管理
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Wed, 12 Mar 2025 08:19:08 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Windows 80端口被占用</title><link>https://bbs.myla.rr.nu/post/Windows%2080-duan-kou-bei-zhan-yong.html</link><description>&lt;h3&gt;&lt;strong&gt;win+R 输入cmd&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/28/8jmZ9vuShPDeKgz.png' alt='file' /&gt;&lt;/p&gt;
+&lt;h3&gt;&lt;strong&gt;输入命令 &lt;code&gt;netstat -ano&lt;/code&gt; 查找端口对应的pid&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/28/4sB8SKhzEJAipou.png' alt='file' /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/28/83d6S5XCDguZBI2.png' alt='file' /&gt;&lt;/p&gt;
+&lt;h3&gt;&lt;strong&gt;输入 &lt;code&gt;netsh http show servicestate&lt;/code&gt; 并找出PID值&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/28/Zg2eUIVqf3mAOiY.png' alt='file' /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/28/jSYE5bCfqrIk39x.png' alt='file' /&gt;&lt;/p&gt;
+&lt;h3&gt;&lt;strong&gt;在任务管理器中关闭对应的PID进程&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/28/IXZQYvd38HRtjnE.png' alt='file' /&gt;&lt;/p&gt;
+&lt;h3&gt;&lt;strong&gt;启动成功&lt;/strong&gt;&lt;/h3&gt;
+&lt;p&gt;&lt;img src='https://s2.loli.net/2024/10/28/sAerYOqaSu52hN1.png' alt='file' /&gt;&lt;/p&gt;。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/Windows%2080-duan-kou-bei-zhan-yong.html</guid><pubDate>Wed, 12 Mar 2025 08:18:42 +0000</pubDate></item><item><title>阿里云基础运维管理</title><link>https://bbs.myla.rr.nu/post/a-li-yun-ji-chu-yun-wei-guan-li.html</link><description>## 云服务器ECS运维管理
 
 **思考：参照云上安全共担责任模型的说明，小云需要自己承担操作系统和其上运行的网站、用户数据以及网络访问控制等的管理，那么他要如何才能保障云服务器中个人网站能够持续良好的运行？**
 
