@@ -1,5 +1,4 @@
 ## Windows
-
 ### 直接扩大 ECS 原有数据盘
 1. 阿里云管理控制台，点击右侧的云盘，进入磁盘列表页面。
 2. 点击数据盘右侧的更多，在弹出的列表中，点击磁盘扩容
@@ -45,3 +44,82 @@
 ![image.png](https://img.cccb.rr.nu/path/202503171552442.png)
 ![image.png](https://img.cccb.rr.nu/path/202503171553901.png)
 
+
+
+## Linux (以Ubuntu为例)
+
+Sir，下面提供一个较为详细的挂载步骤说明，帮助您将独立数据盘挂载到Ubuntu操作系统的ECS服务器上。
+
+### 1. 确认数据盘设备名称
+
+- **操作**：使用以下命令查看所有磁盘及分区信息：
+    
+    ```bash
+    lsblk
+    ```
+    ![image.png](https://img.cccb.rr.nu/path/202503171621784.png)
+
+### 2. 对新磁盘进行分区（如果还未分区）
+
+- 
+    
+    ```bash
+    sudo fdisk /dev/vdb
+    ```
+    
+    在 fdisk 交互界面中：
+    - 输入 `n` 创建新分区
+    - 根据提示选择分区类型和大小（通常选择默认即可）
+    - 输入 `w` 保存退出
+
+
+### 3. 格式化分区
+
+- **操作**：假设新创建的分区为 `/dev/vdb1`，执行：
+    
+    ```bash
+    sudo mkfs.ext4 /dev/vdb1
+    ```
+    
+
+### 4. 挂载数据盘
+
+- **操作**：
+    1. 创建挂载点目录，例如：
+        
+        ```bash
+        sudo mkdir /mnt/data_disk
+        ```
+        
+    2. 挂载分区到该目录：
+        
+        ```bash
+        sudo mount /dev/vdb1 /mnt/data_disk
+        ```
+        
+
+
+### 5. 设置开机自动挂载（可选，但推荐）
+
+- **操作**：编辑 `/etc/fstab` 文件：
+    
+    ```bash
+    sudo nano /etc/fstab
+    ```
+    
+    添加以下一行：
+    
+    ```plaintext
+    /dev/vdb1   /mnt/data_disk   ext4   defaults   0   0
+    ```
+    
+    保存退出后，可用 `sudo mount -a` 测试配置。
+- `/etc/fstab` 文件定义系统启动时自动挂载的文件系统。确保填写正确的设备名称、挂载点和文件系统类型。
+
+### 注意事项
+
+- **设备名称变化**：在云环境中，设备名称有时可能因重启或实例变化而不同，建议使用UUID或LABEL挂载，可以通过命令 `blkid` 获取UUID信息，然后在 `/etc/fstab` 中使用类似格式：
+    
+    ```plaintext
+    UUID=xxxx-xxxx   /mnt/data_disk   ext4   defaults   0   0
+    ```
