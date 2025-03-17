@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    
+    <link rel="icon" href="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="1. 选择实验资源
+
+本实验支持实验资源体验、开通免费试用、个人账户资源三种实验资源方式。">
+<meta property="og:title" content="使用OSS对象存储快速搭建个人网盘">
+<meta property="og:description" content="1. 选择实验资源
+
+本实验支持实验资源体验、开通免费试用、个人账户资源三种实验资源方式。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.myla.rr.nu/post/shi-yong-OSS-dui-xiang-cun-chu-kuai-su-da-jian-ge-ren-wang-pan.html">
+<meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
+<title>使用OSS对象存储快速搭建个人网盘</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">使用OSS对象存储快速搭建个人网盘</h1>
+<div class="title-right">
+    <a href="https://bbs.myla.rr.nu" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/44" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><ol>
+<li>选择实验资源</li>
+</ol>
+<p>本实验支持实验资源体验、开通免费试用、个人账户资源三种实验资源方式。</p>
+<p>在实验开始前，请您选择其中一种实验资源，单击确认开启实验。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c05ec5005cf5a88c6ff7e93edfe5bbf8f871b45a2fca9668ee9d365714de2e39/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f796d78373378636f6f79736c715f62616232353164643566313534313139383564666266333165616238663632632e706e67"><img src="https://camo.githubusercontent.com/c05ec5005cf5a88c6ff7e93edfe5bbf8f871b45a2fca9668ee9d365714de2e39/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f796d78373378636f6f79736c715f62616232353164643566313534313139383564666266333165616238663632632e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/ymx73xcooyslq_bab251dd5f15411985dfbf31eab8f62c.png" style="max-width: 100%;"></a></p>
+<ul>
+<li>如果您选择的是实验资源体验，资源创建过程需要3～5分钟（视资源不同开通时间有所差异，ACK等资源开通时间较长）。完成实验资源的创建后，在实验室页面左侧导航栏中，单击云产品资源列表，可查看本次实验资源相关信息（例如子用户名称、子用户密码、AK ID、AK Secret、资源中的项目名称等）。</li>
+</ul>
+<p>说明：实验环境一旦开始创建则进入计时阶段，建议学员先基本了解实验具体的步骤、目的，真正开始做实验时再进行创建。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/97dcb918dec4108d98f4475f64453c923813f67b10d38513ba14d4d766cf889a/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f66336535626136386437313534323435386365303664333064666132663062632e706e67"><img src="https://camo.githubusercontent.com/97dcb918dec4108d98f4475f64453c923813f67b10d38513ba14d4d766cf889a/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f66336535626136386437313534323435386365303664333064666132663062632e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_f3e5ba68d71542458ce06d30dfa2f0bc.png" style="max-width: 100%;"></a></p>
+<ul>
+<li>如果您选择的是开通免费试用，下方卡片会展示本实验支持的试用规格，可以选择你要试用的云产品资源进行开通。您在实验过程中，可以随时用右下角icon唤起试用卡片。</li>
+</ul>
+<p>说明：试用云产品开通在您的个人账号下，并占用您的试用权益。如试用超出免费试用额度，可能会产生一定费用。</p>
+<p>阿里云支持试用的产品列表、权益及具体规则说明请参考<a href="https://free.aliyun.com/" rel="nofollow">开发者试用中心</a>。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a5b8fe212be5b149901b07ff8634bfd04993dd64ab635545f1cf7e673739bf6c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f6f323379776f64737334706a695f33656231633463663539343234623461393034656537313866333632643662372e706e67"><img src="https://camo.githubusercontent.com/a5b8fe212be5b149901b07ff8634bfd04993dd64ab635545f1cf7e673739bf6c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f6f323379776f64737334706a695f33656231633463663539343234623461393034656537313866333632643662372e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/o23ywodss4pji_3eb1c4cf59424b4a904ee718f362d6b7.png" style="max-width: 100%;"></a></p>
+<ol start="2">
+<li>创建实验资源</li>
+</ol>
+<p>本步骤指导您如何创建文件存储OSS。</p>
+<p>如果您已创建相关资源，请您选择个人账户资源，并跳过本小节，直接进行实验操作即可。</p>
+<p>本步骤仅作为参考使用，您可以根据需求自行选择配置。</p>
+<h3>如果您选择的是开通免费试用，参考以下步骤创建相关资源。</h3>
+<ol>
+<li>在实验室页面下方，选择对象存储OSS，单击立即试用。</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c1a010a7b674c9acb9ca1d5e091523c938ca54c3b56b375409b60c67358057af/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35386262393935316632653634393532613365343065323931353066386366662e706e67"><img src="https://camo.githubusercontent.com/c1a010a7b674c9acb9ca1d5e091523c938ca54c3b56b375409b60c67358057af/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35386262393935316632653634393532613365343065323931353066386366662e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_58bb9951f2e64952a3e40e29150f8cff.png" style="max-width: 100%;"></a></p>
+<ol start="2">
+<li>在对象存储OSS试用开通页面，在确认并了解相关信息后，根据页面提示申请试用。</li>
+</ol>
+<p>说明：如果您的对象存储OSS资源抵扣包已使用完毕或无领取资格，请您选择个人账户资源，创建文件存储OSS。</p>
+<ol start="3">
+<li>
+<p>前往<a href="https://oss.console.aliyun.com/overview" rel="nofollow">对象存储OSS控制台</a><a href="https://fcnext.console.aliyun.com/" rel="nofollow"></a>。如果您没有开通过OSS服务，系统会提示您开通OSS服务，请按照页面提示开通OSS服务。</p>
+</li>
+<li>
+<p>在左侧导航栏中，单击Bucket列表。</p>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1ae732124fb078dff0a30c0399ed982ca27a26886b502a2f3d6db0aec16f8e7b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32633261346331616636316134333630383066626231383763633962383131662e706e67"><img src="https://camo.githubusercontent.com/1ae732124fb078dff0a30c0399ed982ca27a26886b502a2f3d6db0aec16f8e7b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32633261346331616636316134333630383066626231383763633962383131662e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_2c2a4c1af61a436080fbb187cc9b811f.png" style="max-width: 100%;"></a></p>
+<ol start="5">
+<li>在Bucket列表页面，单击创建Bucket。</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/57a2b152c47480f105bf69dc6873f7e4255bfaa68f03d7fed80962661debc003/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33393633316438343238613234383039616466643932623563303261366537622e706e67"><img src="https://camo.githubusercontent.com/57a2b152c47480f105bf69dc6873f7e4255bfaa68f03d7fed80962661debc003/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33393633316438343238613234383039616466643932623563303261366537622e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_39631d8428a24809adfd92b5c02a6e7b.png" style="max-width: 100%;"></a></p>
+<ol start="6">
+<li>在创建Bukcet面板，参考如下说明配置OSS，未提及的配置保持默认选项，然后单击确定。</li>
+</ol>
+<p>参数说明：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>配置项</td>
+<td>示例</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>Bukcet名称</td>
+<td>test-xxx</td>
+<td>自定义Bucket名称</td>
+</tr>
+<tr>
+<td>地域</td>
+<td>地域：华东2（上海）</td>
+<td>实例创建后，无法直接更改地域和可用区，请谨慎选择。</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>如果您选择的是选择个人账户资源，参考以下步骤创建相关资源。</h3>
+<ol>
+<li>
+<p>前往<a href="https://oss.console.aliyun.com/overview" rel="nofollow">对象存储OSS控制台</a>。</p>
+</li>
+<li>
+<p>在左侧导航栏中，单击Bucket列表。</p>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1ae732124fb078dff0a30c0399ed982ca27a26886b502a2f3d6db0aec16f8e7b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32633261346331616636316134333630383066626231383763633962383131662e706e67"><img src="https://camo.githubusercontent.com/1ae732124fb078dff0a30c0399ed982ca27a26886b502a2f3d6db0aec16f8e7b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32633261346331616636316134333630383066626231383763633962383131662e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_2c2a4c1af61a436080fbb187cc9b811f.png" style="max-width: 100%;"></a></p>
+<ol start="3">
+<li>在Bucket列表页面，单击创建Bucket。</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/57a2b152c47480f105bf69dc6873f7e4255bfaa68f03d7fed80962661debc003/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33393633316438343238613234383039616466643932623563303261366537622e706e67"><img src="https://camo.githubusercontent.com/57a2b152c47480f105bf69dc6873f7e4255bfaa68f03d7fed80962661debc003/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33393633316438343238613234383039616466643932623563303261366537622e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_39631d8428a24809adfd92b5c02a6e7b.png" style="max-width: 100%;"></a></p>
+<ol start="4">
+<li>在创建Bukcet面板，参考如下说明配置OSS，未提及的配置保持默认选项，然后单击确定。</li>
+</ol>
+<p>参数说明：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>配置项</td>
+<td>示例</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>Bukcet名称</td>
+<td>test-xxx</td>
+<td>自定义Bucket名称</td>
+</tr>
+<tr>
+<td>地域</td>
+<td>地域：华东2（上海）</td>
+<td>实例创建后，无法直接更改地域和可用区，请谨慎选择。</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<ol start="3">
+<li>登录对象存储OSS控制台</li>
+</ol>
+<p>本步骤指导您如何登录对象存储OSS控制台，并查看OSS Bucket。</p>
+<ol>
+<li>
+<p>在RAM用户登录框中单击下一步，并复制粘贴页面左上角的子用户密码到用户密码输入框，单击登录。</p>
+</li>
+<li>
+<p>复制下方地址，在无影云安全浏览器中打开新页签，粘贴并访问对象存储OSS控制台。</p>
+</li>
+</ol>
+<pre class="notranslate"><code class="notranslate">https://oss.console.aliyun.com/
+</code></pre>
+<ol start="3">
+<li>在左侧导航栏中，单击Bucket列表。</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1ae732124fb078dff0a30c0399ed982ca27a26886b502a2f3d6db0aec16f8e7b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32633261346331616636316134333630383066626231383763633962383131662e706e67"><img src="https://camo.githubusercontent.com/1ae732124fb078dff0a30c0399ed982ca27a26886b502a2f3d6db0aec16f8e7b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32633261346331616636316134333630383066626231383763633962383131662e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_2c2a4c1af61a436080fbb187cc9b811f.png" style="max-width: 100%;"></a></p>
+<ol start="4">
+<li>在Bucket列表页面，您可以找到实验室分配的Bucket。</li>
+</ol>
+<p>说明：你可在云产品资源列表中查看云起实验室分配的对象存储OSS资源。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1585c7de0ee79ae58cb45cb2ef9fd40c49a35c7e137e488794918f67285884ec/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63353039376436363739626534336338386431363531386663633234396166392e706e67"><img src="https://camo.githubusercontent.com/1585c7de0ee79ae58cb45cb2ef9fd40c49a35c7e137e488794918f67285884ec/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63353039376436363739626534336338386431363531386663633234396166392e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_c5097d6679be43c88d16518fcc249af9.png" style="max-width: 100%;"></a></p>
+<ol start="5">
+<li>在您的本机浏览器中打开新页签，复制下方地址到地址栏中，下载我们将要上传到OSS中的测试文件。</li>
+</ol>
+<p>说明：请您在本机浏览器中下载测试文件。</p>
+<pre class="notranslate"><code class="notranslate">https://labfileapp.oss-cn-hangzhou.aliyuncs.com/%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1/testlog.csv
+</code></pre>
+<ol start="4">
+<li>登录对象存储OSS控制台</li>
+</ol>
+<p>本步骤指导您如何登录对象存储OSS控制台，并查看OSS Bucket。</p>
+<ol>
+<li>
+<p>前往<a href="https://oss.console.aliyun.com/overview" rel="nofollow">对象存储OSS控制台</a>。</p>
+</li>
+<li>
+<p>在左侧导航栏中，单击Bucket列表。</p>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1ae732124fb078dff0a30c0399ed982ca27a26886b502a2f3d6db0aec16f8e7b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32633261346331616636316134333630383066626231383763633962383131662e706e67"><img src="https://camo.githubusercontent.com/1ae732124fb078dff0a30c0399ed982ca27a26886b502a2f3d6db0aec16f8e7b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32633261346331616636316134333630383066626231383763633962383131662e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_2c2a4c1af61a436080fbb187cc9b811f.png" style="max-width: 100%;"></a></p>
+<ol start="3">
+<li>在Bucket列表页面，您可以找到您创建的Bucket。</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1585c7de0ee79ae58cb45cb2ef9fd40c49a35c7e137e488794918f67285884ec/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63353039376436363739626534336338386431363531386663633234396166392e706e67"><img src="https://camo.githubusercontent.com/1585c7de0ee79ae58cb45cb2ef9fd40c49a35c7e137e488794918f67285884ec/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63353039376436363739626534336338386431363531386663633234396166392e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_c5097d6679be43c88d16518fcc249af9.png" style="max-width: 100%;"></a></p>
+<ol start="4">
+<li>在您的本机浏览器中打开新页签，复制下方地址到地址栏中，下载我们将要上传到OSS中的测试文件。</li>
+</ol>
+<p>说明：请您在本机浏览器中下载测试文件。</p>
+<pre class="notranslate"><code class="notranslate">https://labfileapp.oss-cn-hangzhou.aliyuncs.com/%E6%97%A5%E5%BF%97%E6%9C%8D%E5%8A%A1/testlog.csv
+</code></pre>
+<ol start="5">
+<li>
+<p>利用图形化工具使用对象存储OSS</p>
+</li>
+<li>
+<p>在您的本机浏览器中，访问地址<a href="https://help.aliyun.com/document_detail/209974.html" rel="nofollow">https://help.aliyun.com/document_detail/209974.html</a>，根据您电脑的操作系统，下载对应的ossbrowser安装包。</p>
+</li>
+</ol>
+<p>说明：在使用公共资源进行实验时，虚拟桌面环境不支持安装ossbrowser，请您使用本地电脑进行安装ossbrowser。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a44ad5d6335794438837d262b2bc727e111142a04ea93aa590ca8dab0b22d870/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35663431363932646365613634363833393338373538646661396530646632392e706e67"><img src="https://camo.githubusercontent.com/a44ad5d6335794438837d262b2bc727e111142a04ea93aa590ca8dab0b22d870/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35663431363932646365613634363833393338373538646661396530646632392e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_5f41692dcea64683938758dfa9e0df29.png" style="max-width: 100%;"></a></p>
+<ol start="2">
+<li>解压ossbrowser安装包，双击打开oss-browser.exe。</li>
+</ol>
+<p>说明：本实验以Windows系统为例，其他操作系统请参考<a href="https://help.aliyun.com/document_detail/209974.html" rel="nofollow">安装并登录ossbrowser</a>官网文档。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4ebf2b1a4312b2894ee69163953a003f07746c7f5371f383cb2fc18e3e65b7b0/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f616d323278676d627064346f735f38303064656631396134333334303731383163316333366463653636633839612e706e67"><img src="https://camo.githubusercontent.com/4ebf2b1a4312b2894ee69163953a003f07746c7f5371f383cb2fc18e3e65b7b0/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f616d323278676d627064346f735f38303064656631396134333334303731383163316333366463653636633839612e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/am22xgmbpd4os_800def19a433407181c1c36dce66c89a.png" style="max-width: 100%;"></a></p>
+<ol start="3">
+<li>在AK登录对话框中，填写AccessKeyId和AccessKeySecret，其他配置保持默认，单击登入。</li>
+</ol>
+<p>说明：请您在云产品资源列表中查看实验室分配的AccessKeyId和AccessKeySecret。本实验以通过AK登录ossbrowser方式为例，通过授权码方式登录ossbrowser请参考<a href="https://help.aliyun.com/document_detail/209974.html" rel="nofollow">安装并登录ossbrowser</a>官网文档。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/7bee4b9a8ff582609a37df682d297b7b687c5ba421bddc6575e7519ae85e8262/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65616165633865663564633534396563623165393737306437636134336135392e706e67"><img src="https://camo.githubusercontent.com/7bee4b9a8ff582609a37df682d297b7b687c5ba421bddc6575e7519ae85e8262/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65616165633865663564633534396563623165393737306437636134336135392e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_eaaec8ef5dc549ecb1e9770d7ca43a59.png" style="max-width: 100%;"></a></p>
+<ol start="4">
+<li>在OSS Browser中，找到对应OSS的Bucket，单击Bucket名称。</li>
+</ol>
+<p>说明：</p>
+<ul>
+<li>
+<p>你可在云产品资源列表中查看实验室分配的Bucket名称。</p>
+</li>
+<li>
+<p>在使用公共资源进行实验时，实验室分配的子账号不支持创建和删除Bucket权限。若要体验创建和删除Bucket步骤，请使用您个人资源进行实验，并注意可能会产生费用问题。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d679d53bde387d8470f04a792e891db50ca6c52cf69637550b572059b9d8517c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f38616565653438363939663034643030393464306662383231653933343865652e706e67"><img src="https://camo.githubusercontent.com/d679d53bde387d8470f04a792e891db50ca6c52cf69637550b572059b9d8517c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f38616565653438363939663034643030393464306662383231653933343865652e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_8aeee48699f04d0094d0fb821e9348ee.png" style="max-width: 100%;"></a></p>
+<ol start="5">
+<li>根据云产品资源列表中的Object路径，在OSS Browser中，进入到对应的目录下。</li>
+</ol>
+<p>说明：在使用公共资源进行实验时，实验室分配给您的Bucket权限仅限于Bucket中的Object路径下的权限，请您进入对应的Object路径再进行后续下操作。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3db6b6de4270145f5c513ec159653f198f52e14691755a7e7c27fe29ffef25bc/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f31316133333665626130396334613666393761303861323163356632336431312e706e67"><img src="https://camo.githubusercontent.com/3db6b6de4270145f5c513ec159653f198f52e14691755a7e7c27fe29ffef25bc/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f31316133333665626130396334613666393761303861323163356632336431312e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_11a336eba09c4a6f97a08a21c5f23d11.png" style="max-width: 100%;"></a></p>
+<ol start="6">
+<li>创建目录。</li>
+</ol>
+<p>6.1 在Bucket中，单击创建目录。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/49707234dcdcfb8444ad674b132e63abe158bb9fa0c3a7bba518ef374a383e48/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61386638323237613161333634376638613966323232363464656563663661302e706e67"><img src="https://camo.githubusercontent.com/49707234dcdcfb8444ad674b132e63abe158bb9fa0c3a7bba518ef374a383e48/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61386638323237613161333634376638613966323232363464656563663661302e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_a8f8227a1a3647f8a9f22264deecf6a0.png" style="max-width: 100%;"></a></p>
+<p>6.2 在创建目录对话框中，输入目录名，例如test，单击确定。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d86779c03fb565293a594b1ee55d40aa661b704993faa64fdb880e1bd45cb47c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f62663633313932346436313934313036393063643631386361323163346261642e706e67"><img src="https://camo.githubusercontent.com/d86779c03fb565293a594b1ee55d40aa661b704993faa64fdb880e1bd45cb47c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f62663633313932346436313934313036393063643631386361323163346261642e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_bf631924d619410690cd618ca21c4bad.png" style="max-width: 100%;"></a></p>
+<ol start="7">
+<li>上传文件。</li>
+</ol>
+<p>7.1 在Bucket中，单击您刚刚创建的目录名，本实验以test为例。<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2bbdf7fb01b202786d43a0d4b066deb5e1bcedc79213e63cd2b07c293c87460b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f64373962383138663539613034663838613362323439643435623234346462342e706e67"><img src="https://camo.githubusercontent.com/2bbdf7fb01b202786d43a0d4b066deb5e1bcedc79213e63cd2b07c293c87460b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f64373962383138663539613034663838613362323439643435623234346462342e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_d79b818f59a04f88a3b249d45b244db4.png" style="max-width: 100%;"></a></p>
+<p>7.2 在test目录中，单击文件</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/35d5c0e35a01c0f510a5095f979b607162edd411d7501e704246a4c46dd99986/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f37613633316235323231353934343063626534363136336534323663613938372e706e67"><img src="https://camo.githubusercontent.com/35d5c0e35a01c0f510a5095f979b607162edd411d7501e704246a4c46dd99986/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f37613633316235323231353934343063626534363136336534323663613938372e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_7a631b522159440cbe46163e426ca987.png" style="max-width: 100%;"></a></p>
+<p>7.3 在您的电脑中，找到测试数据test.log文件，并选择该文件，然后单击上传文件</p>
+<p>说明：文件路径以本地存储路径为准。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/aacd3c89224127ccd4ee4d5b8c5329cf1b228651833800e3076a11aa29278d88/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32316238613166656464623934386666396634636235316161663135306639342e706e67"><img src="https://camo.githubusercontent.com/aacd3c89224127ccd4ee4d5b8c5329cf1b228651833800e3076a11aa29278d88/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32316238613166656464623934386666396634636235316161663135306639342e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_21b8a1feddb948ff9f4cb51aaf150f94.png" style="max-width: 100%;"></a></p>
+<p>返回如下结果，表示您已成功上传testlog.csv文件文件。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c8c1a174aab3b9db95a4445e0d40747821a6e49e740f794be31583083cd198ed/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32393933303663306337633734353261623766633364386638353434303337382e706e67"><img src="https://camo.githubusercontent.com/c8c1a174aab3b9db95a4445e0d40747821a6e49e740f794be31583083cd198ed/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32393933303663306337633734353261623766633364386638353434303337382e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_299306c0c7c7452ab7fc3d8f85440378.png" style="max-width: 100%;"></a></p>
+<ol start="8">
+<li>查看文件。</li>
+</ol>
+<p>8.1 在test目录中，单击testlog.csv文件名称。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c35b3a3b1c8c3679393a7d0ee7257e74309054cc6813b877513e715cab6d6547/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33336663326231323866626134633933623463313038383965386165303136612e706e67"><img src="https://camo.githubusercontent.com/c35b3a3b1c8c3679393a7d0ee7257e74309054cc6813b877513e715cab6d6547/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33336663326231323866626134633933623463313038383965386165303136612e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_33fc2b128fba4c93b4c10889e8ae016a.png" style="max-width: 100%;"></a></p>
+<p>8.2 在预览对话框中，单击尝试作为文本文件打开。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2203eed62ff04d5137883d221ef6d35b4cdfce83ce6d1b99e73d66806a315208/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35643163623134613461666634643230613937386163346436343261333335352e706e67"><img src="https://camo.githubusercontent.com/2203eed62ff04d5137883d221ef6d35b4cdfce83ce6d1b99e73d66806a315208/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35643163623134613461666634643230613937386163346436343261333335352e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_5d1cb14a4aff4d20a978ac4d642a3355.png" style="max-width: 100%;"></a></p>
+<p>返回如下结果，您可以预览testlog.csv文件的内容。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a65886ee81650a7a9098b6a98ec0f495a57f0a58f38038866768ae06889c6f74/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f34346630626130633338633834353635613832666233313932656562316265352e706e67"><img src="https://camo.githubusercontent.com/a65886ee81650a7a9098b6a98ec0f495a57f0a58f38038866768ae06889c6f74/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f34346630626130633338633834353635613832666233313932656562316265352e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_44f0ba0c38c84565a82fb3192eeb1be5.png" style="max-width: 100%;"></a></p>
+<ol start="9">
+<li>下载文件。</li>
+</ol>
+<p>9.1 在test目录中，单击testlog.csv文件右侧操作列下的下载。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/584a1d2f5d969129409d9b576817488ef8c6d9b35626125a1ac4c8375e2c208c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61306535316266613862616434623731616662333463316539643663386635642e706e67"><img src="https://camo.githubusercontent.com/584a1d2f5d969129409d9b576817488ef8c6d9b35626125a1ac4c8375e2c208c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61306535316266613862616434623731616662333463316539643663386635642e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_a0e51bfa8bad4b71afb34c1e9d6c8f5d.png" style="max-width: 100%;"></a></p>
+<p>9.2 选择您需要下载到的文件夹中，然后单击选择文件夹。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2c947da21ba373963e998d9db9a66d5167e15d866128a79b11952385f9595b2e/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f39333530353964353833373934323732623235633063373065633032313436302e706e67"><img src="https://camo.githubusercontent.com/2c947da21ba373963e998d9db9a66d5167e15d866128a79b11952385f9595b2e/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f39333530353964353833373934323732623235633063373065633032313436302e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_935059d583794272b25c0c70ec021460.png" style="max-width: 100%;"></a></p>
+<p>返回如下结果，表示您已下载完成。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ec80b659114fba5e5ecc0f83ca1aaa0891a23dde67e23f68b3a5f70aad398f03/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35333735303837626661363834323230396433393737343533323239303136362e706e67"><img src="https://camo.githubusercontent.com/ec80b659114fba5e5ecc0f83ca1aaa0891a23dde67e23f68b3a5f70aad398f03/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35333735303837626661363834323230396433393737343533323239303136362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_5375087bfa6842209d39774532290166.png" style="max-width: 100%;"></a></p>
+<ol start="10">
+<li>分享文件。</li>
+</ol>
+<p>10.1 在test目录中，单击testlog.csv文件右侧操作列下的获取地址。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d9bfc5eb10e25e310050e2247efb19a1a8104d2eb9fe8e3141cca6ac533fdd60/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63616361333065336637613234343064393734316339613037393531636535642e706e67"><img src="https://camo.githubusercontent.com/d9bfc5eb10e25e310050e2247efb19a1a8104d2eb9fe8e3141cca6ac533fdd60/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63616361333065336637613234343064393734316339613037393531636535642e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_caca30e3f7a2440d9741c9a07951ce5d.png" style="max-width: 100%;"></a></p>
+<p>10.2 在获取地址对话框中，单击生成。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6338ac07a0245d1b33d63c49474299b80c41a63d0cc893b18bbb0e1dd92b1cde/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f34666466323763346237333634383964396466396465326636346439323461362e706e67"><img src="https://camo.githubusercontent.com/6338ac07a0245d1b33d63c49474299b80c41a63d0cc893b18bbb0e1dd92b1cde/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f34666466323763346237333634383964396466396465326636346439323461362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_4fdf27c4b736489d9df9de2f64d924a6.png" style="max-width: 100%;"></a></p>
+<p>10.3 在获取地址对话框中，您可以通过复制、发送邮件和二维码三种方式分享testlog.csv给第三方预览或下载。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/84b291deab9c81890e9e2a81b94207a2d91f3fc55d061d66cbf33d275eaaf6ae/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65613663326262636264346134623966393365393639303765633966613265362e706e67"><img src="https://camo.githubusercontent.com/84b291deab9c81890e9e2a81b94207a2d91f3fc55d061d66cbf33d275eaaf6ae/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65613663326262636264346134623966393365393639303765633966613265362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_ea6c2bbcbd4a4b9f93e96907ec9fa2e6.png" style="max-width: 100%;"></a></p>
+<ol start="11">
+<li>删除文件。</li>
+</ol>
+<p>11.1 在test目录中，单击testlog.csv文件右侧操作列下的删除。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ea70387a83af620bea2180236a01f32def5be5b660b47279c672e57225070679/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f66313136376466626633343534376332613066336433323665613662636337622e706e67"><img src="https://camo.githubusercontent.com/ea70387a83af620bea2180236a01f32def5be5b660b47279c672e57225070679/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f66313136376466626633343534376332613066336433323665613662636337622e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_f1167dfbf34547c2a0f3d326ea6bcc7b.png" style="max-width: 100%;"></a></p>
+<p>11.2 在删除目录和文件对话框中，单击确定。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4f5214dc75c3a2676804a08bfa44e410b637d577a1e37bd6b53e3ba7c883290b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33373861636461653734323534323031396139616165343236366662366232362e706e67"><img src="https://camo.githubusercontent.com/4f5214dc75c3a2676804a08bfa44e410b637d577a1e37bd6b53e3ba7c883290b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33373861636461653734323534323031396139616165343236366662366232362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_378acdae742542019a9aae4266fb6b26.png" style="max-width: 100%;"></a></p>
+<p>返回如下结果，表示您已成功删除testlog.csv文件。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f5bf2aa013e30076b8554fb2d74a682df7587b00aa8ddd119161def23ac2b8f4/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f30323433366634316435653834343761383931383835656265633330643936652e706e67"><img src="https://camo.githubusercontent.com/f5bf2aa013e30076b8554fb2d74a682df7587b00aa8ddd119161def23ac2b8f4/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f30323433366634316435653834343761383931383835656265633330643936652e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_02436f41d5e8447a891885ebec30d96e.png" style="max-width: 100%;"></a></p>
+<ol start="6">
+<li>
+<p>利用图形化工具使用对象存储OSS</p>
+</li>
+<li>
+<p>在您的本机浏览器中，访问地址<a href="https://help.aliyun.com/document_detail/209974.html" rel="nofollow">https://help.aliyun.com/document_detail/209974.html</a>，根据您电脑的操作系统，下载对应的ossbrowser安装包。</p>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a44ad5d6335794438837d262b2bc727e111142a04ea93aa590ca8dab0b22d870/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35663431363932646365613634363833393338373538646661396530646632392e706e67"><img src="https://camo.githubusercontent.com/a44ad5d6335794438837d262b2bc727e111142a04ea93aa590ca8dab0b22d870/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35663431363932646365613634363833393338373538646661396530646632392e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_5f41692dcea64683938758dfa9e0df29.png" style="max-width: 100%;"></a></p>
+<ol start="2">
+<li>解压ossbrowser安装包，双击打开oss-browser.exe。</li>
+</ol>
+<p>说明：本实验以Windows系统为例，其他操作系统请参考<a href="https://help.aliyun.com/document_detail/209974.html" rel="nofollow">安装并登录ossbrowser</a>官网文档。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4ebf2b1a4312b2894ee69163953a003f07746c7f5371f383cb2fc18e3e65b7b0/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f616d323278676d627064346f735f38303064656631396134333334303731383163316333366463653636633839612e706e67"><img src="https://camo.githubusercontent.com/4ebf2b1a4312b2894ee69163953a003f07746c7f5371f383cb2fc18e3e65b7b0/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f616d323278676d627064346f735f38303064656631396134333334303731383163316333366463653636633839612e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/am22xgmbpd4os_800def19a433407181c1c36dce66c89a.png" style="max-width: 100%;"></a></p>
+<ol start="3">
+<li>在AK登录对话框中，填写AccessKeyId和AccessKeySecret，其他配置保持默认，单击登入。</li>
+</ol>
+<p>说明：如您使用个人资源或者免费试用资源进行实验，并且没有AccessKeyId和AccessKeySecret，请您先按照下方[如何创建子账号及AK]指引，创建对应的AccessKeyId和AccessKeySecret。本实验以通过AK登录ossbrowser方式为例，通过授权码方式登录ossbrowser请参考<a href="https://help.aliyun.com/document_detail/209974.html" rel="nofollow">安装并登录ossbrowser</a>官网文档。。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/7bee4b9a8ff582609a37df682d297b7b687c5ba421bddc6575e7519ae85e8262/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65616165633865663564633534396563623165393737306437636134336135392e706e67"><img src="https://camo.githubusercontent.com/7bee4b9a8ff582609a37df682d297b7b687c5ba421bddc6575e7519ae85e8262/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65616165633865663564633534396563623165393737306437636134336135392e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_eaaec8ef5dc549ecb1e9770d7ca43a59.png" style="max-width: 100%;"></a></p>
+<p>[如何创建子账号及AK] -- 选择个人资源实验时参考</p>
+<ol>
+<li>创建用户。</li>
+</ol>
+<p>打开<a href="https://ram.console.aliyun.com/overview" rel="nofollow">RAM访问控制</a>，在左侧导航栏中选择身份管理&gt;用户，单击创建用户，勾选OpenAPI调用访问</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a509b03730d7a22634b51dce4d534f92bc0f8f1f96499beb2db7bd143cc3fed8/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f6f323379776f64737334706a695f61653266626235353038346534356535623637343430363963663464396265362e706e67"><img src="https://camo.githubusercontent.com/a509b03730d7a22634b51dce4d534f92bc0f8f1f96499beb2db7bd143cc3fed8/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f6f323379776f64737334706a695f61653266626235353038346534356535623637343430363963663464396265362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/o23ywodss4pji_ae2fbb55084e45e5b6744069cf4d9be6.png" style="max-width: 100%;"></a></p>
+<ol start="2">
+<li>创建完成后，可以看到用户的AccessKey ID和AccessKey Secret，请将AccessKey ID和AccessKey Secret记录下来，后续将无法查看。</li>
+</ol>
+<p>注意：如后期不使用此AK，请即时在访问控制中停用，避免造成资源损失。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3194d61951fd70594463acb72781345e9c6261202b92b1e1e64bb3c9a2965836/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f6f323379776f64737334706a695f65373138613237383737303134643939396136373039366631356131353537652e706e67"><img src="https://camo.githubusercontent.com/3194d61951fd70594463acb72781345e9c6261202b92b1e1e64bb3c9a2965836/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f6f323379776f64737334706a695f65373138613237383737303134643939396136373039366631356131353537652e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/o23ywodss4pji_e718a27877014d999a67096f15a1557e.png" style="max-width: 100%;"></a></p>
+<ol start="3">
+<li>为子账号添加授权。在用户页面，选择刚刚创建的子账号，单击添加权限。在新增权限面板，资源范围选择账号级别，权限策略选择AliyunOSSFullAccess，单击确认新增授权。</li>
+</ol>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/9e58ad23f9d04308c5f7d67d148e0cb9d1e7173b73613228dd73f85dd9c37f87/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61323564343562306334633434646164383236376563656635656632656666332e706e67"><img src="https://camo.githubusercontent.com/9e58ad23f9d04308c5f7d67d148e0cb9d1e7173b73613228dd73f85dd9c37f87/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61323564343562306334633434646164383236376563656635656632656666332e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_a25d45b0c4c44dad8267ecef5ef2eff3.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/95963a186f36ba36a6d080a2918dd2d5f5e8d44d8733ed492c6d4d083be9a57b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f30623336613566663137393434313433393736363337373130396539666639382e706e67"><img src="https://camo.githubusercontent.com/95963a186f36ba36a6d080a2918dd2d5f5e8d44d8733ed492c6d4d083be9a57b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f30623336613566663137393434313433393736363337373130396539666639382e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_0b36a5ff179441439766377109e9ff98.png" style="max-width: 100%;"></a></p>
+<ol start="4">
+<li>找到对应OSS的Bucket，单击Bucket名称。</li>
+</ol>
+<p>说明：若要体验创建和删除Bucket步骤，请使用您个人资源进行实验，参考创建阿里云账号的AccessKeyId登录ossbrowser，并注意可能会产生费用问题。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d679d53bde387d8470f04a792e891db50ca6c52cf69637550b572059b9d8517c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f38616565653438363939663034643030393464306662383231653933343865652e706e67"><img src="https://camo.githubusercontent.com/d679d53bde387d8470f04a792e891db50ca6c52cf69637550b572059b9d8517c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f38616565653438363939663034643030393464306662383231653933343865652e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_8aeee48699f04d0094d0fb821e9348ee.png" style="max-width: 100%;"></a></p>
+<ol start="5">
+<li>创建目录。</li>
+</ol>
+<p>5.1 在Bucket中，单击创建目录。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/49707234dcdcfb8444ad674b132e63abe158bb9fa0c3a7bba518ef374a383e48/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61386638323237613161333634376638613966323232363464656563663661302e706e67"><img src="https://camo.githubusercontent.com/49707234dcdcfb8444ad674b132e63abe158bb9fa0c3a7bba518ef374a383e48/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61386638323237613161333634376638613966323232363464656563663661302e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_a8f8227a1a3647f8a9f22264deecf6a0.png" style="max-width: 100%;"></a></p>
+<p>5.2 在创建目录对话框中，输入目录名，例如test，单击确定。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d86779c03fb565293a594b1ee55d40aa661b704993faa64fdb880e1bd45cb47c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f62663633313932346436313934313036393063643631386361323163346261642e706e67"><img src="https://camo.githubusercontent.com/d86779c03fb565293a594b1ee55d40aa661b704993faa64fdb880e1bd45cb47c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f62663633313932346436313934313036393063643631386361323163346261642e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_bf631924d619410690cd618ca21c4bad.png" style="max-width: 100%;"></a></p>
+<ol start="6">
+<li>上传文件。</li>
+</ol>
+<p>6.1 在Bucket中，单击您刚刚创建的目录名，本实验以test为例。<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2bbdf7fb01b202786d43a0d4b066deb5e1bcedc79213e63cd2b07c293c87460b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f64373962383138663539613034663838613362323439643435623234346462342e706e67"><img src="https://camo.githubusercontent.com/2bbdf7fb01b202786d43a0d4b066deb5e1bcedc79213e63cd2b07c293c87460b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f64373962383138663539613034663838613362323439643435623234346462342e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_d79b818f59a04f88a3b249d45b244db4.png" style="max-width: 100%;"></a></p>
+<p>6.2 在test目录中，单击文件</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/35d5c0e35a01c0f510a5095f979b607162edd411d7501e704246a4c46dd99986/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f37613633316235323231353934343063626534363136336534323663613938372e706e67"><img src="https://camo.githubusercontent.com/35d5c0e35a01c0f510a5095f979b607162edd411d7501e704246a4c46dd99986/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f37613633316235323231353934343063626534363136336534323663613938372e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_7a631b522159440cbe46163e426ca987.png" style="max-width: 100%;"></a></p>
+<p>6.3 在您的电脑中，找到测试数据test.log文件，并选择该文件，然后单击上传文件</p>
+<p>说明：文件路径以本地存储路径为准。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/aacd3c89224127ccd4ee4d5b8c5329cf1b228651833800e3076a11aa29278d88/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32316238613166656464623934386666396634636235316161663135306639342e706e67"><img src="https://camo.githubusercontent.com/aacd3c89224127ccd4ee4d5b8c5329cf1b228651833800e3076a11aa29278d88/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32316238613166656464623934386666396634636235316161663135306639342e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_21b8a1feddb948ff9f4cb51aaf150f94.png" style="max-width: 100%;"></a></p>
+<p>返回如下结果，表示您已成功上传testlog.csv文件文件。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c8c1a174aab3b9db95a4445e0d40747821a6e49e740f794be31583083cd198ed/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32393933303663306337633734353261623766633364386638353434303337382e706e67"><img src="https://camo.githubusercontent.com/c8c1a174aab3b9db95a4445e0d40747821a6e49e740f794be31583083cd198ed/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32393933303663306337633734353261623766633364386638353434303337382e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_299306c0c7c7452ab7fc3d8f85440378.png" style="max-width: 100%;"></a></p>
+<ol start="7">
+<li>查看文件。</li>
+</ol>
+<p>7.1 在test目录中，单击testlog.csv文件名称。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c35b3a3b1c8c3679393a7d0ee7257e74309054cc6813b877513e715cab6d6547/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33336663326231323866626134633933623463313038383965386165303136612e706e67"><img src="https://camo.githubusercontent.com/c35b3a3b1c8c3679393a7d0ee7257e74309054cc6813b877513e715cab6d6547/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33336663326231323866626134633933623463313038383965386165303136612e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_33fc2b128fba4c93b4c10889e8ae016a.png" style="max-width: 100%;"></a></p>
+<p>7.2 在预览对话框中，单击尝试作为文本文件打开。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2203eed62ff04d5137883d221ef6d35b4cdfce83ce6d1b99e73d66806a315208/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35643163623134613461666634643230613937386163346436343261333335352e706e67"><img src="https://camo.githubusercontent.com/2203eed62ff04d5137883d221ef6d35b4cdfce83ce6d1b99e73d66806a315208/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35643163623134613461666634643230613937386163346436343261333335352e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_5d1cb14a4aff4d20a978ac4d642a3355.png" style="max-width: 100%;"></a></p>
+<p>返回如下结果，您可以预览testlog.csv文件的内容。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a65886ee81650a7a9098b6a98ec0f495a57f0a58f38038866768ae06889c6f74/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f34346630626130633338633834353635613832666233313932656562316265352e706e67"><img src="https://camo.githubusercontent.com/a65886ee81650a7a9098b6a98ec0f495a57f0a58f38038866768ae06889c6f74/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f34346630626130633338633834353635613832666233313932656562316265352e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_44f0ba0c38c84565a82fb3192eeb1be5.png" style="max-width: 100%;"></a></p>
+<ol start="8">
+<li>下载文件。</li>
+</ol>
+<p>8.1 在test目录中，单击testlog.csv文件右侧操作列下的下载。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/584a1d2f5d969129409d9b576817488ef8c6d9b35626125a1ac4c8375e2c208c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61306535316266613862616434623731616662333463316539643663386635642e706e67"><img src="https://camo.githubusercontent.com/584a1d2f5d969129409d9b576817488ef8c6d9b35626125a1ac4c8375e2c208c/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f61306535316266613862616434623731616662333463316539643663386635642e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_a0e51bfa8bad4b71afb34c1e9d6c8f5d.png" style="max-width: 100%;"></a></p>
+<p>8.2 选择您需要下载到的文件夹中，然后单击选择文件夹。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2c947da21ba373963e998d9db9a66d5167e15d866128a79b11952385f9595b2e/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f39333530353964353833373934323732623235633063373065633032313436302e706e67"><img src="https://camo.githubusercontent.com/2c947da21ba373963e998d9db9a66d5167e15d866128a79b11952385f9595b2e/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f39333530353964353833373934323732623235633063373065633032313436302e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_935059d583794272b25c0c70ec021460.png" style="max-width: 100%;"></a></p>
+<p>返回如下结果，表示您已下载完成。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ec80b659114fba5e5ecc0f83ca1aaa0891a23dde67e23f68b3a5f70aad398f03/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35333735303837626661363834323230396433393737343533323239303136362e706e67"><img src="https://camo.githubusercontent.com/ec80b659114fba5e5ecc0f83ca1aaa0891a23dde67e23f68b3a5f70aad398f03/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35333735303837626661363834323230396433393737343533323239303136362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_5375087bfa6842209d39774532290166.png" style="max-width: 100%;"></a></p>
+<ol start="9">
+<li>分享文件。</li>
+</ol>
+<p>9.1 在test目录中，单击testlog.csv文件右侧操作列下的获取地址。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d9bfc5eb10e25e310050e2247efb19a1a8104d2eb9fe8e3141cca6ac533fdd60/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63616361333065336637613234343064393734316339613037393531636535642e706e67"><img src="https://camo.githubusercontent.com/d9bfc5eb10e25e310050e2247efb19a1a8104d2eb9fe8e3141cca6ac533fdd60/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63616361333065336637613234343064393734316339613037393531636535642e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_caca30e3f7a2440d9741c9a07951ce5d.png" style="max-width: 100%;"></a></p>
+<p>9.2 在获取地址对话框中，单击生成。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6338ac07a0245d1b33d63c49474299b80c41a63d0cc893b18bbb0e1dd92b1cde/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f34666466323763346237333634383964396466396465326636346439323461362e706e67"><img src="https://camo.githubusercontent.com/6338ac07a0245d1b33d63c49474299b80c41a63d0cc893b18bbb0e1dd92b1cde/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f34666466323763346237333634383964396466396465326636346439323461362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_4fdf27c4b736489d9df9de2f64d924a6.png" style="max-width: 100%;"></a></p>
+<p>9.3 在获取地址对话框中，您可以通过复制、发送邮件和二维码三种方式分享testlog.csv给第三方预览或下载。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/84b291deab9c81890e9e2a81b94207a2d91f3fc55d061d66cbf33d275eaaf6ae/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65613663326262636264346134623966393365393639303765633966613265362e706e67"><img src="https://camo.githubusercontent.com/84b291deab9c81890e9e2a81b94207a2d91f3fc55d061d66cbf33d275eaaf6ae/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65613663326262636264346134623966393365393639303765633966613265362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_ea6c2bbcbd4a4b9f93e96907ec9fa2e6.png" style="max-width: 100%;"></a></p>
+<ol start="10">
+<li>删除文件。</li>
+</ol>
+<p>10.1 在test目录中，单击testlog.csv文件右侧操作列下的删除。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ea70387a83af620bea2180236a01f32def5be5b660b47279c672e57225070679/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f66313136376466626633343534376332613066336433323665613662636337622e706e67"><img src="https://camo.githubusercontent.com/ea70387a83af620bea2180236a01f32def5be5b660b47279c672e57225070679/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f66313136376466626633343534376332613066336433323665613662636337622e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_f1167dfbf34547c2a0f3d326ea6bcc7b.png" style="max-width: 100%;"></a></p>
+<p>10.2 在删除目录和文件对话框中，单击确定。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4f5214dc75c3a2676804a08bfa44e410b637d577a1e37bd6b53e3ba7c883290b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33373861636461653734323534323031396139616165343236366662366232362e706e67"><img src="https://camo.githubusercontent.com/4f5214dc75c3a2676804a08bfa44e410b637d577a1e37bd6b53e3ba7c883290b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33373861636461653734323534323031396139616165343236366662366232362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_378acdae742542019a9aae4266fb6b26.png" style="max-width: 100%;"></a></p>
+<p>返回如下结果，表示您已成功删除testlog.csv文件。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f5bf2aa013e30076b8554fb2d74a682df7587b00aa8ddd119161def23ac2b8f4/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f30323433366634316435653834343761383931383835656265633330643936652e706e67"><img src="https://camo.githubusercontent.com/f5bf2aa013e30076b8554fb2d74a682df7587b00aa8ddd119161def23ac2b8f4/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f30323433366634316435653834343761383931383835656265633330643936652e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_02436f41d5e8447a891885ebec30d96e.png" style="max-width: 100%;"></a></p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.myla.rr.nu">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
