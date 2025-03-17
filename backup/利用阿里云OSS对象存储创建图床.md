@@ -52,11 +52,11 @@
 * 读写权限：一定要选择“公共读”，否则平台无法通过公网访问 Bucket 中的内容。
 * 其他选择默认，无需修改。
 
-![image.png](https://ucc.alicdn.com/pic/developer-ecology/ouo2h6jyesw2w_1eebf46786fb490b8681a4b009932e4f.png?x-oss-process=image/resize,w_1400/format,webp)  
+![image.png](https://pic.myla.eu.org/file/1742180158815_image.png)
 
-点击下面的确认按钮，然后点弹出框的我知道了，确认创建。
+![image.png](https://pic.myla.eu.org/file/1742180259045_image.png)
 
-![image.png](https://ucc.alicdn.com/pic/developer-ecology/ouo2h6jyesw2w_199e40750a2b48f9b2b43cb8cad2363b.png?x-oss-process=image/resize,w_1400/format,webp)  
+![image.png](https://pic.myla.eu.org/file/1742180343041_image.png)
 
 创建成功，点击进入Bucket
 
