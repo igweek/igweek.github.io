@@ -18,3 +18,15 @@ SQLi-Labs是一个专业的SQL注入练习平台，适用于GET和POST场景。G
 ![图片.png](https://pic.myla.eu.org/file/1741179454080_图片.png)
 5. 现在浏览器打开 "http://127.0.0.1/sqli-labs/"向下翻，就可以看到有很多不同的注入点了，分为基本SQL注入、高级SQL注入、SQL堆叠注入、挑战四个部份，总共约75个SQL注入漏洞。
 ![图片.png](https://pic.myla.eu.org/file/1741179502770_图片.png)
+
+## 注意事项
+1. 如果80端口被占用如何释放
+```shell
+netsh http show servicestate
+```
+2. 如果Mysql无法启动
+右键开始--运行--services.msc
+停止Mysql
+运行--cmd--sc delete mysql
+3. php版本
+php版本选择php5版本，否则会报错
