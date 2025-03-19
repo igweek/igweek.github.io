@@ -21,9 +21,10 @@ SQLi-Labs是一个专业的SQL注入练习平台，适用于GET和POST场景。G
 
 ## 注意事项
 1. **如果80端口被占用如何释放**
-```shell
+```bash
 netsh http show servicestate
 ```
+任务管理器--找出PID--结束进程
 2. **如果Mysql无法启动**
 右键开始--运行--services.msc
 停止Mysql
