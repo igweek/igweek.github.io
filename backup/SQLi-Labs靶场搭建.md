@@ -25,9 +25,9 @@ SQLi-Labs是一个专业的SQL注入练习平台，适用于GET和POST场景。G
 netsh http show servicestate
 ```
 任务管理器--找出PID--结束进程
-2. **如果Mysql无法启动**
+1. **如果Mysql无法启动**
 右键开始--运行--services.msc
 停止Mysql
 运行--cmd--sc delete mysql
-3. **php版本**
+1. **php版本**
 php版本选择php5版本，否则会报错
