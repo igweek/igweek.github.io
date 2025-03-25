@@ -203,67 +203,6 @@ chmod +x ./cloudreve
 
 7. 在终端中按下Ctrl+C键，停止cloudreve运行。
 
-8. 安装Cloudreve
-
-9. 在实验室页面左侧，单击![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_2601a00fbe7b4f779ca73bb07914040a.png) 图标，切换至Web Terminal。
-    
-
-输入ECS登录的用户名和密码进行登录。
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_c0b76cd8a69c4f1cbe6ed53b40ee21aa.png)
-
-2. 执行如下命令，下载cloudreve安装包。
-    
-
-```
-wget https://labfileapp.oss-cn-hangzhou.aliyuncs.com/cloudreve_3.3.1_linux_amd64.tar.gz
-```
-
-3. 下载完毕后，执行如下命令，解压cloudreve安装包。
-    
-
-```
-tar -zxvf cloudreve_3.3.1_linux_amd64.tar.gz
-```
-
-4. 执行如下命令，给cloudreve授予权限。
-    
-
-```
-chmod +x ./cloudreve
-```
-
-5. 执行如下命令，运行cloudreve。
-    
-
-```
-./cloudreve
-```
-
-返回结果如下所示，您可以看到管理员账号和密码。
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_1541fe12d3b54e71905183f7a3859536.png)
-
-6. 在您的本机浏览器中，打开新页签，访问http://<ECS公网地址>:5212，依次输入管理员账号和密码，单击登录。
-    
-
-说明：
-
-- 前往[云服务器ECS控制台](https://ecs.console.aliyun.com/server/region/cn-hangzhou)，在实例页面，在页面顶部切换到资源所在地域，找到您的云服务器ECS，并查看ECS公网地址。
-    
-- 在进行访问时，请您去掉链接中的<>。
-    
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_1748b9d8cee74c33803209e050bd660d.png)
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_38f19338d4bd41adaa150f56f0582113.png)
-
-登录成功界面如下。
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_e81adf5373cc4589a5338ca3d022bd6b.png)
-
-7. 在终端中按下Ctrl+C键，停止cloudreve运行。
-
 8. 安装ossfs
 
 ossfs能让您在Linux系统中，将对象存储OSS的存储空间（Bucket）挂载到本地文件系统中，您能够像操作本地文件一样操作OSS的对象（Object），实现数据的共享。
@@ -330,58 +269,6 @@ echo BucketName:yourAccessKeyId:yourAccessKeySecret > /etc/passwd-ossfs
 chmod 640 /etc/passwd-ossfs
 ```
 
-7. 安装ossfs
-
-ossfs能让您在Linux系统中，将对象存储OSS的存储空间（Bucket）挂载到本地文件系统中，您能够像操作本地文件一样操作OSS的对象（Object），实现数据的共享。
-
-1. 执行如下命令，下载ossfs安装包。
-    
-
-```
-wget https://gosspublic.alicdn.com/ossfs/ossfs_1.80.7_centos7.0_x86_64.rpm
-```
-
-2. 执行如下命令，安装ossfs
-    
-
-```
-yum install -y ./ossfs_1.80.7_centos7.0_x86_64.rpm
-```
-
-返回结果如下所示，表示ossfs安装成功。
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_dc0bc768eab74d4ea49d050bcccdcad7.png)
-
-3. 执行如下命令，配置账号访问信息，将Bucket名称以及具有此Bucket访问权限的AccessKey ID和AccessKey Secret信息存放在/etc/passwd-ossfs文件中。
-
-说明：您需要将命令中的BucketName、yourAccessKeyId和yourAccessKeySecret替换成您创建的Bucket名称、主账号的AccessKey ID和主账号的AccessKey Secret。
-
-```
-echo BucketName:yourAccessKeyId:yourAccessKeySecret > /etc/passwd-ossfs
-```
-
-参数说明：
-
-- BucketName：您在对象存储OSS控制台中创建的bucket名称，可在对象存储OSS控制台>Bucket列表中查看。
-    
-- yourAccessKeyId：具有此Bucket访问权限的AccessKey ID，可在[安全信息管理](https://usercenter.console.aliyun.com/manage/ak#/manage/ak)页面查看您主账号的AccessKey ID和AccessKey Secret。
-    
-- yourAccessKeySecret：具有此Bucket访问权限的AccessKey Secret，可在[安全信息管理](https://usercenter.console.aliyun.com/manage/ak#/manage/ak)页面查看您主账号的AccessKey ID和AccessKey Secret。
-    
-
-图a：OSSbucket名称
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_e49f24ac85ca495d993a6f38f28546b8.png)
-
-图b：AccessKey ID信息
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_53a72444b1054b6aa484c27d4b4df52b.png)
-
-4. 执行如下命令，给passwd-ossfs文件授予权限。
-
-```
-chmod 640 /etc/passwd-ossfs
-```
 
 8. 挂载OSS
 
@@ -461,83 +348,7 @@ chmod a+x /etc/init.d/ossfs
 chkconfig ossfs on
 ```
 
-9. 挂载OSS
 
-10. 在终端中，执行如下命令，创建一个名为oss文件夹。
-    
-
-```
-mkdir oss
-```
-
-2. 执行如下命令，将Bucket挂载到指定目录oss，您需要将命令中的BucketName、mountfolder和Endpoint替换您创建的bucket名称、创建的oss文件夹和OSS的内网Endpoint。
-    
-
-```
-ossfs BucketName mountfolder -o url=Endpoint
-```
-
-例如：ossfs adc-oss-labsxxxx oss -o url=oss-cn-hangzhou-internal.aliyuncs.com
-
-参数说明：
-
-- BucketName：您在对象存储OSS控制台中创建的bucket名称，可在对象存储OSS控制台>Bucket列表中查看。
-    
-- mountfolder：上一步创建的挂载文件夹（本实验为oss）。
-    
-- Endpoint：OSS的内网Endpoint，详情请参考[访问域名和数据中心](https://help.aliyun.com/document_detail/31837.html)。如果您的OSS地域为杭州，其中内网Endpoint为oss-cn-hangzhou-internal.aliyuncs.com。
-    
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_6348901bc3f44738a7dae10efe5770da.png)
-
-3. 查看是否挂载成功。
-    
-
-```
-df -h
-```
-
-返回结果如下，表示挂载成功。
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_c30e58380cc5453ead7e1641cec01395.png)
-
-4. 执行如下命令，在/etc/init.d/目录下建立文件ossfs，设置开机自动启动脚本进行OSS挂载。
-    
-
-```
-vim /etc/init.d/ossfs
-```
-
-进入Vim编辑器后，按下i键进入编辑模式，添加以下内容，添加完成后按下Esc键退出编辑模式，最后输入:wq后按下Enter键，保存并退出Vim编辑器。
-
-注意：您需要将脚本中的BucketName、mountfolder和Endpoint替换成您创建的bucket名称、创建的oss文件夹和OSS的内网Endpoint。
-
-```
-#! /bin/bash
-#
-# ossfs      Automount Aliyun OSS Bucket in the specified direcotry.
-#
-# chkconfig: 2345 90 10
-# description: Activates/Deactivates ossfs configured to start at boot time.
-
-ossfs BucketName mountfolder -o url=Endpoint -oallow_other
-```
-
-添加后的文件内容如下所示。
-
-![](https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_df11acf27b2249dfb355b301f222455a.png)
-
-5. 执行如下命令，为新建立的ossfs脚本赋予可执行权限。
-
-```
-chmod a+x /etc/init.d/ossfs
-```
-
-6. 执行如下命令，把ossfs启动脚本作为其他服务，开机自动启动。
-
-```
-chkconfig ossfs on
-```
 
 10. 配置个人网盘
 

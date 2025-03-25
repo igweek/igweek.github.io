@@ -329,57 +329,6 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>在终端中按下Ctrl+C键，停止cloudreve运行。</p>
 </li>
 <li>
-<p>安装Cloudreve</p>
-</li>
-<li>
-<p>在实验室页面左侧，单击<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/dad5ddd4de8a42768cb5e259fd3a6b5ef14da3d81bd806dd365bb2a760e0adde/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32363031613030666265376234663737396361373362623037393134303430612e706e67"><img src="https://camo.githubusercontent.com/dad5ddd4de8a42768cb5e259fd3a6b5ef14da3d81bd806dd365bb2a760e0adde/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f32363031613030666265376234663737396361373362623037393134303430612e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_2601a00fbe7b4f779ca73bb07914040a.png" style="max-width: 100%;"></a> 图标，切换至Web Terminal。</p>
-</li>
-</ol>
-<p>输入ECS登录的用户名和密码进行登录。</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/47d8b6a3e97f964ab805169a8481bb158f8fd1e303a5eb91381ea5a83e99c4e0/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63306237366364386136396334663163626536656435336234306565323161612e706e67"><img src="https://camo.githubusercontent.com/47d8b6a3e97f964ab805169a8481bb158f8fd1e303a5eb91381ea5a83e99c4e0/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63306237366364386136396334663163626536656435336234306565323161612e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_c0b76cd8a69c4f1cbe6ed53b40ee21aa.png" style="max-width: 100%;"></a></p>
-<ol start="2">
-<li>执行如下命令，下载cloudreve安装包。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">wget https://labfileapp.oss-cn-hangzhou.aliyuncs.com/cloudreve_3.3.1_linux_amd64.tar.gz
-</code></pre>
-<ol start="3">
-<li>下载完毕后，执行如下命令，解压cloudreve安装包。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">tar -zxvf cloudreve_3.3.1_linux_amd64.tar.gz
-</code></pre>
-<ol start="4">
-<li>执行如下命令，给cloudreve授予权限。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">chmod +x ./cloudreve
-</code></pre>
-<ol start="5">
-<li>执行如下命令，运行cloudreve。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">./cloudreve
-</code></pre>
-<p>返回结果如下所示，您可以看到管理员账号和密码。</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1c093eefd00616ac060a6ede1c19aafd91186f1c2e9e7ecffced9283dcabe19a/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f31353431666531326433623534653731393035313833663761333835393533362e706e67"><img src="https://camo.githubusercontent.com/1c093eefd00616ac060a6ede1c19aafd91186f1c2e9e7ecffced9283dcabe19a/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f31353431666531326433623534653731393035313833663761333835393533362e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_1541fe12d3b54e71905183f7a3859536.png" style="max-width: 100%;"></a></p>
-<ol start="6">
-<li>在您的本机浏览器中，打开新页签，访问http://&lt;ECS公网地址&gt;:5212，依次输入管理员账号和密码，单击登录。</li>
-</ol>
-<p>说明：</p>
-<ul>
-<li>
-<p>前往<a href="https://ecs.console.aliyun.com/server/region/cn-hangzhou" rel="nofollow">云服务器ECS控制台</a>，在实例页面，在页面顶部切换到资源所在地域，找到您的云服务器ECS，并查看ECS公网地址。</p>
-</li>
-<li>
-<p>在进行访问时，请您去掉链接中的&lt;&gt;。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/095790462a0dbf5ec2567da7b774d44e392ca60b6452d7bb6d033794425f6bce/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f31373438623964386365653734633333383033323039653035306264363630642e706e67"><img src="https://camo.githubusercontent.com/095790462a0dbf5ec2567da7b774d44e392ca60b6452d7bb6d033794425f6bce/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f31373438623964386365653734633333383033323039653035306264363630642e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_1748b9d8cee74c33803209e050bd660d.png" style="max-width: 100%;"></a></p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0b831d9ab0493eec5ef1ed9c7fa5ff78461d39314b2bc366ca3d540ce7596c0f/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33386631393333386434626434316164616131353066353666303538323131332e706e67"><img src="https://camo.githubusercontent.com/0b831d9ab0493eec5ef1ed9c7fa5ff78461d39314b2bc366ca3d540ce7596c0f/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f33386631393333386434626434316164616131353066353666303538323131332e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_38f19338d4bd41adaa150f56f0582113.png" style="max-width: 100%;"></a></p>
-<p>登录成功界面如下。</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/8fecc90bb8b2331777d20ef04140405b32b09a438e9fcc666e7751a693210ac7/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65383161646635333733636334353839613533333863613364303232626436622e706e67"><img src="https://camo.githubusercontent.com/8fecc90bb8b2331777d20ef04140405b32b09a438e9fcc666e7751a693210ac7/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65383161646635333733636334353839613533333863613364303232626436622e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_e81adf5373cc4589a5338ca3d022bd6b.png" style="max-width: 100%;"></a></p>
-<ol start="7">
-<li>
-<p>在终端中按下Ctrl+C键，停止cloudreve运行。</p>
-</li>
-<li>
 <p>安装ossfs</p>
 </li>
 </ol>
@@ -429,49 +378,6 @@ yum clean all &amp;&amp; yum makecache
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c15ac14fbb6d88f8a842f0496c3cc1810212984caa5dcaa8c6b9190987c62829/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f62363834613338643331336134356132623938626361366436616436313939302e706e67"><img src="https://camo.githubusercontent.com/c15ac14fbb6d88f8a842f0496c3cc1810212984caa5dcaa8c6b9190987c62829/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f62363834613338643331336134356132623938626361366436616436313939302e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/b684a38d313a45a2b98bca6d6ad61990.png" style="max-width: 100%;"></a></p>
 <p>图b：AccessKey ID信息</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/780af41ef90b716ff6fa57b29c732092e59efe73f5925ebb4dd95db4be71a0bc/68747470733a2f2f696d672e616c6963646e2e636f6d2f696d6765787472612f69342f4f31434e303168595149394d31716e4d745741636c4e565f2121363030303030303030353534302d322d7470732d3439372d3238332e706e67"><img src="https://camo.githubusercontent.com/780af41ef90b716ff6fa57b29c732092e59efe73f5925ebb4dd95db4be71a0bc/68747470733a2f2f696d672e616c6963646e2e636f6d2f696d6765787472612f69342f4f31434e303168595149394d31716e4d745741636c4e565f2121363030303030303030353534302d322d7470732d3439372d3238332e706e67" alt="" data-canonical-src="https://img.alicdn.com/imgextra/i4/O1CN01hYQI9M1qnMtWAclNV_!!6000000005540-2-tps-497-283.png" style="max-width: 100%;"></a></p>
-<ol start="4">
-<li>执行如下命令，给passwd-ossfs文件授予权限。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">chmod 640 /etc/passwd-ossfs
-</code></pre>
-<ol start="7">
-<li>安装ossfs</li>
-</ol>
-<p>ossfs能让您在Linux系统中，将对象存储OSS的存储空间（Bucket）挂载到本地文件系统中，您能够像操作本地文件一样操作OSS的对象（Object），实现数据的共享。</p>
-<ol>
-<li>执行如下命令，下载ossfs安装包。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">wget https://gosspublic.alicdn.com/ossfs/ossfs_1.80.7_centos7.0_x86_64.rpm
-</code></pre>
-<ol start="2">
-<li>执行如下命令，安装ossfs</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">yum install -y ./ossfs_1.80.7_centos7.0_x86_64.rpm
-</code></pre>
-<p>返回结果如下所示，表示ossfs安装成功。</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/013448251af42df0474a12ea365d69aeb1187a879a9abeb59ed00dba08594ae3/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f64633062633736386561623734643465613439643035306263636364636164372e706e67"><img src="https://camo.githubusercontent.com/013448251af42df0474a12ea365d69aeb1187a879a9abeb59ed00dba08594ae3/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f64633062633736386561623734643465613439643035306263636364636164372e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_dc0bc768eab74d4ea49d050bcccdcad7.png" style="max-width: 100%;"></a></p>
-<ol start="3">
-<li>执行如下命令，配置账号访问信息，将Bucket名称以及具有此Bucket访问权限的AccessKey ID和AccessKey Secret信息存放在/etc/passwd-ossfs文件中。</li>
-</ol>
-<p>说明：您需要将命令中的BucketName、yourAccessKeyId和yourAccessKeySecret替换成您创建的Bucket名称、主账号的AccessKey ID和主账号的AccessKey Secret。</p>
-<pre class="notranslate"><code class="notranslate">echo BucketName:yourAccessKeyId:yourAccessKeySecret &gt; /etc/passwd-ossfs
-</code></pre>
-<p>参数说明：</p>
-<ul>
-<li>
-<p>BucketName：您在对象存储OSS控制台中创建的bucket名称，可在对象存储OSS控制台&gt;Bucket列表中查看。</p>
-</li>
-<li>
-<p>yourAccessKeyId：具有此Bucket访问权限的AccessKey ID，可在<a href="https://usercenter.console.aliyun.com/manage/ak#/manage/ak" rel="nofollow">安全信息管理</a>页面查看您主账号的AccessKey ID和AccessKey Secret。</p>
-</li>
-<li>
-<p>yourAccessKeySecret：具有此Bucket访问权限的AccessKey Secret，可在<a href="https://usercenter.console.aliyun.com/manage/ak#/manage/ak" rel="nofollow">安全信息管理</a>页面查看您主账号的AccessKey ID和AccessKey Secret。</p>
-</li>
-</ul>
-<p>图a：OSSbucket名称</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0725c9b1c7c74729e98a5aa3fe78a303185b63d19dce52ae0a364eca9e609438/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65343966323461633835636134393564393933613666333866323835343662382e706e67"><img src="https://camo.githubusercontent.com/0725c9b1c7c74729e98a5aa3fe78a303185b63d19dce52ae0a364eca9e609438/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f65343966323461633835636134393564393933613666333866323835343662382e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_e49f24ac85ca495d993a6f38f28546b8.png" style="max-width: 100%;"></a></p>
-<p>图b：AccessKey ID信息</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0db314ac8aeb6d26e7156744d7d96917028f51a17d0ea61b496bcc464e994474/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35336137323434346231303534623661613438346332376434623464663532622e706e67"><img src="https://camo.githubusercontent.com/0db314ac8aeb6d26e7156744d7d96917028f51a17d0ea61b496bcc464e994474/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f35336137323434346231303534623661613438346332376434623464663532622e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_53a72444b1054b6aa484c27d4b4df52b.png" style="max-width: 100%;"></a></p>
 <ol start="4">
 <li>执行如下命令，给passwd-ossfs文件授予权限。</li>
 </ol>
@@ -531,70 +437,6 @@ ossfs BucketName mountfolder -o url=Endpoint -oallow_other
 </code></pre>
 <p>添加后的文件内容如下所示。</p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b56ba225713db238caf847a34a68ead33f32494a4848d477d8cf30506ffe4e76/68747470733a2f2f696d672e616c6963646e2e636f6d2f696d6765787472612f69342f4f31434e303152706a754156314d32466733777039306c5f2121363030303030303030313337362d322d7470732d3735382d3230322e706e67"><img src="https://camo.githubusercontent.com/b56ba225713db238caf847a34a68ead33f32494a4848d477d8cf30506ffe4e76/68747470733a2f2f696d672e616c6963646e2e636f6d2f696d6765787472612f69342f4f31434e303152706a754156314d32466733777039306c5f2121363030303030303030313337362d322d7470732d3735382d3230322e706e67" alt="" data-canonical-src="https://img.alicdn.com/imgextra/i4/O1CN01RpjuAV1M2Fg3wp90l_!!6000000001376-2-tps-758-202.png" style="max-width: 100%;"></a></p>
-<ol start="5">
-<li>执行如下命令，为新建立的ossfs脚本赋予可执行权限。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">chmod a+x /etc/init.d/ossfs
-</code></pre>
-<ol start="6">
-<li>执行如下命令，把ossfs启动脚本作为其他服务，开机自动启动。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">chkconfig ossfs on
-</code></pre>
-<ol start="9">
-<li>
-<p>挂载OSS</p>
-</li>
-<li>
-<p>在终端中，执行如下命令，创建一个名为oss文件夹。</p>
-</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">mkdir oss
-</code></pre>
-<ol start="2">
-<li>执行如下命令，将Bucket挂载到指定目录oss，您需要将命令中的BucketName、mountfolder和Endpoint替换您创建的bucket名称、创建的oss文件夹和OSS的内网Endpoint。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">ossfs BucketName mountfolder -o url=Endpoint
-</code></pre>
-<p>例如：ossfs adc-oss-labsxxxx oss -o url=oss-cn-hangzhou-internal.aliyuncs.com</p>
-<p>参数说明：</p>
-<ul>
-<li>
-<p>BucketName：您在对象存储OSS控制台中创建的bucket名称，可在对象存储OSS控制台&gt;Bucket列表中查看。</p>
-</li>
-<li>
-<p>mountfolder：上一步创建的挂载文件夹（本实验为oss）。</p>
-</li>
-<li>
-<p>Endpoint：OSS的内网Endpoint，详情请参考<a href="https://help.aliyun.com/document_detail/31837.html" rel="nofollow">访问域名和数据中心</a>。如果您的OSS地域为杭州，其中内网Endpoint为oss-cn-hangzhou-internal.aliyuncs.com。</p>
-</li>
-</ul>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/36feff6a47d8d1d7a910fba06e468b55644066eaa43f737a179131a2cbb96888/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f36333438393031626333663434373338613764616531306566653537373064612e706e67"><img src="https://camo.githubusercontent.com/36feff6a47d8d1d7a910fba06e468b55644066eaa43f737a179131a2cbb96888/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f36333438393031626333663434373338613764616531306566653537373064612e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_6348901bc3f44738a7dae10efe5770da.png" style="max-width: 100%;"></a></p>
-<ol start="3">
-<li>查看是否挂载成功。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">df -h
-</code></pre>
-<p>返回结果如下，表示挂载成功。</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/633bad4da9bebe23a15ffb6ce94a6ae7090c84b86cd0b7302bd852190b337591/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63333065353833383063633534353365616437653136343163656330313339352e706e67"><img src="https://camo.githubusercontent.com/633bad4da9bebe23a15ffb6ce94a6ae7090c84b86cd0b7302bd852190b337591/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f63333065353833383063633534353365616437653136343163656330313339352e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_c30e58380cc5453ead7e1641cec01395.png" style="max-width: 100%;"></a></p>
-<ol start="4">
-<li>执行如下命令，在/etc/init.d/目录下建立文件ossfs，设置开机自动启动脚本进行OSS挂载。</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">vim /etc/init.d/ossfs
-</code></pre>
-<p>进入Vim编辑器后，按下i键进入编辑模式，添加以下内容，添加完成后按下Esc键退出编辑模式，最后输入:wq后按下Enter键，保存并退出Vim编辑器。</p>
-<p>注意：您需要将脚本中的BucketName、mountfolder和Endpoint替换成您创建的bucket名称、创建的oss文件夹和OSS的内网Endpoint。</p>
-<pre class="notranslate"><code class="notranslate">#! /bin/bash
-#
-# ossfs      Automount Aliyun OSS Bucket in the specified direcotry.
-#
-# chkconfig: 2345 90 10
-# description: Activates/Deactivates ossfs configured to start at boot time.
-
-ossfs BucketName mountfolder -o url=Endpoint -oallow_other
-</code></pre>
-<p>添加后的文件内容如下所示。</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/db986f654024ab25a7e923aacfb184f290eb4db7ddddbf582964e3cde5d4ba02/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f64663131616366323762323234396466623335356233303166323232343535612e706e67"><img src="https://camo.githubusercontent.com/db986f654024ab25a7e923aacfb184f290eb4db7ddddbf582964e3cde5d4ba02/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f7934646e366561746f6132326b5f64663131616366323762323234396466623335356233303166323232343535612e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/y4dn6eatoa22k_df11acf27b2249dfb355b301f222455a.png" style="max-width: 100%;"></a></p>
 <ol start="5">
 <li>执行如下命令，为新建立的ossfs脚本赋予可执行权限。</li>
 </ol>
