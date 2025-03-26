@@ -187,8 +187,8 @@ SQL注入（SQL Injection）是一种攻击方式，攻击者通过向SQL查询�
 **sqli-labs Lesson 1**
 
 ### 1.  ‌正常输入（id=1）‌
- 原SQL语句‌：SELECT * FROM users WHERE id='1';
-‌ 原理‌：输入1被包裹在单引号内，语法正确，正常执行。
+原SQL语句‌：SELECT * FROM users WHERE id='1';
+原理‌：输入1被包裹在单引号内，语法正确，正常执行。
 ### 2. ‌ 异常输入（id=1'）‌
 原SQL语句‌：SELECT * FROM users WHERE id='1'';
 报错原因‌：单引号未闭合，导致语法错误（id='1'后多出一个单引号）。

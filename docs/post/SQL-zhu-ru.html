@@ -253,7 +253,7 @@ password<span class="pl-k">=</span>anypassword</pre></div>
 <p><strong>sqli-labs Lesson 1</strong></p>
 <h3>1.  ‌正常输入（id=1）‌</h3>
 <p>原SQL语句‌：SELECT * FROM users WHERE id='1';<br>
-‌ 原理‌：输入1被包裹在单引号内，语法正确，正常执行。</p>
+原理‌：输入1被包裹在单引号内，语法正确，正常执行。</p>
 <h3>2. ‌ 异常输入（id=1'）‌</h3>
 <p>原SQL语句‌：SELECT * FROM users WHERE id='1'';<br>
 报错原因‌：单引号未闭合，导致语法错误（id='1'后多出一个单引号）。<br>
