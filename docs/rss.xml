@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Mon, 07 Apr 2025 14:44:48 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>n8n工作流环境变量</title><link>https://bbs.myla.rr.nu/post/n8n-gong-zuo-liu-huan-jing-bian-liang.html</link><description>### Cloudflare tunnel
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Tue, 08 Apr 2025 00:51:48 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>n8n工作流环境变量</title><link>https://bbs.myla.rr.nu/post/n8n-gong-zuo-liu-huan-jing-bian-liang.html</link><description>### Cloudflare tunnel
 ```yaml
 networks:
     1panel-network:
@@ -29,6 +29,39 @@ services:
         restart: always
         volumes:
             - ./data:/home/node/.n8n
+```
+
+### Nginx 反代
+```yaml
+networks:
+    1panel-network:
+        external: true
+services:
+    n8n:
+        container_name: ${CONTAINER_NAME}
+        deploy:
+            resources:
+                limits:
+                    cpus: ${CPUS}
+                    memory: ${MEMORY_LIMIT}
+        image: n8nio/n8n:1.86.0
+        labels:
+            createdBy: Apps
+        networks:
+            - 1panel-network
+        ports:
+            - ${HOST_IP}:${PANEL_APP_PORT_HTTP}:5678
+        restart: always
+        volumes:
+            - ./data:/home/node/.n8n
+        environment:
+            - N8N_SECURE_COOKIE=false
+            - N8N_PORT=5678
+            - N8N_HOST=n8n.xxx.nyc.mn
+            - WEBHOOK_TUNNEL_URL=https://n8n.xxx.nyc.mn
+            - VUE_APP_URL_BASE_API=https://n8n.xxx.nyc.mn
+            - N8N_EDITOR_BASE_URL=https://n8n.xxx.nyc.mn
+            - N8N_PROTOCOL=https
 ```。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/n8n-gong-zuo-liu-huan-jing-bian-liang.html</guid><pubDate>Mon, 07 Apr 2025 13:37:24 +0000</pubDate></item><item><title>XSS攻击原理</title><link>https://bbs.myla.rr.nu/post/XSS-gong-ji-yuan-li.html</link><description>## XSS攻击原理：云计算和网络专业学生不可忽视的Web安全漏洞
 
 在Web应用日益普及的今天，Web安全变得越来越重要。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/XSS-gong-ji-yuan-li.html</guid><pubDate>Sat, 29 Mar 2025 05:47:36 +0000</pubDate></item><item><title>使用ECS和OSS对象存储快速搭建个人网盘</title><link>https://bbs.myla.rr.nu/post/shi-yong-ECS-he-OSS-dui-xiang-cun-chu-kuai-su-da-jian-ge-ren-wang-pan.html</link><description>1. 选择实验资源

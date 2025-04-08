@@ -40,6 +40,39 @@ services:
         restart: always
         volumes:
             - ./data:/home/node/.n8n
+```
+
+### Nginx 反代
+```yaml
+networks:
+    1panel-network:
+        external: true
+services:
+    n8n:
+        container_name: ${CONTAINER_NAME}
+        deploy:
+            resources:
+                limits:
+                    cpus: ${CPUS}
+                    memory: ${MEMORY_LIMIT}
+        image: n8nio/n8n:1.86.0
+        labels:
+            createdBy: Apps
+        networks:
+            - 1panel-network
+        ports:
+            - ${HOST_IP}:${PANEL_APP_PORT_HTTP}:5678
+        restart: always
+        volumes:
+            - ./data:/home/node/.n8n
+        environment:
+            - N8N_SECURE_COOKIE=false
+            - N8N_PORT=5678
+            - N8N_HOST=n8n.xxx.nyc.mn
+            - WEBHOOK_TUNNEL_URL=https://n8n.xxx.nyc.mn
+            - VUE_APP_URL_BASE_API=https://n8n.xxx.nyc.mn
+            - N8N_EDITOR_BASE_URL=https://n8n.xxx.nyc.mn
+            - N8N_PROTOCOL=https
 ```。">
 <meta property="og:title" content="n8n工作流环境变量">
 <meta property="og:description" content="### Cloudflare tunnel
@@ -72,6 +105,39 @@ services:
         restart: always
         volumes:
             - ./data:/home/node/.n8n
+```
+
+### Nginx 反代
+```yaml
+networks:
+    1panel-network:
+        external: true
+services:
+    n8n:
+        container_name: ${CONTAINER_NAME}
+        deploy:
+            resources:
+                limits:
+                    cpus: ${CPUS}
+                    memory: ${MEMORY_LIMIT}
+        image: n8nio/n8n:1.86.0
+        labels:
+            createdBy: Apps
+        networks:
+            - 1panel-network
+        ports:
+            - ${HOST_IP}:${PANEL_APP_PORT_HTTP}:5678
+        restart: always
+        volumes:
+            - ./data:/home/node/.n8n
+        environment:
+            - N8N_SECURE_COOKIE=false
+            - N8N_PORT=5678
+            - N8N_HOST=n8n.xxx.nyc.mn
+            - WEBHOOK_TUNNEL_URL=https://n8n.xxx.nyc.mn
+            - VUE_APP_URL_BASE_API=https://n8n.xxx.nyc.mn
+            - N8N_EDITOR_BASE_URL=https://n8n.xxx.nyc.mn
+            - N8N_PROTOCOL=https
 ```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.myla.rr.nu/post/n8n-gong-zuo-liu-huan-jing-bian-liang.html">
@@ -171,7 +237,37 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
             - <span class="pl-s">${HOST_IP}:${PANEL_APP_PORT_HTTP}:5678</span>
         <span class="pl-ent">restart</span>: <span class="pl-s">always</span>
         <span class="pl-ent">volumes</span>:
-            - <span class="pl-s">./data:/home/node/.n8n</span></pre></div></div>
+            - <span class="pl-s">./data:/home/node/.n8n</span></pre></div>
+<h3>Nginx 反代</h3>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">networks</span>:
+    <span class="pl-ent">1panel-network</span>:
+        <span class="pl-ent">external</span>: <span class="pl-c1">true</span>
+<span class="pl-ent">services</span>:
+    <span class="pl-ent">n8n</span>:
+        <span class="pl-ent">container_name</span>: <span class="pl-s">${CONTAINER_NAME}</span>
+        <span class="pl-ent">deploy</span>:
+            <span class="pl-ent">resources</span>:
+                <span class="pl-ent">limits</span>:
+                    <span class="pl-ent">cpus</span>: <span class="pl-s">${CPUS}</span>
+                    <span class="pl-ent">memory</span>: <span class="pl-s">${MEMORY_LIMIT}</span>
+        <span class="pl-ent">image</span>: <span class="pl-s">n8nio/n8n:1.86.0</span>
+        <span class="pl-ent">labels</span>:
+            <span class="pl-ent">createdBy</span>: <span class="pl-s">Apps</span>
+        <span class="pl-ent">networks</span>:
+            - <span class="pl-s">1panel-network</span>
+        <span class="pl-ent">ports</span>:
+            - <span class="pl-s">${HOST_IP}:${PANEL_APP_PORT_HTTP}:5678</span>
+        <span class="pl-ent">restart</span>: <span class="pl-s">always</span>
+        <span class="pl-ent">volumes</span>:
+            - <span class="pl-s">./data:/home/node/.n8n</span>
+        <span class="pl-ent">environment</span>:
+            - <span class="pl-s">N8N_SECURE_COOKIE=false</span>
+            - <span class="pl-s">N8N_PORT=5678</span>
+            - <span class="pl-s">N8N_HOST=n8n.xxx.nyc.mn</span>
+            - <span class="pl-s">WEBHOOK_TUNNEL_URL=https://n8n.xxx.nyc.mn</span>
+            - <span class="pl-s">VUE_APP_URL_BASE_API=https://n8n.xxx.nyc.mn</span>
+            - <span class="pl-s">N8N_EDITOR_BASE_URL=https://n8n.xxx.nyc.mn</span>
+            - <span class="pl-s">N8N_PROTOCOL=https</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
