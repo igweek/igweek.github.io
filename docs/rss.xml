@@ -1,5 +1,45 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Tue, 08 Apr 2025 00:51:48 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>n8n工作流环境变量</title><link>https://bbs.myla.rr.nu/post/n8n-gong-zuo-liu-huan-jing-bian-liang.html</link><description>### Cloudflare tunnel
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Thu, 10 Apr 2025 08:47:11 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>XSS-Labs通关过程</title><link>https://bbs.myla.rr.nu/post/XSS-Labs-tong-guan-guo-cheng.html</link><description>## Level1 (直接注入)
+
+### 源码
+
+
+
+```php
+&lt;!DOCTYPE html&gt;&lt;!--STATUS OK--&gt;&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv='content-type' content='text/html;charset=utf-8'&gt;
+&lt;script&gt;
+window.alert = function()  
+{     
+confirm('完成的不错！');
+ window.location.href='level2.php?keyword=test'; 
+}
+&lt;/script&gt;
+&lt;title&gt;欢迎来到level1&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1 align=center&gt;欢迎来到level1&lt;/h1&gt;
+&lt;?php 
+ini_set('display_errors', 0);
+$str = $_GET['name'];
+echo '&lt;h2 align=center&gt;欢迎用户'.$str.'&lt;/h2&gt;';
+?&gt;
+&lt;center&gt;&lt;img src=level1.png&gt;&lt;/center&gt;
+&lt;?php 
+echo '&lt;h3 align=center&gt;payload的长度:'.strlen($str).'&lt;/h3&gt;';
+?&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+```
+
+### 注入过程
+
+在script内，如果alert函数被调用执行，则会弹出警示框，重定向到level2
+
+window.location.href  重定向
+
+那么直接在url的name参数进行xss注入。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/XSS-Labs-tong-guan-guo-cheng.html</guid><pubDate>Thu, 10 Apr 2025 08:46:52 +0000</pubDate></item><item><title>n8n工作流环境变量</title><link>https://bbs.myla.rr.nu/post/n8n-gong-zuo-liu-huan-jing-bian-liang.html</link><description>### Cloudflare tunnel
 ```yaml
 networks:
     1panel-network:
