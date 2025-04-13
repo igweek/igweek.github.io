@@ -14,13 +14,13 @@
 ```sql
  select schema_name from information_schema.schemata
 ```
-`information_schema.schemata`：MySQL系统自带的元数据表，存储所有数据库的元信息。">
+- `information_schema.schemata`：MySQL系统自带的元数据表，存储所有数据库的元信息。">
 <meta property="og:title" content="Mysql基本语句">
 <meta property="og:description" content="## 查库名
 ```sql
  select schema_name from information_schema.schemata
 ```
-`information_schema.schemata`：MySQL系统自带的元数据表，存储所有数据库的元信息。">
+- `information_schema.schemata`：MySQL系统自带的元数据表，存储所有数据库的元信息。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.myla.rr.nu/post/Mysql-ji-ben-yu-ju.html">
 <meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
@@ -93,14 +93,30 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div class="markdown-body" id="postBody"><h2>查库名</h2>
 <div class="highlight highlight-source-sql"><pre class="notranslate"> <span class="pl-k">select</span> schema_name <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">schemata</span></pre></div>
-<p><code class="notranslate">information_schema.schemata</code>：MySQL系统自带的元数据表，存储所有数据库的元信息。<br>
-<code class="notranslate">schema_name</code>：该表的字段，表示数据库名称。</p>
+<ul>
+<li><code class="notranslate">information_schema.schemata</code>：MySQL系统自带的元数据表，存储所有数据库的元信息。</li>
+<li><code class="notranslate">schema_name</code>：该表的字段，表示数据库名称。</li>
+</ul>
 <h2>查表名</h2>
 <div class="highlight highlight-source-sql"><pre class="notranslate"> <span class="pl-k">select</span> table_name <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">tables</span> <span class="pl-k">where</span> table_schema<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>security<span class="pl-pds">'</span></span></pre></div>
+<ul>
+<li><code class="notranslate">information_schema.tables</code>：存储所有表的元数据（如表名、所属数据库等）。</li>
+<li><code class="notranslate">table_schema</code>：字段表示表所属的数据库名称（与 schema_name 对应）。</li>
+<li><code class="notranslate">WHERE table_schema</code> = 'security'：过滤出属于 security 数据库的表。</li>
+</ul>
 <h2>查列名</h2>
 <div class="highlight highlight-source-sql"><pre class="notranslate"> <span class="pl-k">select</span> column_name <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">columns</span> <span class="pl-k">where</span> table_name<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>users<span class="pl-pds">'</span></span></pre></div>
+<ul>
+<li><code class="notranslate">information_schema.columns</code>：存储所有列的元数据（如列名、数据类型等）。</li>
+<li><code class="notranslate">table_name</code>：字段表示列所属的表名称。</li>
+<li><code class="notranslate">WHERE table_name</code> = 'users'：过滤出属于 users 表的列。</li>
+</ul>
 <h2>查字段</h2>
-<div class="highlight highlight-source-sql"><pre class="notranslate"> <span class="pl-k">select</span> id,username,password <span class="pl-k">from</span> <span class="pl-c1">security</span>.<span class="pl-c1">users</span></pre></div></div>
+<div class="highlight highlight-source-sql"><pre class="notranslate"> <span class="pl-k">select</span> id,username,password <span class="pl-k">from</span> <span class="pl-c1">security</span>.<span class="pl-c1">users</span></pre></div>
+<ul>
+<li><code class="notranslate">security.users</code>：表示 security 数据库中的 users 表。</li>
+<li><code class="notranslate">username, password</code>：具体要查询的字段名。</li>
+</ul></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Sun, 13 Apr 2025 11:50:59 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Mysql基本语句</title><link>https://bbs.myla.rr.nu/post/Mysql-ji-ben-yu-ju.html</link><description>## 查库名
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Sun, 13 Apr 2025 11:54:55 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Mysql基本语句</title><link>https://bbs.myla.rr.nu/post/Mysql-ji-ben-yu-ju.html</link><description>## 查库名
 ```sql
  select schema_name from information_schema.schemata
 ```
-`information_schema.schemata`：MySQL系统自带的元数据表，存储所有数据库的元信息。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/Mysql-ji-ben-yu-ju.html</guid><pubDate>Sun, 13 Apr 2025 11:31:26 +0000</pubDate></item><item><title>XSS-Labs通关过程</title><link>https://bbs.myla.rr.nu/post/XSS-Labs-tong-guan-guo-cheng.html</link><description>## Level1 (直接注入)
+- `information_schema.schemata`：MySQL系统自带的元数据表，存储所有数据库的元信息。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/Mysql-ji-ben-yu-ju.html</guid><pubDate>Sun, 13 Apr 2025 11:31:26 +0000</pubDate></item><item><title>XSS-Labs通关过程</title><link>https://bbs.myla.rr.nu/post/XSS-Labs-tong-guan-guo-cheng.html</link><description>## Level1 (直接注入)
 
 ### 源码
 
