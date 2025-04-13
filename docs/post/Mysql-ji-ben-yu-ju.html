@@ -14,35 +14,13 @@
 ```sql
  select schema_name from information_schema.schemata
 ```
-## 查表名
-```sql
- select table_name from information_schema.tables where table_schema='security'
-```
-## 查列名
-```sql
- select column_name from information_schema.columns where table_name='users'
-```
-## 查字段
-```sql
- select id,username,password from security.users
-```。">
+`information_schema.schemata`：MySQL系统自带的元数据表，存储所有数据库的元信息。">
 <meta property="og:title" content="Mysql基本语句">
 <meta property="og:description" content="## 查库名
 ```sql
  select schema_name from information_schema.schemata
 ```
-## 查表名
-```sql
- select table_name from information_schema.tables where table_schema='security'
-```
-## 查列名
-```sql
- select column_name from information_schema.columns where table_name='users'
-```
-## 查字段
-```sql
- select id,username,password from security.users
-```。">
+`information_schema.schemata`：MySQL系统自带的元数据表，存储所有数据库的元信息。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.myla.rr.nu/post/Mysql-ji-ben-yu-ju.html">
 <meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
@@ -115,6 +93,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <div id="content">
 <div class="markdown-body" id="postBody"><h2>查库名</h2>
 <div class="highlight highlight-source-sql"><pre class="notranslate"> <span class="pl-k">select</span> schema_name <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">schemata</span></pre></div>
+<p><code class="notranslate">information_schema.schemata</code>：MySQL系统自带的元数据表，存储所有数据库的元信息。<br>
+<code class="notranslate">schema_name</code>：该表的字段，表示数据库名称。</p>
 <h2>查表名</h2>
 <div class="highlight highlight-source-sql"><pre class="notranslate"> <span class="pl-k">select</span> table_name <span class="pl-k">from</span> <span class="pl-c1">information_schema</span>.<span class="pl-c1">tables</span> <span class="pl-k">where</span> table_schema<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">'</span>security<span class="pl-pds">'</span></span></pre></div>
 <h2>查列名</h2>
