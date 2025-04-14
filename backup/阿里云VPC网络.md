@@ -74,7 +74,8 @@ cd ~/easy-rsa
 ```shell
 ./easyrsa build-client-full client1 nopass  # 创建客户端client1的证书
 ```
-###‌ 步骤 3：配置OpenVPN服务器
+
+### 步骤 3：配置OpenVPN服务器
 - ‌创建配置文件‌：
 ```shell
 sudo mkdir -p /etc/openvpn/server
