@@ -37,6 +37,14 @@ Keepalive 机制‌：
 
 OpenVPN 连接 VPC 的本质是通过 ‌加密隧道‌ 和 ‌PKI 证书体系‌，将客户端流量安全地引入私有网络。其核心依赖 TLS 协议保障通信安全，并通过路由规则实现 VPC 资源访问。正确配置证书、加密算法和路由策略是成功的关键。
 
+## 前置条件
+1. 创建VPC网络
+![](https://img.cccb.rr.nu/path/202504141628295.png)
+2. 创建安全组
+![](https://img.cccb.rr.nu/path/202504141629909.png)
+3.更换VPC网络
+![](https://img.cccb.rr.nu/path/202504141630603.png)
+![](https://img.cccb.rr.nu/path/202504141630107.png)
 ## 过程
 ### ‌步骤 1：准备阿里云ECS实例‌
 - ‌创建ECS实例‌：
@@ -94,7 +102,7 @@ ca /etc/openvpn/server/ca.crt
 cert /etc/openvpn/server/server.crt
 key /etc/openvpn/server/server.key
 dh /etc/openvpn/server/dh.pem
-server 10.8.0.0 255.255.255.0  # VPN客户端使用的子网
+server 172.17.0.0 255.255.255.0  # VPN客户端使用的子网
 push "route 192.168.0.0 255.255.0.0"  # 替换为VPC的CIDR（如192.168.0.0/16）
 keepalive 10 120
 user nobody
@@ -112,7 +120,7 @@ sudo echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 sudo sysctl -p
 
 # 配置iptables NAT规则（假设ECS内网网卡为eth0）
-sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+sudo iptables -t nat -A POSTROUTING -s 172.17.0.0/24 -o eth0 -j MASQUERADE
 sudo iptables-save > /etc/sysconfig/iptables  # CentOS保存规则
 sudo netfilter-persistent save                # Ubuntu（需安装iptables-persistent）
 ```
@@ -133,7 +141,7 @@ client1.key（客户端私钥）
 client
 dev tun
 proto udp
-remote 114.8.3.2 1194  #更换实际ecs的公网IP地址
+remote 10.8.0.0 1194  #更换实际ecs的公网IP地址
 resolv-retry infinite
 nobind
 persist-key

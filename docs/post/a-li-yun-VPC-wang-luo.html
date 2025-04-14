@@ -132,6 +132,16 @@ Keepalive 机制‌：<br>
 动态更新会话密钥（reneg-sec 3600），提升安全性。</li>
 </ol>
 <p>OpenVPN 连接 VPC 的本质是通过 ‌加密隧道‌ 和 ‌PKI 证书体系‌，将客户端流量安全地引入私有网络。其核心依赖 TLS 协议保障通信安全，并通过路由规则实现 VPC 资源访问。正确配置证书、加密算法和路由策略是成功的关键。</p>
+<h2>前置条件</h2>
+<ol>
+<li>创建VPC网络<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/431f00725e38ec6a757a8216f6be25eba55d0b7d4a9bcd6b9de1a964c5cd0572/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343134313632383239352e706e67"><img src="https://camo.githubusercontent.com/431f00725e38ec6a757a8216f6be25eba55d0b7d4a9bcd6b9de1a964c5cd0572/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343134313632383239352e706e67" alt="" data-canonical-src="https://img.cccb.rr.nu/path/202504141628295.png" style="max-width: 100%;"></a></li>
+<li>创建安全组<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/de1fbefeaded7b3bad08e9629f6b6087a63c7357e46709d4979b0725bbbf00e3/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343134313632393930392e706e67"><img src="https://camo.githubusercontent.com/de1fbefeaded7b3bad08e9629f6b6087a63c7357e46709d4979b0725bbbf00e3/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343134313632393930392e706e67" alt="" data-canonical-src="https://img.cccb.rr.nu/path/202504141629909.png" style="max-width: 100%;"></a><br>
+3.更换VPC网络<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/31b8ba2922d7236acb5bd7f1993c95f3d503aa96cdf955e8faa650a17127d194/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343134313633303630332e706e67"><img src="https://camo.githubusercontent.com/31b8ba2922d7236acb5bd7f1993c95f3d503aa96cdf955e8faa650a17127d194/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343134313633303630332e706e67" alt="" data-canonical-src="https://img.cccb.rr.nu/path/202504141630603.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f9430c909907c9b93c0c306fd8f95ad34c88e8931507d3591c205368d5d4fc6d/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343134313633303130372e706e67"><img src="https://camo.githubusercontent.com/f9430c909907c9b93c0c306fd8f95ad34c88e8931507d3591c205368d5d4fc6d/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343134313633303130372e706e67" alt="" data-canonical-src="https://img.cccb.rr.nu/path/202504141630107.png" style="max-width: 100%;"></a></li>
+</ol>
 <h2>过程</h2>
 <h3>‌步骤 1：准备阿里云ECS实例‌</h3>
 <ul>
@@ -189,7 +199,7 @@ ca /etc/openvpn/server/ca.crt
 cert /etc/openvpn/server/server.crt
 key /etc/openvpn/server/server.key
 dh /etc/openvpn/server/dh.pem
-server 10.8.0.0 255.255.255.0  <span class="pl-c"><span class="pl-c">#</span> VPN客户端使用的子网</span>
+server 172.17.0.0 255.255.255.0  <span class="pl-c"><span class="pl-c">#</span> VPN客户端使用的子网</span>
 push <span class="pl-s"><span class="pl-pds">"</span>route 192.168.0.0 255.255.0.0<span class="pl-pds">"</span></span>  <span class="pl-c"><span class="pl-c">#</span> 替换为VPC的CIDR（如192.168.0.0/16）</span>
 keepalive 10 120
 user nobody
@@ -207,7 +217,7 @@ sudo <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</
 sudo sysctl -p
 
 <span class="pl-c"><span class="pl-c">#</span> 配置iptables NAT规则（假设ECS内网网卡为eth0）</span>
-sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+sudo iptables -t nat -A POSTROUTING -s 172.17.0.0/24 -o eth0 -j MASQUERADE
 sudo iptables-save <span class="pl-k">&gt;</span> /etc/sysconfig/iptables  <span class="pl-c"><span class="pl-c">#</span> CentOS保存规则</span>
 sudo netfilter-persistent save                <span class="pl-c"><span class="pl-c">#</span> Ubuntu（需安装iptables-persistent）</span></pre></div>
 <h3>‌步骤 4：启动OpenVPN服务</h3>
@@ -225,7 +235,7 @@ client1.key（客户端私钥）</li>
 <div class="highlight highlight-source-shell"><pre class="notranslate">client
 dev tun
 proto udp
-remote 114.8.3.2 1194  <span class="pl-c"><span class="pl-c">#</span>更换实际ecs的公网IP地址</span>
+remote 10.8.0.0 1194  <span class="pl-c"><span class="pl-c">#</span>更换实际ecs的公网IP地址</span>
 resolv-retry infinite
 nobind
 persist-key
