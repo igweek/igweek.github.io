@@ -133,7 +133,7 @@ client1.key（客户端私钥）
 client
 dev tun
 proto udp
-remote 10.8.0.0 1194  #更换实际ecs的公网IP地址
+remote 114.8.3.2 1194  #更换实际ecs的公网IP地址
 resolv-retry infinite
 nobind
 persist-key
