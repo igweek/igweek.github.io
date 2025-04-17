@@ -17,3 +17,84 @@
     - 能够对各种编码格式（如URL编码、Base64编码、HTML实体编码等）进行解码和编码操作。在分析HTTP请求和响应时，经常会遇到各种编码后的参数和数据，Decoder可以帮助将这些数据转换为可读的形式，方便进行分析和处理。
 8. **Comparer（比较器）**
     - 用于比较两个或多个HTTP请求、响应或文件的差异。可以帮助测试人员快速发现不同请求之间的变化，例如在进行漏洞验证时，比较正常请求和恶意请求的响应差异，以确定漏洞是否成功利用。
+
+
+## Burp Suite安装
+### JDK的安装
+
+开始安装JDK：
+
+![img](https://img.cccb.rr.nu/path/202504172012609.jpg)
+
+可以设置为你想安装的路径。
+
+------
+
+## 环境变量配置
+
+### 1. 打开 环境变量窗口
+
+右键 **This PC(此电脑) -> Properties（属性） -> Advanced system settings（高级系统设置） -> Environment Variables（环境变量）...**
+
+![img](https://img.cccb.rr.nu/path/202504172012612.png)
+
+![img](https://img.cccb.rr.nu/path/202504172012614.png)
+
+![img](https://img.cccb.rr.nu/path/202504172012615.png)
+
+![img](https://img.cccb.rr.nu/path/202504172012616.png)
+
+### 2. 新建JAVA_HOME 变量 点击 **New（新建）...** 按钮
+
+![img](https://img.cccb.rr.nu/path/202504172012618.png)
+
+输入:
+
+```
+变量名：JAVA_HOME
+变量值：电脑上JDK安装的绝对路径
+```
+
+输入完毕后点击 OK。
+
+![img](https://img.cccb.rr.nu/path/202504172012619.png)
+
+JDK 路径下必须能够看到如下的文件。
+
+![img](https://img.cccb.rr.nu/path/202504172012620.png)
+
+### 3. 新建/修改 CLASSPATH 变量
+
+如果存在 CLASSPATH 变量，选中点击 **Edit(编辑)**。
+
+如果没有，点击 **New（新建）...** 新建。
+
+输入/在已有的变量值后面添加：
+
+```
+变量名：CLASSPATH
+变量值：.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar;
+```
+
+点击 OK 保存。
+
+![img](https://img.cccb.rr.nu/path/202504172012621.png)
+
+### 4. 修改Path 变量
+
+由于 win10 的不同，当选中 Path 变量的时候，系统会很方便的把所有不同路径都分开了，不会像 win7 或者 win8 那样连在一起。
+
+![img](https://img.cccb.rr.nu/path/202504172012623.png)
+
+新建两条路径：
+
+```
+%JAVA_HOME%\bin
+%JAVA_HOME%\jre\bin
+```
+
+![img](https://img.cccb.rr.nu/path/202504172012624.png)
+
+### 4. 检查 打开 cmd，输入 java，出现一连串的指令提示，说明配置成功了:
+
+![img](https://img.cccb.rr.nu/path/202504172012626.png)

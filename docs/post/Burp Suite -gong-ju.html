@@ -49,7 +49,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
 
 
@@ -123,7 +133,49 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>用于比较两个或多个HTTP请求、响应或文件的差异。可以帮助测试人员快速发现不同请求之间的变化，例如在进行漏洞验证时，比较正常请求和恶意请求的响应差异，以确定漏洞是否成功利用。</li>
 </ul>
 </li>
-</ol></div>
+</ol>
+<h2>Burp Suite安装</h2>
+<h3>JDK的安装</h3>
+<p>开始安装JDK：</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/59921ec77090503018f770c3f24de960c85f942b61fa82ff76fad9f2e5016a78/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323630392e6a7067"><img src="https://camo.githubusercontent.com/59921ec77090503018f770c3f24de960c85f942b61fa82ff76fad9f2e5016a78/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323630392e6a7067" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012609.jpg" style="max-width: 100%;"></a></p>
+<p>可以设置为你想安装的路径。</p>
+<hr>
+<h2>环境变量配置</h2>
+<h3>1. 打开 环境变量窗口</h3>
+<p>右键 <strong>This PC(此电脑) -&gt; Properties（属性） -&gt; Advanced system settings（高级系统设置） -&gt; Environment Variables（环境变量）...</strong></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/50a8f5782d4993b2a4ffcd50ebc64acacb86e236b3062be083d6b4fe6cd50146/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631322e706e67"><img src="https://camo.githubusercontent.com/50a8f5782d4993b2a4ffcd50ebc64acacb86e236b3062be083d6b4fe6cd50146/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631322e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012612.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f13d08101edb97e3976959cc89c131a5c83fd9e8e8939d0cf91caa2d78c71480/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631342e706e67"><img src="https://camo.githubusercontent.com/f13d08101edb97e3976959cc89c131a5c83fd9e8e8939d0cf91caa2d78c71480/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631342e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012614.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/dca8a075e31c3cc8b924a9aca57726fd4f3d7c7f283133032f1e6f3983d824d7/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631352e706e67"><img src="https://camo.githubusercontent.com/dca8a075e31c3cc8b924a9aca57726fd4f3d7c7f283133032f1e6f3983d824d7/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631352e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012615.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/462858d26da994402fff57e6756dfdf61d1fc5f31a0ad10fe93f16f8c96e3527/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631362e706e67"><img src="https://camo.githubusercontent.com/462858d26da994402fff57e6756dfdf61d1fc5f31a0ad10fe93f16f8c96e3527/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631362e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012616.png" style="max-width: 100%;"></a></p>
+<h3>2. 新建JAVA_HOME 变量 点击 <strong>New（新建）...</strong> 按钮</h3>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/16823aade411fb3e13fe64b240fec2936aeee8cb099bb0a0ce48f99c6d8dc15b/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631382e706e67"><img src="https://camo.githubusercontent.com/16823aade411fb3e13fe64b240fec2936aeee8cb099bb0a0ce48f99c6d8dc15b/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631382e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012618.png" style="max-width: 100%;"></a></p>
+<p>输入:</p>
+<pre class="notranslate"><code class="notranslate">变量名：JAVA_HOME
+变量值：电脑上JDK安装的绝对路径
+</code></pre>
+<p>输入完毕后点击 OK。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ff4914e07a9bb377908b43fac73896f57f977b98fc1f47e4c259de96577f5fcf/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631392e706e67"><img src="https://camo.githubusercontent.com/ff4914e07a9bb377908b43fac73896f57f977b98fc1f47e4c259de96577f5fcf/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323631392e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012619.png" style="max-width: 100%;"></a></p>
+<p>JDK 路径下必须能够看到如下的文件。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/47f305140b47067b89abb4e50dc35ea115464972c84ba837b304486b635f0700/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632302e706e67"><img src="https://camo.githubusercontent.com/47f305140b47067b89abb4e50dc35ea115464972c84ba837b304486b635f0700/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632302e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012620.png" style="max-width: 100%;"></a></p>
+<h3>3. 新建/修改 CLASSPATH 变量</h3>
+<p>如果存在 CLASSPATH 变量，选中点击 <strong>Edit(编辑)</strong>。</p>
+<p>如果没有，点击 <strong>New（新建）...</strong> 新建。</p>
+<p>输入/在已有的变量值后面添加：</p>
+<pre class="notranslate"><code class="notranslate">变量名：CLASSPATH
+变量值：.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar;
+</code></pre>
+<p>点击 OK 保存。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/455123037b384ba73efd4474d11100dab4f1bf4d7222d45c94198d03354b18d4/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632312e706e67"><img src="https://camo.githubusercontent.com/455123037b384ba73efd4474d11100dab4f1bf4d7222d45c94198d03354b18d4/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632312e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012621.png" style="max-width: 100%;"></a></p>
+<h3>4. 修改Path 变量</h3>
+<p>由于 win10 的不同，当选中 Path 变量的时候，系统会很方便的把所有不同路径都分开了，不会像 win7 或者 win8 那样连在一起。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/571df94c95bcbfbf1d96cc2c8cc53b04bc59faa90efbdf91116e403a8aced0e0/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632332e706e67"><img src="https://camo.githubusercontent.com/571df94c95bcbfbf1d96cc2c8cc53b04bc59faa90efbdf91116e403a8aced0e0/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632332e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012623.png" style="max-width: 100%;"></a></p>
+<p>新建两条路径：</p>
+<pre class="notranslate"><code class="notranslate">%JAVA_HOME%\bin
+%JAVA_HOME%\jre\bin
+</code></pre>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b84986fd3fd13b532ff58e9fc5ba2e8da2a4eda42acca0d7e7d3b95c3d0ac6b1/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632342e706e67"><img src="https://camo.githubusercontent.com/b84986fd3fd13b532ff58e9fc5ba2e8da2a4eda42acca0d7e7d3b95c3d0ac6b1/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632342e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012624.png" style="max-width: 100%;"></a></p>
+<h3>4. 检查 打开 cmd，输入 java，出现一连串的指令提示，说明配置成功了:</h3>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b17c7b9cb0d288f4ed5037c1361d819d69a02a3561559522519b05b648f27710/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632362e706e67"><img src="https://camo.githubusercontent.com/b17c7b9cb0d288f4ed5037c1361d819d69a02a3561559522519b05b648f27710/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530343137323031323632362e706e67" alt="img" data-canonical-src="https://img.cccb.rr.nu/path/202504172012626.png" style="max-width: 100%;"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -148,7 +200,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -221,7 +273,70 @@ function iFrameLoading(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
