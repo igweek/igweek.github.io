@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Thu, 17 Apr 2025 04:48:23 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Burp Suite 工具</title><link>https://bbs.myla.rr.nu/post/Burp%20Suite%20-gong-ju.html</link><description>Burp Suite 是一款集成化的 Web 应用程序安全测试工具，其主要功能模块如下：
-**1. Proxy（代理）**
-功能：作为一个中间人代理，拦截、查看、修改客户端和服务器之间的 HTTP 和 HTTPS 流量。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/Burp%20Suite%20-gong-ju.html</guid><pubDate>Thu, 17 Apr 2025 04:48:02 +0000</pubDate></item><item><title>SQL注入防范</title><link>https://bbs.myla.rr.nu/post/SQL-zhu-ru-fang-fan.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.myla.rr.nu</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.myla.rr.nu</link></image><lastBuildDate>Thu, 17 Apr 2025 04:54:26 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Burp Suite 工具</title><link>https://bbs.myla.rr.nu/post/Burp%20Suite%20-gong-ju.html</link><description>**Burp Suite** 是一款集成化的 Web 应用程序安全测试工具，其主要功能模块如下：
+---
+
+1. **Proxy（代理）**
+    - 作为浏览器和目标服务器之间的中间人，拦截、查看和修改浏览器与服务器之间传输的HTTP和HTTPS请求和响应。</description><guid isPermaLink="true">https://bbs.myla.rr.nu/post/Burp%20Suite%20-gong-ju.html</guid><pubDate>Thu, 17 Apr 2025 04:48:02 +0000</pubDate></item><item><title>SQL注入防范</title><link>https://bbs.myla.rr.nu/post/SQL-zhu-ru-fang-fan.html</link><description>
 
 ### 1. **使用预编译语句（Prepared Statements）+ 参数化查询**
 
