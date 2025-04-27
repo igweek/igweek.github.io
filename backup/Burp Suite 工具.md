@@ -24,7 +24,7 @@
 
 开始安装JDK：
 
-![img](https://img.cccb.rr.nu/path/202504172012609.jpg)
+![img](https://pic.geek.nyc.mn/path/202504172012609.jpg)
 
 可以设置为你想安装的路径。
 
@@ -36,17 +36,17 @@
 
 右键 **This PC(此电脑) -> Properties（属性） -> Advanced system settings（高级系统设置） -> Environment Variables（环境变量）...**
 
-![img](https://img.cccb.rr.nu/path/202504172012612.png)
+![img](https://pic.geek.nyc.mn/path/202504172012612.png)
 
-![img](https://img.cccb.rr.nu/path/202504172012614.png)
+![img](https://pic.geek.nyc.mn/path/202504172012614.png)
 
-![img](https://img.cccb.rr.nu/path/202504172012615.png)
+![img](https://pic.geek.nyc.mn/path/202504172012615.png)
 
-![img](https://img.cccb.rr.nu/path/202504172012616.png)
+![img](https://pic.geek.nyc.mn/path/202504172012616.png)
 
 ### 2. 新建JAVA_HOME 变量 点击 **New（新建）...** 按钮
 
-![img](https://img.cccb.rr.nu/path/202504172012618.png)
+![img](https://pic.geek.nyc.mn/path/202504172012618.png)
 
 输入:
 
@@ -57,11 +57,11 @@
 
 输入完毕后点击 OK。
 
-![img](https://img.cccb.rr.nu/path/202504172012619.png)
+![img](https://pic.geek.nyc.mn/path/202504172012619.png)
 
 JDK 路径下必须能够看到如下的文件。
 
-![img](https://img.cccb.rr.nu/path/202504172012620.png)
+![img](https://pic.geek.nyc.mn/path/202504172012620.png)
 
 ### 3. 新建/修改 CLASSPATH 变量
 
@@ -78,13 +78,13 @@ JDK 路径下必须能够看到如下的文件。
 
 点击 OK 保存。
 
-![img](https://img.cccb.rr.nu/path/202504172012621.png)
+![img](https://pic.geek.nyc.mn/path/202504172012621.png)
 
 ### 4. 修改Path 变量
 
 由于 win10 的不同，当选中 Path 变量的时候，系统会很方便的把所有不同路径都分开了，不会像 win7 或者 win8 那样连在一起。
 
-![img](https://img.cccb.rr.nu/path/202504172012623.png)
+![img](https://pic.geek.nyc.mn/path/202504172012623.png)
 
 新建两条路径：
 
@@ -93,8 +93,8 @@ JDK 路径下必须能够看到如下的文件。
 %JAVA_HOME%\jre\bin
 ```
 
-![img](https://img.cccb.rr.nu/path/202504172012624.png)
+![img](https://pic.geek.nyc.mn/path/202504172012624.png)
 
 ### 4. 检查 打开 cmd，输入 java，出现一连串的指令提示，说明配置成功了:
 
-![img](https://img.cccb.rr.nu/path/202504172012626.png)
+![img](https://pic.geek.nyc.mn/path/202504172012626.png)
