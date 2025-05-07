@@ -1,7 +1,7 @@
 ## 设置dvwa安全级别为**low**
 ## 获取有效的Cookie
 登录后，使用浏览器开发者工具(F12)查看当前Cookie
-
+![image.png](https://pic.myla.eu.org/file/1746589718115_image.png)
 或者使用Burp Suite拦截一个请求，获取Cookie值
 
 您需要的Cookie应该包含PHPSESSID和security值
