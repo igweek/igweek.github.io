@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script>
+    <link rel="icon" href="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="![image.png](https://pic.myla.eu.org/file/1747622262076_image.png)
+
+# 简单实用的Shell脚本示例及解释
+
+## 1. 欢迎脚本
+
+```bash
+#!/bin/bash
+# 简单的欢迎脚本
+
+echo '请输入你的名字:'
+read name
+echo '你好, $name! 欢迎使用Shell脚本!'
+```
+
+### 命令解释：
+- `#!/bin/bash` - 指定使用bash shell执行此脚本
+- `#` - 注释符号，后面的内容不会执行
+- `echo` - 打印文本到屏幕
+- `read name` - 读取用户输入并存储到变量`name`中
+- `$name` - 使用变量`name`的值
+
+## 2. 计算器脚本
+
+```bash
+#!/bin/bash
+# 简单的加法计算器
+
+echo '请输入第一个数字:'
+read num1
+echo '请输入第二个数字:'
+read num2
+
+sum=$((num1 + num2))
+echo '两数之和是: $sum'
+```
+
+### 命令解释：
+- `read num1` - 读取用户输入的第一个数字
+- `$(( ))` - 算术运算的语法
+- `sum=$((num1 + num2))` - 计算两个数字的和并赋值给变量sum
+
+## 3. 文件检查脚本
+
+```bash
+#!/bin/bash
+# 检查文件是否存在
+
+echo '请输入要检查的文件路径:'
+read filepath
+
+if [ -f '$filepath' ]; then
+    echo '文件 $filepath 存在!'
+else
+    echo '文件 $filepath 不存在!'
+fi
+```
+
+### 命令解释：
+- `if [ -f '$filepath' ]` - 检查文件是否存在
+  - `-f` - 检查是否是普通文件
+- `then` - if条件成立时执行的代码开始
+- `else` - if条件不成立时执行的代码开始
+- `fi` - if语句结束
+
+## 4. 当前目录文件列表
+
+```bash
+#!/bin/bash
+# 显示当前目录下的文件
+
+echo '当前目录下的文件和文件夹:'
+ls
+```
+
+### 命令解释：
+- `ls` - 列出当前目录下的文件和文件夹
+
+## 5. 系统时间显示
+
+```bash
+#!/bin/bash
+# 显示当前日期和时间
+
+current_date=$(date +'%Y-%m-%d')
+current_time=$(date +'%H:%M:%S')
+
+echo '今天是: $current_date'
+echo '现在时间是: $current_time'
+```
+
+### 命令解释：
+- `date +'%Y-%m-%d'` - 以年-月-日格式显示日期
+- `date +'%H:%M:%S'` - 以时:分:秒格式显示时间
+- `$( )` - 执行括号内的命令并将结果赋值给变量
+
+## 6. 简单的循环示例
+
+```bash
+#!/bin/bash
+# 打印数字1到5
+
+for i in 1 2 3 4 5
+do
+    echo '数字: $i'
+done
+```
+
+### 命令解释：
+- `for i in 1 2 3 4 5` - 循环5次，i的值依次为1到5
+- `do` - 循环体开始
+- `done` - 循环结束
+
+## 如何使用这些脚本
+
+1. 将代码保存为`.sh`文件，例如`welcome.sh`
+2. 给脚本执行权限：
+   ```bash
+   chmod +x welcome.sh
+   ```
+3. 运行脚本：
+   ```bash
+   ./welcome.sh
+   ```
+
+
+# shell脚本进阶
+
+## 1. 系统信息检查脚本
+
+```bash
+#!/bin/bash
+# 这是一个显示系统信息的脚本
+
+echo '===== 系统信息 ====='
+echo '当前用户: $(whoami)'
+echo '主机名: $(hostname)'
+echo '===== 系统时间 ====='
+date
+echo '===== 系统运行时间 ====='
+uptime
+echo '===== 磁盘使用情况 ====='
+df -h
+echo '===== 内存使用情况 ====='
+free -m
+```
+
+### 命令解释：
+- `#!/bin/bash`：指定使用bash shell执行此脚本
+- `# 这是一个...`：注释行，解释脚本用途
+- `echo`：打印后面的文本到屏幕
+- `$(command)`：执行括号内的命令并返回结果
+- `whoami`：显示当前登录用户名
+- `hostname`：显示系统主机名
+- `date`：显示当前日期和时间
+- `uptime`：显示系统运行时间和平均负载
+- `df -h`：以易读格式(GB,MB)显示磁盘空间使用情况
+- `free -m`：以MB为单位显示内存使用情况
+
+## 2. 文件备份脚本
+
+```bash
+#!/bin/bash
+# 文件备份脚本
+
+backup_dir='/backup'
+source_dir='/home/user/documents'
+timestamp=$(date +%Y%m%d_%H%M%S)
+backup_file='backup_$timestamp.tar.gz'
+
+if [ ! -d '$backup_dir' ]; then
+    mkdir -p '$backup_dir'
+fi
+
+tar -czf '$backup_dir/$backup_file' '$source_dir'
+
+if [ $? -eq 0 ]; then
+    echo '备份成功完成: $backup_file'
+else
+    echo '备份失败!' >&2
+    exit 1
+fi
+```
+
+### 命令解释：
+- `backup_dir='/backup'`：定义变量，设置备份目录路径
+- `timestamp=$(date +%Y%m%d_%H%M%S)`：获取当前时间戳，格式为年月日_时分秒
+- `if [ ! -d '$backup_dir' ]; then`：检查目录是否存在
+- `mkdir -p`：创建目录，-p参数确保父目录不存在时一并创建
+- `tar -czf`：创建压缩归档文件
+  - `-c`：创建新归档
+  - `-z`：使用gzip压缩
+  - `-f`：指定文件名
+- `$?`：上一条命令的退出状态
+- `-eq 0`：检查是否等于0(成功)
+- `>&2`：将输出重定向到标准错误
+- `exit 1`：以错误状态退出脚本
+
+## 3. 日志文件分析脚本
+
+```bash
+#!/bin/bash
+# 分析日志文件中的错误
+
+log_file='/var/log/syslog'
+error_keywords=('error' 'failed' 'warning')
+output_file='error_report.txt'
+
+if [ ! -f '$log_file' ]; then
+    echo '错误: 日志文件 $log_file 不存在!' >&2
+    exit 1
+fi
+
+> '$output_file'  # 清空输出文件
+
+for keyword in '${error_keywords[@]}'; do
+    echo '===== $keyword =====' >> '$output_file'
+    grep -i '$keyword' '$log_file' | tail -n 10 >> '$output_file'
+    echo '' >> '$output_file'
+done
+
+echo '错误报告已生成: $output_file'
+```
+
+### 命令解释：
+- `error_keywords=('error' 'failed' 'warning')`：定义数组变量
+- `'${error_keywords[@]}'`：展开数组所有元素
+- `> '$output_file'`：清空文件内容(重定向空输出到文件)
+- `grep -i`：搜索文本，-i忽略大小写
+- `|`：管道，将前一个命令的输出作为后一个命令的输入
+- `tail -n 10`：显示最后10行
+- `>>`：追加输出到文件
+
+## 4. 用户账户管理脚本
+
+```bash
+#!/bin/bash
+# 批量添加用户
+
+user_list=('user1' 'user2' 'user3')
+default_password='ChangeMe123'
+
+if [ $(id -u) -ne 0 ]; then
+    echo '该脚本需要root权限!' >&2
+    exit 1
+fi
+
+for user in '${user_list[@]}'; do
+    if id '$user' &>/dev/null; then
+        echo '用户 $user 已存在，跳过...'
+    else
+        useradd -m -s /bin/bash '$user'
+        echo '$user:$default_password' | chpasswd
+        passwd -e '$user'  # 强制用户首次登录修改密码
+        echo '已创建用户: $user'
+    fi
+done
+```
+
+### 命令解释：
+- `id -u`：显示当前用户ID(0表示root)
+- `-ne 0`：不等于0
+- `id '$user' &>/dev/null`：检查用户是否存在，丢弃所有输出
+- `useradd`：添加用户
+  - `-m`：创建用户主目录
+  - `-s`：指定默认shell
+- `chpasswd`：批量修改密码
+- `passwd -e`：使密码立即过期，强制用户首次登录修改
+- `&>/dev/null`：将标准输出和错误都重定向到/dev/null(丢弃)
+
+## 5.系统监控脚本
+```shell
+#!/bin/bash
+# 获取系统信息
+cpu=$(top -bn1 | grep load | awk '{printf '%.2f', $(NF-2)}')
+mem=$(free -m | awk '/Mem/{print $3'MB'}')
+disk=$(df -h | awk '/\/$/{print $5}')
+
+# 发送警报
+if (( $(echo '$cpu > 80' | bc -l) )); then
+    echo 'High CPU usage: $cpu%' | mail -s 'Alert' admin@example.com
+fi
+
+# 输出报告
+echo 'CPU: $cpu | Memory: $mem | Disk: $disk'
+```
+### 解释
+- top -bn1：非交互式获取系统状态
+- awk：文本处理工具
+- bc -l：浮点数比较
+- mail：发送邮件通知
+
+
+。">
+<meta property="og:title" content="常见的Shell脚本">
+<meta property="og:description" content="![image.png](https://pic.myla.eu.org/file/1747622262076_image.png)
+
+# 简单实用的Shell脚本示例及解释
+
+## 1. 欢迎脚本
+
+```bash
+#!/bin/bash
+# 简单的欢迎脚本
+
+echo '请输入你的名字:'
+read name
+echo '你好, $name! 欢迎使用Shell脚本!'
+```
+
+### 命令解释：
+- `#!/bin/bash` - 指定使用bash shell执行此脚本
+- `#` - 注释符号，后面的内容不会执行
+- `echo` - 打印文本到屏幕
+- `read name` - 读取用户输入并存储到变量`name`中
+- `$name` - 使用变量`name`的值
+
+## 2. 计算器脚本
+
+```bash
+#!/bin/bash
+# 简单的加法计算器
+
+echo '请输入第一个数字:'
+read num1
+echo '请输入第二个数字:'
+read num2
+
+sum=$((num1 + num2))
+echo '两数之和是: $sum'
+```
+
+### 命令解释：
+- `read num1` - 读取用户输入的第一个数字
+- `$(( ))` - 算术运算的语法
+- `sum=$((num1 + num2))` - 计算两个数字的和并赋值给变量sum
+
+## 3. 文件检查脚本
+
+```bash
+#!/bin/bash
+# 检查文件是否存在
+
+echo '请输入要检查的文件路径:'
+read filepath
+
+if [ -f '$filepath' ]; then
+    echo '文件 $filepath 存在!'
+else
+    echo '文件 $filepath 不存在!'
+fi
+```
+
+### 命令解释：
+- `if [ -f '$filepath' ]` - 检查文件是否存在
+  - `-f` - 检查是否是普通文件
+- `then` - if条件成立时执行的代码开始
+- `else` - if条件不成立时执行的代码开始
+- `fi` - if语句结束
+
+## 4. 当前目录文件列表
+
+```bash
+#!/bin/bash
+# 显示当前目录下的文件
+
+echo '当前目录下的文件和文件夹:'
+ls
+```
+
+### 命令解释：
+- `ls` - 列出当前目录下的文件和文件夹
+
+## 5. 系统时间显示
+
+```bash
+#!/bin/bash
+# 显示当前日期和时间
+
+current_date=$(date +'%Y-%m-%d')
+current_time=$(date +'%H:%M:%S')
+
+echo '今天是: $current_date'
+echo '现在时间是: $current_time'
+```
+
+### 命令解释：
+- `date +'%Y-%m-%d'` - 以年-月-日格式显示日期
+- `date +'%H:%M:%S'` - 以时:分:秒格式显示时间
+- `$( )` - 执行括号内的命令并将结果赋值给变量
+
+## 6. 简单的循环示例
+
+```bash
+#!/bin/bash
+# 打印数字1到5
+
+for i in 1 2 3 4 5
+do
+    echo '数字: $i'
+done
+```
+
+### 命令解释：
+- `for i in 1 2 3 4 5` - 循环5次，i的值依次为1到5
+- `do` - 循环体开始
+- `done` - 循环结束
+
+## 如何使用这些脚本
+
+1. 将代码保存为`.sh`文件，例如`welcome.sh`
+2. 给脚本执行权限：
+   ```bash
+   chmod +x welcome.sh
+   ```
+3. 运行脚本：
+   ```bash
+   ./welcome.sh
+   ```
+
+
+# shell脚本进阶
+
+## 1. 系统信息检查脚本
+
+```bash
+#!/bin/bash
+# 这是一个显示系统信息的脚本
+
+echo '===== 系统信息 ====='
+echo '当前用户: $(whoami)'
+echo '主机名: $(hostname)'
+echo '===== 系统时间 ====='
+date
+echo '===== 系统运行时间 ====='
+uptime
+echo '===== 磁盘使用情况 ====='
+df -h
+echo '===== 内存使用情况 ====='
+free -m
+```
+
+### 命令解释：
+- `#!/bin/bash`：指定使用bash shell执行此脚本
+- `# 这是一个...`：注释行，解释脚本用途
+- `echo`：打印后面的文本到屏幕
+- `$(command)`：执行括号内的命令并返回结果
+- `whoami`：显示当前登录用户名
+- `hostname`：显示系统主机名
+- `date`：显示当前日期和时间
+- `uptime`：显示系统运行时间和平均负载
+- `df -h`：以易读格式(GB,MB)显示磁盘空间使用情况
+- `free -m`：以MB为单位显示内存使用情况
+
+## 2. 文件备份脚本
+
+```bash
+#!/bin/bash
+# 文件备份脚本
+
+backup_dir='/backup'
+source_dir='/home/user/documents'
+timestamp=$(date +%Y%m%d_%H%M%S)
+backup_file='backup_$timestamp.tar.gz'
+
+if [ ! -d '$backup_dir' ]; then
+    mkdir -p '$backup_dir'
+fi
+
+tar -czf '$backup_dir/$backup_file' '$source_dir'
+
+if [ $? -eq 0 ]; then
+    echo '备份成功完成: $backup_file'
+else
+    echo '备份失败!' >&2
+    exit 1
+fi
+```
+
+### 命令解释：
+- `backup_dir='/backup'`：定义变量，设置备份目录路径
+- `timestamp=$(date +%Y%m%d_%H%M%S)`：获取当前时间戳，格式为年月日_时分秒
+- `if [ ! -d '$backup_dir' ]; then`：检查目录是否存在
+- `mkdir -p`：创建目录，-p参数确保父目录不存在时一并创建
+- `tar -czf`：创建压缩归档文件
+  - `-c`：创建新归档
+  - `-z`：使用gzip压缩
+  - `-f`：指定文件名
+- `$?`：上一条命令的退出状态
+- `-eq 0`：检查是否等于0(成功)
+- `>&2`：将输出重定向到标准错误
+- `exit 1`：以错误状态退出脚本
+
+## 3. 日志文件分析脚本
+
+```bash
+#!/bin/bash
+# 分析日志文件中的错误
+
+log_file='/var/log/syslog'
+error_keywords=('error' 'failed' 'warning')
+output_file='error_report.txt'
+
+if [ ! -f '$log_file' ]; then
+    echo '错误: 日志文件 $log_file 不存在!' >&2
+    exit 1
+fi
+
+> '$output_file'  # 清空输出文件
+
+for keyword in '${error_keywords[@]}'; do
+    echo '===== $keyword =====' >> '$output_file'
+    grep -i '$keyword' '$log_file' | tail -n 10 >> '$output_file'
+    echo '' >> '$output_file'
+done
+
+echo '错误报告已生成: $output_file'
+```
+
+### 命令解释：
+- `error_keywords=('error' 'failed' 'warning')`：定义数组变量
+- `'${error_keywords[@]}'`：展开数组所有元素
+- `> '$output_file'`：清空文件内容(重定向空输出到文件)
+- `grep -i`：搜索文本，-i忽略大小写
+- `|`：管道，将前一个命令的输出作为后一个命令的输入
+- `tail -n 10`：显示最后10行
+- `>>`：追加输出到文件
+
+## 4. 用户账户管理脚本
+
+```bash
+#!/bin/bash
+# 批量添加用户
+
+user_list=('user1' 'user2' 'user3')
+default_password='ChangeMe123'
+
+if [ $(id -u) -ne 0 ]; then
+    echo '该脚本需要root权限!' >&2
+    exit 1
+fi
+
+for user in '${user_list[@]}'; do
+    if id '$user' &>/dev/null; then
+        echo '用户 $user 已存在，跳过...'
+    else
+        useradd -m -s /bin/bash '$user'
+        echo '$user:$default_password' | chpasswd
+        passwd -e '$user'  # 强制用户首次登录修改密码
+        echo '已创建用户: $user'
+    fi
+done
+```
+
+### 命令解释：
+- `id -u`：显示当前用户ID(0表示root)
+- `-ne 0`：不等于0
+- `id '$user' &>/dev/null`：检查用户是否存在，丢弃所有输出
+- `useradd`：添加用户
+  - `-m`：创建用户主目录
+  - `-s`：指定默认shell
+- `chpasswd`：批量修改密码
+- `passwd -e`：使密码立即过期，强制用户首次登录修改
+- `&>/dev/null`：将标准输出和错误都重定向到/dev/null(丢弃)
+
+## 5.系统监控脚本
+```shell
+#!/bin/bash
+# 获取系统信息
+cpu=$(top -bn1 | grep load | awk '{printf '%.2f', $(NF-2)}')
+mem=$(free -m | awk '/Mem/{print $3'MB'}')
+disk=$(df -h | awk '/\/$/{print $5}')
+
+# 发送警报
+if (( $(echo '$cpu > 80' | bc -l) )); then
+    echo 'High CPU usage: $cpu%' | mail -s 'Alert' admin@example.com
+fi
+
+# 输出报告
+echo 'CPU: $cpu | Memory: $mem | Disk: $disk'
+```
+### 解释
+- top -bn1：非交互式获取系统状态
+- awk：文本处理工具
+- bc -l：浮点数比较
+- mail：发送邮件通知
+
+
+。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.yame.news/post/chang-jian-de-Shell-jiao-ben.html">
+<meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
+<title>常见的Shell脚本</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">常见的Shell脚本</h1>
+<div class="title-right">
+    <a href="https://bbs.yame.news" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/65" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6fbf9b5ff8875ed8eb7ec11647cd98ab42a06d2a7430d7529c18ff42cc615b7d/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734373632323236323037365f696d6167652e706e67"><img src="https://camo.githubusercontent.com/6fbf9b5ff8875ed8eb7ec11647cd98ab42a06d2a7430d7529c18ff42cc615b7d/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313734373632323236323037365f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1747622262076_image.png" style="max-width: 100%;"></a></p>
+<h1>简单实用的Shell脚本示例及解释</h1>
+<h2>1. 欢迎脚本</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 简单的欢迎脚本</span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>请输入你的名字:<span class="pl-pds">"</span></span>
+<span class="pl-c1">read</span> name
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>你好, <span class="pl-smi">$name</span>! 欢迎使用Shell脚本!<span class="pl-pds">"</span></span></pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">#!/bin/bash</code> - 指定使用bash shell执行此脚本</li>
+<li><code class="notranslate">#</code> - 注释符号，后面的内容不会执行</li>
+<li><code class="notranslate">echo</code> - 打印文本到屏幕</li>
+<li><code class="notranslate">read name</code> - 读取用户输入并存储到变量<code class="notranslate">name</code>中</li>
+<li><code class="notranslate">$name</code> - 使用变量<code class="notranslate">name</code>的值</li>
+</ul>
+<h2>2. 计算器脚本</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 简单的加法计算器</span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>请输入第一个数字:<span class="pl-pds">"</span></span>
+<span class="pl-c1">read</span> num1
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>请输入第二个数字:<span class="pl-pds">"</span></span>
+<span class="pl-c1">read</span> num2
+
+sum=<span class="pl-s"><span class="pl-pds">$((</span>num<span class="pl-c1">1</span> <span class="pl-k">+</span> num<span class="pl-c1">2</span><span class="pl-pds">))</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>两数之和是: <span class="pl-smi">$sum</span><span class="pl-pds">"</span></span></pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">read num1</code> - 读取用户输入的第一个数字</li>
+<li><code class="notranslate">$(( ))</code> - 算术运算的语法</li>
+<li><code class="notranslate">sum=$((num1 + num2))</code> - 计算两个数字的和并赋值给变量sum</li>
+</ul>
+<h2>3. 文件检查脚本</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 检查文件是否存在</span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>请输入要检查的文件路径:<span class="pl-pds">"</span></span>
+<span class="pl-c1">read</span> filepath
+
+<span class="pl-k">if</span> [ <span class="pl-k">-f</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$filepath</span><span class="pl-pds">"</span></span> ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>文件 <span class="pl-smi">$filepath</span> 存在!<span class="pl-pds">"</span></span>
+<span class="pl-k">else</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>文件 <span class="pl-smi">$filepath</span> 不存在!<span class="pl-pds">"</span></span>
+<span class="pl-k">fi</span></pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">if [ -f "$filepath" ]</code> - 检查文件是否存在
+<ul>
+<li><code class="notranslate">-f</code> - 检查是否是普通文件</li>
+</ul>
+</li>
+<li><code class="notranslate">then</code> - if条件成立时执行的代码开始</li>
+<li><code class="notranslate">else</code> - if条件不成立时执行的代码开始</li>
+<li><code class="notranslate">fi</code> - if语句结束</li>
+</ul>
+<h2>4. 当前目录文件列表</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 显示当前目录下的文件</span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>当前目录下的文件和文件夹:<span class="pl-pds">"</span></span>
+ls</pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">ls</code> - 列出当前目录下的文件和文件夹</li>
+</ul>
+<h2>5. 系统时间显示</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 显示当前日期和时间</span>
+
+current_date=<span class="pl-s"><span class="pl-pds">$(</span>date +<span class="pl-s"><span class="pl-pds">"</span>%Y-%m-%d<span class="pl-pds">"</span></span><span class="pl-pds">)</span></span>
+current_time=<span class="pl-s"><span class="pl-pds">$(</span>date +<span class="pl-s"><span class="pl-pds">"</span>%H:%M:%S<span class="pl-pds">"</span></span><span class="pl-pds">)</span></span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>今天是: <span class="pl-smi">$current_date</span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>现在时间是: <span class="pl-smi">$current_time</span><span class="pl-pds">"</span></span></pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">date +"%Y-%m-%d"</code> - 以年-月-日格式显示日期</li>
+<li><code class="notranslate">date +"%H:%M:%S"</code> - 以时:分:秒格式显示时间</li>
+<li><code class="notranslate">$( )</code> - 执行括号内的命令并将结果赋值给变量</li>
+</ul>
+<h2>6. 简单的循环示例</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 打印数字1到5</span>
+
+<span class="pl-k">for</span> <span class="pl-smi">i</span> <span class="pl-k">in</span> 1 2 3 4 5
+<span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>数字: <span class="pl-smi">$i</span><span class="pl-pds">"</span></span>
+<span class="pl-k">done</span></pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">for i in 1 2 3 4 5</code> - 循环5次，i的值依次为1到5</li>
+<li><code class="notranslate">do</code> - 循环体开始</li>
+<li><code class="notranslate">done</code> - 循环结束</li>
+</ul>
+<h2>如何使用这些脚本</h2>
+<ol>
+<li>将代码保存为<code class="notranslate">.sh</code>文件，例如<code class="notranslate">welcome.sh</code></li>
+<li>给脚本执行权限：
+<div class="highlight highlight-source-shell"><pre class="notranslate">chmod +x welcome.sh</pre></div>
+</li>
+<li>运行脚本：
+<div class="highlight highlight-source-shell"><pre class="notranslate">./welcome.sh</pre></div>
+</li>
+</ol>
+<h1>shell脚本进阶</h1>
+<h2>1. 系统信息检查脚本</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 这是一个显示系统信息的脚本</span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>===== 系统信息 =====<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>当前用户: <span class="pl-s"><span class="pl-pds">$(</span>whoami<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>主机名: <span class="pl-s"><span class="pl-pds">$(</span>hostname<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>===== 系统时间 =====<span class="pl-pds">"</span></span>
+date
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>===== 系统运行时间 =====<span class="pl-pds">"</span></span>
+uptime
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>===== 磁盘使用情况 =====<span class="pl-pds">"</span></span>
+df -h
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>===== 内存使用情况 =====<span class="pl-pds">"</span></span>
+free -m</pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">#!/bin/bash</code>：指定使用bash shell执行此脚本</li>
+<li><code class="notranslate"># 这是一个...</code>：注释行，解释脚本用途</li>
+<li><code class="notranslate">echo</code>：打印后面的文本到屏幕</li>
+<li><code class="notranslate">$(command)</code>：执行括号内的命令并返回结果</li>
+<li><code class="notranslate">whoami</code>：显示当前登录用户名</li>
+<li><code class="notranslate">hostname</code>：显示系统主机名</li>
+<li><code class="notranslate">date</code>：显示当前日期和时间</li>
+<li><code class="notranslate">uptime</code>：显示系统运行时间和平均负载</li>
+<li><code class="notranslate">df -h</code>：以易读格式(GB,MB)显示磁盘空间使用情况</li>
+<li><code class="notranslate">free -m</code>：以MB为单位显示内存使用情况</li>
+</ul>
+<h2>2. 文件备份脚本</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 文件备份脚本</span>
+
+backup_dir=<span class="pl-s"><span class="pl-pds">"</span>/backup<span class="pl-pds">"</span></span>
+source_dir=<span class="pl-s"><span class="pl-pds">"</span>/home/user/documents<span class="pl-pds">"</span></span>
+timestamp=<span class="pl-s"><span class="pl-pds">$(</span>date +%Y%m%d_%H%M%S<span class="pl-pds">)</span></span>
+backup_file=<span class="pl-s"><span class="pl-pds">"</span>backup_<span class="pl-smi">$timestamp</span>.tar.gz<span class="pl-pds">"</span></span>
+
+<span class="pl-k">if</span> [ <span class="pl-k">!</span> <span class="pl-k">-d</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$backup_dir</span><span class="pl-pds">"</span></span> ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    mkdir -p <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$backup_dir</span><span class="pl-pds">"</span></span>
+<span class="pl-k">fi</span>
+
+tar -czf <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$backup_dir</span>/<span class="pl-smi">$backup_file</span><span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$source_dir</span><span class="pl-pds">"</span></span>
+
+<span class="pl-k">if</span> [ <span class="pl-smi">$?</span> <span class="pl-k">-eq</span> 0 ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>备份成功完成: <span class="pl-smi">$backup_file</span><span class="pl-pds">"</span></span>
+<span class="pl-k">else</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>备份失败!<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&amp;2</span>
+    <span class="pl-c1">exit</span> 1
+<span class="pl-k">fi</span></pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">backup_dir="/backup"</code>：定义变量，设置备份目录路径</li>
+<li><code class="notranslate">timestamp=$(date +%Y%m%d_%H%M%S)</code>：获取当前时间戳，格式为年月日_时分秒</li>
+<li><code class="notranslate">if [ ! -d "$backup_dir" ]; then</code>：检查目录是否存在</li>
+<li><code class="notranslate">mkdir -p</code>：创建目录，-p参数确保父目录不存在时一并创建</li>
+<li><code class="notranslate">tar -czf</code>：创建压缩归档文件
+<ul>
+<li><code class="notranslate">-c</code>：创建新归档</li>
+<li><code class="notranslate">-z</code>：使用gzip压缩</li>
+<li><code class="notranslate">-f</code>：指定文件名</li>
+</ul>
+</li>
+<li><code class="notranslate">$?</code>：上一条命令的退出状态</li>
+<li><code class="notranslate">-eq 0</code>：检查是否等于0(成功)</li>
+<li><code class="notranslate">&gt;&amp;2</code>：将输出重定向到标准错误</li>
+<li><code class="notranslate">exit 1</code>：以错误状态退出脚本</li>
+</ul>
+<h2>3. 日志文件分析脚本</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 分析日志文件中的错误</span>
+
+log_file=<span class="pl-s"><span class="pl-pds">"</span>/var/log/syslog<span class="pl-pds">"</span></span>
+error_keywords=(<span class="pl-s"><span class="pl-pds">"</span>error<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>failed<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>warning<span class="pl-pds">"</span></span>)
+output_file=<span class="pl-s"><span class="pl-pds">"</span>error_report.txt<span class="pl-pds">"</span></span>
+
+<span class="pl-k">if</span> [ <span class="pl-k">!</span> <span class="pl-k">-f</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$log_file</span><span class="pl-pds">"</span></span> ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>错误: 日志文件 <span class="pl-smi">$log_file</span> 不存在!<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&amp;2</span>
+    <span class="pl-c1">exit</span> 1
+<span class="pl-k">fi</span>
+
+<span class="pl-k">&gt;</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$output_file</span><span class="pl-pds">"</span></span>  <span class="pl-c"><span class="pl-c">#</span> 清空输出文件</span>
+
+<span class="pl-k">for</span> <span class="pl-smi">keyword</span> <span class="pl-k">in</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${error_keywords[@]}</span><span class="pl-pds">"</span></span><span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>===== <span class="pl-smi">$keyword</span> =====<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$output_file</span><span class="pl-pds">"</span></span>
+    grep -i <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$keyword</span><span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$log_file</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> tail -n 10 <span class="pl-k">&gt;&gt;</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$output_file</span><span class="pl-pds">"</span></span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$output_file</span><span class="pl-pds">"</span></span>
+<span class="pl-k">done</span>
+
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>错误报告已生成: <span class="pl-smi">$output_file</span><span class="pl-pds">"</span></span></pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">error_keywords=("error" "failed" "warning")</code>：定义数组变量</li>
+<li><code class="notranslate">"${error_keywords[@]}"</code>：展开数组所有元素</li>
+<li><code class="notranslate">&gt; "$output_file"</code>：清空文件内容(重定向空输出到文件)</li>
+<li><code class="notranslate">grep -i</code>：搜索文本，-i忽略大小写</li>
+<li><code class="notranslate">|</code>：管道，将前一个命令的输出作为后一个命令的输入</li>
+<li><code class="notranslate">tail -n 10</code>：显示最后10行</li>
+<li><code class="notranslate">&gt;&gt;</code>：追加输出到文件</li>
+</ul>
+<h2>4. 用户账户管理脚本</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 批量添加用户</span>
+
+user_list=(<span class="pl-s"><span class="pl-pds">"</span>user1<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>user2<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>user3<span class="pl-pds">"</span></span>)
+default_password=<span class="pl-s"><span class="pl-pds">"</span>ChangeMe123<span class="pl-pds">"</span></span>
+
+<span class="pl-k">if</span> [ <span class="pl-s"><span class="pl-pds">$(</span>id -u<span class="pl-pds">)</span></span> <span class="pl-k">-ne</span> 0 ]<span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>该脚本需要root权限!<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&amp;2</span>
+    <span class="pl-c1">exit</span> 1
+<span class="pl-k">fi</span>
+
+<span class="pl-k">for</span> <span class="pl-smi">user</span> <span class="pl-k">in</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${user_list[@]}</span><span class="pl-pds">"</span></span><span class="pl-k">;</span> <span class="pl-k">do</span>
+    <span class="pl-k">if</span> id <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$user</span><span class="pl-pds">"</span></span> <span class="pl-k">&amp;</span><span class="pl-k">&gt;</span>/dev/null<span class="pl-k">;</span> <span class="pl-k">then</span>
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>用户 <span class="pl-smi">$user</span> 已存在，跳过...<span class="pl-pds">"</span></span>
+    <span class="pl-k">else</span>
+        useradd -m -s /bin/bash <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$user</span><span class="pl-pds">"</span></span>
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$user</span>:<span class="pl-smi">$default_password</span><span class="pl-pds">"</span></span> <span class="pl-k">|</span> chpasswd
+        passwd -e <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$user</span><span class="pl-pds">"</span></span>  <span class="pl-c"><span class="pl-c">#</span> 强制用户首次登录修改密码</span>
+        <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>已创建用户: <span class="pl-smi">$user</span><span class="pl-pds">"</span></span>
+    <span class="pl-k">fi</span>
+<span class="pl-k">done</span></pre></div>
+<h3>命令解释：</h3>
+<ul>
+<li><code class="notranslate">id -u</code>：显示当前用户ID(0表示root)</li>
+<li><code class="notranslate">-ne 0</code>：不等于0</li>
+<li><code class="notranslate">id "$user" &amp;&gt;/dev/null</code>：检查用户是否存在，丢弃所有输出</li>
+<li><code class="notranslate">useradd</code>：添加用户
+<ul>
+<li><code class="notranslate">-m</code>：创建用户主目录</li>
+<li><code class="notranslate">-s</code>：指定默认shell</li>
+</ul>
+</li>
+<li><code class="notranslate">chpasswd</code>：批量修改密码</li>
+<li><code class="notranslate">passwd -e</code>：使密码立即过期，强制用户首次登录修改</li>
+<li><code class="notranslate">&amp;&gt;/dev/null</code>：将标准输出和错误都重定向到/dev/null(丢弃)</li>
+</ul>
+<h2>5.系统监控脚本</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c"><span class="pl-c">#</span> 获取系统信息</span>
+cpu=<span class="pl-s"><span class="pl-pds">$(</span>top -bn1 <span class="pl-k">|</span> grep load <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{printf "%.2f", $(NF-2)}<span class="pl-pds">'</span></span><span class="pl-pds">)</span></span>
+mem=<span class="pl-s"><span class="pl-pds">$(</span>free -m <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>/Mem/{print $3"MB"}<span class="pl-pds">'</span></span><span class="pl-pds">)</span></span>
+disk=<span class="pl-s"><span class="pl-pds">$(</span>df -h <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>/\/$/{print $5}<span class="pl-pds">'</span></span><span class="pl-pds">)</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 发送警报</span>
+<span class="pl-k">if</span> <span class="pl-s"><span class="pl-pds">((</span> $(echo "<span class="pl-smi">$cpu</span> <span class="pl-k">&gt;</span> <span class="pl-c1">80</span>" <span class="pl-k">|</span> bc <span class="pl-k">-</span>l) <span class="pl-pds">))</span></span><span class="pl-k">;</span> <span class="pl-k">then</span>
+    <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>High CPU usage: <span class="pl-smi">$cpu</span>%<span class="pl-pds">"</span></span> <span class="pl-k">|</span> mail -s <span class="pl-s"><span class="pl-pds">"</span>Alert<span class="pl-pds">"</span></span> admin@example.com
+<span class="pl-k">fi</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 输出报告</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>CPU: <span class="pl-smi">$cpu</span> | Memory: <span class="pl-smi">$mem</span> | Disk: <span class="pl-smi">$disk</span><span class="pl-pds">"</span></span></pre></div>
+<h3>解释</h3>
+<ul>
+<li>top -bn1：非交互式获取系统状态</li>
+<li>awk：文本处理工具</li>
+<li>bc -l：浮点数比较</li>
+<li>mail：发送邮件通知</li>
+</ul></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.yame.news">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
