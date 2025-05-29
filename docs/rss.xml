@@ -1,5 +1,24 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.yame.news</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.yame.news</link></image><lastBuildDate>Wed, 28 May 2025 08:32:43 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Git基础</title><link>https://bbs.yame.news/post/Git-ji-chu.html</link><description>## 一、Git是什么？
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.yame.news</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.yame.news</link></image><lastBuildDate>Thu, 29 May 2025 02:37:25 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>LNPM下安装WORDPRESS</title><link>https://bbs.yame.news/post/LNPM-xia-an-zhuang-WORDPRESS.html</link><description>
+## 🧱 一、安装 LNMP 环境
+
+### 1. 安装 Nginx
+
+```bash
+sudo dnf install epel-release -y
+sudo dnf install nginx -y
+sudo systemctl enable --now nginx
+```
+
+### 2. 安装 MariaDB（MySQL 的开源分支）
+
+```bash
+sudo dnf install mariadb-server -y
+sudo systemctl enable --now mariadb
+sudo mysql_secure_installation
+```
+
+&gt; 执行 `mysql_secure_installation` 时建议设置 root 密码，禁止远程登录，移除测试数据库。</description><guid isPermaLink="true">https://bbs.yame.news/post/LNPM-xia-an-zhuang-WORDPRESS.html</guid><pubDate>Thu, 29 May 2025 02:36:53 +0000</pubDate></item><item><title>Git基础</title><link>https://bbs.yame.news/post/Git-ji-chu.html</link><description>## 一、Git是什么？
 
 Git是一种分布式版本控制系统，用于跟踪文件的更改，特别是计算机代码文件的更改。</description><guid isPermaLink="true">https://bbs.yame.news/post/Git-ji-chu.html</guid><pubDate>Wed, 28 May 2025 08:32:12 +0000</pubDate></item><item><title>常见的Shell脚本</title><link>https://bbs.yame.news/post/chang-jian-de-Shell-jiao-ben.html</link><description>![image.png](https://pic.myla.eu.org/file/1747622262076_image.png)
 
