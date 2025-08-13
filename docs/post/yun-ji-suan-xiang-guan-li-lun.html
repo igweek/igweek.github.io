@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script>
+    <link rel="icon" href="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="## 云计算定义：
+云计算是通过互联网提供计算资源（如服务器、存储、数据库、软件等）的方式。">
+<meta property="og:title" content="云计算相关理论">
+<meta property="og:description" content="## 云计算定义：
+云计算是通过互联网提供计算资源（如服务器、存储、数据库、软件等）的方式。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.yame.news/post/yun-ji-suan-xiang-guan-li-lun.html">
+<meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
+<title>云计算相关理论</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">云计算相关理论</h1>
+<div class="title-right">
+    <a href="https://bbs.yame.news" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/28" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>云计算定义：</h2>
+<p>云计算是通过互联网提供计算资源（如服务器、存储、数据库、软件等）的方式。用户无需拥有或维护物理硬件，而是按需购买服务。这些资源通常由云服务商（如AWS、Azure、Google Cloud等）托管和管理，用户可以远程访问和使用这些资源。</p>
+<p>通俗地说，云计算就像是你租用一个虚拟的计算机或服务器，按使用量支付费用，而不需要自己去购买、安装和维护硬件设备。</p>
+<h2>云计算的商业驱动力：</h2>
+<p><strong>成本效益</strong>：企业通过云计算无需投资昂贵的硬件设备和基础设施，也无需担心硬件故障的修复和维护问题。它采用按需付费模式，根据实际使用量支付费用，从而大大降低了企业的初期投资和运营成本。</p>
+<p><strong>灵活性和可扩展性</strong>：云计算允许企业根据需求动态调整资源。例如，流量突然增加时，可以快速扩展计算能力；流量减少时，可以减少资源，从而避免浪费。</p>
+<p><strong>业务连续性和可靠性</strong>：云服务商通常会提供多个数据中心和灾难恢复能力，确保业务不会因为硬件故障而中断，保障了高可用性。</p>
+<p><strong>创新速度</strong>：云计算使得企业可以快速获得最新的技术和工具，减少了更新系统和软件的时间，使得企业能在竞争中更快创新，响应市场需求。</p>
+<p><strong>全球化支持</strong>：借助云计算，企业可以轻松将应用和服务扩展到全球范围，满足不同地区用户的需求，而无需担心地域性硬件部署问题。</p>
+<p>通过这些商业驱动力，云计算帮助企业降低成本、提高效率、加速创新，进而提升竞争力。</p>
+<h2>云计算发展历史</h2>
+<p>云计算的发展历史可以追溯到上世纪60年代，尽管“云计算”这个名字本身直到21世纪初才开始流行。以下是几个关键的发展阶段：</p>
+<h3>1. <strong>60年代：雏形初现</strong></h3>
+<ul>
+<li><strong>虚拟化技术的出现</strong>：云计算的基础可以追溯到上世纪60年代。麻省理工学院（MIT）的<strong>乔治·金</strong>提出了“计算共享”的理念。那时，计算机非常昂贵，只有少数大公司和大学能拥有，而虚拟化技术的出现使得计算资源能够在多个用户之间共享。</li>
+<li><strong>时分共享系统</strong>：这种计算资源共享的方式使得多个用户可以同时使用一台大型计算机，而不必每个人都拥有一台计算机。</li>
+</ul>
+<h3>2. <strong>90年代：互联网的崛起</strong></h3>
+<ul>
+<li><strong>互联网的发展</strong>：90年代，互联网的发展带来了更高效的计算和数据交换方式，尤其是电子邮件和网页的普及让人们开始意识到远程计算和存储的可行性。</li>
+<li><strong>应用托管和ASP（应用服务提供商）</strong>：一些公司开始提供通过互联网访问的软件和应用服务，类似现在的SaaS（软件即服务）。不过那时，企业还是需要自己管理服务器。</li>
+</ul>
+<h3>3. <strong>2000年代初：云计算的起步</strong></h3>
+<ul>
+<li><strong>Amazon Web Services (AWS)</strong>：2002年，亚马逊推出了<strong>Amazon Web Services (AWS)</strong>，这是云计算发展史上的一个重要标志。AWS为企业提供了按需计算、存储等基础设施服务，这种灵活的按需收费模式成为了云计算的基础。</li>
+<li><strong>Google、Salesforce、微软等的参与</strong>：2006年，Google推出了Google Apps，开始提供在线办公软件。2008年，Salesforce推出了其基于云计算的CRM系统（客户关系管理），进一步推动了云计算的商业化应用。</li>
+<li><strong>虚拟化技术的成熟</strong>：VMware等公司推出的虚拟化技术，使得硬件资源能够被更加高效地划分和使用，为云计算的基础设施提供了支持。</li>
+</ul>
+<h3>4. <strong>2010年代：云计算的爆发</strong></h3>
+<ul>
+<li><strong>公有云的快速发展</strong>：2006年，AWS推出了Elastic Compute Cloud (EC2)，为用户提供计算能力的租赁服务。这个产品标志着公有云的正式崛起。随后，微软Azure（2010年）、Google Cloud（2008年）等云平台也陆续推出。</li>
+<li><strong>SaaS、PaaS、IaaS的细分</strong>：云计算开始从基础设施服务（IaaS）扩展到平台服务（PaaS）和软件服务（SaaS）。例如，<strong>Salesforce</strong>、<strong>Dropbox</strong>、<strong>Office 365</strong>等开始流行，企业和个人都开始依赖云服务进行办公、存储和协作。</li>
+<li><strong>大数据与云计算结合</strong>：随着大数据技术的发展，云计算成为了存储和处理大数据的理想平台。企业可以借助云计算大规模处理、分析数据，优化决策。</li>
+</ul>
+<h3>5. <strong>2020年代至今：智能云与边缘计算</strong></h3>
+<ul>
+<li><strong>多云和混合云架构</strong>：随着云计算技术的不断成熟，企业开始选择多云或者混合云架构，以避免单一云服务商带来的风险，提升灵活性和可靠性。</li>
+<li><strong>人工智能与云计算结合</strong>：云计算与人工智能（AI）和机器学习的结合，使得企业可以通过云平台更轻松地获取计算能力和大数据处理能力，加速创新。</li>
+<li><strong>边缘计算</strong>：随着物联网（IoT）的发展，边缘计算成为了一个重要趋势。边缘计算将数据处理推向网络边缘，更接近数据源，减少延迟并提高实时性。云计算和边缘计算的结合为智能设备和实时应用提供了支持。</li>
+</ul>
+<h2>云计算平台</h2>
+<p>云计算平台是提供各种计算资源（如服务器、存储、网络、软件等）的基础设施或平台，通常由云服务商提供并通过互联网访问。云计算平台可以根据部署模式分为 <strong>私有云</strong>、<strong>公有云</strong> 和 <strong>混合云</strong>。这三种云计算平台各有特点，适用于不同的企业需求。</p>
+<h3>1. <strong>公有云（Public Cloud）</strong></h3>
+<p><strong>定义</strong>：公有云是由第三方云服务提供商（如亚马逊AWS、微软Azure、谷歌Cloud等）提供和管理的云计算平台，用户可以通过互联网访问共享的计算资源。公有云资源和服务是多租户的，即多个不同的用户共享同一基础设施，但每个用户的数据和应用是隔离的。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><strong>按需付费</strong>：用户根据使用的资源量进行付费，不需要进行大量的前期投资。</li>
+<li><strong>可扩展性强</strong>：能够根据需求弹性调整资源，适应不同的业务需求。</li>
+<li><strong>管理简便</strong>：用户不需要自己管理硬件和基础设施，减少了维护的复杂性。</li>
+<li><strong>适用场景</strong>：适合中小企业和初创公司，特别是那些不需要极高安全性、或不涉及敏感数据的企业。</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>降低初期投资和运维成本。</li>
+<li>高度灵活，按需扩展或收缩。</li>
+<li>可以利用先进的技术，如AI、大数据等。</li>
+</ul>
+<p><strong>劣势</strong>：</p>
+<ul>
+<li>安全性和隐私性可能较弱，因为资源是共享的。</li>
+<li>对某些特定行业的合规要求可能无法满足。</li>
+</ul>
+<h3>2. <strong>私有云（Private Cloud）</strong></h3>
+<p><strong>定义</strong>：私有云是由单一组织拥有并操作的云计算平台，所有的计算资源和基础设施都为该组织专用。私有云可以托管在企业的本地数据中心，也可以托管在第三方的服务商数据中心，但所有资源都只为一个组织使用。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><strong>资源专用</strong>：所有的计算资源、存储等都是为单一企业提供的。</li>
+<li><strong>高度控制</strong>：企业对私有云的硬件、软件和数据具有完全的控制权，能够自定义和优化云环境。</li>
+<li><strong>安全性高</strong>：由于没有其他租户共享，私有云可以实现更严格的安全控制和合规性要求。</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>更高的安全性和隐私性，适合处理敏感数据。</li>
+<li>灵活性较高，可以完全根据企业的需求进行定制。</li>
+<li>可确保合规性和业务连续性，适合金融、医疗等高要求行业。</li>
+</ul>
+<p><strong>劣势</strong>：</p>
+<ul>
+<li>成本较高，需要投入大量资金进行建设、维护和管理。</li>
+<li>资源利用率可能不如公有云，存在闲置的风险。</li>
+</ul>
+<h3>3. <strong>混合云（Hybrid Cloud）</strong></h3>
+<p><strong>定义</strong>：混合云是结合了公有云和私有云的优点的一种云计算部署模式。企业可以将一些核心的、敏感的工作负载部署在私有云上，而将其他的非核心业务或弹性需求部署在公有云上，从而在两者之间实现数据和应用的集成。</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li><strong>灵活性</strong>：能够根据实际需要在私有云和公有云之间自由切换或扩展。</li>
+<li><strong>资源优化</strong>：企业可以将敏感数据保留在私有云中，同时利用公有云的弹性资源来处理非敏感的数据或业务。</li>
+<li><strong>集成性</strong>：混合云通常需要对公有云和私有云进行集成，以确保数据和应用的互通和统一管理。</li>
+</ul>
+<p><strong>优势</strong>：</p>
+<ul>
+<li>兼顾了私有云的安全性和公有云的灵活性。</li>
+<li>适合需要遵循合规性要求，同时又需要快速扩展计算资源的企业。</li>
+<li>可以根据需求动态调整，优化成本结构。</li>
+</ul>
+<p><strong>劣势</strong>：</p>
+<ul>
+<li>配置和管理较为复杂，需要良好的技术架构支持。</li>
+<li>成本较高，因为需要同时维护私有云和公有云。</li>
+</ul>
+<hr>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>公有云（Public Cloud）</strong></th>
+<th><strong>私有云（Private Cloud）</strong></th>
+<th><strong>混合云（Hybrid Cloud）</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>定义</strong></td>
+<td>由第三方云服务商提供和管理，多个用户共享资源。</td>
+<td>由单一组织专用的云计算平台，资源完全由企业控制。</td>
+<td>结合了公有云和私有云，支持资源在两者之间的灵活切换。</td>
+</tr>
+<tr>
+<td><strong>控制权</strong></td>
+<td>云服务商控制所有资源，用户无法干预硬件和基础设施管理。</td>
+<td>企业拥有完全的控制权，可以自定义云环境。</td>
+<td>用户可以在私有云和公有云之间自由切换，灵活管理。</td>
+</tr>
+<tr>
+<td><strong>安全性</strong></td>
+<td>相对较低，因为资源是多租户共享的，数据可能暴露给其他用户。</td>
+<td>高安全性，所有数据和资源仅供一个组织使用。</td>
+<td>结合了私有云的安全性和公有云的弹性，适合处理敏感数据。</td>
+</tr>
+<tr>
+<td><strong>成本</strong></td>
+<td>按需付费，成本较低，不需要大规模的前期投资。</td>
+<td>成本较高，需要购买硬件、软件，并进行维护和管理。</td>
+<td>成本较高，企业需要同时维护私有云和公有云资源。</td>
+</tr>
+<tr>
+<td><strong>灵活性</strong></td>
+<td>高，可根据需求随时扩展或减少资源。</td>
+<td>低，资源固定，需要提前规划和投入。</td>
+<td>高，可以根据不同需求在私有云和公有云之间动态切换资源。</td>
+</tr>
+<tr>
+<td><strong>适用场景</strong></td>
+<td>适合中小企业和初创公司，尤其是业务增长较快的公司。</td>
+<td>适合大型企业和对数据安全、合规性要求高的行业（如金融、医疗）。</td>
+<td>适合需要高安全性但又希望利用公有云弹性扩展的企业（如大型制造业、跨国公司）。</td>
+</tr>
+<tr>
+<td><strong>管理复杂性</strong></td>
+<td>云服务商负责管理和维护，用户无需参与基础设施管理。</td>
+<td>企业需要自行管理和维护，增加了IT管理的负担。</td>
+<td>比较复杂，需要同时管理私有云和公有云的集成和数据流动。</td>
+</tr>
+<tr>
+<td><strong>扩展性</strong></td>
+<td>非常高，可以快速扩展或缩减资源，几乎无限制。</td>
+<td>限制较大，扩展需要额外的投资和时间。</td>
+<td>高，结合了公有云的扩展性和私有云的稳定性。</td>
+</tr>
+<tr>
+<td><strong>合规性</strong></td>
+<td>可能不符合某些行业的严格合规要求。</td>
+<td>高，企业可以根据需求定制合规政策。</td>
+<td>可以根据需要灵活配置合规性，敏感数据留在私有云，其他数据在公有云。</td>
+</tr>
+<tr>
+<td><strong>举例</strong></td>
+<td>Netflix、Dropbox、Salesforce（SaaS服务）。</td>
+<td>摩根大通、IBM Cloud Private、银行业、医疗行业等。</td>
+<td>沃尔沃（使用混合云处理汽车实时数据）、一些大型跨国公司。</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>云计算服务类型</h2>
+<p>IaaS、PaaS、SaaS 和 DaaS 都是云计算服务的不同层级或类型，代表了不同的服务模型。它们之间的主要区别在于提供的服务范围以及用户需要管理的内容。</p>
+<h3><strong>IaaS（基础设施即服务，Infrastructure as a Service）</strong></h3>
+<p><strong>定义</strong>：IaaS 提供虚拟化的计算资源，通过互联网向用户提供基础设施服务，如虚拟服务器、存储、网络等。用户不需要购买和维护物理硬件，而是按需租用云服务商提供的计算资源。</p>
+<p><strong>用户管理的内容</strong>：</p>
+<ul>
+<li>操作系统、应用软件、数据等由用户管理。</li>
+<li>计算、存储、网络等硬件资源由云服务商提供和管理。</li>
+</ul>
+<p><strong>举例</strong>：</p>
+<ul>
+<li><strong>Amazon Web Services (AWS)</strong> 提供 EC2（虚拟服务器）、S3（存储服务）。</li>
+<li><strong>Microsoft Azure</strong> 提供虚拟机、虚拟网络。</li>
+<li><strong>Google Cloud Platform</strong> 提供计算引擎、云存储。</li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>适合需要灵活、高度可扩展的计算资源的企业。</li>
+<li>例如需要创建虚拟服务器、进行数据备份或运行自定义应用的公司。</li>
+</ul>
+<h3><strong>PaaS（平台即服务，Platform as a Service）</strong></h3>
+<p><strong>定义</strong>：PaaS 提供了一个开发和部署应用的完整平台，用户可以在平台上构建、运行、管理应用程序，而无需关注底层的硬件资源和基础设施。</p>
+<p><strong>用户管理的内容</strong>：</p>
+<ul>
+<li>只需关注应用的开发、测试、部署等。</li>
+<li>底层的计算、存储、网络、操作系统、数据库等由云服务商管理。</li>
+</ul>
+<p><strong>举例</strong>：</p>
+<ul>
+<li><strong>Google App Engine</strong> 提供了一个平台，开发者可以直接将应用部署到云中，而无需担心底层基础设施。</li>
+<li><strong>Microsoft Azure App Services</strong> 提供了构建和托管 Web 应用的工具和平台。</li>
+<li><strong>Heroku</strong> 提供一个可以直接部署应用的平台。</li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>开发者希望专注于应用开发，而不想管理底层基础设施。</li>
+<li>例如 Web 应用开发、API 集成等项目。</li>
+</ul>
+<h3><strong>SaaS（软件即服务，Software as a Service）</strong></h3>
+<p><strong>定义</strong>：SaaS 提供了完整的软件应用服务，用户可以通过互联网直接使用软件，无需安装、维护、更新或管理软件。软件和所有相关的基础设施都由云服务商提供和管理。</p>
+<p><strong>用户管理的内容</strong>：</p>
+<ul>
+<li>用户只需关注软件的使用，所有的硬件、操作系统、数据库、应用程序等都由云服务商管理。</li>
+</ul>
+<p><strong>举例</strong>：</p>
+<ul>
+<li><strong>Google Workspace</strong>（前身为 G Suite）提供的 Gmail、Google Docs、Google Drive 等应用。</li>
+<li><strong>Microsoft 365</strong> 提供的 Word、Excel、PowerPoint 等在线办公软件。</li>
+<li><strong>Salesforce</strong> 提供的 CRM（客户关系管理）系统。</li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>适用于希望快速部署并使用现成软件的公司。</li>
+<li>比如企业协作、办公、客户关系管理等场景。</li>
+</ul>
+<h3><strong>DaaS（桌面即服务，Desktop as a Service）</strong></h3>
+<p><strong>定义</strong>：DaaS 是将桌面虚拟化技术与云计算结合的服务，用户可以通过互联网访问和使用托管在云中的虚拟桌面。这意味着用户可以在任何设备上访问自己的操作系统和应用环境，而不需要依赖本地硬件。</p>
+<p><strong>用户管理的内容</strong>：</p>
+<ul>
+<li>用户通过云平台访问虚拟桌面，管理自己的应用和数据。</li>
+<li>基础设施、操作系统和虚拟化平台由云服务商负责管理。</li>
+</ul>
+<p><strong>举例</strong>：</p>
+<ul>
+<li><strong>Amazon WorkSpaces</strong>：提供虚拟桌面，允许用户在任何设备上访问。</li>
+<li><strong>Microsoft Windows Virtual Desktop</strong>：基于 Azure 提供的虚拟桌面解决方案。</li>
+<li><strong>Citrix Virtual Apps and Desktops</strong>：提供虚拟化桌面和应用程序。</li>
+</ul>
+<p><strong>适用场景</strong>：</p>
+<ul>
+<li>适合需要远程工作、桌面虚拟化、提高数据安全的企业。</li>
+<li>例如跨地域团队、需要集中管理桌面的公司。</li>
+</ul>
+<hr>
+<h3>总结：</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th><strong>服务模型</strong></th>
+<th><strong>定义</strong></th>
+<th><strong>主要服务内容</strong></th>
+<th><strong>适用对象/场景</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IaaS</strong></td>
+<td>基础设施即服务，提供计算、存储和网络资源。</td>
+<td>提供虚拟化的硬件资源（如虚拟机、存储、网络）。</td>
+<td>企业需要灵活的计算资源，如虚拟机、数据库等。</td>
+</tr>
+<tr>
+<td><strong>PaaS</strong></td>
+<td>平台即服务，提供开发和部署应用的平台。</td>
+<td>提供开发、部署、管理应用的平台（如操作系统、数据库）。</td>
+<td>开发者希望专注于应用开发，无需管理底层基础设施。</td>
+</tr>
+<tr>
+<td><strong>SaaS</strong></td>
+<td>软件即服务，提供已托管的软件应用服务。</td>
+<td>提供完整的应用软件（如办公软件、CRM 系统）。</td>
+<td>企业和个人需要即开即用的应用，如办公协作、客户管理等。</td>
+</tr>
+<tr>
+<td><strong>DaaS</strong></td>
+<td>桌面即服务，提供托管在云中的虚拟桌面。</td>
+<td>提供虚拟桌面和应用，用户通过网络访问。</td>
+<td>需要远程桌面访问和集中管理桌面的企业，如跨地区的工作环境。</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4494b0e061f58df4ecaf960cc03c2850ae872da8f68aba2ad58027b826cbe481/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313733393730333337303531335f696d6167652e706e67"><img src="https://camo.githubusercontent.com/4494b0e061f58df4ecaf960cc03c2850ae872da8f68aba2ad58027b826cbe481/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313733393730333337303531335f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1739703370513_image.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/bb747eeb2d6ae45de1feb4cda3538cb071c7c3eed11164c08752c82bb0e8efff/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313733393730333338343133305f696d6167652e706e67"><img src="https://camo.githubusercontent.com/bb747eeb2d6ae45de1feb4cda3538cb071c7c3eed11164c08752c82bb0e8efff/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313733393730333338343133305f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1739703384130_image.png" style="max-width: 100%;"></a></p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.yame.news">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>
