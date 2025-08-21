@@ -1,6 +1,6 @@
-# Gweek :link: https://bbs.yame.news 
-### :page_facing_up: [60](https://bbs.yame.news/tag.html) 
+# Gweek :link: https://bbs.myla.eu.org 
+### :page_facing_up: [60](https://bbs.myla.eu.org/tag.html) 
 ### :speech_balloon: 4 
 ### :hibiscus: 319944 
-### :alarm_clock: 2025-05-29 11:30:43 
+### :alarm_clock: 2025-08-22 01:18:31 
 ### Powered by :heart: [Gmeek](https://github.com/Meekdai/Gmeek)
