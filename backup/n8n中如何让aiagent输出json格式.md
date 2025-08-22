@@ -8,12 +8,14 @@
 
 请严格输出 JSON 格式，不能包含多余的文字或注释。
 只输出如下格式：
+```
 {
   "title": "...",
   "body": "...",
   "tags": [...]
 }
 
+```
 这样模型会更倾向于生成符合 JSON 的输出。
 ⚠️ 但是模型仍可能偶尔“跑偏”，生成非 JSON 的内容。
 
@@ -22,6 +24,7 @@
 ✅ 方法二：用 “Code” 节点 或 “Function” 节点 转换
 
 无论 Agent 输出是什么，你可以在后续加一个 Function 节点 来解析/修正 JSON：
+```
 
 // Function 节点代码
 try {
@@ -37,6 +40,7 @@ try {
   }
 }
 
+```
 这里假设 Agent 输出存在 data 字段里，你根据实际字段名调整。
 
 ⸻
@@ -62,6 +66,3 @@ n8n 里的 AI 工具包有一些 parser，比如 Structured Output，可以指�
 	2.	在流程里紧跟一个 JSON Parse 节点（或者 Function 节点做兜底）。
 	3.	如果任务是固定结构，最好用 Structured Output 方式。
 
-⸻
-
-要不要我帮你写一个 n8n 工作流示例，比如输入是一个问题，Agent 必须返回 { "answer": "...", "tags": [...] } 这样的 JSON？
