@@ -10,692 +10,14 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="## 文件与目录操作
-
-‌创建目录‌：在/home/user下新建名为projects的目录
-mkdir /home/user/projects
-
-‌递归创建目录‌：创建嵌套目录/data/app/logs（确保父目录不存在时自动创建）
-mkdir -p /data/app/logs
-
-‌复制文件‌：将file1.txt复制到/backup目录下并重命名为file1_bak.txt
-cp file1.txt /backup/file1_bak.txt
-
-‌递归复制目录‌：复制/var/www目录及其所有内容到/backup
-cp -r /var/www /backup
-
-‌移动文件‌：将当前目录下所有.log文件移动到/var/logs目录
-mv *.log /var/logs
-
-‌重命名文件‌：将old_name.txt重命名为new_name.txt
-mv old_name.txt new_name.txt
-
-‌删除文件‌：删除当前目录下所有.tmp临时文件（非递归）
-rm *.tmp
-
-‌强制删除目录‌：递归强制删除/cache目录及其所有内容
-rm -rf /cache
-
-‌创建空文件‌：在/tmp下创建名为lockfile的空文件
-touch /tmp/lockfile
-
-‌创建硬链接‌：为/data/file.txt创建硬链接/backup/file_link.txt
-ln /data/file.txt /backup/file_link.txt
-
-## 文本处理
-
-‌查看文件开头‌：查看/var/log/syslog的前10行内容
-head -n 10 /var/log/syslog
-
-‌查看文件末尾‌：实时监控/var/log/apache/access.log的新增内容
-tail -f /var/log/apache/access.log
-
-‌关键词搜索‌：在config.conf中搜索包含'error'的行（忽略大小写）
-grep -i 'error' config.conf
-
-‌递归搜索文本‌：在/etc目录下所有.conf文件中查找'timeout'关键词
-grep -r 'timeout' /etc/*.conf
-
-‌统计行数‌：统计data.csv的总行数
-wc -l data.csv
-
-‌文本替换‌：将document.txt中所有'old'替换为'new'（原地修改）
-sed -i 's/old/new/g' document.txt
-
-‌删除空行‌：删除notes.txt中的所有空行并保存为新文件clean_notes.txt
-sed '/^$/d' notes.txt > clean_notes.txt
-
-‌列格式化输出‌：用:分隔符显示/etc/passwd的第1列和第3列
-awk -F':' '{print $1,$3}' /etc/passwd
-
-‌合并文件‌：将file1.txt和file2.txt合并为combined.txt
-cat file1.txt file2.txt > combined.txt
-
-‌排序去重‌：对usernames.txt排序并去重后输出到sorted_users.txt
-sort -u usernames.txt > sorted_users.txt
-
-## 权限管理
-
-‌修改文件权限‌：设置script.sh为所有者可读写执行，组和其他人只读
-chmod 755 script.sh
-或
-chmod u=rwx,go=r script.sh
-
-‌修改所有者‌：将/data/reports目录的所有者改为admin用户
-chown admin /data/reports
-
-‌递归修改权限‌：将/var/www/html下所有文件设为644，目录设为755
-find /var/www/html -type f -exec chmod 644 {} \;
-find /var/www/html -type d -exec chmod 755 {} \;
-
-‌设置SUID‌：为/usr/bin/backup_tool设置SUID权限
-chmod u+s /usr/bin/backup_tool
-
-## 系统信息查看
-
-‌查看磁盘空间‌：以人类可读格式显示所有挂载点的磁盘使用情况
-df -h
-
-‌查看目录大小‌：统计/home目录占用的磁盘空间（人类可读）
-du -sh /home
-
-‌查看内存使用‌：显示内存和交换空间使用情况（MB单位）
-free -m
-
-‌查看进程‌：列出所有包含'nginx'关键字的进程
-ps aux | grep nginx
-
-‌实时监控进程‌：动态显示CPU占用最高的进程
-top（进入后按P键排序）
-
-‌查看系统负载‌：显示过去1/5/15分钟的系统负载
-uptime
-
-## 进程管理
-
-‌终止进程‌：强制终止PID为2248的进程
-kill -9 2248
-
-‌批量结束进程‌：终止所有名为'chromium'的进程
-pkill chromium
-
-‌后台运行程序‌：将python app.py放入后台运行
-python app.py &
-
-‌查看后台任务‌：列出所有后台任务
-jobs
-
-‌切换后台任务‌：将后台任务%2切换到前台
-fg %2
-
-## 压缩与归档
-
-‌压缩目录‌：将/data/docs目录打包为docs.tar.gz（使用gzip压缩）
-tar -czvf docs.tar.gz /data/docs
-
-‌解压文件‌：解压backup.tar.bz2到当前目录
-tar -xjvf backup.tar.bz2
-
-‌创建zip压缩包‌：将file1.log和file2.log压缩为logs.zip
-zip logs.zip file1.log file2.log
-
-‌解压zip文件‌：解压archive.zip到/tmp/extracted目录
-unzip archive.zip -d /tmp/extracted
-
-## 查找与定位
-
-‌按文件名查找‌：在/etc目录下查找所有.conf后缀的文件
-find /etc -name '*.conf'
-
-‌按大小查找‌：查找/var目录下大于100MB的文件
-find /var -size +100M
-
-‌按时间查找‌：查找/home目录下7天内修改过的文件
-find /home -mtime -7
-
-‌定位二进制路径‌：查找ls命令的完整路径
-which ls
-
-‌搜索命令文档‌：在man手册中搜索与'partition'相关的命令
-man -k partition 或 apropos partition
-
-## 用户与组管理
-
-‌创建用户‌：新建用户testuser并自动创建家目录
-useradd -m testuser
-
-‌设置密码‌：为用户testuser设置登录密码
-passwd testuser
-
-‌删除用户‌：删除用户olduser并移除其家目录
-userdel -r olduser
-
-‌创建用户组‌：创建名为developers的新组
-groupadd developers
-
-‌用户加入组‌：将用户john添加到sudo组
-usermod -aG sudo john
-
-‌查看用户组‌：显示当前用户所属的所有组
-groups
-
-## 软件包管理（Debian/Ubuntu）
-
-‌更新源列表‌：刷新APT软件包索引
-sudo apt update
-
-‌安装软件‌：安装nginx服务器
-sudo apt install nginx
-
-‌卸载软件‌：卸载apache2保留配置文件
-sudo apt remove apache2
-
-‌彻底卸载‌：完全卸载mysql-server（包括配置文件）
-sudo apt purge mysql-server
-
-‌搜索软件包‌：在仓库中搜索包含'pdf'关键字的软件包
-apt search pdf
-
-软件包管理（CentOS/RHEL）
-‌安装软件‌：用YUM安装vim编辑器
-sudo yum install vim
-
-‌卸载软件‌：移除httpd服务
-sudo yum remove httpd
-
-‌查询文件来源‌：查找/usr/bin/gcc属于哪个软件包
-yum provides /usr/bin/gcc
-
-## 计划任务
-
-‌添加定时任务‌：每天凌晨3点执行/backup/backup.sh
-crontab -e 添加：
-0 3 * * * /backup/backup.sh
-
-‌列出定时任务‌：显示当前用户的cron任务
-crontab -l
-
-## 文件系统操作
-
-‌挂载磁盘‌：将/dev/sdb1挂载到/mnt/data
-mount /dev/sdb1 /mnt/data
-
-‌卸载磁盘‌：卸载/mnt/data挂载点
-umount /mnt/data
-
-‌检查磁盘错误‌：检查/dev/sda1的文件系统错误
-fsck /dev/sda1
-
-## 网络配置（单机相关）
-
-‌查看主机名‌：显示当前系统主机名
-hostname
-
-‌修改主机名‌：临时将主机名改为server01（重启失效）
-hostname server01
-
-‌查看IP地址‌：显示所有网卡的IP地址信息
-ip addr show 或 ifconfig
-
-环境变量
-‌查看环境变量‌：显示PATH变量的内容
-echo $PATH
-
-‌临时设置变量‌：设置临时环境变量APP_ENV=production
-export APP_ENV=production
-
-‌持久化变量‌：将JAVA_HOME=/opt/jdk添加到用户环境变量
-echo 'export JAVA_HOME=/opt/jdk' >> ~/.bashrc
-
-杂项操作
-‌清空文件内容‌：清空/var/log/app.log文件（不删除文件）
-> /var/log/app.log 或 truncate -s 0 /var/log/app.log
-
-‌比较文件差异‌：对比file_v1.txt和file_v2.txt的不同
-diff file_v1.txt file_v2.txt
-
-‌生成随机密码‌：生成16字符的随机密码（含大小写字母和数字）
-tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16
-
-‌计算文件哈希‌：计算installer.iso的SHA256校验值
-sha256sum installer.iso
-
-‌查看命令历史‌：显示最近30条命令历史
-history 30
-
-‌重定向错误输出‌：运行test.sh并将错误信息保存到error.log
-bash test.sh 2> error.log
-
-‌创建符号链接‌：为/opt/app/bin创建桌面快捷方式~/Desktop/app_link
-ln -s /opt/app/bin ~/Desktop/app_link
-
-‌改变文件时间戳‌：将file.txt的修改时间设为当前时间
-touch file.txt
-
-‌按列分割文件‌：用cut提取passwd文件的第1列（用户名）
-cut -d: -f1 /etc/passwd
-
-‌合并两文件列‌：将names.txt和ids.txt按列合并为name_id.txt
-paste names.txt ids.txt > name_id.txt
-
-‌转换文件编码‌：将GBK编码的data.txt转为UTF-8
-iconv -f GBK -t UTF-8 data.txt > data_utf8.txt
-
-## 高级文本处理
-
-‌统计词频‌：统计document.txt中每个单词出现的频率
-tr '[:space:]' '[\n*]' < document.txt | grep -v '^$' | sort | uniq -c | sort -nr
-
-‌提取XML内容‌：从config.xml中提取所有<title>标签的内容
-grep -oP '<title>\K[^<]+' config.xml
-
-‌批量重命名‌：将当前目录所有.jpg文件后缀改为.jpeg
-rename 's/\.jpg$/.jpeg/' *.jpg
-
-‌文本去重‌：对log.txt按行去重（保留顺序）
-awk '!seen[$0]++' log.txt
-
-‌数值计算‌：计算numbers.txt中所有数字的总和
-awk '{sum+=$1} END{print sum}' numbers.txt
-
-## 系统管理
-
-‌关机命令‌：立即关闭系统
-shutdown now
-
-‌重启命令‌：10分钟后重启系统
-shutdown -r +10
-
-‌查看内核版本‌：显示当前Linux内核版本
-uname -r
-
-‌查看发行版信息‌：显示系统发行版详细信息
-cat /etc/os-release
-
-‌查看登录用户‌：显示当前登录系统的用户
-who
-
-‌查看命令帮助‌：查看grep命令的简明手册
-grep --help
-
-‌查看完整手册‌：阅读tar命令的完整手册页
-man tar
-
-## 文件传输（单机内）
-
-‌本地复制到远程目录‌：用scp将本地的data.bin复制到远程服务器（题目要求单机，此处调整为单机内操作）
-改为：将/local/file复制到同一台机器的/remote_dir
-cp /local/file /remote_dir/
-资源限制
-‌限制CPU时间‌：运行stress命令并限制最多使用50% CPU
-cpulimit -l 50 -i stress --cpu 1
-信号控制
-‌发送信号‌：向PID为1234的进程发送SIGHUP信号（重新加载配置）
-kill -HUP 1234
-归档备份
-‌差异备份‌：备份/home中修改过的文件到home_diff.tar
-tar -cvf home_diff.tar -N '$(date -d '1 day ago' '+%F')' /home
-设备管理
-‌查看USB设备‌：列出所有连接的USB设备信息
-lsusb
-
-‌查看块设备‌：列出所有磁盘分区信息
-lsblk
-
-内核模块
-‌查看加载模块‌：显示已加载的内核模块
-lsmod
-
-‌加载模块‌：加载nvidia内核模块
-modprobe nvidia
-
-。">
+<meta name="description" content="每个实验都模拟了一个真实的场景，希望你不仅能敲命令，更能理解其背后的逻辑。">
 <meta property="og:title" content="Linux命令练习">
-<meta property="og:description" content="## 文件与目录操作
-
-‌创建目录‌：在/home/user下新建名为projects的目录
-mkdir /home/user/projects
-
-‌递归创建目录‌：创建嵌套目录/data/app/logs（确保父目录不存在时自动创建）
-mkdir -p /data/app/logs
-
-‌复制文件‌：将file1.txt复制到/backup目录下并重命名为file1_bak.txt
-cp file1.txt /backup/file1_bak.txt
-
-‌递归复制目录‌：复制/var/www目录及其所有内容到/backup
-cp -r /var/www /backup
-
-‌移动文件‌：将当前目录下所有.log文件移动到/var/logs目录
-mv *.log /var/logs
-
-‌重命名文件‌：将old_name.txt重命名为new_name.txt
-mv old_name.txt new_name.txt
-
-‌删除文件‌：删除当前目录下所有.tmp临时文件（非递归）
-rm *.tmp
-
-‌强制删除目录‌：递归强制删除/cache目录及其所有内容
-rm -rf /cache
-
-‌创建空文件‌：在/tmp下创建名为lockfile的空文件
-touch /tmp/lockfile
-
-‌创建硬链接‌：为/data/file.txt创建硬链接/backup/file_link.txt
-ln /data/file.txt /backup/file_link.txt
-
-## 文本处理
-
-‌查看文件开头‌：查看/var/log/syslog的前10行内容
-head -n 10 /var/log/syslog
-
-‌查看文件末尾‌：实时监控/var/log/apache/access.log的新增内容
-tail -f /var/log/apache/access.log
-
-‌关键词搜索‌：在config.conf中搜索包含'error'的行（忽略大小写）
-grep -i 'error' config.conf
-
-‌递归搜索文本‌：在/etc目录下所有.conf文件中查找'timeout'关键词
-grep -r 'timeout' /etc/*.conf
-
-‌统计行数‌：统计data.csv的总行数
-wc -l data.csv
-
-‌文本替换‌：将document.txt中所有'old'替换为'new'（原地修改）
-sed -i 's/old/new/g' document.txt
-
-‌删除空行‌：删除notes.txt中的所有空行并保存为新文件clean_notes.txt
-sed '/^$/d' notes.txt > clean_notes.txt
-
-‌列格式化输出‌：用:分隔符显示/etc/passwd的第1列和第3列
-awk -F':' '{print $1,$3}' /etc/passwd
-
-‌合并文件‌：将file1.txt和file2.txt合并为combined.txt
-cat file1.txt file2.txt > combined.txt
-
-‌排序去重‌：对usernames.txt排序并去重后输出到sorted_users.txt
-sort -u usernames.txt > sorted_users.txt
-
-## 权限管理
-
-‌修改文件权限‌：设置script.sh为所有者可读写执行，组和其他人只读
-chmod 755 script.sh
-或
-chmod u=rwx,go=r script.sh
-
-‌修改所有者‌：将/data/reports目录的所有者改为admin用户
-chown admin /data/reports
-
-‌递归修改权限‌：将/var/www/html下所有文件设为644，目录设为755
-find /var/www/html -type f -exec chmod 644 {} \;
-find /var/www/html -type d -exec chmod 755 {} \;
-
-‌设置SUID‌：为/usr/bin/backup_tool设置SUID权限
-chmod u+s /usr/bin/backup_tool
-
-## 系统信息查看
-
-‌查看磁盘空间‌：以人类可读格式显示所有挂载点的磁盘使用情况
-df -h
-
-‌查看目录大小‌：统计/home目录占用的磁盘空间（人类可读）
-du -sh /home
-
-‌查看内存使用‌：显示内存和交换空间使用情况（MB单位）
-free -m
-
-‌查看进程‌：列出所有包含'nginx'关键字的进程
-ps aux | grep nginx
-
-‌实时监控进程‌：动态显示CPU占用最高的进程
-top（进入后按P键排序）
-
-‌查看系统负载‌：显示过去1/5/15分钟的系统负载
-uptime
-
-## 进程管理
-
-‌终止进程‌：强制终止PID为2248的进程
-kill -9 2248
-
-‌批量结束进程‌：终止所有名为'chromium'的进程
-pkill chromium
-
-‌后台运行程序‌：将python app.py放入后台运行
-python app.py &
-
-‌查看后台任务‌：列出所有后台任务
-jobs
-
-‌切换后台任务‌：将后台任务%2切换到前台
-fg %2
-
-## 压缩与归档
-
-‌压缩目录‌：将/data/docs目录打包为docs.tar.gz（使用gzip压缩）
-tar -czvf docs.tar.gz /data/docs
-
-‌解压文件‌：解压backup.tar.bz2到当前目录
-tar -xjvf backup.tar.bz2
-
-‌创建zip压缩包‌：将file1.log和file2.log压缩为logs.zip
-zip logs.zip file1.log file2.log
-
-‌解压zip文件‌：解压archive.zip到/tmp/extracted目录
-unzip archive.zip -d /tmp/extracted
-
-## 查找与定位
-
-‌按文件名查找‌：在/etc目录下查找所有.conf后缀的文件
-find /etc -name '*.conf'
-
-‌按大小查找‌：查找/var目录下大于100MB的文件
-find /var -size +100M
-
-‌按时间查找‌：查找/home目录下7天内修改过的文件
-find /home -mtime -7
-
-‌定位二进制路径‌：查找ls命令的完整路径
-which ls
-
-‌搜索命令文档‌：在man手册中搜索与'partition'相关的命令
-man -k partition 或 apropos partition
-
-## 用户与组管理
-
-‌创建用户‌：新建用户testuser并自动创建家目录
-useradd -m testuser
-
-‌设置密码‌：为用户testuser设置登录密码
-passwd testuser
-
-‌删除用户‌：删除用户olduser并移除其家目录
-userdel -r olduser
-
-‌创建用户组‌：创建名为developers的新组
-groupadd developers
-
-‌用户加入组‌：将用户john添加到sudo组
-usermod -aG sudo john
-
-‌查看用户组‌：显示当前用户所属的所有组
-groups
-
-## 软件包管理（Debian/Ubuntu）
-
-‌更新源列表‌：刷新APT软件包索引
-sudo apt update
-
-‌安装软件‌：安装nginx服务器
-sudo apt install nginx
-
-‌卸载软件‌：卸载apache2保留配置文件
-sudo apt remove apache2
-
-‌彻底卸载‌：完全卸载mysql-server（包括配置文件）
-sudo apt purge mysql-server
-
-‌搜索软件包‌：在仓库中搜索包含'pdf'关键字的软件包
-apt search pdf
-
-软件包管理（CentOS/RHEL）
-‌安装软件‌：用YUM安装vim编辑器
-sudo yum install vim
-
-‌卸载软件‌：移除httpd服务
-sudo yum remove httpd
-
-‌查询文件来源‌：查找/usr/bin/gcc属于哪个软件包
-yum provides /usr/bin/gcc
-
-## 计划任务
-
-‌添加定时任务‌：每天凌晨3点执行/backup/backup.sh
-crontab -e 添加：
-0 3 * * * /backup/backup.sh
-
-‌列出定时任务‌：显示当前用户的cron任务
-crontab -l
-
-## 文件系统操作
-
-‌挂载磁盘‌：将/dev/sdb1挂载到/mnt/data
-mount /dev/sdb1 /mnt/data
-
-‌卸载磁盘‌：卸载/mnt/data挂载点
-umount /mnt/data
-
-‌检查磁盘错误‌：检查/dev/sda1的文件系统错误
-fsck /dev/sda1
-
-## 网络配置（单机相关）
-
-‌查看主机名‌：显示当前系统主机名
-hostname
-
-‌修改主机名‌：临时将主机名改为server01（重启失效）
-hostname server01
-
-‌查看IP地址‌：显示所有网卡的IP地址信息
-ip addr show 或 ifconfig
-
-环境变量
-‌查看环境变量‌：显示PATH变量的内容
-echo $PATH
-
-‌临时设置变量‌：设置临时环境变量APP_ENV=production
-export APP_ENV=production
-
-‌持久化变量‌：将JAVA_HOME=/opt/jdk添加到用户环境变量
-echo 'export JAVA_HOME=/opt/jdk' >> ~/.bashrc
-
-杂项操作
-‌清空文件内容‌：清空/var/log/app.log文件（不删除文件）
-> /var/log/app.log 或 truncate -s 0 /var/log/app.log
-
-‌比较文件差异‌：对比file_v1.txt和file_v2.txt的不同
-diff file_v1.txt file_v2.txt
-
-‌生成随机密码‌：生成16字符的随机密码（含大小写字母和数字）
-tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16
-
-‌计算文件哈希‌：计算installer.iso的SHA256校验值
-sha256sum installer.iso
-
-‌查看命令历史‌：显示最近30条命令历史
-history 30
-
-‌重定向错误输出‌：运行test.sh并将错误信息保存到error.log
-bash test.sh 2> error.log
-
-‌创建符号链接‌：为/opt/app/bin创建桌面快捷方式~/Desktop/app_link
-ln -s /opt/app/bin ~/Desktop/app_link
-
-‌改变文件时间戳‌：将file.txt的修改时间设为当前时间
-touch file.txt
-
-‌按列分割文件‌：用cut提取passwd文件的第1列（用户名）
-cut -d: -f1 /etc/passwd
-
-‌合并两文件列‌：将names.txt和ids.txt按列合并为name_id.txt
-paste names.txt ids.txt > name_id.txt
-
-‌转换文件编码‌：将GBK编码的data.txt转为UTF-8
-iconv -f GBK -t UTF-8 data.txt > data_utf8.txt
-
-## 高级文本处理
-
-‌统计词频‌：统计document.txt中每个单词出现的频率
-tr '[:space:]' '[\n*]' < document.txt | grep -v '^$' | sort | uniq -c | sort -nr
-
-‌提取XML内容‌：从config.xml中提取所有<title>标签的内容
-grep -oP '<title>\K[^<]+' config.xml
-
-‌批量重命名‌：将当前目录所有.jpg文件后缀改为.jpeg
-rename 's/\.jpg$/.jpeg/' *.jpg
-
-‌文本去重‌：对log.txt按行去重（保留顺序）
-awk '!seen[$0]++' log.txt
-
-‌数值计算‌：计算numbers.txt中所有数字的总和
-awk '{sum+=$1} END{print sum}' numbers.txt
-
-## 系统管理
-
-‌关机命令‌：立即关闭系统
-shutdown now
-
-‌重启命令‌：10分钟后重启系统
-shutdown -r +10
-
-‌查看内核版本‌：显示当前Linux内核版本
-uname -r
-
-‌查看发行版信息‌：显示系统发行版详细信息
-cat /etc/os-release
-
-‌查看登录用户‌：显示当前登录系统的用户
-who
-
-‌查看命令帮助‌：查看grep命令的简明手册
-grep --help
-
-‌查看完整手册‌：阅读tar命令的完整手册页
-man tar
-
-## 文件传输（单机内）
-
-‌本地复制到远程目录‌：用scp将本地的data.bin复制到远程服务器（题目要求单机，此处调整为单机内操作）
-改为：将/local/file复制到同一台机器的/remote_dir
-cp /local/file /remote_dir/
-资源限制
-‌限制CPU时间‌：运行stress命令并限制最多使用50% CPU
-cpulimit -l 50 -i stress --cpu 1
-信号控制
-‌发送信号‌：向PID为1234的进程发送SIGHUP信号（重新加载配置）
-kill -HUP 1234
-归档备份
-‌差异备份‌：备份/home中修改过的文件到home_diff.tar
-tar -cvf home_diff.tar -N '$(date -d '1 day ago' '+%F')' /home
-设备管理
-‌查看USB设备‌：列出所有连接的USB设备信息
-lsusb
-
-‌查看块设备‌：列出所有磁盘分区信息
-lsblk
-
-内核模块
-‌查看加载模块‌：显示已加载的内核模块
-lsmod
-
-‌加载模块‌：加载nvidia内核模块
-modprobe nvidia
-
-。">
+<meta property="og:description" content="每个实验都模拟了一个真实的场景，希望你不仅能敲命令，更能理解其背后的逻辑。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.myla.eu.org/post/Linux-ming-ling-lian-xi.html">
 <meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
 <title>Linux命令练习</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -719,7 +41,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
 
 
@@ -751,236 +83,145 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h2>文件与目录操作</h2>
-<p>‌创建目录‌：在/home/user下新建名为projects的目录<br>
-mkdir /home/user/projects</p>
-<p>‌递归创建目录‌：创建嵌套目录/data/app/logs（确保父目录不存在时自动创建）<br>
-mkdir -p /data/app/logs</p>
-<p>‌复制文件‌：将file1.txt复制到/backup目录下并重命名为file1_bak.txt<br>
-cp file1.txt /backup/file1_bak.txt</p>
-<p>‌递归复制目录‌：复制/var/www目录及其所有内容到/backup<br>
-cp -r /var/www /backup</p>
-<p>‌移动文件‌：将当前目录下所有.log文件移动到/var/logs目录<br>
-mv *.log /var/logs</p>
-<p>‌重命名文件‌：将old_name.txt重命名为new_name.txt<br>
-mv old_name.txt new_name.txt</p>
-<p>‌删除文件‌：删除当前目录下所有.tmp临时文件（非递归）<br>
-rm *.tmp</p>
-<p>‌强制删除目录‌：递归强制删除/cache目录及其所有内容<br>
-rm -rf /cache</p>
-<p>‌创建空文件‌：在/tmp下创建名为lockfile的空文件<br>
-touch /tmp/lockfile</p>
-<p>‌创建硬链接‌：为/data/file.txt创建硬链接/backup/file_link.txt<br>
-ln /data/file.txt /backup/file_link.txt</p>
-<h2>文本处理</h2>
-<p>‌查看文件开头‌：查看/var/log/syslog的前10行内容<br>
-head -n 10 /var/log/syslog</p>
-<p>‌查看文件末尾‌：实时监控/var/log/apache/access.log的新增内容<br>
-tail -f /var/log/apache/access.log</p>
-<p>‌关键词搜索‌：在config.conf中搜索包含"error"的行（忽略大小写）<br>
-grep -i "error" config.conf</p>
-<p>‌递归搜索文本‌：在/etc目录下所有.conf文件中查找"timeout"关键词<br>
-grep -r "timeout" /etc/*.conf</p>
-<p>‌统计行数‌：统计data.csv的总行数<br>
-wc -l data.csv</p>
-<p>‌文本替换‌：将document.txt中所有"old"替换为"new"（原地修改）<br>
-sed -i 's/old/new/g' document.txt</p>
-<p>‌删除空行‌：删除notes.txt中的所有空行并保存为新文件clean_notes.txt<br>
-sed '/^$/d' notes.txt &gt; clean_notes.txt</p>
-<p>‌列格式化输出‌：用:分隔符显示/etc/passwd的第1列和第3列<br>
-awk -F':' '{print $1,$3}' /etc/passwd</p>
-<p>‌合并文件‌：将file1.txt和file2.txt合并为combined.txt<br>
-cat file1.txt file2.txt &gt; combined.txt</p>
-<p>‌排序去重‌：对usernames.txt排序并去重后输出到sorted_users.txt<br>
-sort -u usernames.txt &gt; sorted_users.txt</p>
-<h2>权限管理</h2>
-<p>‌修改文件权限‌：设置script.sh为所有者可读写执行，组和其他人只读<br>
-chmod 755 script.sh<br>
-或<br>
-chmod u=rwx,go=r script.sh</p>
-<p>‌修改所有者‌：将/data/reports目录的所有者改为admin用户<br>
-chown admin /data/reports</p>
-<p>‌递归修改权限‌：将/var/www/html下所有文件设为644，目录设为755<br>
-find /var/www/html -type f -exec chmod 644 {} ;<br>
-find /var/www/html -type d -exec chmod 755 {} ;</p>
-<p>‌设置SUID‌：为/usr/bin/backup_tool设置SUID权限<br>
-chmod u+s /usr/bin/backup_tool</p>
-<h2>系统信息查看</h2>
-<p>‌查看磁盘空间‌：以人类可读格式显示所有挂载点的磁盘使用情况<br>
-df -h</p>
-<p>‌查看目录大小‌：统计/home目录占用的磁盘空间（人类可读）<br>
-du -sh /home</p>
-<p>‌查看内存使用‌：显示内存和交换空间使用情况（MB单位）<br>
-free -m</p>
-<p>‌查看进程‌：列出所有包含"nginx"关键字的进程<br>
-ps aux | grep nginx</p>
-<p>‌实时监控进程‌：动态显示CPU占用最高的进程<br>
-top（进入后按P键排序）</p>
-<p>‌查看系统负载‌：显示过去1/5/15分钟的系统负载<br>
-uptime</p>
-<h2>进程管理</h2>
-<p>‌终止进程‌：强制终止PID为2248的进程<br>
-kill -9 2248</p>
-<p>‌批量结束进程‌：终止所有名为"chromium"的进程<br>
-pkill chromium</p>
-<p>‌后台运行程序‌：将python app.py放入后台运行<br>
-python app.py &amp;</p>
-<p>‌查看后台任务‌：列出所有后台任务<br>
-jobs</p>
-<p>‌切换后台任务‌：将后台任务%2切换到前台<br>
-fg %2</p>
-<h2>压缩与归档</h2>
-<p>‌压缩目录‌：将/data/docs目录打包为docs.tar.gz（使用gzip压缩）<br>
-tar -czvf docs.tar.gz /data/docs</p>
-<p>‌解压文件‌：解压backup.tar.bz2到当前目录<br>
-tar -xjvf backup.tar.bz2</p>
-<p>‌创建zip压缩包‌：将file1.log和file2.log压缩为logs.zip<br>
-zip logs.zip file1.log file2.log</p>
-<p>‌解压zip文件‌：解压archive.zip到/tmp/extracted目录<br>
-unzip archive.zip -d /tmp/extracted</p>
-<h2>查找与定位</h2>
-<p>‌按文件名查找‌：在/etc目录下查找所有.conf后缀的文件<br>
-find /etc -name "*.conf"</p>
-<p>‌按大小查找‌：查找/var目录下大于100MB的文件<br>
-find /var -size +100M</p>
-<p>‌按时间查找‌：查找/home目录下7天内修改过的文件<br>
-find /home -mtime -7</p>
-<p>‌定位二进制路径‌：查找ls命令的完整路径<br>
-which ls</p>
-<p>‌搜索命令文档‌：在man手册中搜索与"partition"相关的命令<br>
-man -k partition 或 apropos partition</p>
-<h2>用户与组管理</h2>
-<p>‌创建用户‌：新建用户testuser并自动创建家目录<br>
-useradd -m testuser</p>
-<p>‌设置密码‌：为用户testuser设置登录密码<br>
-passwd testuser</p>
-<p>‌删除用户‌：删除用户olduser并移除其家目录<br>
-userdel -r olduser</p>
-<p>‌创建用户组‌：创建名为developers的新组<br>
-groupadd developers</p>
-<p>‌用户加入组‌：将用户john添加到sudo组<br>
-usermod -aG sudo john</p>
-<p>‌查看用户组‌：显示当前用户所属的所有组<br>
-groups</p>
-<h2>软件包管理（Debian/Ubuntu）</h2>
-<p>‌更新源列表‌：刷新APT软件包索引<br>
-sudo apt update</p>
-<p>‌安装软件‌：安装nginx服务器<br>
-sudo apt install nginx</p>
-<p>‌卸载软件‌：卸载apache2保留配置文件<br>
-sudo apt remove apache2</p>
-<p>‌彻底卸载‌：完全卸载mysql-server（包括配置文件）<br>
-sudo apt purge mysql-server</p>
-<p>‌搜索软件包‌：在仓库中搜索包含"pdf"关键字的软件包<br>
-apt search pdf</p>
-<p>软件包管理（CentOS/RHEL）<br>
-‌安装软件‌：用YUM安装vim编辑器<br>
-sudo yum install vim</p>
-<p>‌卸载软件‌：移除httpd服务<br>
-sudo yum remove httpd</p>
-<p>‌查询文件来源‌：查找/usr/bin/gcc属于哪个软件包<br>
-yum provides /usr/bin/gcc</p>
-<h2>计划任务</h2>
-<p>‌添加定时任务‌：每天凌晨3点执行/backup/backup.sh<br>
-crontab -e 添加：<br>
-0 3 * * * /backup/backup.sh</p>
-<p>‌列出定时任务‌：显示当前用户的cron任务<br>
-crontab -l</p>
-<h2>文件系统操作</h2>
-<p>‌挂载磁盘‌：将/dev/sdb1挂载到/mnt/data<br>
-mount /dev/sdb1 /mnt/data</p>
-<p>‌卸载磁盘‌：卸载/mnt/data挂载点<br>
-umount /mnt/data</p>
-<p>‌检查磁盘错误‌：检查/dev/sda1的文件系统错误<br>
-fsck /dev/sda1</p>
-<h2>网络配置（单机相关）</h2>
-<p>‌查看主机名‌：显示当前系统主机名<br>
-hostname</p>
-<p>‌修改主机名‌：临时将主机名改为server01（重启失效）<br>
-hostname server01</p>
-<p>‌查看IP地址‌：显示所有网卡的IP地址信息<br>
-ip addr show 或 ifconfig</p>
-<p>环境变量<br>
-‌查看环境变量‌：显示PATH变量的内容<br>
-echo $PATH</p>
-<p>‌临时设置变量‌：设置临时环境变量APP_ENV=production<br>
-export APP_ENV=production</p>
-<p>‌持久化变量‌：将JAVA_HOME=/opt/jdk添加到用户环境变量<br>
-echo 'export JAVA_HOME=/opt/jdk' &gt;&gt; ~/.bashrc</p>
-<p>杂项操作<br>
-‌清空文件内容‌：清空/var/log/app.log文件（不删除文件）</p>
-<blockquote>
-<p>/var/log/app.log 或 truncate -s 0 /var/log/app.log</p>
-</blockquote>
-<p>‌比较文件差异‌：对比file_v1.txt和file_v2.txt的不同<br>
-diff file_v1.txt file_v2.txt</p>
-<p>‌生成随机密码‌：生成16字符的随机密码（含大小写字母和数字）<br>
-tr -dc 'A-Za-z0-9' &lt; /dev/urandom | head -c 16</p>
-<p>‌计算文件哈希‌：计算installer.iso的SHA256校验值<br>
-sha256sum installer.iso</p>
-<p>‌查看命令历史‌：显示最近30条命令历史<br>
-history 30</p>
-<p>‌重定向错误输出‌：运行test.sh并将错误信息保存到error.log<br>
-bash test.sh 2&gt; error.log</p>
-<p>‌创建符号链接‌：为/opt/app/bin创建桌面快捷方式~/Desktop/app_link<br>
-ln -s /opt/app/bin ~/Desktop/app_link</p>
-<p>‌改变文件时间戳‌：将file.txt的修改时间设为当前时间<br>
-touch file.txt</p>
-<p>‌按列分割文件‌：用cut提取passwd文件的第1列（用户名）<br>
-cut -d: -f1 /etc/passwd</p>
-<p>‌合并两文件列‌：将names.txt和ids.txt按列合并为name_id.txt<br>
-paste names.txt ids.txt &gt; name_id.txt</p>
-<p>‌转换文件编码‌：将GBK编码的data.txt转为UTF-8<br>
-iconv -f GBK -t UTF-8 data.txt &gt; data_utf8.txt</p>
-<h2>高级文本处理</h2>
-<p>‌统计词频‌：统计document.txt中每个单词出现的频率<br>
-tr '[:space:]' '[\n*]' &lt; document.txt | grep -v "^$" | sort | uniq -c | sort -nr</p>
-<p>‌提取XML内容‌：从config.xml中提取所有&lt;title&gt;标签的内容<br>
-grep -oP '&lt;title&gt;\K[^&lt;]+' config.xml</p>
-<p>‌批量重命名‌：将当前目录所有.jpg文件后缀改为.jpeg<br>
-rename 's/.jpg$/.jpeg/' *.jpg</p>
-<p>‌文本去重‌：对log.txt按行去重（保留顺序）<br>
-awk '!seen[$0]++' log.txt</p>
-<p>‌数值计算‌：计算numbers.txt中所有数字的总和<br>
-awk '{sum+=$1} END{print sum}' numbers.txt</p>
-<h2>系统管理</h2>
-<p>‌关机命令‌：立即关闭系统<br>
-shutdown now</p>
-<p>‌重启命令‌：10分钟后重启系统<br>
-shutdown -r +10</p>
-<p>‌查看内核版本‌：显示当前Linux内核版本<br>
-uname -r</p>
-<p>‌查看发行版信息‌：显示系统发行版详细信息<br>
-cat /etc/os-release</p>
-<p>‌查看登录用户‌：显示当前登录系统的用户<br>
-who</p>
-<p>‌查看命令帮助‌：查看grep命令的简明手册<br>
-grep --help</p>
-<p>‌查看完整手册‌：阅读tar命令的完整手册页<br>
-man tar</p>
-<h2>文件传输（单机内）</h2>
-<p>‌本地复制到远程目录‌：用scp将本地的data.bin复制到远程服务器（题目要求单机，此处调整为单机内操作）<br>
-改为：将/local/file复制到同一台机器的/remote_dir<br>
-cp /local/file /remote_dir/<br>
-资源限制<br>
-‌限制CPU时间‌：运行stress命令并限制最多使用50% CPU<br>
-cpulimit -l 50 -i stress --cpu 1<br>
-信号控制<br>
-‌发送信号‌：向PID为1234的进程发送SIGHUP信号（重新加载配置）<br>
-kill -HUP 1234<br>
-归档备份<br>
-‌差异备份‌：备份/home中修改过的文件到home_diff.tar<br>
-tar -cvf home_diff.tar -N "$(date -d '1 day ago' '+%F')" /home<br>
-设备管理<br>
-‌查看USB设备‌：列出所有连接的USB设备信息<br>
-lsusb</p>
-<p>‌查看块设备‌：列出所有磁盘分区信息<br>
-lsblk</p>
-<p>内核模块<br>
-‌查看加载模块‌：显示已加载的内核模块<br>
-lsmod</p>
-<p>‌加载模块‌：加载nvidia内核模块<br>
-modprobe nvidia</p></div>
+<div class="markdown-body" id="postBody"><p>每个实验都模拟了一个真实的场景，希望你不仅能敲命令，更能理解其背后的逻辑。请在你的Linux虚拟机或环境中逐一完成。</p>
+<hr>
+<h3><strong>一、 文件与目录操作 (25题)</strong></h3>
+<ol>
+<li><strong>基础导航</strong>：在你的家目录下，创建一个名为 <code class="notranslate">test_lab</code> 的目录，并进入该目录。</li>
+<li><strong>绝对路径与相对路径</strong>：在 <code class="notranslate">test_lab</code> 目录下，使用绝对路径创建 <code class="notranslate">dir1/dir2/dir3</code>（使用 <code class="notranslate">-p</code> 选项）。</li>
+<li><strong>创建文件</strong>：在 <code class="notranslate">test_lab</code> 目录下，使用 <code class="notranslate">touch</code> 命令创建三个空文件：<code class="notranslate">file1.txt</code>, <code class="notranslate">file2.log</code>, <code class="notranslate">data1.csv</code>。</li>
+<li><strong>列表查看</strong>：以“长格式”列出 <code class="notranslate">test_lab</code> 目录下的所有内容，包括隐藏文件，并按文件大小排序。</li>
+<li><strong>复制文件</strong>：将 <code class="notranslate">file1.txt</code> 复制到 <code class="notranslate">dir1/dir2/</code> 目录下，并重命名为 <code class="notranslate">file1_backup.txt</code>。</li>
+<li><strong>移动文件</strong>：将 <code class="notranslate">file2.log</code> 移动到 <code class="notranslate">dir1/</code> 目录下。</li>
+<li><strong>重命名文件</strong>：在 <code class="notranslate">dir1/</code> 目录下，将 <code class="notranslate">file2.log</code> 重命名为 <code class="notranslate">application.log</code>（使用 <code class="notranslate">mv</code> 命令）。</li>
+<li><strong>创建链接</strong>：为 <code class="notranslate">test_lab/file1.txt</code> 在当期目录下创建一个软链接（符号链接），名为 <code class="notranslate">soft_link_to_file1</code>。</li>
+<li><strong>删除文件</strong>：删除 <code class="notranslate">data1.csv</code> 文件，并在删除前要求确认。</li>
+<li><strong>删除目录</strong>：尝试删除 <code class="notranslate">dir1</code> 目录（会失败），然后使用递归删除命令成功删除整个 <code class="notranslate">dir1</code> 目录结构。</li>
+<li><strong>查看文件类型</strong>：使用 <code class="notranslate">file</code> 命令查看 <code class="notranslate">/bin/bash</code> 的文件类型。</li>
+<li><strong>查看整个文件</strong>：使用 <code class="notranslate">cat</code> 命令查看 <code class="notranslate">/etc/hosts</code> 文件的内容。</li>
+<li><strong>分页查看文件</strong>：使用 <code class="notranslate">less</code> 或 <code class="notranslate">more</code> 命令查看 <code class="notranslate">/etc/services</code> 文件的内容。</li>
+<li><strong>查看文件头尾</strong>：使用 <code class="notranslate">head</code> 命令查看 <code class="notranslate">/etc/passwd</code> 的前 5 行。</li>
+<li><strong>查看文件尾</strong>：使用 <code class="notranslate">tail</code> 命令查看 <code class="notranslate">/var/log/syslog</code> 或 <code class="notranslate">/var/log/messages</code> 的最后 10 行，并持续监视其更新（<code class="notranslate">-f</code> 选项）。</li>
+<li><strong>文件统计</strong>：使用 <code class="notranslate">wc</code> 命令统计 <code class="notranslate">/etc/passwd</code> 的行数、单词数和字节数。</li>
+<li><strong>比较文件</strong>：创建两个文件 <code class="notranslate">a.txt</code>（内容为 "hello world"）和 <code class="notranslate">b.txt</code>（内容为 "hello linux"），使用 <code class="notranslate">diff</code> 命令比较它们的差异。</li>
+<li><strong>生成序列</strong>：使用 <code class="notranslate">seq</code> 命令生成 1 到 10 的数字，并将其输出重定向到 <code class="notranslate">numbers.txt</code> 文件。</li>
+<li><strong>备份与还原</strong>：使用 <code class="notranslate">cp</code> 命令备份 <code class="notranslate">/etc/passwd</code> 到当前目录，并保留其所有原始属性（如时间戳、权限）。</li>
+<li><strong>创建特殊文件</strong>：使用 <code class="notranslate">mkdir -p</code> 创建 <code class="notranslate">project/{src,doc,bin,assets}</code> 这样的级联目录结构。</li>
+<li><strong>树状展示</strong>：使用 <code class="notranslate">tree</code> 命令（如果未安装请先安装）以树状图列出 <code class="notranslate">project</code> 目录的结构。</li>
+<li><strong>交互式复制</strong>：使用 <code class="notranslate">cp -i</code> 尝试复制一个已存在的文件，体验交互式提示。</li>
+<li><strong>详细操作</strong>：执行任意 <code class="notranslate">cp</code> 或 <code class="notranslate">mv</code> 命令，并使用 <code class="notranslate">-v</code> 选项查看详细过程。</li>
+<li><strong>空目录检查</strong>：删除一个空目录 <code class="notranslate">empty_dir</code>。</li>
+<li><strong>通配符练习</strong>：在包含 <code class="notranslate">file1.txt</code>, <code class="notranslate">file2.log</code>, <code class="notranslate">readme.md</code> 的目录中，使用 <code class="notranslate">*.txt</code> 和 <code class="notranslate">f*</code> 等通配符一次性操作多个文件。</li>
+</ol>
+<hr>
+<h3><strong>二、 文本处理 (15题)</strong></h3>
+<ol start="26">
+<li><strong>搜索内容</strong>：在 <code class="notranslate">/etc/passwd</code> 文件中搜索包含你的用户名的那一行。</li>
+<li><strong>全局搜索</strong>：递归地在 <code class="notranslate">/etc</code> 目录下的所有文件中搜索包含 <code class="notranslate">"localhost"</code> 字符串的行。</li>
+<li><strong>流编辑器</strong>：使用 <code class="notranslate">sed</code> 将 <code class="notranslate">file1.txt</code> 中的所有 "old" 替换为 "new"（假设文件有内容），并将结果输出到屏幕。</li>
+<li><strong>流编辑器写入</strong>：使用 <code class="notranslate">sed -i</code> 直接原地修改 <code class="notranslate">file1.txt</code>，完成上述替换。</li>
+<li><strong>打印特定行</strong>：使用 <code class="notranslate">sed -n '5,10p'</code> 打印 <code class="notranslate">/etc/passwd</code> 的第5到第10行。</li>
+<li><strong>文本分析</strong>：使用 <code class="notranslate">awk</code> 打印 <code class="notranslate">/etc/passwd</code> 文件中以冒号分隔的第一列（用户名）和第三列（用户ID）。</li>
+<li><strong>高级awk</strong>：使用 <code class="notranslate">awk</code> 找出 <code class="notranslate">/etc/passwd</code> 中UID大于1000的用户名。</li>
+<li><strong>排序</strong>：创建一个包含数字的文件 <code class="notranslate">num.txt</code>，使用 <code class="notranslate">sort -n</code> 对其进行数字排序。</li>
+<li><strong>去重</strong>：创建一个有重复行的文件 <code class="notranslate">duplicates.txt</code>，使用 <code class="notranslate">uniq</code> 命令前先排序，然后去除重复行。</li>
+<li><strong>裁剪文本</strong>：使用 <code class="notranslate">cut -d':' -f1 /etc/passwd</code> 裁剪出用户名。</li>
+<li><strong>转换字符</strong>：使用 <code class="notranslate">tr</code> 命令将 <code class="notranslate">file1.txt</code> 中的所有小写字母转换为大写字母。</li>
+<li><strong>合并文件</strong>：使用 <code class="notranslate">paste</code> 命令将两个文件 <code class="notranslate">a.txt</code> 和 <code class="notranslate">b.txt</code> 按列合并。</li>
+<li><strong>查找差异</strong>：使用 <code class="notranslate">comm</code> 命令比较两个排序后的文件 <code class="notranslate">list1.txt</code> 和 <code class="notranslate">list2.txt</code>。</li>
+<li><strong>编号输出</strong>：使用 <code class="notranslate">nl</code> 命令给 <code class="notranslate">file1.txt</code> 的每一行加上行号并输出。</li>
+<li><strong>格式化输出</strong>：使用 <code class="notranslate">column -t</code> 将 <code class="notranslate">/etc/passwd</code> 的内容以表格形式格式化输出。</li>
+</ol>
+<hr>
+<h3><strong>三、 系统管理与信息查看 (15题)</strong></h3>
+<ol start="41">
+<li><strong>查看系统信息</strong>：使用 <code class="notranslate">uname -a</code> 查看所有系统信息。</li>
+<li><strong>查看内核版本</strong>：使用 <code class="notranslate">uname -r</code> 只查看内核版本。</li>
+<li><strong>查看主机名</strong>：使用 <code class="notranslate">hostname</code> 命令查看当前主机名。</li>
+<li><strong>查看系统负载</strong>：使用 <code class="notranslate">uptime</code> 命令查看系统运行时间和平均负载。</li>
+<li><strong>查看内存使用</strong>：使用 <code class="notranslate">free -h</code> 以人类可读的方式查看内存和交换空间使用情况。</li>
+<li><strong>监控进程动态</strong>：使用 <code class="notranslate">top</code> 或 <code class="notranslate">htop</code> 命令动态监控进程和系统性能。</li>
+<li><strong>查看磁盘空间</strong>：使用 <code class="notranslate">df -h</code> 查看文件系统磁盘空间使用情况。</li>
+<li><strong>查看目录大小</strong>：使用 <code class="notranslate">du -sh /var/log</code> 查看 <code class="notranslate">/var/log</code> 目录的总大小。</li>
+<li><strong>查看环境变量</strong>：使用 <code class="notranslate">printenv</code> 或 <code class="notranslate">env</code> 查看所有环境变量，并使用 <code class="notranslate">echo $PATH</code> 查看特定环境变量。</li>
+<li><strong>设置别名</strong>：在你的 <code class="notranslate">~/.bashrc</code> 文件中添加一个别名 <code class="notranslate">ll='ls -alF'</code>，然后使其生效（<code class="notranslate">source ~/.bashrc</code>）。</li>
+<li><strong>查看命令历史</strong>：使用 <code class="notranslate">history</code> 查看命令历史记录，并重新执行历史记录中的第100条命令（<code class="notranslate">!100</code>）。</li>
+<li><strong>查看用户登录</strong>：使用 <code class="notranslate">who</code> 或 <code class="notranslate">w</code> 命令查看当前有哪些用户登录在系统上。</li>
+<li><strong>查看自己是谁</strong>：使用 <code class="notranslate">whoami</code> 命令查看当前有效用户名。</li>
+<li><strong>查看用户信息</strong>：使用 <code class="notranslate">id</code> 命令查看当前用户的UID、GID等信息。</li>
+<li><strong>日历</strong>：使用 <code class="notranslate">cal</code> 查看当前月的日历，并查看2025年12月的日历。</li>
+</ol>
+<hr>
+<h3><strong>四、 权限管理 (10题)</strong></h3>
+<ol start="56">
+<li><strong>查看权限</strong>：使用 <code class="notranslate">ls -l</code> 详细查看 <code class="notranslate">/etc/passwd</code> 文件的权限、所有者和组。</li>
+<li><strong>修改文件权限（数字）</strong>：创建一个文件 <code class="notranslate">secret.txt</code>，使用 <code class="notranslate">chmod</code> 的数字模式将其权限设置为仅所有者可读可写 (<code class="notranslate">600</code>)。</li>
+<li><strong>修改文件权限（符号）</strong>：使用 <code class="notranslate">chmod</code> 的符号模式给 <code class="notranslate">secret.txt</code> 的同组用户增加读权限。</li>
+<li><strong>修改文件所有者</strong>：使用 <code class="notranslate">sudo chown</code> 将 <code class="notranslate">secret.txt</code> 的所有者改为root用户（需要sudo权限）。</li>
+<li><strong>修改文件所属组</strong>：使用 <code class="notranslate">sudo chgrp</code> 将 <code class="notranslate">secret.txt</code> 的所属组改为root组。</li>
+<li><strong>默认权限</strong>：使用 <code class="notranslate">umask</code> 查看当前默认的权限掩码，并创建一个新文件和新目录，验证其初始权限。</li>
+<li><strong>特殊权限SUID</strong>：查找系统中具有SUID权限的命令（如 <code class="notranslate">sudo chmod u+s /usr/bin/your_command</code>，但请勿随意设置）。</li>
+<li><strong>目录权限理解</strong>：创建一个目录 <code class="notranslate">shared_dir</code>，设置权限为 <code class="notranslate">775</code>，使其组成员都可以在其中创建和删除文件。</li>
+<li><strong>粘滞位</strong>：在 <code class="notranslate">/tmp</code> 目录下创建一个文件，理解粘滞位（<code class="notranslate">t</code> 权限）的作用。<code class="notranslate">ls -ld /tmp</code> 查看。</li>
+<li><strong>ACL扩展权限</strong>：使用 <code class="notranslate">setfacl -m u:username:rwx file</code> 为某个用户对某个文件设置扩展权限，并用 <code class="notranslate">getfacl</code> 查看。</li>
+</ol>
+<hr>
+<h3><strong>五、 进程管理 (10题)</strong></h3>
+<ol start="66">
+<li><strong>查看进程</strong>：使用 <code class="notranslate">ps aux</code> 查看系统所有进程。</li>
+<li><strong>查看进程树</strong>：使用 <code class="notranslate">pstree</code> 以树状结构查看进程关系。</li>
+<li><strong>动态监控进程</strong>：使用 <code class="notranslate">top</code> 命令，然后在其中按 <code class="notranslate">P</code>（按CPU排序）和 <code class="notranslate">M</code>（按内存排序）。</li>
+<li><strong>终止进程</strong>：启动一个 <code class="notranslate">sleep 1000</code> 进程，然后使用 <code class="notranslate">kill</code> 命令通过PID终止它。</li>
+<li><strong>强制终止进程</strong>：使用 <code class="notranslate">kill -9</code> 强制终止一个进程。</li>
+<li><strong>按名称终止进程</strong>：使用 <code class="notranslate">pkill sleep</code> 终止所有名为sleep的进程。</li>
+<li><strong>后台运行</strong>：使用 <code class="notranslate">&amp;</code> 将一个命令（如 <code class="notranslate">sleep 500</code>）放到后台运行。</li>
+<li><strong>前后台切换</strong>：启动一个前台进程，使用 <code class="notranslate">Ctrl+Z</code> 将其暂停并放入后台，然后使用 <code class="notranslate">bg</code> 命令让其继续在后台运行，使用 <code class="notranslate">fg</code> 命令将其调回前台。</li>
+<li><strong>查看后台作业</strong>：使用 <code class="notranslate">jobs</code> 命令查看当前shell的后台作业。</li>
+<li><strong>使进程脱离终端</strong>：使用 <code class="notranslate">nohup</code> 命令运行一个脚本，即使终端关闭它也不会退出（<code class="notranslate">nohup ./script.sh &amp;</code>）。</li>
+</ol>
+<hr>
+<h3><strong>六、 网络操作 (10题)</strong></h3>
+<ol start="76">
+<li><strong>查看IP地址</strong>：使用 <code class="notranslate">ip addr show</code> 或 <code class="notranslate">ifconfig</code> 查看网络接口信息。</li>
+<li><strong>测试连通性</strong>：使用 <code class="notranslate">ping -c 4 8.8.8.8</code> 测试与Google DNS的网络连通性，发送4个包后停止。</li>
+<li><strong>查看路由表</strong>：使用 <code class="notranslate">ip route show</code> 或 <code class="notranslate">route -n</code> 查看系统路由表。</li>
+<li><strong>追踪路径</strong>：使用 <code class="notranslate">traceroute</code> 或 <code class="notranslate">tracepath</code> 追踪到 <code class="notranslate">www.google.com</code> 的网络路径。</li>
+<li><strong>查询域名</strong>：使用 <code class="notranslate">nslookup</code> 或 <code class="notranslate">dig</code> 查询 <code class="notranslate">www.github.com</code> 的IP地址。</li>
+<li><strong>查看端口监听</strong>：使用 <code class="notranslate">ss -tulnp</code> 或 <code class="notranslate">netstat -tulnp</code> 查看系统监听的TCP和UDP端口。</li>
+<li><strong>下载文件</strong>：使用 <code class="notranslate">wget</code> 从网络上下载一个文件（如 <code class="notranslate">wget https://example.com/file.zip</code>）。</li>
+<li><strong>高级下载</strong>：使用 <code class="notranslate">curl -O</code> 下载文件，并尝试使用 <code class="notranslate">-I</code> 选项只获取HTTP头信息。</li>
+<li><strong>扫描端口</strong>：使用 <code class="notranslate">nmap localhost</code> 扫描本机开放的端口（需安装nmap）。</li>
+<li><strong>网络统计</strong>：使用 <code class="notranslate">ss -s</code> 查看详细的网络套接字统计信息。</li>
+</ol>
+<hr>
+<h3><strong>七、 压缩与打包 (5题)</strong></h3>
+<ol start="86">
+<li><strong>压缩文件</strong>：使用 <code class="notranslate">gzip</code> 压缩 <code class="notranslate">file1.txt</code>，生成 <code class="notranslate">file1.txt.gz</code>。</li>
+<li><strong>解压缩文件</strong>：使用 <code class="notranslate">gunzip</code> 解压 <code class="notranslate">file1.txt.gz</code>。</li>
+<li><strong>打包与压缩</strong>：使用 <code class="notranslate">tar -czvf archive.tar.gz dir1/</code> 将 <code class="notranslate">dir1</code> 目录打包并压缩为 <code class="notranslate">.tar.gz</code> 文件。</li>
+<li><strong>解包与解压</strong>：使用 <code class="notranslate">tar -xzvf archive.tar.gz</code> 解压并解包刚才的文件。</li>
+<li><strong>其他格式</strong>：使用 <code class="notranslate">tar -cjvf archive.tar.bz2 dir1/</code> 创建 <code class="notranslate">.tar.bz2</code> 格式的压缩包。</li>
+</ol>
+<hr>
+<h3><strong>八、 搜索与查找 (5题)</strong></h3>
+<ol start="91">
+<li><strong>查找文件</strong>：使用 <code class="notranslate">find /home -name "*.txt"</code> 在 <code class="notranslate">/home</code> 目录下查找所有 <code class="notranslate">.txt</code> 文件。</li>
+<li><strong>按类型查找</strong>：使用 <code class="notranslate">find /var -type f -name "*.log"</code> 查找 <code class="notranslate">/var</code> 下的所有日志文件。</li>
+<li><strong>按时间查找</strong>：使用 <code class="notranslate">find ~ -mtime -1</code> 查找你家目录下最近1天内修改过的文件。</li>
+<li><strong>按大小查找</strong>：使用 <code class="notranslate">find / -size +100M</code> 查找系统中大于100MB的文件（可能需要sudo）。</li>
+<li><strong>命令查找</strong>：使用 <code class="notranslate">which ls</code> 查找 <code class="notranslate">ls</code> 命令的完整路径。使用 <code class="notranslate">whereis ls</code> 查找 <code class="notranslate">ls</code> 命令的二进制程序、源代码和man手册页的位置。</li>
+</ol>
+<hr>
+<h3><strong>九、 Shell编程与脚本基础 (3题)</strong></h3>
+<ol start="96">
+<li><strong>变量操作</strong>：在Shell中定义一个变量 <code class="notranslate">NAME=your_name</code>，然后使用 <code class="notranslate">echo "Hello, $NAME"</code> 打印出来。</li>
+<li><strong>命令替换</strong>：使用反引号 <code class="notranslate">`</code> 或 <code class="notranslate">$()</code> 将 <code class="notranslate">date</code> 命令的输出结果赋值给一个变量，并打印出来。</li>
+<li><strong>编写简单脚本</strong>：创建一个脚本 <code class="notranslate">hello.sh</code>，内容如下，然后赋予它执行权限 (<code class="notranslate">chmod +x hello.sh</code>) 并运行它：
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Hello, World!<span class="pl-pds">"</span></span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Today is <span class="pl-s"><span class="pl-pds">$(</span>date<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span></pre></div>
+</li>
+</ol></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -1005,7 +246,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -1078,7 +319,70 @@ function iFrameLoading(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>

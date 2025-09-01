@@ -1,339 +1,149 @@
-## 文件与目录操作
-
-‌创建目录‌：在/home/user下新建名为projects的目录
-mkdir /home/user/projects
-
-‌递归创建目录‌：创建嵌套目录/data/app/logs（确保父目录不存在时自动创建）
-mkdir -p /data/app/logs
-
-‌复制文件‌：将file1.txt复制到/backup目录下并重命名为file1_bak.txt
-cp file1.txt /backup/file1_bak.txt
-
-‌递归复制目录‌：复制/var/www目录及其所有内容到/backup
-cp -r /var/www /backup
-
-‌移动文件‌：将当前目录下所有.log文件移动到/var/logs目录
-mv *.log /var/logs
-
-‌重命名文件‌：将old_name.txt重命名为new_name.txt
-mv old_name.txt new_name.txt
-
-‌删除文件‌：删除当前目录下所有.tmp临时文件（非递归）
-rm *.tmp
-
-‌强制删除目录‌：递归强制删除/cache目录及其所有内容
-rm -rf /cache
-
-‌创建空文件‌：在/tmp下创建名为lockfile的空文件
-touch /tmp/lockfile
-
-‌创建硬链接‌：为/data/file.txt创建硬链接/backup/file_link.txt
-ln /data/file.txt /backup/file_link.txt
-
-## 文本处理
-
-‌查看文件开头‌：查看/var/log/syslog的前10行内容
-head -n 10 /var/log/syslog
-
-‌查看文件末尾‌：实时监控/var/log/apache/access.log的新增内容
-tail -f /var/log/apache/access.log
-
-‌关键词搜索‌：在config.conf中搜索包含"error"的行（忽略大小写）
-grep -i "error" config.conf
-
-‌递归搜索文本‌：在/etc目录下所有.conf文件中查找"timeout"关键词
-grep -r "timeout" /etc/*.conf
-
-‌统计行数‌：统计data.csv的总行数
-wc -l data.csv
-
-‌文本替换‌：将document.txt中所有"old"替换为"new"（原地修改）
-sed -i 's/old/new/g' document.txt
-
-‌删除空行‌：删除notes.txt中的所有空行并保存为新文件clean_notes.txt
-sed '/^$/d' notes.txt > clean_notes.txt
-
-‌列格式化输出‌：用:分隔符显示/etc/passwd的第1列和第3列
-awk -F':' '{print $1,$3}' /etc/passwd
-
-‌合并文件‌：将file1.txt和file2.txt合并为combined.txt
-cat file1.txt file2.txt > combined.txt
-
-‌排序去重‌：对usernames.txt排序并去重后输出到sorted_users.txt
-sort -u usernames.txt > sorted_users.txt
-
-## 权限管理
-
-‌修改文件权限‌：设置script.sh为所有者可读写执行，组和其他人只读
-chmod 755 script.sh
-或
-chmod u=rwx,go=r script.sh
-
-‌修改所有者‌：将/data/reports目录的所有者改为admin用户
-chown admin /data/reports
-
-‌递归修改权限‌：将/var/www/html下所有文件设为644，目录设为755
-find /var/www/html -type f -exec chmod 644 {} \;
-find /var/www/html -type d -exec chmod 755 {} \;
-
-‌设置SUID‌：为/usr/bin/backup_tool设置SUID权限
-chmod u+s /usr/bin/backup_tool
-
-## 系统信息查看
-
-‌查看磁盘空间‌：以人类可读格式显示所有挂载点的磁盘使用情况
-df -h
-
-‌查看目录大小‌：统计/home目录占用的磁盘空间（人类可读）
-du -sh /home
-
-‌查看内存使用‌：显示内存和交换空间使用情况（MB单位）
-free -m
-
-‌查看进程‌：列出所有包含"nginx"关键字的进程
-ps aux | grep nginx
-
-‌实时监控进程‌：动态显示CPU占用最高的进程
-top（进入后按P键排序）
-
-‌查看系统负载‌：显示过去1/5/15分钟的系统负载
-uptime
-
-## 进程管理
-
-‌终止进程‌：强制终止PID为2248的进程
-kill -9 2248
-
-‌批量结束进程‌：终止所有名为"chromium"的进程
-pkill chromium
-
-‌后台运行程序‌：将python app.py放入后台运行
-python app.py &
-
-‌查看后台任务‌：列出所有后台任务
-jobs
-
-‌切换后台任务‌：将后台任务%2切换到前台
-fg %2
-
-## 压缩与归档
-
-‌压缩目录‌：将/data/docs目录打包为docs.tar.gz（使用gzip压缩）
-tar -czvf docs.tar.gz /data/docs
-
-‌解压文件‌：解压backup.tar.bz2到当前目录
-tar -xjvf backup.tar.bz2
-
-‌创建zip压缩包‌：将file1.log和file2.log压缩为logs.zip
-zip logs.zip file1.log file2.log
-
-‌解压zip文件‌：解压archive.zip到/tmp/extracted目录
-unzip archive.zip -d /tmp/extracted
-
-## 查找与定位
-
-‌按文件名查找‌：在/etc目录下查找所有.conf后缀的文件
-find /etc -name "*.conf"
-
-‌按大小查找‌：查找/var目录下大于100MB的文件
-find /var -size +100M
-
-‌按时间查找‌：查找/home目录下7天内修改过的文件
-find /home -mtime -7
-
-‌定位二进制路径‌：查找ls命令的完整路径
-which ls
-
-‌搜索命令文档‌：在man手册中搜索与"partition"相关的命令
-man -k partition 或 apropos partition
-
-## 用户与组管理
-
-‌创建用户‌：新建用户testuser并自动创建家目录
-useradd -m testuser
-
-‌设置密码‌：为用户testuser设置登录密码
-passwd testuser
-
-‌删除用户‌：删除用户olduser并移除其家目录
-userdel -r olduser
-
-‌创建用户组‌：创建名为developers的新组
-groupadd developers
-
-‌用户加入组‌：将用户john添加到sudo组
-usermod -aG sudo john
-
-‌查看用户组‌：显示当前用户所属的所有组
-groups
-
-## 软件包管理（Debian/Ubuntu）
-
-‌更新源列表‌：刷新APT软件包索引
-sudo apt update
-
-‌安装软件‌：安装nginx服务器
-sudo apt install nginx
-
-‌卸载软件‌：卸载apache2保留配置文件
-sudo apt remove apache2
-
-‌彻底卸载‌：完全卸载mysql-server（包括配置文件）
-sudo apt purge mysql-server
-
-‌搜索软件包‌：在仓库中搜索包含"pdf"关键字的软件包
-apt search pdf
-
-软件包管理（CentOS/RHEL）
-‌安装软件‌：用YUM安装vim编辑器
-sudo yum install vim
-
-‌卸载软件‌：移除httpd服务
-sudo yum remove httpd
-
-‌查询文件来源‌：查找/usr/bin/gcc属于哪个软件包
-yum provides /usr/bin/gcc
-
-## 计划任务
-
-‌添加定时任务‌：每天凌晨3点执行/backup/backup.sh
-crontab -e 添加：
-0 3 * * * /backup/backup.sh
-
-‌列出定时任务‌：显示当前用户的cron任务
-crontab -l
-
-## 文件系统操作
-
-‌挂载磁盘‌：将/dev/sdb1挂载到/mnt/data
-mount /dev/sdb1 /mnt/data
-
-‌卸载磁盘‌：卸载/mnt/data挂载点
-umount /mnt/data
-
-‌检查磁盘错误‌：检查/dev/sda1的文件系统错误
-fsck /dev/sda1
-
-## 网络配置（单机相关）
-
-‌查看主机名‌：显示当前系统主机名
-hostname
-
-‌修改主机名‌：临时将主机名改为server01（重启失效）
-hostname server01
-
-‌查看IP地址‌：显示所有网卡的IP地址信息
-ip addr show 或 ifconfig
-
-环境变量
-‌查看环境变量‌：显示PATH变量的内容
-echo $PATH
-
-‌临时设置变量‌：设置临时环境变量APP_ENV=production
-export APP_ENV=production
-
-‌持久化变量‌：将JAVA_HOME=/opt/jdk添加到用户环境变量
-echo 'export JAVA_HOME=/opt/jdk' >> ~/.bashrc
-
-杂项操作
-‌清空文件内容‌：清空/var/log/app.log文件（不删除文件）
-> /var/log/app.log 或 truncate -s 0 /var/log/app.log
-
-‌比较文件差异‌：对比file_v1.txt和file_v2.txt的不同
-diff file_v1.txt file_v2.txt
-
-‌生成随机密码‌：生成16字符的随机密码（含大小写字母和数字）
-tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 16
-
-‌计算文件哈希‌：计算installer.iso的SHA256校验值
-sha256sum installer.iso
-
-‌查看命令历史‌：显示最近30条命令历史
-history 30
-
-‌重定向错误输出‌：运行test.sh并将错误信息保存到error.log
-bash test.sh 2> error.log
-
-‌创建符号链接‌：为/opt/app/bin创建桌面快捷方式~/Desktop/app_link
-ln -s /opt/app/bin ~/Desktop/app_link
-
-‌改变文件时间戳‌：将file.txt的修改时间设为当前时间
-touch file.txt
-
-‌按列分割文件‌：用cut提取passwd文件的第1列（用户名）
-cut -d: -f1 /etc/passwd
-
-‌合并两文件列‌：将names.txt和ids.txt按列合并为name_id.txt
-paste names.txt ids.txt > name_id.txt
-
-‌转换文件编码‌：将GBK编码的data.txt转为UTF-8
-iconv -f GBK -t UTF-8 data.txt > data_utf8.txt
-
-## 高级文本处理
-
-‌统计词频‌：统计document.txt中每个单词出现的频率
-tr '[:space:]' '[\n*]' < document.txt | grep -v "^$" | sort | uniq -c | sort -nr
-
-‌提取XML内容‌：从config.xml中提取所有<title>标签的内容
-grep -oP '<title>\K[^<]+' config.xml
-
-‌批量重命名‌：将当前目录所有.jpg文件后缀改为.jpeg
-rename 's/\.jpg$/.jpeg/' *.jpg
-
-‌文本去重‌：对log.txt按行去重（保留顺序）
-awk '!seen[$0]++' log.txt
-
-‌数值计算‌：计算numbers.txt中所有数字的总和
-awk '{sum+=$1} END{print sum}' numbers.txt
-
-## 系统管理
-
-‌关机命令‌：立即关闭系统
-shutdown now
-
-‌重启命令‌：10分钟后重启系统
-shutdown -r +10
-
-‌查看内核版本‌：显示当前Linux内核版本
-uname -r
-
-‌查看发行版信息‌：显示系统发行版详细信息
-cat /etc/os-release
-
-‌查看登录用户‌：显示当前登录系统的用户
-who
-
-‌查看命令帮助‌：查看grep命令的简明手册
-grep --help
-
-‌查看完整手册‌：阅读tar命令的完整手册页
-man tar
-
-## 文件传输（单机内）
-
-‌本地复制到远程目录‌：用scp将本地的data.bin复制到远程服务器（题目要求单机，此处调整为单机内操作）
-改为：将/local/file复制到同一台机器的/remote_dir
-cp /local/file /remote_dir/
-资源限制
-‌限制CPU时间‌：运行stress命令并限制最多使用50% CPU
-cpulimit -l 50 -i stress --cpu 1
-信号控制
-‌发送信号‌：向PID为1234的进程发送SIGHUP信号（重新加载配置）
-kill -HUP 1234
-归档备份
-‌差异备份‌：备份/home中修改过的文件到home_diff.tar
-tar -cvf home_diff.tar -N "$(date -d '1 day ago' '+%F')" /home
-设备管理
-‌查看USB设备‌：列出所有连接的USB设备信息
-lsusb
-
-‌查看块设备‌：列出所有磁盘分区信息
-lsblk
-
-内核模块
-‌查看加载模块‌：显示已加载的内核模块
-lsmod
-
-‌加载模块‌：加载nvidia内核模块
-modprobe nvidia
-
+每个实验都模拟了一个真实的场景，希望你不仅能敲命令，更能理解其背后的逻辑。请在你的Linux虚拟机或环境中逐一完成。
+
+---
+
+### **一、 文件与目录操作 (25题)**
+
+1.  **基础导航**：在你的家目录下，创建一个名为 `test_lab` 的目录，并进入该目录。
+2.  **绝对路径与相对路径**：在 `test_lab` 目录下，使用绝对路径创建 `dir1/dir2/dir3`（使用 `-p` 选项）。
+3.  **创建文件**：在 `test_lab` 目录下，使用 `touch` 命令创建三个空文件：`file1.txt`, `file2.log`, `data1.csv`。
+4.  **列表查看**：以“长格式”列出 `test_lab` 目录下的所有内容，包括隐藏文件，并按文件大小排序。
+5.  **复制文件**：将 `file1.txt` 复制到 `dir1/dir2/` 目录下，并重命名为 `file1_backup.txt`。
+6.  **移动文件**：将 `file2.log` 移动到 `dir1/` 目录下。
+7.  **重命名文件**：在 `dir1/` 目录下，将 `file2.log` 重命名为 `application.log`（使用 `mv` 命令）。
+8.  **创建链接**：为 `test_lab/file1.txt` 在当期目录下创建一个软链接（符号链接），名为 `soft_link_to_file1`。
+9.  **删除文件**：删除 `data1.csv` 文件，并在删除前要求确认。
+10. **删除目录**：尝试删除 `dir1` 目录（会失败），然后使用递归删除命令成功删除整个 `dir1` 目录结构。
+11. **查看文件类型**：使用 `file` 命令查看 `/bin/bash` 的文件类型。
+12. **查看整个文件**：使用 `cat` 命令查看 `/etc/hosts` 文件的内容。
+13. **分页查看文件**：使用 `less` 或 `more` 命令查看 `/etc/services` 文件的内容。
+14. **查看文件头尾**：使用 `head` 命令查看 `/etc/passwd` 的前 5 行。
+15. **查看文件尾**：使用 `tail` 命令查看 `/var/log/syslog` 或 `/var/log/messages` 的最后 10 行，并持续监视其更新（`-f` 选项）。
+16. **文件统计**：使用 `wc` 命令统计 `/etc/passwd` 的行数、单词数和字节数。
+17. **比较文件**：创建两个文件 `a.txt`（内容为 "hello world"）和 `b.txt`（内容为 "hello linux"），使用 `diff` 命令比较它们的差异。
+18. **生成序列**：使用 `seq` 命令生成 1 到 10 的数字，并将其输出重定向到 `numbers.txt` 文件。
+19. **备份与还原**：使用 `cp` 命令备份 `/etc/passwd` 到当前目录，并保留其所有原始属性（如时间戳、权限）。
+20. **创建特殊文件**：使用 `mkdir -p` 创建 `project/{src,doc,bin,assets}` 这样的级联目录结构。
+21. **树状展示**：使用 `tree` 命令（如果未安装请先安装）以树状图列出 `project` 目录的结构。
+22. **交互式复制**：使用 `cp -i` 尝试复制一个已存在的文件，体验交互式提示。
+23. **详细操作**：执行任意 `cp` 或 `mv` 命令，并使用 `-v` 选项查看详细过程。
+24. **空目录检查**：删除一个空目录 `empty_dir`。
+25. **通配符练习**：在包含 `file1.txt`, `file2.log`, `readme.md` 的目录中，使用 `*.txt` 和 `f*` 等通配符一次性操作多个文件。
+
+---
+
+### **二、 文本处理 (15题)**
+
+26. **搜索内容**：在 `/etc/passwd` 文件中搜索包含你的用户名的那一行。
+27. **全局搜索**：递归地在 `/etc` 目录下的所有文件中搜索包含 `"localhost"` 字符串的行。
+28. **流编辑器**：使用 `sed` 将 `file1.txt` 中的所有 "old" 替换为 "new"（假设文件有内容），并将结果输出到屏幕。
+29. **流编辑器写入**：使用 `sed -i` 直接原地修改 `file1.txt`，完成上述替换。
+30. **打印特定行**：使用 `sed -n '5,10p'` 打印 `/etc/passwd` 的第5到第10行。
+31. **文本分析**：使用 `awk` 打印 `/etc/passwd` 文件中以冒号分隔的第一列（用户名）和第三列（用户ID）。
+32. **高级awk**：使用 `awk` 找出 `/etc/passwd` 中UID大于1000的用户名。
+33. **排序**：创建一个包含数字的文件 `num.txt`，使用 `sort -n` 对其进行数字排序。
+34. **去重**：创建一个有重复行的文件 `duplicates.txt`，使用 `uniq` 命令前先排序，然后去除重复行。
+35. **裁剪文本**：使用 `cut -d':' -f1 /etc/passwd` 裁剪出用户名。
+36. **转换字符**：使用 `tr` 命令将 `file1.txt` 中的所有小写字母转换为大写字母。
+37. **合并文件**：使用 `paste` 命令将两个文件 `a.txt` 和 `b.txt` 按列合并。
+38. **查找差异**：使用 `comm` 命令比较两个排序后的文件 `list1.txt` 和 `list2.txt`。
+39. **编号输出**：使用 `nl` 命令给 `file1.txt` 的每一行加上行号并输出。
+40. **格式化输出**：使用 `column -t` 将 `/etc/passwd` 的内容以表格形式格式化输出。
+
+---
+
+### **三、 系统管理与信息查看 (15题)**
+
+41. **查看系统信息**：使用 `uname -a` 查看所有系统信息。
+42. **查看内核版本**：使用 `uname -r` 只查看内核版本。
+43. **查看主机名**：使用 `hostname` 命令查看当前主机名。
+44. **查看系统负载**：使用 `uptime` 命令查看系统运行时间和平均负载。
+45. **查看内存使用**：使用 `free -h` 以人类可读的方式查看内存和交换空间使用情况。
+46. **监控进程动态**：使用 `top` 或 `htop` 命令动态监控进程和系统性能。
+47. **查看磁盘空间**：使用 `df -h` 查看文件系统磁盘空间使用情况。
+48. **查看目录大小**：使用 `du -sh /var/log` 查看 `/var/log` 目录的总大小。
+49. **查看环境变量**：使用 `printenv` 或 `env` 查看所有环境变量，并使用 `echo $PATH` 查看特定环境变量。
+50. **设置别名**：在你的 `~/.bashrc` 文件中添加一个别名 `ll='ls -alF'`，然后使其生效（`source ~/.bashrc`）。
+51. **查看命令历史**：使用 `history` 查看命令历史记录，并重新执行历史记录中的第100条命令（`!100`）。
+52. **查看用户登录**：使用 `who` 或 `w` 命令查看当前有哪些用户登录在系统上。
+53. **查看自己是谁**：使用 `whoami` 命令查看当前有效用户名。
+54. **查看用户信息**：使用 `id` 命令查看当前用户的UID、GID等信息。
+55. **日历**：使用 `cal` 查看当前月的日历，并查看2025年12月的日历。
+
+---
+
+### **四、 权限管理 (10题)**
+
+56. **查看权限**：使用 `ls -l` 详细查看 `/etc/passwd` 文件的权限、所有者和组。
+57. **修改文件权限（数字）**：创建一个文件 `secret.txt`，使用 `chmod` 的数字模式将其权限设置为仅所有者可读可写 (`600`)。
+58. **修改文件权限（符号）**：使用 `chmod` 的符号模式给 `secret.txt` 的同组用户增加读权限。
+59. **修改文件所有者**：使用 `sudo chown` 将 `secret.txt` 的所有者改为root用户（需要sudo权限）。
+60. **修改文件所属组**：使用 `sudo chgrp` 将 `secret.txt` 的所属组改为root组。
+61. **默认权限**：使用 `umask` 查看当前默认的权限掩码，并创建一个新文件和新目录，验证其初始权限。
+62. **特殊权限SUID**：查找系统中具有SUID权限的命令（如 `sudo chmod u+s /usr/bin/your_command`，但请勿随意设置）。
+63. **目录权限理解**：创建一个目录 `shared_dir`，设置权限为 `775`，使其组成员都可以在其中创建和删除文件。
+64. **粘滞位**：在 `/tmp` 目录下创建一个文件，理解粘滞位（`t` 权限）的作用。`ls -ld /tmp` 查看。
+65. **ACL扩展权限**：使用 `setfacl -m u:username:rwx file` 为某个用户对某个文件设置扩展权限，并用 `getfacl` 查看。
+
+---
+
+### **五、 进程管理 (10题)**
+
+66. **查看进程**：使用 `ps aux` 查看系统所有进程。
+67. **查看进程树**：使用 `pstree` 以树状结构查看进程关系。
+68. **动态监控进程**：使用 `top` 命令，然后在其中按 `P`（按CPU排序）和 `M`（按内存排序）。
+69. **终止进程**：启动一个 `sleep 1000` 进程，然后使用 `kill` 命令通过PID终止它。
+70. **强制终止进程**：使用 `kill -9` 强制终止一个进程。
+71. **按名称终止进程**：使用 `pkill sleep` 终止所有名为sleep的进程。
+72. **后台运行**：使用 `&` 将一个命令（如 `sleep 500`）放到后台运行。
+73. **前后台切换**：启动一个前台进程，使用 `Ctrl+Z` 将其暂停并放入后台，然后使用 `bg` 命令让其继续在后台运行，使用 `fg` 命令将其调回前台。
+74. **查看后台作业**：使用 `jobs` 命令查看当前shell的后台作业。
+75. **使进程脱离终端**：使用 `nohup` 命令运行一个脚本，即使终端关闭它也不会退出（`nohup ./script.sh &`）。
+
+---
+
+### **六、 网络操作 (10题)**
+
+76. **查看IP地址**：使用 `ip addr show` 或 `ifconfig` 查看网络接口信息。
+77. **测试连通性**：使用 `ping -c 4 8.8.8.8` 测试与Google DNS的网络连通性，发送4个包后停止。
+78. **查看路由表**：使用 `ip route show` 或 `route -n` 查看系统路由表。
+79. **追踪路径**：使用 `traceroute` 或 `tracepath` 追踪到 `www.google.com` 的网络路径。
+80. **查询域名**：使用 `nslookup` 或 `dig` 查询 `www.github.com` 的IP地址。
+81. **查看端口监听**：使用 `ss -tulnp` 或 `netstat -tulnp` 查看系统监听的TCP和UDP端口。
+82. **下载文件**：使用 `wget` 从网络上下载一个文件（如 `wget https://example.com/file.zip`）。
+83. **高级下载**：使用 `curl -O` 下载文件，并尝试使用 `-I` 选项只获取HTTP头信息。
+84. **扫描端口**：使用 `nmap localhost` 扫描本机开放的端口（需安装nmap）。
+85. **网络统计**：使用 `ss -s` 查看详细的网络套接字统计信息。
+
+---
+
+### **七、 压缩与打包 (5题)**
+
+86. **压缩文件**：使用 `gzip` 压缩 `file1.txt`，生成 `file1.txt.gz`。
+87. **解压缩文件**：使用 `gunzip` 解压 `file1.txt.gz`。
+88. **打包与压缩**：使用 `tar -czvf archive.tar.gz dir1/` 将 `dir1` 目录打包并压缩为 `.tar.gz` 文件。
+89. **解包与解压**：使用 `tar -xzvf archive.tar.gz` 解压并解包刚才的文件。
+90. **其他格式**：使用 `tar -cjvf archive.tar.bz2 dir1/` 创建 `.tar.bz2` 格式的压缩包。
+
+---
+
+### **八、 搜索与查找 (5题)**
+
+91. **查找文件**：使用 `find /home -name "*.txt"` 在 `/home` 目录下查找所有 `.txt` 文件。
+92. **按类型查找**：使用 `find /var -type f -name "*.log"` 查找 `/var` 下的所有日志文件。
+93. **按时间查找**：使用 `find ~ -mtime -1` 查找你家目录下最近1天内修改过的文件。
+94. **按大小查找**：使用 `find / -size +100M` 查找系统中大于100MB的文件（可能需要sudo）。
+95. **命令查找**：使用 `which ls` 查找 `ls` 命令的完整路径。使用 `whereis ls` 查找 `ls` 命令的二进制程序、源代码和man手册页的位置。
+
+---
+
+### **九、 Shell编程与脚本基础 (3题)**
+
+96. **变量操作**：在Shell中定义一个变量 `NAME=your_name`，然后使用 `echo "Hello, $NAME"` 打印出来。
+97. **命令替换**：使用反引号 `` ` `` 或 `$()` 将 `date` 命令的输出结果赋值给一个变量，并打印出来。
+98. **编写简单脚本**：创建一个脚本 `hello.sh`，内容如下，然后赋予它执行权限 (`chmod +x hello.sh`) 并运行它：
+    ```bash
+    #!/bin/bash
+    echo "Hello, World!"
+    echo "Today is $(date)"
+    ```
