@@ -206,4 +206,14 @@ pvremove /dev/sdb /dev/sdc
 
 ---
 
+## 注意事项
+在vmware中添加磁盘后，记得要扫描下，否则lsblk无法显示磁盘
+```bash
+# 查看所有SCSI主机总线
+ls /sys/class/scsi_host/
 
+# 对每个host执行扫描(例如host0, host1, host2)
+echo "- - -" > /sys/class/scsi_host/host0/scan
+echo "- - -" > /sys/class/scsi_host/host1/scan
+echo "- - -" > /sys/class/scsi_host/host2/scan
+```

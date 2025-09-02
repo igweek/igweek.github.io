@@ -220,7 +220,16 @@ pvremove /dev/sdb /dev/sdc</pre></div>
 <li>LVM 可以动态扩容，非常灵活。</li>
 <li>如果再加快照（<code class="notranslate">lvcreate -s</code>），还能做数据备份。</li>
 </ul>
-<hr></div>
+<hr>
+<h2>注意事项</h2>
+<p>在vmware中添加磁盘后，记得要扫描下，否则lsblk无法显示磁盘</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看所有SCSI主机总线</span>
+ls /sys/class/scsi_host/
+
+<span class="pl-c"><span class="pl-c">#</span> 对每个host执行扫描(例如host0, host1, host2)</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>- - -<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /sys/class/scsi_host/host0/scan
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>- - -<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /sys/class/scsi_host/host1/scan
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>- - -<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /sys/class/scsi_host/host2/scan</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
