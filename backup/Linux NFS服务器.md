@@ -37,12 +37,14 @@ NFS服务配置文件在**/etc/exports**，配置参数其结构如下：
 
 首先关闭selinux
 
-`vim /etc/selinux/config`    编辑selinux配置文件
+`vim /etc/selinux/config`    
+编辑selinux配置文件selinx设置为disabled
 
-`sestatus`                   查看selinnx状态，如果还是enable，reboot一下
+`sestatus`                  
+查看selinnx状态，如果还是enable，reboot一下
+
 或者临时关闭防火墙
-`systemctl stop firewalld
-setenforce 0`
+`systemctl stop firewalld setenforce 0`
 
 步骤 1：安装 NFS 服务器软件包
 
@@ -62,21 +64,21 @@ setenforce 0`
 
 步骤 3：重启 NFS 服务
 
-`systemctl restart nfs-server
-systemctl enable nfs-server`
+`systemctl restart nfs-server`
+`systemctl enable nfs-server`
 
 步骤 4：设置防火墙规则
 
-`firewall-cmd --permanent --add-service=nfs
-firewall-cmd --reload`
+`firewall-cmd --permanent --add-service=nfs`
+`firewall-cmd --reload`
 
 步骤 5：挂载 NFS 共享（对于客户端）
 
 在客户端系统上，使用 mount 命令挂载 NFS 共享
 
 新建挂载目录
-`mkdir /mnt/nfs
-mount -t nfs <NFS服务器IP>:/data /mnt/nfs`
+`mkdir /mnt/nfs`
+`mount -t nfs <NFS服务器IP>:/data /mnt/nfs`
 
 步骤 6：验证共享是否生效
 
@@ -100,8 +102,8 @@ Linux客户机2：192.168.0.20
 `sestatus`                   查看selinnx状态，如果还是enable，reboot一下
 
 或者临时关闭防火墙
-`systemctl stop firewalld
-setenforce 0`
+`systemctl stop firewalld`
+`setenforce 0`
 
 步骤 1：安装 NFS 服务器软件包
 `yum install nfs-utils rpcbind -y`
