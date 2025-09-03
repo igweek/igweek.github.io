@@ -56,7 +56,7 @@ firewall-cmd --reload
 rpm -Uvh https://repo.mysql.com/mysql80-community-release-el8-4.noarch.rpm
 
 # 安装并启动
-yum install -y mysql-community-server
+yum install -y mysql-server
 systemctl enable --now mysqld
 ```
 
@@ -182,7 +182,7 @@ firewall-cmd --reload
 rpm -Uvh https://repo.mysql.com/mysql80-community-release-el8-4.noarch.rpm
 
 # 安装并启动
-yum install -y mysql-community-server
+yum install -y mysql-server
 systemctl enable --now mysqld
 ```
 
@@ -364,7 +364,7 @@ firewall-cmd --reload</pre></div>
 rpm -Uvh https://repo.mysql.com/mysql80-community-release-el8-4.noarch.rpm
 
 <span class="pl-c"><span class="pl-c">#</span> 安装并启动</span>
-yum install -y mysql-community-server
+yum install -y mysql-server
 systemctl <span class="pl-c1">enable</span> --now mysqld</pre></div>
 <p>初始化 root 密码（MySQL 初次启动会生成临时密码）：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 获取临时密码（两台分别查看）</span>

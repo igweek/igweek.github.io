@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 03 Sep 2025 01:41:43 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>主从数据库 数据库读写分离</title><link>https://bbs.017121.xyz/post/zhu-cong-shu-ju-ku-%20-shu-ju-ku-du-xie-fen-li.html</link><description>* `db1`（192.168.56.10）：MySQL 主库 + ProxySQL（作为应用入口，做读写分离）
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 03 Sep 2025 05:50:03 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>主从数据库 数据库读写分离</title><link>https://bbs.017121.xyz/post/zhu-cong-shu-ju-ku-%20-shu-ju-ku-du-xie-fen-li.html</link><description>* `db1`（192.168.56.10）：MySQL 主库 + ProxySQL（作为应用入口，做读写分离）
 * `db2`（192.168.56.11）：MySQL 从库（只读）
 * 应用/客户端只连接 ProxySQL（`db1:6033`），**写**走主库，**读**走从库
 
@@ -45,7 +45,7 @@ firewall-cmd --reload
 rpm -Uvh https://repo.mysql.com/mysql80-community-release-el8-4.noarch.rpm
 
 # 安装并启动
-yum install -y mysql-community-server
+yum install -y mysql-server
 systemctl enable --now mysqld
 ```
 
