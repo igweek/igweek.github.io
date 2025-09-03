@@ -468,6 +468,12 @@ systemctl <span class="pl-c1">enable</span> --now proxysql</pre></div>
 <hr>
 <h1>7. 在两台 MySQL 上为应用创建业务账户</h1>
 <p><strong>db1 与 db2</strong> 都执行（保证账号在两边都能认证）：</p>
+<p><strong>db1</strong></p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">INSERT INTO</span> mysql_users(username, password, active, default_hostgroup) 
+<span class="pl-k">VALUES</span> (<span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>App@123!<span class="pl-pds">'</span></span>, <span class="pl-c1">1</span>, <span class="pl-c1">10</span>);
+LOAD MYSQL USERS TO RUNTIME;
+SAVE MYSQL USERS TO DISK;</pre></div>
+<p><strong>db2</strong></p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">CREATE</span> <span class="pl-k">USER</span> '<span class="pl-en">app</span>'@<span class="pl-s"><span class="pl-pds">'</span>%<span class="pl-pds">'</span></span> IDENTIFIED BY <span class="pl-s"><span class="pl-pds">'</span>App@123!<span class="pl-pds">'</span></span>;
 <span class="pl-k">GRANT</span> ALL PRIVILEGES <span class="pl-k">ON</span> <span class="pl-k">*</span>.<span class="pl-k">*</span> TO <span class="pl-s"><span class="pl-pds">'</span>app<span class="pl-pds">'</span></span>@<span class="pl-s"><span class="pl-pds">'</span>%<span class="pl-pds">'</span></span> WITH <span class="pl-k">GRANT</span> OPTION;
 <span class="pl-c"><span class="pl-c">--</span> 为了防误写，从库仍有 super_read_only=ON，写入会被拒绝。</span>
