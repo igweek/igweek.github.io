@@ -571,6 +571,74 @@ USE demo;
 </ul>
 </li>
 </ul>
+<hr>
+<h2>1. ProxySQL 是什么</h2>
+<ul>
+<li>它是一个 <strong>高性能的 MySQL 中间件（数据库代理层）</strong>，运行在应用与数据库之间。</li>
+<li>应用不用直接连接多个 MySQL 节点，而是只连 ProxySQL（一个入口），ProxySQL 再根据规则把 SQL 请求转发给合适的数据库实例。</li>
+</ul>
+<hr>
+<h2>2. ProxySQL 的主要作用</h2>
+<ol>
+<li>
+<p><strong>读写分离</strong></p>
+<ul>
+<li>ProxySQL 可以通过规则判断一条 SQL 是“读”还是“写”。</li>
+<li><strong>写（INSERT/UPDATE/DELETE/DDL）</strong> → 转发到主库（writer）。</li>
+<li><strong>读（SELECT）</strong> → 转发到从库（reader）。</li>
+<li>这样就能让主库专心处理写，从库负责分担读压力。</li>
+</ul>
+</li>
+<li>
+<p><strong>负载均衡</strong></p>
+<ul>
+<li>如果有多个从库，ProxySQL 可以自动把查询分散到不同的从库，做到负载均衡。</li>
+<li>可以根据 <strong>权重 (weight)</strong> 来分配比例。</li>
+</ul>
+</li>
+<li>
+<p><strong>高可用切换</strong></p>
+<ul>
+<li>ProxySQL 可以通过健康检查和监控账号，知道某个节点是否宕机或只读状态。</li>
+<li>如果主库宕了，可以自动把它从 writer 组里摘掉，避免应用请求失败。</li>
+</ul>
+</li>
+<li>
+<p><strong>SQL 路由/过滤/缓存</strong></p>
+<ul>
+<li>ProxySQL 可以基于正则匹配 SQL，把特定 SQL 路由到指定实例。</li>
+<li>也可以缓存热点查询结果，减轻数据库压力。</li>
+</ul>
+</li>
+<li>
+<p><strong>连接池</strong></p>
+<ul>
+<li>应用只需要连 ProxySQL，ProxySQL 内部维护与后端 MySQL 的连接池，大幅减少 MySQL 建连开销。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>3. 判定读写的方式</h2>
+<ul>
+<li>
+<p>ProxySQL 的 <strong>查询规则（mysql_query_rules）</strong> 表里配置了正则规则，例如：</p>
+<ul>
+<li><code class="notranslate">^SELECT</code> → 匹配所有以 SELECT 开头的语句 → 路由到从库组。</li>
+<li><code class="notranslate">^SELECT.*FOR UPDATE</code> → 带锁的 SELECT → 强制走主库。</li>
+<li>其他 INSERT/UPDATE/DELETE/DDL 默认走主库。</li>
+</ul>
+</li>
+<li>
+<p>这样 ProxySQL 就能根据 SQL 类型来判定是“读”还是“写”。</p>
+</li>
+</ul>
+<hr>
+<h2>4. 最终效果</h2>
+<ul>
+<li>应用只连 ProxySQL，不用关心背后有多少 MySQL 节点。</li>
+<li>ProxySQL 会把写 SQL 发给主库，把读 SQL 分配到从库（甚至多个从库）。</li>
+<li>实现了 <strong>透明的读写分离 + 负载均衡</strong>。</li>
+</ul>
 <hr></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
