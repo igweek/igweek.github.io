@@ -1,5 +1,129 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 02 Sep 2025 05:43:28 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Linux NFS服务器</title><link>https://bbs.017121.xyz/post/Linux%20NFS-fu-wu-qi.html</link><description>## 一、NFS服务
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 03 Sep 2025 01:41:43 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>主从数据库 数据库读写分离</title><link>https://bbs.017121.xyz/post/zhu-cong-shu-ju-ku-%20-shu-ju-ku-du-xie-fen-li.html</link><description>* `db1`（192.168.56.10）：MySQL 主库 + ProxySQL（作为应用入口，做读写分离）
+* `db2`（192.168.56.11）：MySQL 从库（只读）
+* 应用/客户端只连接 ProxySQL（`db1:6033`），**写**走主库，**读**走从库
+
+---
+
+![image.png](https://pic.myla.eu.org/file/1756863511450_image.png)
+
+# 0. 准备工作
+
+两台干净的 CentOS 8（root 或 sudo 权限），主机名与 IP：
+
+```bash
+# db1
+hostnamectl set-hostname db1 &amp;&amp; exec bash
+nmcli -p dev show  # 确认网卡与IP
+# 假设 db1: 192.168.56.10
+
+# db2
+hostnamectl set-hostname db2 &amp;&amp; exec bash
+# 假设 db2: 192.168.56.11
+```
+
+关闭 SELinux（实验方便，生产建议按策略放行）与开放端口：
+
+```bash
+# 两台都执行
+setenforce 0
+sed -ri 's/^SELINUX=.*/SELINUX=permissive/' /etc/selinux/config
+
+# 防火墙放行 MySQL(3306)、ProxySQL(6032 管理端口、6033 业务端口，仅 db1 需要)
+firewall-cmd --add-port=3306/tcp --permanent
+firewall-cmd --add-port=6032/tcp --permanent   # 仅 db1
+firewall-cmd --add-port=6033/tcp --permanent   # 仅 db1
+firewall-cmd --reload
+```
+
+---
+
+# 1. 安装 MySQL 8（两台）
+
+```bash
+# 安装 MySQL 官方 YUM 仓库（版本号可能更新，按需替换）
+rpm -Uvh https://repo.mysql.com/mysql80-community-release-el8-4.noarch.rpm
+
+# 安装并启动
+yum install -y mysql-community-server
+systemctl enable --now mysqld
+```
+
+初始化 root 密码（MySQL 初次启动会生成临时密码）：
+
+```bash
+# 获取临时密码（两台分别查看）
+grep 'temporary password' /var/log/mysqld.log
+
+# 使用临时密码登录并设置新密码（两台各自执行，设置为相同便于实验）
+mysql -uroot -p
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Root@123!';
+EXIT;
+```
+
+---
+
+# 2. 配置主库（db1）与从库（db2）参数（启用 GTID）
+
+\*\*db1（主库）\*\*修改 `/etc/my.cnf`，在 `[mysqld]` 段新增/调整：
+
+```ini
+[mysqld]
+server-id=1
+log_bin=/var/lib/mysql/mysql-bin
+binlog_format=ROW
+gtid_mode=ON
+enforce_gtid_consistency=ON
+binlog_row_image=FULL
+innodb_flush_log_at_trx_commit=1
+sync_binlog=1
+```
+
+\*\*db2（从库）\*\*修改 `/etc/my.cnf`：
+
+```ini
+[mysqld]
+server-id=2
+log_bin=/var/lib/mysql/mysql-bin
+relay_log=/var/lib/mysql/mysql-relay-bin
+relay_log_recovery=ON
+read_only=ON
+super_read_only=ON
+gtid_mode=ON
+enforce_gtid_consistency=ON
+log_slave_updates=ON
+```
+
+重启 MySQL：
+
+```bash
+# 两台
+systemctl restart mysqld
+```
+
+---
+
+# 3. 主库创建复制与监控用户
+
+在 **db1** 登录 MySQL：
+
+```sql
+-- 复制账号（给从库用）
+CREATE USER 'repl'@'%' IDENTIFIED BY 'Repl@123!';
+GRANT REPLICATION SLAVE ON *.* TO 'repl'@'%';
+
+-- 监控账号（ProxySQL 健康检查用）
+CREATE USER 'monitor'@'%' IDENTIFIED BY 'Monit@123!';
+GRANT USAGE, REPLICATION CLIENT ON *.* TO 'monitor'@'%';
+
+FLUSH PRIVILEGES;
+```
+
+---
+
+# 4. 主库导出初始化数据（带 GTID），从库导入
+
+&gt; 为确保一致性，建议主库暂时暂停 DDL/DML。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/zhu-cong-shu-ju-ku-%20-shu-ju-ku-du-xie-fen-li.html</guid><pubDate>Wed, 03 Sep 2025 01:41:20 +0000</pubDate></item><item><title>Linux NFS服务器</title><link>https://bbs.017121.xyz/post/Linux%20NFS-fu-wu-qi.html</link><description>## 一、NFS服务
 
 NFS（Network File System）是一种用于在网络上共享文件系统的协议，它允许不同计算机之间通过网络共享文件和目录。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/Linux%20NFS-fu-wu-qi.html</guid><pubDate>Tue, 02 Sep 2025 05:43:02 +0000</pubDate></item><item><title>Linux Nginx服务器</title><link>https://bbs.017121.xyz/post/Linux%20Nginx-fu-wu-qi.html</link><description>## 一、Nginx服务器
 
