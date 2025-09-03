@@ -647,7 +647,17 @@ USE demo;
 <li>ProxySQL 会把写 SQL 发给主库，把读 SQL 分配到从库（甚至多个从库）。</li>
 <li>实现了 <strong>透明的读写分离 + 负载均衡</strong>。</li>
 </ul>
-<hr></div>
+<hr>
+<h2>注意事项</h2>
+<p>由于db2只读，过程中如遇需要写入的情况可临时关闭只读模式。<br>
+在db2上执行以下命令</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mysql -uroot -p</pre></div>
+<p>登陆后执行：</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SET</span> GLOBAL super_read_only<span class="pl-k">=</span>OFF;
+<span class="pl-k">SET</span> GLOBAL read_only<span class="pl-k">=</span>OFF;</pre></div>
+<p>待文件写入后恢复只读模式</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SET</span> GLOBAL read_only<span class="pl-k">=</span><span class="pl-k">ON</span>;
+<span class="pl-k">SET</span> GLOBAL super_read_only<span class="pl-k">=</span><span class="pl-k">ON</span>;</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
