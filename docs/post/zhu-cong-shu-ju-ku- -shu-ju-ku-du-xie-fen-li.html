@@ -424,8 +424,10 @@ scp /tmp/full.sql root@192.168.56.11:/tmp/</pre></div>
 <p>在 <strong>db2</strong> 导入：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">mysql -uroot -p <span class="pl-k">&lt;</span> /tmp/full.sql</pre></div>
 <blockquote>
-<p>如果 <code class="notranslate">SET @@GLOBAL.GTID_PURGED</code> 报错，多为从库已有事务历史。确保是<strong>全新实例</strong>或清空数据目录后重装。</p>
+<p>如果 <code class="notranslate">SET @@GLOBAL.GTID_PURGED</code> 报错，多为从库已有事务历史。确保是<strong>全新实例</strong>或清空数据目录后重装。<br>
+使用命令</p>
 </blockquote>
+<div class="highlight highlight-source-sql"><pre class="notranslate">RESET MASTER;</pre></div>
 <hr>
 <h1>5. 配置并启动复制（GTID 自动定位）</h1>
 <p>在 <strong>db2</strong>（从库）执行：</p>
