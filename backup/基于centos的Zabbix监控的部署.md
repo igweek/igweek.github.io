@@ -50,8 +50,13 @@ FLUSH PRIVILEGES;
 ```
 
 ### 步骤 4：安装 Zabbix Server、Web 前端和 Agent  
+安装zabbix官方库
 ```bash
-dnf install -y zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/x86_64/zabbix-release-6.0-1.el8.noarch.rpm
+```
+安装zabbix
+```bash
+yum install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-agent
 ```
 
 ### 步骤 5：导入 Zabbix 数据库结构  
