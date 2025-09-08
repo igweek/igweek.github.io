@@ -172,27 +172,24 @@ quit</pre></div>
 <p>输入mysql</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">set</span> global log_bin_trust_function_creators <span class="pl-k">=</span> <span class="pl-c1">0</span>;
 quit;</pre></div>
-<pre class="notranslate"><code class="notranslate">
-### 步骤 7：配置 Zabbix Server  
-编辑 `/etc/zabbix/zabbix_server.conf`，并更新以下字段：  
-```ini
-DBHost=localhost
-DBName=zabbix
-DBUser=zabbix
-DBPassword=password
-</code></pre>
+<h3>步骤 7：配置 Zabbix Server</h3>
+<p>编辑 <code class="notranslate">/etc/zabbix/zabbix_server.conf</code>，并更新以下字段：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-k">DBHost</span>=localhost
+<span class="pl-k">DBName</span>=zabbix
+<span class="pl-k">DBUser</span>=zabbix
+<span class="pl-k">DBPassword</span>=password</pre></div>
 <h3>步骤 8：配置 PHP 时区</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">vi /etc/php-fpm.d/zabbix.conf</pre></div>
 <p>找到并修改：</p>
 <div class="highlight highlight-source-ini"><pre class="notranslate">php_value[date.timezone] = Asia/Shanghai</pre></div>
-<h3>步骤 8：启动并设置自启</h3>
+<h3>步骤 9：启动并设置自启</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">systemctl <span class="pl-c1">enable</span> --now zabbix-server zabbix-agent httpd php-fpm</pre></div>
-<h3>步骤 9：防火墙配置</h3>
+<h3>步骤 10：防火墙配置</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-port=10050/tcp
 firewall-cmd --permanent --add-port=10051/tcp
 firewall-cmd --reload</pre></div>
-<h3>步骤 10：Web 界面访问</h3>
+<h3>步骤 11：Web 界面访问</h3>
 <p>访问 <code class="notranslate">http://&lt;服务器IP&gt;/zabbix</code>，按照安装向导配置数据库连接，默认登录用户为 <code class="notranslate">Admin</code>，密码为 <code class="notranslate">zabbix</code>。</p>
 <hr>
 <h2>4. 实例解析</h2>
