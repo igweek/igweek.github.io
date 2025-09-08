@@ -26,54 +26,107 @@
 
 ## 3. 实例（以 CentOS 8 + MySQL + Zabbix 为例）
 
-### 步骤 1：更新系统  
+### 步骤 1：更换软件源
 ```bash
-dnf update -y
+bash <(curl -sSL https://linuxmirrors.cn/main.sh)
 ```
 
-### 步骤 2：安装 MySQL（使用 MySQL 作为数据库）  
+### 步骤 2：检查php版本
 ```bash
-dnf install -y @mysql
-systemctl enable --now mysqld
+php -v
+php-fpm -v  
+#如果php版本低于8.2，请升级php版本，在进行后续操作
 ```
 
-### 步骤 3：初始化 MySQL 数据库并配置  
+### 步骤 3：php版本升级
 ```bash
-mysql_secure_installation
+wget https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+sudo rpm -ivh remi-release-8.rpm --nodeps --force
+ls /etc/yum.repos.d/ | grep remi
+#若输出包含 remi.repo、remi-modular.repo 等文件，说明安装成功。
+sudo dnf clean all
+sudo dnf makecache
 ```
-创建 Zabbix 数据库和用户：  
+### 步骤4：继续安装php8
+```bash
+# 重置 PHP 模块配置
+sudo dnf module reset php -y
+
+# 启用 Remi 仓库的 PHP 8.2 模块
+sudo dnf module enable php:remi-8.2 -y
+
+# 安装 PHP 8.2 及扩展（添加 --allowerasing 解决可能的依赖冲突）
+sudo dnf install -y \
+  php \
+  php-cli \
+  php-fpm \
+  php-mysqlnd \
+  php-mbstring \
+  php-gd \
+  php-xml \
+  php-zip \
+  php-bcmath \
+  php-opcache \
+  --allowerasing
+```
+### 步骤5：验证php版本
+```bash
+# 查看 PHP 版本
+php -v
+
+# 查看 PHP-FPM 版本
+php-fpm -v
+```
+
+### 步骤6：继续安装zabbix监控
+```bash
+rpm -Uvh https://repo.zabbix.com/zabbix/7.0/centos/8/x86_64/zabbix-release-latest-7.0.el8.noarch.rpm
+dnf clean all
+dnf install -y zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-sql-scripts zabbix-agent
+```
+
+### 步骤7：创建数据库
+```bash
+dnf install mysql-server -y
+systemctl start mysqld
+systemctl enable mysqld
+```
+输入mysql
 ```sql
-CREATE DATABASE zabbix CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
-CREATE USER 'zabbix'@'localhost' IDENTIFIED BY 'zabbixpass';
-GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';
-FLUSH PRIVILEGES;
+create database zabbix character set utf8mb4 collate utf8mb4\_bin;
+
+create user zabbix@localhost identified by 'password';
+
+grant all privileges on zabbix.\* to zabbix@localhost;
+
+set global log\_bin\_trust\_function\_creators \= 1;
+
+quit
 ```
 
-### 步骤 4：安装 Zabbix Server、Web 前端和 Agent  
-安装zabbix官方库
 ```bash
-rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/8/x86_64/zabbix-release-6.0-1.el8.noarch.rpm
-```
-安装zabbix
-```bash
-yum install zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-agent
+zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
 ```
 
-### 步骤 5：导入 Zabbix 数据库结构  
-```bash
-zcat /usr/share/doc/zabbix-sql-scripts/mysql/server.sql.gz | mysql -uzabbix -pzabbixpass zabbix
+输入mysql
+```sql
+set global log_bin_trust_function_creators = 0;
+quit;
 ```
 
-### 步骤 6：配置 Zabbix Server  
+
+```
+
+### 步骤 7：配置 Zabbix Server  
 编辑 `/etc/zabbix/zabbix_server.conf`，并更新以下字段：  
 ```ini
 DBHost=localhost
 DBName=zabbix
 DBUser=zabbix
-DBPassword=zabbixpass
+DBPassword=password
 ```
 
-### 步骤 7：配置 PHP 时区  
+### 步骤 8：配置 PHP 时区  
 ```bash
 vi /etc/php-fpm.d/zabbix.conf
 ```
