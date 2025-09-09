@@ -115,7 +115,7 @@ quit;
 ```
 
 
-### 步骤 7：配置 Zabbix Server  
+### 步骤 8：配置 Zabbix Server  
 编辑 `/etc/zabbix/zabbix_server.conf`，并更新以下字段：  
 ```ini
 DBHost=localhost
@@ -124,7 +124,7 @@ DBUser=zabbix
 DBPassword=password
 ```
 
-### 步骤 8：配置 PHP 时区  
+### 步骤 9：配置 PHP 时区  
 ```bash
 vi /etc/php-fpm.d/zabbix.conf
 ```
@@ -133,12 +133,12 @@ vi /etc/php-fpm.d/zabbix.conf
 php_value[date.timezone] = Asia/Shanghai
 ```
 
-### 步骤 9：启动并设置自启  
+### 步骤 10：启动并设置自启  
 ```bash
 systemctl enable --now zabbix-server zabbix-agent httpd php-fpm
 ```
 
-### 步骤 10：防火墙配置  
+### 步骤 11：防火墙配置  
 ```bash
 firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-port=10050/tcp
@@ -146,7 +146,7 @@ firewall-cmd --permanent --add-port=10051/tcp
 firewall-cmd --reload
 ```
 
-### 步骤 11：Web 界面访问  
+### 步骤 12：Web 界面访问  
 访问 `http://<服务器IP>/zabbix`，按照安装向导配置数据库连接，默认登录用户为 `Admin`，密码为 `zabbix`。
 
 ---
