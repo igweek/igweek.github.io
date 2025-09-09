@@ -92,17 +92,7 @@ systemctl start mysqld
 systemctl enable mysqld
 ```
 输入mysql
-```sql
-create database zabbix character set utf8mb4 collate utf8mb4\_bin;
-
-create user zabbix@localhost identified by 'password';
-
-grant all privileges on zabbix.\* to zabbix@localhost;
-
-set global log\_bin\_trust\_function\_creators \= 1;
-
-quit
-```
+![12.PNG](https://pic.myla.eu.org/file/1757379681861_12.PNG)
 
 ```bash
 zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
