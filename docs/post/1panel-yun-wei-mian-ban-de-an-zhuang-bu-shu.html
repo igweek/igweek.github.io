@@ -10,11 +10,11 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="## 准备一台linux服务器
+<meta name="description" content="## 1.准备一台linux服务器
 
 确保您有一台运行Linux系统的服务器，支持CentOS、Ubuntu、Debian等主流发行版，及麒麟、统信等国产操作系统。">
 <meta property="og:title" content="1panel运维面板的安装部署">
-<meta property="og:description" content="## 准备一台linux服务器
+<meta property="og:description" content="## 1.准备一台linux服务器
 
 确保您有一台运行Linux系统的服务器，支持CentOS、Ubuntu、Debian等主流发行版，及麒麟、统信等国产操作系统。">
 <meta property="og:type" content="article">
@@ -87,14 +87,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h2>准备一台linux服务器</h2>
+<div class="markdown-body" id="postBody"><h2>1.准备一台linux服务器</h2>
 <p>确保您有一台运行Linux系统的服务器，支持CentOS、Ubuntu、Debian等主流发行版，及麒麟、统信等国产操作系统。支持各种服务器架构：x86_64、aarch64、armv7l、ppc64le、s390x。</p>
-<h2>Docker安装及换源</h2>
+<h2>2.Docker安装及换源</h2>
 <div class="highlight highlight-source-shell"><pre class="notranslate">bash <span class="pl-s"><span class="pl-pds">&lt;(</span>curl -sSL https://linuxmirrors.cn/docker.sh<span class="pl-pds">)</span></span></pre></div>
-<h2>运行安装脚本</h2>
+<h2>3.运行安装脚本</h2>
 <p>以root用户身份运行一键安装脚本，自动完成1Panel的下载和安装。</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">bash -c <span class="pl-s"><span class="pl-pds">"</span><span class="pl-s"><span class="pl-pds">$(</span>curl -sSL https://resource.fit2cloud.com/1panel/package/v2/quick_start.sh<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span></pre></div>
-<h2>访问管理面板</h2>
+<h2>4.访问管理面板</h2>
 <p>安装完成后，通过浏览器访问安装脚本提示的访问地址，开始使用1Panel<br>
 <a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/bdb9365228164174978ac65fc4183ad4e345748ba64ee87a46d6338851dcee8d/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373338363134393036335f25453625384425393531313233333331323331322e504e47"><img src="https://camo.githubusercontent.com/bdb9365228164174978ac65fc4183ad4e345748ba64ee87a46d6338851dcee8d/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373338363134393036335f25453625384425393531313233333331323331322e504e47" alt="捕11233312312.PNG" data-canonical-src="https://pic.myla.eu.org/file/1757386149063_%E6%8D%9511233312312.PNG" style="max-width: 100%;"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
