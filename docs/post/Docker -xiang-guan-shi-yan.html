@@ -272,7 +272,6 @@ sudo chmod +x /usr/local/bin/docker-compose</pre></div>
 </li>
 </ul>
 <hr>
-<p>好的，以下是修改后的综合性实验设计，用于搭建 LNMP 环境并部署一个博客：</p>
 <h3><strong>综合性实验：使用 Docker 搭建 LNMP 环境并部署博客</strong></h3>
 <h4><strong>实验背景：</strong></h4>
 <p>该实验旨在通过使用 Docker 搭建 LNMP 环境（Nginx、MySQL、PHP），并部署一个简单的博客系统。通过这个过程，可以掌握 Docker 容器管理、镜像构建、容器网络配置等技能，并在容器化环境中完成 Web 应用的搭建和管理。</p>
@@ -325,7 +324,7 @@ sudo chmod +x /usr/local/bin/docker-compose</pre></div>
       - <span class="pl-s"><span class="pl-pds">"</span>80:80<span class="pl-pds">"</span></span>
     <span class="pl-ent">volumes</span>:
       - <span class="pl-s">./html:/usr/share/nginx/html</span>
-      - <span class="pl-s">./nginx.conf:/etc/nginx/nginx.conf</span>
+      - <span class="pl-s">./nginx.conf:/etc/nginx/conf.d/default.conf</span>
     <span class="pl-ent">depends_on</span>:
       - <span class="pl-s">php</span>
       - <span class="pl-s">db</span>

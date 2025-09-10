@@ -231,7 +231,6 @@ sudo docker --version
 
 ---
 
-好的，以下是修改后的综合性实验设计，用于搭建 LNMP 环境并部署一个博客：
 
 ### **综合性实验：使用 Docker 搭建 LNMP 环境并部署博客**
 
@@ -303,7 +302,7 @@ services:
       - "80:80"
     volumes:
       - ./html:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
       - db
