@@ -1,5 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 10 Sep 2025 04:42:45 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Docker 相关实验</title><link>https://bbs.017121.xyz/post/Docker%20-xiang-guan-shi-yan.html</link><description>### **实验目标：**
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 10 Sep 2025 04:58:27 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>什么是Docker</title><link>https://bbs.017121.xyz/post/shen-me-shi-Docker.html</link><description>![image.png](https://pic.myla.eu.org/file/1727241316398_image.png)
+
+
+### 1. 架构层级
+
+- **Docker**：
+  - 基于容器的虚拟化。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/shen-me-shi-Docker.html</guid><pubDate>Wed, 10 Sep 2025 04:57:55 +0000</pubDate></item><item><title>Docker 相关实验</title><link>https://bbs.017121.xyz/post/Docker%20-xiang-guan-shi-yan.html</link><description>### **实验目标：**
 
 1. 理解 Docker 的基本概念：容器、镜像、仓库等。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/Docker%20-xiang-guan-shi-yan.html</guid><pubDate>Wed, 10 Sep 2025 04:42:09 +0000</pubDate></item><item><title>1panel运维面板的安装部署</title><link>https://bbs.017121.xyz/post/1panel-yun-wei-mian-ban-de-an-zhuang-bu-shu.html</link><description>## 1.准备一台linux服务器
 
