@@ -1,5 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 10 Sep 2025 04:58:27 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>什么是Docker</title><link>https://bbs.017121.xyz/post/shen-me-shi-Docker.html</link><description>![image.png](https://pic.myla.eu.org/file/1727241316398_image.png)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 10 Sep 2025 05:00:56 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Docker相关命令及Compose写法</title><link>https://bbs.017121.xyz/post/Docker-xiang-guan-ming-ling-ji-Compose-xie-fa.html</link><description>![file](https://s2.loli.net/2024/09/29/9NtLPkzWlujZcH4.png)
+
+## 一、镜像管理
+
+1. `docker search`：搜索 Docker 仓库中的镜像。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/Docker-xiang-guan-ming-ling-ji-Compose-xie-fa.html</guid><pubDate>Wed, 10 Sep 2025 05:00:16 +0000</pubDate></item><item><title>什么是Docker</title><link>https://bbs.017121.xyz/post/shen-me-shi-Docker.html</link><description>![image.png](https://pic.myla.eu.org/file/1727241316398_image.png)
 
 
 ### 1. 架构层级
