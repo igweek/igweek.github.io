@@ -1,5 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 10 Sep 2025 05:00:56 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Docker相关命令及Compose写法</title><link>https://bbs.017121.xyz/post/Docker-xiang-guan-ming-ling-ji-Compose-xie-fa.html</link><description>![file](https://s2.loli.net/2024/09/29/9NtLPkzWlujZcH4.png)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 11 Sep 2025 03:11:06 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>虚拟化技术发展史</title><link>https://bbs.017121.xyz/post/xu-ni-hua-ji-shu-fa-zhan-shi.html</link><description>&lt;h2&gt;虚拟化技术发展简史&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;最早的影子：IBM 大机时代&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;1960-70年代 IBM 大型机就有了虚拟化雏形——一台硬件划分出多个“虚拟机”，每个虚拟机跑自己的 OS。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/xu-ni-hua-ji-shu-fa-zhan-shi.html</guid><pubDate>Thu, 11 Sep 2025 03:10:40 +0000</pubDate></item><item><title>Docker相关命令及Compose写法</title><link>https://bbs.017121.xyz/post/Docker-xiang-guan-ming-ling-ji-Compose-xie-fa.html</link><description>![file](https://s2.loli.net/2024/09/29/9NtLPkzWlujZcH4.png)
 
 ## 一、镜像管理
 
