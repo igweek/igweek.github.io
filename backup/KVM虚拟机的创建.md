@@ -161,5 +161,5 @@ sysctl -p
 查看虚拟机是否创建成功
 
 ```
-virt-manager
+virsh list --all
 ```
