@@ -1,5 +1,58 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 11 Sep 2025 10:32:57 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>KVM的安装</title><link>https://bbs.017121.xyz/post/KVM-de-an-zhuang.html</link><description>### KVM软件安装
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 11 Sep 2025 12:52:12 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>KVM虚拟机的创建</title><link>https://bbs.017121.xyz/post/KVM-xu-ni-ji-de-chuang-jian.html</link><description>## 一、利用图形化界面安装
+
+1、打开图形化界面
+
+利用命令virt-manager
+
+或者点击Applications——SystemTools——Virtual Machine Manager
+
+![QQå¾ç20240401112307.png](https://pic.myla.eu.org/file/1757594132220_QQå¾ç20240401112307.png)
+
+2、开始安装
+
+![1.png](https://pic.myla.eu.org/file/1757594133368_1.png)
+
+![2.png](https://pic.myla.eu.org/file/1757594132537_2.png)
+
+![3.png](https://pic.myla.eu.org/file/1757594133977_3.png)
+
+![4.png](https://pic.myla.eu.org/file/1757594133710_4.png)
+
+![5.png](https://pic.myla.eu.org/file/1757594130770_5.png)
+
+![6.png](https://pic.myla.eu.org/file/1757594131809_6.png)
+
+## 二、利用命令安装虚拟机
+
+1、利用qemu-img创建虚拟机的虚拟磁盘
+
+```bash
+qemu-img create -f qcow2 /var/lib/libvirt/images/vm2.qcow2 1G
+```
+
+2、查看所创建的虚拟磁盘的信息
+
+```bash
+qemu-img info /var/lib/libvirt/images/vm2.qcow2
+```
+
+3、利用virt-install命令创建虚拟机
+
+```bash
+virt-install --name=vm2 --disk path=/var/lib/libvirt/images/vm2.qcow2 --vcpus=1 --ram=512 --cdrom=/vm/iso/Core-11.1.iso --network network=default --os-type=linux
+```
+
+4、利用virsh命令查看虚拟机
+
+```bash
+virsh list —all
+```
+
+5、virt-install参数说明
+
+&gt; [!note]
+**`virt-install`** 是一个用于创建新虚拟机的命令行工具，它有许多参数可以配置虚拟机的各种设置。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/KVM-xu-ni-ji-de-chuang-jian.html</guid><pubDate>Thu, 11 Sep 2025 12:51:41 +0000</pubDate></item><item><title>KVM的安装</title><link>https://bbs.017121.xyz/post/KVM-de-an-zhuang.html</link><description>### KVM软件安装
 
 ### 1、 环境准备
 
