@@ -27,12 +27,12 @@ bash <(curl -sSL https://linuxmirrors.cn/main.sh)
 ### 4、安装软件
 
 `yum install qemu-kvm libvirt virt-manager libguestfs-tools virt-install.noarch -y`
+>[!TIP]
 >kvm相关安装包及其作用:
-
-- `qemu-kvm` 主要的KVM程序包
-- `virt-manager` GUI虚拟机管理工具
-- `libvirt` C语言工具包，提供libvirt服务
-- `virt-install` 基于libvirt服务的虚拟机创建命令
+>- `qemu-kvm` 主要的KVM程序包
+>- `virt-manager` GUI虚拟机管理工具
+>- `libvirt` C语言工具包，提供libvirt服务
+>- `virt-install` 基于libvirt服务的虚拟机创建命令
 
 验证 KVM 模块
 
