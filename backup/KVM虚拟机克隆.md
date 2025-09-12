@@ -3,10 +3,11 @@
 > - 虚拟机配置文件
 > - 虚拟磁盘
 
-*   **配置文件**：通常位于 `/etc/libvirt/qemu/` 目录下，是一个 XML 文件（例如 `ubuntu-server.xml`）。它定义了虚拟机的所有硬件规格，如 CPU 数量、内存大小、网络设置、磁盘路径、启动顺序等。
-*   **磁盘文件**：通常位于 `/var/lib/libvirt/images/` 或其他指定目录下（例如 `ubuntu-server.qcow2`）。它是虚拟机的硬盘，里面安装了操作系统和所有数据。
+*   **配置文件**：通常位于 `/etc/libvirt/qemu/` 目录下，是一个 XML 文件（例如 `ubuntu-server.xml`）。它定义了虚拟机的所有硬件规格，如 CPU 数量、内存大小、网络设置、磁盘路径、启动顺序等。如下图
+![11.png](https://pic.myla.eu.org/file/1757594473172_11.png)
+*   **磁盘文件**：通常位于 `/var/lib/libvirt/images/` 或其他指定目录下（例如 `ubuntu-server.qcow2`）。它是虚拟机的硬盘，里面安装了操作系统和所有数据。如下图
+![22.png](https://pic.myla.eu.org/file/1757594478620_22.png)
 
-好的👌 你给的内容比较偏笔记性质，我来帮你整理成一篇 **KVM 虚拟机克隆** 的技术博文，条理清晰，适合博客发布，兼顾 SEO 优化。  
 
 ---
 
@@ -57,6 +58,7 @@ virt-clone --auto-clone -o web01 -n web02
    - 删除 `<uuid>`  
    - 删除 `<mac address>`  
    - 修改 `<source file>` 为新的磁盘路径  
+![33.png](https://pic.myla.eu.org/file/1757594474987_33.png)
 3. 定义并启动新虚拟机：  
    ```bash
    virsh define web02.xml

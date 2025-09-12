@@ -100,10 +100,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 </div>
 <ul>
-<li><strong>配置文件</strong>：通常位于 <code class="notranslate">/etc/libvirt/qemu/</code> 目录下，是一个 XML 文件（例如 <code class="notranslate">ubuntu-server.xml</code>）。它定义了虚拟机的所有硬件规格，如 CPU 数量、内存大小、网络设置、磁盘路径、启动顺序等。</li>
-<li><strong>磁盘文件</strong>：通常位于 <code class="notranslate">/var/lib/libvirt/images/</code> 或其他指定目录下（例如 <code class="notranslate">ubuntu-server.qcow2</code>）。它是虚拟机的硬盘，里面安装了操作系统和所有数据。</li>
+<li><strong>配置文件</strong>：通常位于 <code class="notranslate">/etc/libvirt/qemu/</code> 目录下，是一个 XML 文件（例如 <code class="notranslate">ubuntu-server.xml</code>）。它定义了虚拟机的所有硬件规格，如 CPU 数量、内存大小、网络设置、磁盘路径、启动顺序等。如下图<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/17f46f04d633e360f41619a33ed649e7b5d91882c15c5b7e29acc7d1b57871b2/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437333137325f31312e706e67"><img src="https://camo.githubusercontent.com/17f46f04d633e360f41619a33ed649e7b5d91882c15c5b7e29acc7d1b57871b2/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437333137325f31312e706e67" alt="11.png" data-canonical-src="https://pic.myla.eu.org/file/1757594473172_11.png" style="max-width: 100%;"></a></li>
+<li><strong>磁盘文件</strong>：通常位于 <code class="notranslate">/var/lib/libvirt/images/</code> 或其他指定目录下（例如 <code class="notranslate">ubuntu-server.qcow2</code>）。它是虚拟机的硬盘，里面安装了操作系统和所有数据。如下图<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3882e4994cf892c48cde2ea04615ed238fc68f8920a91ecbd80afe30a48be847/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437383632305f32322e706e67"><img src="https://camo.githubusercontent.com/3882e4994cf892c48cde2ea04615ed238fc68f8920a91ecbd80afe30a48be847/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437383632305f32322e706e67" alt="22.png" data-canonical-src="https://pic.myla.eu.org/file/1757594478620_22.png" style="max-width: 100%;"></a></li>
 </ul>
-<p>好的👌 你给的内容比较偏笔记性质，我来帮你整理成一篇 <strong>KVM 虚拟机克隆</strong> 的技术博文，条理清晰，适合博客发布，兼顾 SEO 优化。</p>
 <hr>
 <h1>KVM 虚拟机克隆详解：完整克隆与链接克隆</h1>
 <p>在日常 KVM 虚拟化管理中，虚拟机克隆是一项非常实用的功能。通过克隆，运维人员可以快速复制一台现有虚拟机的配置和磁盘文件，从而节省部署时间、提高环境搭建效率。本文将详细介绍 <strong>KVM 虚拟机的完整克隆和链接克隆</strong> 两种方式，并提供自动化脚本示例。</p>
@@ -151,7 +152,8 @@ vim web02.xml</pre></div>
 <li><code class="notranslate">&lt;name&gt;</code>：虚拟机名称</li>
 <li>删除 <code class="notranslate">&lt;uuid&gt;</code></li>
 <li>删除 <code class="notranslate">&lt;mac address&gt;</code></li>
-<li>修改 <code class="notranslate">&lt;source file&gt;</code> 为新的磁盘路径</li>
+<li>修改 <code class="notranslate">&lt;source file&gt;</code> 为新的磁盘路径<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/83a6e2ee2a1f5efa0e14464f9cf6862c67613c4f56a02a3826984c1d9b7c3898/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437343938375f33332e706e67"><img src="https://camo.githubusercontent.com/83a6e2ee2a1f5efa0e14464f9cf6862c67613c4f56a02a3826984c1d9b7c3898/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437343938375f33332e706e67" alt="33.png" data-canonical-src="https://pic.myla.eu.org/file/1757594474987_33.png" style="max-width: 100%;"></a></li>
 </ul>
 </li>
 <li>定义并启动新虚拟机：
