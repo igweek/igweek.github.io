@@ -27,7 +27,8 @@
 
 ---
 
-# 实验案例：CentOS8 下使用 virsh 管理 KVM 虚拟机
+> [!note]
+> # 实验案例：CentOS8 下使用 virsh 管理 KVM 虚拟机
 
 ## 一、实验环境
 
