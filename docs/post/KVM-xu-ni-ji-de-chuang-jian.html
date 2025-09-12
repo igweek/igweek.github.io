@@ -232,52 +232,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </blockquote>
 <div class="markdown-alert markdown-alert-tip"><p class="markdown-alert-title"><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p>这些参数可以组合使用，以满足特定的虚拟机配置需求。例如，创建一个名为 “myvm”、内存为 2048MB、单个 vCPU、并使用本地/path/to/install.iso文件作为安装介质的虚拟机的命令可能如下：</p>
 </div>
-<div class="highlight highlight-source-shell"><pre class="notranslate">virt-install --name myvm --ram 2048 --vcpus 1 --disk path=/var/lib/libvirt/images/myvm.img,size=10 --cdrom /path/to/install.iso --os-type linux --os-variant ubuntu20.04</pre></div>
-<h2>三、利用配置文件创建虚拟机</h2>
-<p>虚拟机的组成部分</p>
-<p>1、虚拟机配置⽂件</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/17f46f04d633e360f41619a33ed649e7b5d91882c15c5b7e29acc7d1b57871b2/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437333137325f31312e706e67"><img src="https://camo.githubusercontent.com/17f46f04d633e360f41619a33ed649e7b5d91882c15c5b7e29acc7d1b57871b2/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437333137325f31312e706e67" alt="11.png" data-canonical-src="https://pic.myla.eu.org/file/1757594473172_11.png" style="max-width: 100%;"></a></p>
-<p>2、储存虚拟机的介质</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3882e4994cf892c48cde2ea04615ed238fc68f8920a91ecbd80afe30a48be847/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437383632305f32322e706e67"><img src="https://camo.githubusercontent.com/3882e4994cf892c48cde2ea04615ed238fc68f8920a91ecbd80afe30a48be847/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437383632305f32322e706e67" alt="22.png" data-canonical-src="https://pic.myla.eu.org/file/1757594478620_22.png" style="max-width: 100%;"></a></p>
-<p>3、根据配置⽂件创建虚拟机</p>
-<p>a.需要有磁盘镜像⽂件：</p>
-<pre class="notranslate"><code class="notranslate">cp vm3.qcow2 vm4.img
-</code></pre>
-<p>b.需要有配置⽂件</p>
-<pre class="notranslate"><code class="notranslate">cp vm3.xml vm4.xml
-</code></pre>
-<p>c.配置⽂件需要修改必要的内容</p>
-<p>d.创建虚拟机</p>
-<pre class="notranslate"><code class="notranslate">virsh define /etc/libvirt/qemu/vm4.xml
-</code></pre>
-<p>具体步骤</p>
-<p>拷贝镜像</p>
-<pre class="notranslate"><code class="notranslate">cp /var/lib/libvirt/images/vm3.qcow2 /var/lib/libvirt/images/vm4.qcow2
-</code></pre>
-<p>拷贝配置文件</p>
-<pre class="notranslate"><code class="notranslate">cp /etc/libvirt/qemu/vm3.xml /etc/libvirt/qemu/vm4.xml
-</code></pre>
-<p>修改配置文件</p>
-<pre class="notranslate"><code class="notranslate">vim /etc/libvirt/qemu/vm4.xml
-</code></pre>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/83a6e2ee2a1f5efa0e14464f9cf6862c67613c4f56a02a3826984c1d9b7c3898/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437343938375f33332e706e67"><img src="https://camo.githubusercontent.com/83a6e2ee2a1f5efa0e14464f9cf6862c67613c4f56a02a3826984c1d9b7c3898/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343437343938375f33332e706e67" alt="33.png" data-canonical-src="https://pic.myla.eu.org/file/1757594474987_33.png" style="max-width: 100%;"></a></p>
-<p>用virsh创建虚拟机</p>
-<pre class="notranslate"><code class="notranslate">virsh define /etc/libvirt/qemu/vm4.xml
-</code></pre>
-<p>重启libvirt</p>
-<pre class="notranslate"><code class="notranslate">systemctl restart libvirtd
-</code></pre>
-<p>在宿主机上开启路由转发</p>
-<pre class="notranslate"><code class="notranslate">vim /etc/sysctl.conf
-</code></pre>
-<p>在最后一行加入 <code class="notranslate">net.ipv4.ip_forward=1</code></p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4ca8c3afda2ccfadf6c96606a071a9c720350047fc87bce6d97824d447b15ae3/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343438303037335f35352e706e67"><img src="https://camo.githubusercontent.com/4ca8c3afda2ccfadf6c96606a071a9c720350047fc87bce6d97824d447b15ae3/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343438303037335f35352e706e67" alt="55.png" data-canonical-src="https://pic.myla.eu.org/file/1757594480073_55.png" style="max-width: 100%;"></a></p>
-<p>使其生效</p>
-<pre class="notranslate"><code class="notranslate">sysctl -p
-</code></pre>
-<p>查看虚拟机是否创建成功</p>
-<pre class="notranslate"><code class="notranslate">virsh list --all
-</code></pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virt-install --name myvm --ram 2048 --vcpus 1 --disk path=/var/lib/libvirt/images/myvm.img,size=10 --cdrom /path/to/install.iso --os-type linux --os-variant ubuntu20.04</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
