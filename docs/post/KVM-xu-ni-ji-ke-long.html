@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="> [!note]
+> KVM虚拟机本质上由两部分组成：
+> - 虚拟机配置文件
+> - 虚拟磁盘
+
+*   **配置文件**：通常位于 `/etc/libvirt/qemu/` 目录下，是一个 XML 文件（例如 `ubuntu-server.xml`）。">
+<meta property="og:title" content="KVM虚拟机克隆">
+<meta property="og:description" content="> [!note]
+> KVM虚拟机本质上由两部分组成：
+> - 虚拟机配置文件
+> - 虚拟磁盘
+
+*   **配置文件**：通常位于 `/etc/libvirt/qemu/` 目录下，是一个 XML 文件（例如 `ubuntu-server.xml`）。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.017121.xyz/post/KVM-xu-ni-ji-ke-long.html">
+<meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
+<title>KVM虚拟机克隆</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">KVM虚拟机克隆</h1>
+<div class="title-right">
+    <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/93" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>KVM虚拟机本质上由两部分组成：</p>
+<ul>
+<li>虚拟机配置文件</li>
+<li>虚拟磁盘</li>
+</ul>
+</div>
+<ul>
+<li><strong>配置文件</strong>：通常位于 <code class="notranslate">/etc/libvirt/qemu/</code> 目录下，是一个 XML 文件（例如 <code class="notranslate">ubuntu-server.xml</code>）。它定义了虚拟机的所有硬件规格，如 CPU 数量、内存大小、网络设置、磁盘路径、启动顺序等。</li>
+<li><strong>磁盘文件</strong>：通常位于 <code class="notranslate">/var/lib/libvirt/images/</code> 或其他指定目录下（例如 <code class="notranslate">ubuntu-server.qcow2</code>）。它是虚拟机的硬盘，里面安装了操作系统和所有数据。</li>
+</ul>
+<p>好的👌 你给的内容比较偏笔记性质，我来帮你整理成一篇 <strong>KVM 虚拟机克隆</strong> 的技术博文，条理清晰，适合博客发布，兼顾 SEO 优化。</p>
+<hr>
+<h1>KVM 虚拟机克隆详解：完整克隆与链接克隆</h1>
+<p>在日常 KVM 虚拟化管理中，虚拟机克隆是一项非常实用的功能。通过克隆，运维人员可以快速复制一台现有虚拟机的配置和磁盘文件，从而节省部署时间、提高环境搭建效率。本文将详细介绍 <strong>KVM 虚拟机的完整克隆和链接克隆</strong> 两种方式，并提供自动化脚本示例。</p>
+<hr>
+<h2>一、虚拟机克隆的两种方式</h2>
+<p>在 KVM 环境中，常见的克隆方式有两种：</p>
+<ol>
+<li>
+<p><strong>完整克隆（Full Clone）</strong></p>
+<ul>
+<li>会复制原虚拟机的所有磁盘数据，生成一个全新的独立虚拟机。</li>
+<li>优点：互不影响，稳定可靠。</li>
+<li>缺点：磁盘文件较大，克隆耗时。</li>
+</ul>
+</li>
+<li>
+<p><strong>链接克隆（Linked Clone）</strong></p>
+<ul>
+<li>新虚拟机磁盘文件基于原虚拟机磁盘（母盘），只记录增量部分。</li>
+<li>优点：磁盘占用小，创建速度快。</li>
+<li>缺点：依赖母盘，若母盘损坏，克隆机无法使用。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>二、完整克隆方法</h2>
+<h3>1. 自动模式（virt-clone 工具）</h3>
+<p><code class="notranslate">virt-clone</code> 是 libvirt 提供的专用克隆工具，操作简单：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virt-clone --auto-clone -o web01 -n web02</pre></div>
+<ul>
+<li><code class="notranslate">-o web01</code>：指定原始虚拟机名称</li>
+<li><code class="notranslate">-n web02</code>：指定新虚拟机名称</li>
+<li><code class="notranslate">--auto-clone</code>：自动生成新磁盘文件</li>
+</ul>
+<h3>2. 手动模式（复制配置 + 修改）</h3>
+<ol>
+<li>转换磁盘文件：
+<div class="highlight highlight-source-shell"><pre class="notranslate">qemu-img convert -f qcow2 -O qcow2 -c web01.qcow2 web03.qcow2</pre></div>
+</li>
+<li>导出配置文件并修改：
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh dumpxml web01 <span class="pl-k">&gt;</span> web02.xml
+vim web02.xml</pre></div>
+修改内容包括：
+<ul>
+<li><code class="notranslate">&lt;name&gt;</code>：虚拟机名称</li>
+<li>删除 <code class="notranslate">&lt;uuid&gt;</code></li>
+<li>删除 <code class="notranslate">&lt;mac address&gt;</code></li>
+<li>修改 <code class="notranslate">&lt;source file&gt;</code> 为新的磁盘路径</li>
+</ul>
+</li>
+<li>定义并启动新虚拟机：
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh define web02.xml
+virsh start web02</pre></div>
+</li>
+</ol>
+<hr>
+<h2>三、链接克隆方法</h2>
+<h3>1. 步骤解析</h3>
+<p>a. <strong>生成新的虚拟机磁盘文件</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">qemu-img create -f qcow2 -b web03.qcow2 web04.qcow2</pre></div>
+<p>参数说明：</p>
+<ul>
+<li><code class="notranslate">-f qcow2</code>：磁盘格式</li>
+<li><code class="notranslate">-b</code>：基于哪个母盘</li>
+</ul>
+<p>b. <strong>生成新的配置文件</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh dumpxml web01 <span class="pl-k">&gt;</span> web03.xml
+vim web03.xml</pre></div>
+<p>修改点与完整克隆相同：虚拟机名称、UUID、MAC 地址、磁盘路径。</p>
+<p>c. <strong>导入虚拟机并测试</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh define web03.xml
+virsh start web03</pre></div>
+<hr>
+<h3>2. 全自动链接克隆脚本</h3>
+<p>为了简化操作，可以写一个脚本来一键完成：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#!</span>/bin/bash</span>
+old_vm=<span class="pl-smi">$1</span>
+new_vm=<span class="pl-smi">$2</span>
+
+<span class="pl-c"><span class="pl-c">#</span> a：生成虚拟机磁盘文件</span>
+old_disk=<span class="pl-s"><span class="pl-pds">$(</span>virsh dumpxml <span class="pl-smi">$old_vm</span> <span class="pl-k">|</span> grep <span class="pl-s"><span class="pl-pds">"</span>&lt;source file<span class="pl-pds">"</span></span> <span class="pl-k">|</span> awk -F<span class="pl-s"><span class="pl-pds">"</span>'<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">'</span>{print $2}<span class="pl-pds">'</span></span><span class="pl-pds">)</span></span>
+disk_tmp=<span class="pl-s"><span class="pl-pds">$(</span>dirname <span class="pl-smi">$old_disk</span><span class="pl-pds">)</span></span>
+qemu-img create -f qcow2 -b <span class="pl-smi">$old_disk</span> <span class="pl-smi">${disk_tmp}</span>/<span class="pl-smi">${new_vm}</span>.qcow2
+
+<span class="pl-c"><span class="pl-c">#</span> b：生成虚拟机的配置文件</span>
+virsh dumpxml <span class="pl-smi">$old_vm</span> <span class="pl-k">&gt;</span> /tmp/<span class="pl-smi">${new_vm}</span>.xml
+
+<span class="pl-c"><span class="pl-c">#</span> 修改虚拟机的名字</span>
+sed -ri <span class="pl-s"><span class="pl-pds">"</span>s#(&lt;name&gt;)(.*)(&lt;/name&gt;)#\1<span class="pl-smi">${new_vm}</span>\3#g<span class="pl-pds">"</span></span> /tmp/<span class="pl-smi">${new_vm}</span>.xml
+<span class="pl-c"><span class="pl-c">#</span> 删除虚拟机uuid</span>
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/&lt;uuid&gt;/d<span class="pl-pds">'</span></span> /tmp/<span class="pl-smi">${new_vm}</span>.xml
+<span class="pl-c"><span class="pl-c">#</span> 删除mac地址</span>
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/&lt;mac address/d<span class="pl-pds">'</span></span> /tmp/<span class="pl-smi">${new_vm}</span>.xml
+<span class="pl-c"><span class="pl-c">#</span> 修改磁盘路径</span>
+sed -ri <span class="pl-s"><span class="pl-pds">"</span>s#(&lt;source file=')(.*)('/&gt;)#\1<span class="pl-smi">${disk_tmp}</span>/<span class="pl-smi">${new_vm}</span>.qcow2\3#g<span class="pl-pds">"</span></span> /tmp/<span class="pl-smi">${new_vm}</span>.xml
+
+<span class="pl-c"><span class="pl-c">#</span> c：导入虚拟机并进行启动测试</span>
+virsh define /tmp/<span class="pl-smi">${new_vm}</span>.xml
+virsh start <span class="pl-smi">${new_vm}</span></pre></div>
+<p>执行方式：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">bash link_clone.sh web01 web05</pre></div>
+<p>即可基于 <code class="notranslate">web01</code> 快速生成一个新虚拟机 <code class="notranslate">web05</code>。</p>
+<hr>
+<h2>四、完整克隆与链接克隆对比</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>特性</th>
+<th>完整克隆</th>
+<th>链接克隆</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>磁盘占用</td>
+<td>较大（复制全盘）</td>
+<td>较小（仅增量部分）</td>
+</tr>
+<tr>
+<td>创建速度</td>
+<td>较慢</td>
+<td>较快</td>
+</tr>
+<tr>
+<td>依赖性</td>
+<td>独立运行</td>
+<td>依赖母盘</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>生产环境、长期使用</td>
+<td>测试环境、临时环境</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h2>五、总结</h2>
+<ul>
+<li>如果你需要一个完全独立的虚拟机，<strong>完整克隆</strong> 更适合。</li>
+<li>如果是测试或临时环境，<strong>链接克隆</strong> 能极大节省空间和时间。</li>
+<li>结合 <code class="notranslate">virt-clone</code> 和脚本工具，可以快速、批量地生成虚拟机，大大提升运维效率。</li>
+</ul>
+<hr></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.017121.xyz">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
+
+</html>

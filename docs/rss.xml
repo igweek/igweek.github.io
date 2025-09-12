@@ -1,5 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Fri, 12 Sep 2025 12:27:02 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>KVM的磁盘管理工具</title><link>https://bbs.017121.xyz/post/KVM-de-ci-pan-guan-li-gong-ju.html</link><description>&gt; [!note]
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Fri, 12 Sep 2025 12:53:36 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>KVM虚拟机克隆</title><link>https://bbs.017121.xyz/post/KVM-xu-ni-ji-ke-long.html</link><description>&gt; [!note]
+&gt; KVM虚拟机本质上由两部分组成：
+&gt; - 虚拟机配置文件
+&gt; - 虚拟磁盘
+
+*   **配置文件**：通常位于 `/etc/libvirt/qemu/` 目录下，是一个 XML 文件（例如 `ubuntu-server.xml`）。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/KVM-xu-ni-ji-ke-long.html</guid><pubDate>Fri, 12 Sep 2025 12:53:10 +0000</pubDate></item><item><title>KVM的磁盘管理工具</title><link>https://bbs.017121.xyz/post/KVM-de-ci-pan-guan-li-gong-ju.html</link><description>&gt; [!note]
 &gt; ### **qemu-img 是什么？**
 &gt; `qemu-img` 是 KVM中一个**命令行磁盘镜像管理工具**，专门用于创建、转换、修改和检查虚拟机磁盘镜像文件。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/KVM-de-ci-pan-guan-li-gong-ju.html</guid><pubDate>Fri, 12 Sep 2025 09:05:57 +0000</pubDate></item><item><title>KVM管理命令</title><link>https://bbs.017121.xyz/post/KVM-guan-li-ming-ling.html</link><description>&lt;html&gt;
 &lt;body&gt;
