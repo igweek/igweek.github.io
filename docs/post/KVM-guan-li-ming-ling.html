@@ -18,18 +18,18 @@
 功能 | 命令示例 | 说明
 -- | -- | --
 查看列表 | virsh list --all | 显示所有虚拟机及状态
-开机 | virsh start vm1 | 启动虚拟机
-关机 | virsh shutdown vm1 | 正常关机（ACPI 信号）
-拔电源关机 | virsh destroy vm1 | 强制关闭（相当于断电）
-重启 | virsh reboot vm1 | 重启虚拟机
-导出配置 | virsh dumpxml vm1 > vm1.xml | 导出虚拟机 XML 配置文件
-删除虚拟机 | virsh undefine vm1 | 删除虚拟机定义（不删磁盘）
-导入配置 | virsh define vm1.xml | 通过 XML 导入虚拟机配置
-修改配置 | virsh edit vm1 | 编辑虚拟机配置（vim 编辑）
-挂起 | virsh suspend vm1 | 暂停虚拟机
-恢复 | virsh resume vm1 | 恢复挂起的虚拟机
-开机自启 | virsh autostart vm1 | 设置开机自启
-控制台登录 | virsh console vm1 | 进入虚拟机控制台
+开机 | virsh start  | 启动虚拟机
+关机 | virsh shutdown | 正常关机（ACPI 信号）
+拔电源关机 | virsh destroy | 强制关闭（相当于断电）
+重启 | virsh reboot | 重启虚拟机
+导出配置 | virsh dumpxml > vm1.xml | 导出虚拟机 XML 配置文件
+删除虚拟机 | virsh undefine | 删除虚拟机定义（不删磁盘）
+导入配置 | virsh define | 通过 XML 导入虚拟机配置
+修改配置 | virsh edit | 编辑虚拟机配置（vim 编辑）
+挂起 | virsh suspend | 暂停虚拟机
+恢复 | virsh resume | 恢复挂起的虚拟机
+开机自启 | virsh autostart | 设置开机自启
+控制台登录 | virsh console | 进入虚拟机控制台
 
 
 <hr>
@@ -66,18 +66,18 @@
 功能 | 命令示例 | 说明
 -- | -- | --
 查看列表 | virsh list --all | 显示所有虚拟机及状态
-开机 | virsh start vm1 | 启动虚拟机
-关机 | virsh shutdown vm1 | 正常关机（ACPI 信号）
-拔电源关机 | virsh destroy vm1 | 强制关闭（相当于断电）
-重启 | virsh reboot vm1 | 重启虚拟机
-导出配置 | virsh dumpxml vm1 > vm1.xml | 导出虚拟机 XML 配置文件
-删除虚拟机 | virsh undefine vm1 | 删除虚拟机定义（不删磁盘）
-导入配置 | virsh define vm1.xml | 通过 XML 导入虚拟机配置
-修改配置 | virsh edit vm1 | 编辑虚拟机配置（vim 编辑）
-挂起 | virsh suspend vm1 | 暂停虚拟机
-恢复 | virsh resume vm1 | 恢复挂起的虚拟机
-开机自启 | virsh autostart vm1 | 设置开机自启
-控制台登录 | virsh console vm1 | 进入虚拟机控制台
+开机 | virsh start  | 启动虚拟机
+关机 | virsh shutdown | 正常关机（ACPI 信号）
+拔电源关机 | virsh destroy | 强制关闭（相当于断电）
+重启 | virsh reboot | 重启虚拟机
+导出配置 | virsh dumpxml > vm1.xml | 导出虚拟机 XML 配置文件
+删除虚拟机 | virsh undefine | 删除虚拟机定义（不删磁盘）
+导入配置 | virsh define | 通过 XML 导入虚拟机配置
+修改配置 | virsh edit | 编辑虚拟机配置（vim 编辑）
+挂起 | virsh suspend | 暂停虚拟机
+恢复 | virsh resume | 恢复挂起的虚拟机
+开机自启 | virsh autostart | 设置开机自启
+控制台登录 | virsh console | 进入虚拟机控制台
 
 
 <hr>
@@ -195,62 +195,62 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </tr>
 <tr>
 <td>开机</td>
-<td>virsh start vm1</td>
+<td>virsh start</td>
 <td>启动虚拟机</td>
 </tr>
 <tr>
 <td>关机</td>
-<td>virsh shutdown vm1</td>
+<td>virsh shutdown</td>
 <td>正常关机（ACPI 信号）</td>
 </tr>
 <tr>
 <td>拔电源关机</td>
-<td>virsh destroy vm1</td>
+<td>virsh destroy</td>
 <td>强制关闭（相当于断电）</td>
 </tr>
 <tr>
 <td>重启</td>
-<td>virsh reboot vm1</td>
+<td>virsh reboot</td>
 <td>重启虚拟机</td>
 </tr>
 <tr>
 <td>导出配置</td>
-<td>virsh dumpxml vm1 &gt; vm1.xml</td>
+<td>virsh dumpxml &gt; vm1.xml</td>
 <td>导出虚拟机 XML 配置文件</td>
 </tr>
 <tr>
 <td>删除虚拟机</td>
-<td>virsh undefine vm1</td>
+<td>virsh undefine</td>
 <td>删除虚拟机定义（不删磁盘）</td>
 </tr>
 <tr>
 <td>导入配置</td>
-<td>virsh define vm1.xml</td>
+<td>virsh define</td>
 <td>通过 XML 导入虚拟机配置</td>
 </tr>
 <tr>
 <td>修改配置</td>
-<td>virsh edit vm1</td>
+<td>virsh edit</td>
 <td>编辑虚拟机配置（vim 编辑）</td>
 </tr>
 <tr>
 <td>挂起</td>
-<td>virsh suspend vm1</td>
+<td>virsh suspend</td>
 <td>暂停虚拟机</td>
 </tr>
 <tr>
 <td>恢复</td>
-<td>virsh resume vm1</td>
+<td>virsh resume</td>
 <td>恢复挂起的虚拟机</td>
 </tr>
 <tr>
 <td>开机自启</td>
-<td>virsh autostart vm1</td>
+<td>virsh autostart</td>
 <td>设置开机自启</td>
 </tr>
 <tr>
 <td>控制台登录</td>
-<td>virsh console vm1</td>
+<td>virsh console</td>
 <td>进入虚拟机控制台</td>
 </tr>
 </tbody>
