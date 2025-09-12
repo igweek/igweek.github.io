@@ -60,7 +60,6 @@ virt-install \
   --cdrom=/iso/CentOS-8.4.2105-x86_64-dvd1.iso \
   --network network=default \
   --os-variant=centos8.0 \
-  --graphics none
 ```
 
 > 安装完成后有一台名为 **centos8** 的虚拟机。
