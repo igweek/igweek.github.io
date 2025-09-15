@@ -153,7 +153,11 @@ virsh autostart --disable centos8
 ---
 
 ### 9. 控制台登录
-
+修改centos7的内核
+```bash
+grubby --update-kernel=ALL --args="console=ttyS0,115200n8"
+reboot
+```
 ```bash
 virsh console centos8
 ```

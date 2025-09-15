@@ -342,6 +342,9 @@ virsh resume centos8</pre></div>
 virsh autostart --disable centos8</pre></div>
 <hr>
 <h3>9. 控制台登录</h3>
+<p>修改centos7的内核</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">grubby --update-kernel=ALL --args=<span class="pl-s"><span class="pl-pds">"</span>console=ttyS0,115200n8<span class="pl-pds">"</span></span>
+reboot</pre></div>
 <div class="highlight highlight-source-shell"><pre class="notranslate">virsh console centos8</pre></div>
 <blockquote>
 <p>如果虚拟机启用了 <code class="notranslate">ttyS0</code> 串口控制台，可以直接进入登录界面；退出方式：<code class="notranslate">Ctrl + ]</code></p>
