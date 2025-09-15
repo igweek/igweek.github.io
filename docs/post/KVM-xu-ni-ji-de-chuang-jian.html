@@ -65,6 +65,8 @@ sudo firewall-cmd --add-port=5900-5910/tcp --zone=public --permanent
 sudo firewall-cmd --reload
 ```
 
+使用vnc连接，默认端口5900
+
 4、利用virsh命令查看虚拟机
 
 ```bash
@@ -130,6 +132,8 @@ virt-install --name=vm1 --disk path=/var/lib/libvirt/images/centos1.raw --vcpus=
 sudo firewall-cmd --add-port=5900-5910/tcp --zone=public --permanent
 sudo firewall-cmd --reload
 ```
+
+使用vnc连接，默认端口5900
 
 4、利用virsh命令查看虚拟机
 
@@ -236,6 +240,7 @@ wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-220
 <p>临时放开5900-5910端口</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo firewall-cmd --add-port=5900-5910/tcp --zone=public --permanent
 sudo firewall-cmd --reload</pre></div>
+<p>使用vnc连接，默认端口5900</p>
 <p>4、利用virsh命令查看虚拟机</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">virsh list —all</pre></div>
 <p>5、virt-install参数说明</p>

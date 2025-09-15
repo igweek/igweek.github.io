@@ -53,6 +53,8 @@ sudo firewall-cmd --add-port=5900-5910/tcp --zone=public --permanent
 sudo firewall-cmd --reload
 ```
 
+使用vnc连接，默认端口5900
+
 4、利用virsh命令查看虚拟机
 
 ```bash
