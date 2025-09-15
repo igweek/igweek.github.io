@@ -27,19 +27,30 @@
 1、利用qemu-img创建虚拟机的虚拟磁盘
 
 ```bash
-qemu-img create -f qcow2 /var/lib/libvirt/images/vm2.qcow2 1G
+qemu-img create -f raw /var/lib/libvirt/images/centos1.raw 10G
 ```
 
 2、查看所创建的虚拟磁盘的信息
 
 ```bash
-qemu-img info /var/lib/libvirt/images/vm2.qcow2
+qemu-img info /var/lib/libvirt/images/centos1.raw
+```
+下载iso镜像文件
+```bash
+cd /opt
+wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2207-02.iso
 ```
 
 3、利用virt-install命令创建虚拟机
 
 ```bash
-virt-install --name=vm2 --disk path=/var/lib/libvirt/images/vm2.qcow2 --vcpus=1 --ram=512 --cdrom=/vm/iso/Core-11.1.iso --network network=default --os-type=linux
+virt-install --name=vm1 --disk path=/var/lib/libvirt/images/centos1.raw --vcpus=1 --ram=1024 --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default --os-type=linux --graphics vnc,listen=0.0.0.0
+```
+临时放开5900-5910端口
+
+```bash
+sudo firewall-cmd --add-port=5900-5910/tcp --zone=public --permanent
+sudo firewall-cmd --reload
 ```
 
 4、利用virsh命令查看虚拟机
