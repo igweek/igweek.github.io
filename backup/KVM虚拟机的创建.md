@@ -24,13 +24,7 @@
 
 ## 二、利用命令安装虚拟机
 
-1、利用qemu-img创建虚拟机的虚拟磁盘
-
-```bash
-qemu-img create -f raw /var/lib/libvirt/images/centos1.raw 10G
-```
-
-2、查看所创建的虚拟磁盘的信息
+1、查看所创建的虚拟磁盘的信息
 
 ```bash
 qemu-img info /var/lib/libvirt/images/centos1.raw
@@ -41,10 +35,10 @@ cd /opt
 wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2207-02.iso
 ```
 
-3、利用virt-install命令创建虚拟机
+2、利用virt-install命令创建虚拟机
 
 ```bash
-virt-install --name=vm1 --disk path=/var/lib/libvirt/images/centos1.raw --vcpus=1 --ram=1024 --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default --os-type=linux --graphics vnc,listen=0.0.0.0
+virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=20,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
 ```
 临时放开5900-5910端口
 
@@ -55,13 +49,13 @@ sudo firewall-cmd --reload
 
 使用vnc连接，默认端口5900
 
-4、利用virsh命令查看虚拟机
+3、利用virsh命令查看虚拟机
 
 ```bash
 virsh list —all
 ```
 
-5、virt-install参数说明
+4、virt-install参数说明
 
 > [!note]
 **`virt-install`** 是一个用于创建新虚拟机的命令行工具，它有许多参数可以配置虚拟机的各种设置。以下是一些常用的 **`virt-install`** 命令参数及其详细说明：

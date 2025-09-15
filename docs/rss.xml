@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 15 Sep 2025 07:25:53 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>KVM虚拟机迁移</title><link>https://bbs.017121.xyz/post/KVM-xu-ni-ji-qian-yi.html</link><description>&gt; [!note]
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 15 Sep 2025 11:30:40 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>KVM虚拟机迁移</title><link>https://bbs.017121.xyz/post/KVM-xu-ni-ji-qian-yi.html</link><description>&gt; [!note]
 &gt; KVM（Kernel-based Virtual Machine）KVM支持两种类型的迁移：
 &gt; 1. **冷迁移**（Cold Migration）：在迁移过程中，虚拟机会停止运行，迁移完成后再启动。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/KVM-xu-ni-ji-qian-yi.html</guid><pubDate>Sun, 14 Sep 2025 12:20:06 +0000</pubDate></item><item><title>KVM虚拟机克隆</title><link>https://bbs.017121.xyz/post/KVM-xu-ni-ji-ke-long.html</link><description>&gt; [!note]
 &gt; KVM虚拟机本质上由两部分组成：
@@ -80,13 +80,7 @@
 
 ## 二、利用命令安装虚拟机
 
-1、利用qemu-img创建虚拟机的虚拟磁盘
-
-```bash
-qemu-img create -f raw /var/lib/libvirt/images/centos1.raw 10G
-```
-
-2、查看所创建的虚拟磁盘的信息
+1、查看所创建的虚拟磁盘的信息
 
 ```bash
 qemu-img info /var/lib/libvirt/images/centos1.raw
@@ -97,10 +91,10 @@ cd /opt
 wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2207-02.iso
 ```
 
-3、利用virt-install命令创建虚拟机
+2、利用virt-install命令创建虚拟机
 
 ```bash
-virt-install --name=vm1 --disk path=/var/lib/libvirt/images/centos1.raw --vcpus=1 --ram=1024 --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default --os-type=linux --graphics vnc,listen=0.0.0.0
+virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=20,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
 ```
 临时放开5900-5910端口
 
@@ -111,13 +105,13 @@ sudo firewall-cmd --reload
 
 使用vnc连接，默认端口5900
 
-4、利用virsh命令查看虚拟机
+3、利用virsh命令查看虚拟机
 
 ```bash
 virsh list —all
 ```
 
-5、virt-install参数说明
+4、virt-install参数说明
 
 &gt; [!note]
 **`virt-install`** 是一个用于创建新虚拟机的命令行工具，它有许多参数可以配置虚拟机的各种设置。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/KVM-xu-ni-ji-de-chuang-jian.html</guid><pubDate>Thu, 11 Sep 2025 12:51:41 +0000</pubDate></item><item><title>KVM的安装</title><link>https://bbs.017121.xyz/post/KVM-de-an-zhuang.html</link><description>### KVM软件安装

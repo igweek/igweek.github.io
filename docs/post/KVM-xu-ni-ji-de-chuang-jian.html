@@ -36,13 +36,7 @@
 
 ## 二、利用命令安装虚拟机
 
-1、利用qemu-img创建虚拟机的虚拟磁盘
-
-```bash
-qemu-img create -f raw /var/lib/libvirt/images/centos1.raw 10G
-```
-
-2、查看所创建的虚拟磁盘的信息
+1、查看所创建的虚拟磁盘的信息
 
 ```bash
 qemu-img info /var/lib/libvirt/images/centos1.raw
@@ -53,10 +47,10 @@ cd /opt
 wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2207-02.iso
 ```
 
-3、利用virt-install命令创建虚拟机
+2、利用virt-install命令创建虚拟机
 
 ```bash
-virt-install --name=vm1 --disk path=/var/lib/libvirt/images/centos1.raw --vcpus=1 --ram=1024 --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default --os-type=linux --graphics vnc,listen=0.0.0.0
+virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=20,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
 ```
 临时放开5900-5910端口
 
@@ -67,13 +61,13 @@ sudo firewall-cmd --reload
 
 使用vnc连接，默认端口5900
 
-4、利用virsh命令查看虚拟机
+3、利用virsh命令查看虚拟机
 
 ```bash
 virsh list —all
 ```
 
-5、virt-install参数说明
+4、virt-install参数说明
 
 > [!note]
 **`virt-install`** 是一个用于创建新虚拟机的命令行工具，它有许多参数可以配置虚拟机的各种设置。">
@@ -104,13 +98,7 @@ virsh list —all
 
 ## 二、利用命令安装虚拟机
 
-1、利用qemu-img创建虚拟机的虚拟磁盘
-
-```bash
-qemu-img create -f raw /var/lib/libvirt/images/centos1.raw 10G
-```
-
-2、查看所创建的虚拟磁盘的信息
+1、查看所创建的虚拟磁盘的信息
 
 ```bash
 qemu-img info /var/lib/libvirt/images/centos1.raw
@@ -121,10 +109,10 @@ cd /opt
 wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2207-02.iso
 ```
 
-3、利用virt-install命令创建虚拟机
+2、利用virt-install命令创建虚拟机
 
 ```bash
-virt-install --name=vm1 --disk path=/var/lib/libvirt/images/centos1.raw --vcpus=1 --ram=1024 --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default --os-type=linux --graphics vnc,listen=0.0.0.0
+virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=20,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
 ```
 临时放开5900-5910端口
 
@@ -135,13 +123,13 @@ sudo firewall-cmd --reload
 
 使用vnc连接，默认端口5900
 
-4、利用virsh命令查看虚拟机
+3、利用virsh命令查看虚拟机
 
 ```bash
 virsh list —all
 ```
 
-5、virt-install参数说明
+4、virt-install参数说明
 
 > [!note]
 **`virt-install`** 是一个用于创建新虚拟机的命令行工具，它有许多参数可以配置虚拟机的各种设置。">
@@ -228,22 +216,20 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/dc53d3d6d90efa97c4804f0c9820e3b4d0dba9ce5fe7d2bab4f90036c109ca78/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343133303737305f352e706e67"><img src="https://camo.githubusercontent.com/dc53d3d6d90efa97c4804f0c9820e3b4d0dba9ce5fe7d2bab4f90036c109ca78/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343133303737305f352e706e67" alt="5.png" data-canonical-src="https://pic.myla.eu.org/file/1757594130770_5.png" style="max-width: 100%;"></a></p>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/cd3b84b3a162c2a99c3bfcbe5e094da9d6f0ffb0ec76b5ce6cfc8c9aa4592c13/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343133313830395f362e706e67"><img src="https://camo.githubusercontent.com/cd3b84b3a162c2a99c3bfcbe5e094da9d6f0ffb0ec76b5ce6cfc8c9aa4592c13/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373539343133313830395f362e706e67" alt="6.png" data-canonical-src="https://pic.myla.eu.org/file/1757594131809_6.png" style="max-width: 100%;"></a></p>
 <h2>二、利用命令安装虚拟机</h2>
-<p>1、利用qemu-img创建虚拟机的虚拟磁盘</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">qemu-img create -f raw /var/lib/libvirt/images/centos1.raw 10G</pre></div>
-<p>2、查看所创建的虚拟磁盘的信息</p>
+<p>1、查看所创建的虚拟磁盘的信息</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">qemu-img info /var/lib/libvirt/images/centos1.raw</pre></div>
 <p>下载iso镜像文件</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /opt
 wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2207-02.iso</pre></div>
-<p>3、利用virt-install命令创建虚拟机</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">virt-install --name=vm1 --disk path=/var/lib/libvirt/images/centos1.raw --vcpus=1 --ram=1024 --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default --os-type=linux --graphics vnc,listen=0.0.0.0</pre></div>
+<p>2、利用virt-install命令创建虚拟机</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=20,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole</pre></div>
 <p>临时放开5900-5910端口</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo firewall-cmd --add-port=5900-5910/tcp --zone=public --permanent
 sudo firewall-cmd --reload</pre></div>
 <p>使用vnc连接，默认端口5900</p>
-<p>4、利用virsh命令查看虚拟机</p>
+<p>3、利用virsh命令查看虚拟机</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">virsh list —all</pre></div>
-<p>5、virt-install参数说明</p>
+<p>4、virt-install参数说明</p>
 <div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p><strong><code class="notranslate">virt-install</code></strong> 是一个用于创建新虚拟机的命令行工具，它有许多参数可以配置虚拟机的各种设置。以下是一些常用的 <strong><code class="notranslate">virt-install</code></strong> 命令参数及其详细说明：</p>
 </div>
 <blockquote>
