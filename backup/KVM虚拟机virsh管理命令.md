@@ -53,14 +53,7 @@
 ### 1. 创建一台虚拟机（准备实验对象）
 
 ```bash
-virt-install \
-  --name=centos8 \
-  --vcpus=2 \
-  --memory=2048 \
-  --disk path=/var/lib/libvirt/images/centos8.img,size=20 \
-  --cdrom=/iso/CentOS-8.4.2105-x86_64-dvd1.iso \
-  --network network=default \
-  --os-variant=centos8.0 \
+virt-install --name=centos8 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=10,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
 ```
 
 > 安装完成后有一台名为 **centos8** 的虚拟机。
