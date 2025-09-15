@@ -50,7 +50,7 @@ wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-220
 2、利用virt-install命令创建虚拟机
 
 ```bash
-virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=20,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
+virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=10,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
 ```
 临时放开5900-5910端口
 
@@ -112,7 +112,7 @@ wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-220
 2、利用virt-install命令创建虚拟机
 
 ```bash
-virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=20,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
+virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=10,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
 ```
 临时放开5900-5910端口
 
@@ -222,7 +222,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /opt
 wget https://mirrors.aliyun.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-2207-02.iso</pre></div>
 <p>2、利用virt-install命令创建虚拟机</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=20,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=10,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole</pre></div>
 <p>临时放开5900-5910端口</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo firewall-cmd --add-port=5900-5910/tcp --zone=public --permanent
 sudo firewall-cmd --reload</pre></div>
