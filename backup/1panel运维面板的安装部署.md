@@ -15,4 +15,3 @@ bash -c "$(curl -sSL https://resource.fit2cloud.com/1panel/package/v2/quick_star
 
 ## 4.访问管理面板
 安装完成后，通过浏览器访问安装脚本提示的访问地址，开始使用1Panel
-![捕11233312312.PNG](https://pic.myla.eu.org/file/1757386149063_捕11233312312.PNG)
