@@ -59,7 +59,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     font-size: 12px;
 }
 </style>
-<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style>
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style><style>.markdown-alert.markdown-alert-important {border-left-color:var(--borderColor-done-emphasis, var(--color-done-emphasis));background-color:var(--color-done-subtle);}.markdown-alert.markdown-alert-important .markdown-alert-title {color: var(--fgColor-done,var(--color-done-fg));}</style>
 
 
 
@@ -149,22 +149,16 @@ scp -rp /var/lib/libvirt/images/testvm.qcow2 root@192.168.1.100:/var/lib/libvirt
 </li>
 </ol>
 <hr>
+<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
 <h2>5. 相似问题（练习）</h2>
-<p>请根据上面的示例，尝试完成以下练习（<strong>不需要现在回答</strong>，你先自己写，之后我来给你检查和反馈）：</p>
+<p>请根据上面的示例，尝试完成以下练习</p>
 <ol>
-<li>
-<p>你有一台虚拟机 <strong>web01</strong>，配置文件在 <code class="notranslate">/etc/libvirt/qemu/web01.xml</code>，磁盘在 <code class="notranslate">/var/lib/libvirt/images/web01.img</code>。请写出迁移到目标主机（IP：192.168.1.200）的 <code class="notranslate">scp</code> 命令。</p>
-</li>
-<li>
-<p>如果虚拟机磁盘文件不在默认目录，而在 <code class="notranslate">/data/vm/web02.qcow2</code>，请写出完整的 <code class="notranslate">scp</code> 命令把它迁移到目标主机（IP：192.168.1.150）。</p>
-</li>
-<li>
-<p>完成拷贝后，目标主机如何让这个虚拟机可用？请写出 <code class="notranslate">virsh</code> 命令步骤。</p>
-</li>
-<li>
-<p>如果有一台虚拟机是链接克隆，能否启动成功呢？</p>
-</li>
+<li>你有一台虚拟机 <strong>web01</strong>，配置文件在 <code class="notranslate">/etc/libvirt/qemu/web01.xml</code>，磁盘在 <code class="notranslate">/var/lib/libvirt/images/web01.img</code>。请写出迁移到目标主机（IP：192.168.1.200）的 <code class="notranslate">scp</code> 命令。</li>
+<li>如果虚拟机磁盘文件不在默认目录，而在 <code class="notranslate">/data/vm/web02.qcow2</code>，请写出完整的 <code class="notranslate">scp</code> 命令把它迁移到目标主机（IP：192.168.1.150）。</li>
+<li>完成拷贝后，目标主机如何让这个虚拟机可用？请写出 <code class="notranslate">virsh</code> 命令步骤。</li>
+<li>如果有一台虚拟机是链接克隆，能否启动成功呢？</li>
 </ol>
+</div>
 <hr></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
