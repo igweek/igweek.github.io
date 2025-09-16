@@ -24,11 +24,8 @@
 
 ## 二、利用命令安装虚拟机
 
-1、查看所创建的虚拟磁盘的信息
+1、下载镜像文件
 
-```bash
-qemu-img info /var/lib/libvirt/images/centos1.raw
-```
 下载iso镜像文件
 ```bash
 cd /opt
