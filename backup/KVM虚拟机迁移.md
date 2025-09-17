@@ -97,11 +97,12 @@ sudo firewall-cmd --reload
 cp /opt/vm1.qcow2 /opt/vm2.qcow2
 virsh dumpxml vm1 > /opt/vm2.xml
 ```
-修改vm2.xml内容包括：
-<name>：虚拟机名称
-删除 <uuid>
-删除 <mac address>
-修改 <source file> 为新的磁盘路径
+
+修改vm3.xml内容包括：
+修改name：虚拟机名称
+删除 uuid
+删除 mac address
+修改 source file 为新的磁盘路径
 
 ```bash
 virsh define /opt/vm2.xml
@@ -112,11 +113,12 @@ virsh define /opt/vm2.xml
 qemu-img create -f qcow2 -b /opt/vm1.qcow2 /opt/vm3.qcow2
 virsh dumpxml vm1 > /opt/vm3.xml
 ```
+
 修改vm3.xml内容包括：
-<name>：虚拟机名称
-删除 <uuid>
-删除 <mac address>
-修改 <source file> 为新的磁盘路径
+修改name：虚拟机名称
+删除 uuid
+删除 mac address
+修改 source file 为新的磁盘路径
 
 ```bash
 virsh define /opt/vm3.xml

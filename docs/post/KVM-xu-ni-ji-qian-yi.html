@@ -175,11 +175,11 @@ sudo firewall-cmd --reload</pre></div>
 </ul>
 <div class="highlight highlight-source-shell"><pre class="notranslate">cp /opt/vm1.qcow2 /opt/vm2.qcow2
 virsh dumpxml vm1 <span class="pl-k">&gt;</span> /opt/vm2.xml</pre></div>
-<p>修改vm2.xml内容包括：<br>
-：虚拟机名称<br>
-删除 <br>
-删除 <br>
-修改 <source> 为新的磁盘路径</p>
+<p>修改vm3.xml内容包括：<br>
+修改name：虚拟机名称<br>
+删除 uuid<br>
+删除 mac address<br>
+修改 source file 为新的磁盘路径</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">virsh define /opt/vm2.xml</pre></div>
 <ul>
 <li>链接克隆</li>
@@ -187,10 +187,10 @@ virsh dumpxml vm1 <span class="pl-k">&gt;</span> /opt/vm2.xml</pre></div>
 <div class="highlight highlight-source-shell"><pre class="notranslate">qemu-img create -f qcow2 -b /opt/vm1.qcow2 /opt/vm3.qcow2
 virsh dumpxml vm1 <span class="pl-k">&gt;</span> /opt/vm3.xml</pre></div>
 <p>修改vm3.xml内容包括：<br>
-：虚拟机名称<br>
-删除 <br>
-删除 <br>
-修改 <source> 为新的磁盘路径</p>
+修改name：虚拟机名称<br>
+删除 uuid<br>
+删除 mac address<br>
+修改 source file 为新的磁盘路径</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">virsh define /opt/vm3.xml</pre></div>
 <p><strong>5. 虚拟机迁移</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /opt
