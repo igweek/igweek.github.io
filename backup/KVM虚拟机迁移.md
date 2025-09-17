@@ -72,3 +72,65 @@ scp -rp /var/lib/libvirt/images/testvm.qcow2 root@192.168.1.100:/var/lib/libvirt
 > 3. 完成拷贝后，目标主机如何让这个虚拟机可用？请写出 `virsh` 命令步骤。  
 > 4. 如果有一台虚拟机是链接克隆，能否启动成功呢？
 ---
+
+>[!TIP]
+>KVM虚拟机的冷迁移
+
+
+## KVM虚拟机迁移（冷迁移）
+
+**1. 创建vm1虚拟机**
+```bash
+virt-install --name=vm1 --vcpus=1 --memory=1024 --disk path=/opt/vm1.qcow2,size=10,format=qcow2 --cdrom=/opt/CentOS7.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,listen=0.0.0.0 --noautoconsole
+```
+**2. 放开端口**
+```bash
+sudo firewall-cmd --add-port=5900-5910/tcp --zone=public --permanent
+sudo firewall-cmd --reload
+```
+**3. VNC连接并完成系统安装**
+
+**4. 虚拟机克隆**
+
+- 完整克隆
+```bash
+cp /opt/vm1.qcow2 /opt/vm2.qcow2
+virsh dumpxml vm1 > /opt/vm2.xml
+```
+修改vm2.xml内容包括：
+<name>：虚拟机名称
+删除 <uuid>
+删除 <mac address>
+修改 <source file> 为新的磁盘路径
+
+```bash
+virsh define /opt/vm2.xml
+```
+
+- 链接克隆
+```bash
+qemu-img create -f qcow2 -b /opt/vm1.qcow2 /opt/vm3.qcow2
+virsh dumpxml vm1 > /opt/vm3.xml
+```
+修改vm3.xml内容包括：
+<name>：虚拟机名称
+删除 <uuid>
+删除 <mac address>
+修改 <source file> 为新的磁盘路径
+
+```bash
+virsh define /opt/vm3.xml
+```
+
+**5. 虚拟机迁移**
+```bash
+cd /opt
+scp -rp vm2.qcow2 vm2.xml vm3.qcow2 vm3.xml 192.168.3.129:/opt
+```
+注意：由于vm3是链接克隆，所以在做迁移的时候需要将模板机（vm1）的磁盘镜像也要迁移，否则vm3无法启动
+
+```bash
+scp -rp vm1.qcow2 vm2.qcow2 vm2.xml vm3.qcow2 vm3.xml 192.168.3.129:/opt
+```
+
+
