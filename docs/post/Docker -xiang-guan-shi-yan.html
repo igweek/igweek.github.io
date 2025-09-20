@@ -349,27 +349,27 @@ sudo chmod +x /usr/local/bin/docker-compose</pre></div>
 <h4><strong>4. 创建 Nginx 配置文件：</strong></h4>
 <p>创建一个简单的 <code class="notranslate">nginx.conf</code> 文件，配置 Nginx 来处理 PHP 请求。</p>
 <p><code class="notranslate">nginx.conf</code>:</p>
-<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-k">server</span> {
-    <span class="pl-k">listen</span> <span class="pl-s">80</span>;
-    <span class="pl-k">server_name</span> localhost;
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span> localhost<span class="pl-c1">;</span>
 
-    <span class="pl-k">root</span> /usr/share/nginx/html;
-    <span class="pl-k">index</span> index.php index.html;
+    <span class="pl-c1">root</span> /usr/share/nginx/html<span class="pl-c1">;</span>
+    <span class="pl-c1">index</span> <span class="pl-c1">index</span>.php <span class="pl-c1">index</span>.html<span class="pl-c1">;</span>
 
-    <span class="pl-k">location</span> <span class="pl-en">/ </span>{
-        <span class="pl-k">try_files</span> <span class="pl-smi">$uri</span> <span class="pl-smi">$uri</span>/ <span class="pl-c1">=404</span>;
-    }
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">try_files</span> <span class="pl-v">$uri</span> <span class="pl-v">$uri</span>/ =<span class="pl-c1">404</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
 
-    <span class="pl-k">location</span> ~ <span class="pl-sr">\.php$ </span>{
-        <span class="pl-k">fastcgi_pass</span> php:9000;
-        <span class="pl-k">fastcgi_index</span> index.php;
-        <span class="pl-k">fastcgi_param</span> SCRIPT_FILENAME /var/www/html<span class="pl-smi">$document_root$fastcgi_script_name</span>;
-        <span class="pl-k">include</span> fastcgi_params;
-    }
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span> <span class="pl-sr">\.php$ </span><span class="pl-c1">{</span>
+        <span class="pl-c1">fastcgi_pass</span> php:<span class="pl-c1">9000</span><span class="pl-c1">;</span>
+        <span class="pl-c1">fastcgi_index</span> <span class="pl-c1">index</span>.php<span class="pl-c1">;</span>
+        <span class="pl-c1">fastcgi_param</span> SCRIPT_FILENAME /var/www/html<span class="pl-v">$document_root$fastcgi_script_name</span><span class="pl-c1">;</span>
+        <span class="pl-c1">include</span> fastcgi_params<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
 
-    <span class="pl-k">error_log</span>  /var/log/nginx/error.log;
-    <span class="pl-k">access_log</span> /var/log/nginx/access.log;
-}</pre></div>
+    <span class="pl-c1">error_log</span>  /var/log/nginx/error.log<span class="pl-c1">;</span>
+    <span class="pl-c1">access_log</span> /var/log/nginx/access.log<span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
 <h4><strong>5. 创建博客 HTML 文件（可选）：</strong></h4>
 <p>创建一个简单的 HTML 文件或者下载 WordPress 来作为博客系统的前端展示。</p>
 <p><code class="notranslate">html/index.html</code>:</p>

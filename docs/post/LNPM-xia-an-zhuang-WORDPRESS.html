@@ -171,28 +171,28 @@ cp wp-config-sample.php wp-config.php</pre></div>
 <p>编辑配置文件，例如：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo vim /etc/nginx/conf.d/wordpress.conf</pre></div>
 <p>配置内容如下（假设域名为 <code class="notranslate">example.com</code>）：</p>
-<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-k">server</span> {
-    <span class="pl-k">listen</span> <span class="pl-s">80</span>;
-    <span class="pl-k">server_name</span> example.com;
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span> example.com<span class="pl-c1">;</span>
 
-    <span class="pl-k">root</span> /usr/share/nginx/html/wordpress;
-    <span class="pl-k">index</span> index.php index.html;
+    <span class="pl-c1">root</span> /usr/share/nginx/html/wordpress<span class="pl-c1">;</span>
+    <span class="pl-c1">index</span> <span class="pl-c1">index</span>.php <span class="pl-c1">index</span>.html<span class="pl-c1">;</span>
 
-    <span class="pl-k">location</span> <span class="pl-en">/ </span>{
-        <span class="pl-k">try_files</span> <span class="pl-smi">$uri</span> <span class="pl-smi">$uri</span>/ /index.php?<span class="pl-smi">$args</span>;
-    }
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">try_files</span> <span class="pl-v">$uri</span> <span class="pl-v">$uri</span>/ /<span class="pl-c1">index</span>.php?<span class="pl-v">$args</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
 
-    <span class="pl-k">location</span> ~ <span class="pl-sr">\.php$ </span>{
-        <span class="pl-k">include</span> fastcgi_params;
-        <span class="pl-k">fastcgi_pass</span> unix:/run/php-fpm/www.sock;
-        <span class="pl-k">fastcgi_param</span> SCRIPT_FILENAME <span class="pl-smi">$document_root$fastcgi_script_name</span>;
-    }
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span> <span class="pl-sr">\.php$ </span><span class="pl-c1">{</span>
+        <span class="pl-c1">include</span> fastcgi_params<span class="pl-c1">;</span>
+        <span class="pl-c1">fastcgi_pass</span> unix:/run/php-fpm/www.sock<span class="pl-c1">;</span>
+        <span class="pl-c1">fastcgi_param</span> SCRIPT_FILENAME <span class="pl-v">$document_root$fastcgi_script_name</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
 
-    <span class="pl-k">location</span> ~* <span class="pl-sr">\.(js|css|png|jpg|jpeg|gif|ico|svg)$ </span>{
-        <span class="pl-k">expires</span><span class="pl-c1"> max</span>;
-        <span class="pl-k">log_not_found</span><span class="pl-c1"> off</span>;
-    }
-}</pre></div>
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span>* <span class="pl-sr">\.(js|css|png|jpg|jpeg|gif|ico|svg)$ </span><span class="pl-c1">{</span>
+        <span class="pl-c1">expires</span> max<span class="pl-c1">;</span>
+        <span class="pl-c1">log_not_found</span> off<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+<span class="pl-c1">}</span></pre></div>
 <p>然后检查配置并重启 Nginx：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo nginx -t
 sudo systemctl restart nginx</pre></div>
