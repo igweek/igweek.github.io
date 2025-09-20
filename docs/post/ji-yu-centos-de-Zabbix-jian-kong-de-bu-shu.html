@@ -158,8 +158,14 @@ dnf install -y zabbix-server-mysql zabbix-web-mysql zabbix-apache-conf zabbix-sq
 <div class="highlight highlight-source-shell"><pre class="notranslate">dnf install mysql-server -y
 systemctl start mysqld
 systemctl <span class="pl-c1">enable</span> mysqld</pre></div>
-<p>输入mysql<br>
-<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/83e511a129d3b13d28d675e4362126f6513178a89a59a0d0a9730b33516aef7a/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373337393638313836315f31322e504e47"><img src="https://camo.githubusercontent.com/83e511a129d3b13d28d675e4362126f6513178a89a59a0d0a9730b33516aef7a/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735373337393638313836315f31322e504e47" alt="12.PNG" data-canonical-src="https://pic.myla.eu.org/file/1757379681861_12.PNG" style="max-width: 100%;"></a></p>
+<p>输入mysql</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> mysql -uroot -p</span>
+password
+mysql<span class="pl-k">&gt;</span> create database zabbix character <span class="pl-c1">set</span> utf8mb4 collate utf8mb4_bin<span class="pl-k">;</span>
+mysql<span class="pl-k">&gt;</span> create user zabbix@localhost identified by <span class="pl-s"><span class="pl-pds">'</span>password<span class="pl-pds">'</span></span><span class="pl-k">;</span>
+mysql<span class="pl-k">&gt;</span> grant all privileges on zabbix.<span class="pl-k">*</span> to zabbix@localhost<span class="pl-k">;</span>
+mysql<span class="pl-k">&gt;</span> <span class="pl-c1">set</span> global log_bin_trust_function_creators = 1<span class="pl-k">;</span>
+mysql<span class="pl-k">&gt;</span> quit<span class="pl-k">;</span></pre></div>
 <div class="highlight highlight-source-shell"><pre class="notranslate">zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz <span class="pl-k">|</span> mysql --default-character-set=utf8mb4 -uzabbix -p zabbix</pre></div>
 <p>输入mysql</p>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">set</span> global log_bin_trust_function_creators <span class="pl-k">=</span> <span class="pl-c1">0</span>;
