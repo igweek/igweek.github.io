@@ -1,5 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 16 Sep 2025 14:36:16 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Openstack基础架构</title><link>https://bbs.017121.xyz/post/Openstack-ji-chu-jia-gou.html</link><description>![neutron.png](https://pic.myla.eu.org/file/1758033300286_neutron.png)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 22 Sep 2025 02:49:18 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于Centos8搭建Openstack</title><link>https://bbs.017121.xyz/post/ji-yu-Centos8-da-jian-Openstack.html</link><description># CentOS 8搭建 OpenStack(yoga版) 的方法和步骤
+
+### **一、OpenStak简介**
+
+#### 1.1、简介
+
+OpenStack既是一个社区，也是一个项目和一个开源软件，提供开放源码软件，建立公共和私有云，它提供了一个部署云的操作平台或工具集，其宗旨在于：帮助组织运行为虚拟计算或存储服务的云，为公有云、私有云，也为大云、小云提供可扩展的、灵活的云计算。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/ji-yu-Centos8-da-jian-Openstack.html</guid><pubDate>Mon, 22 Sep 2025 02:48:53 +0000</pubDate></item><item><title>Openstack基础架构</title><link>https://bbs.017121.xyz/post/Openstack-ji-chu-jia-gou.html</link><description>![neutron.png](https://pic.myla.eu.org/file/1758033300286_neutron.png)
 
 ---
 
