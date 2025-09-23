@@ -1,7 +1,7 @@
 ## 基于Ubuntu22.04部署openstack
 
 ### 整体规划
-![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/1758638611290_截屏2025-09-23 22.42.05_副本.png)
+![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
 *   **操作系统**: Ubuntu 22.04 LTS
 *   **OpenStack 版本**: Zed
 *   **部署工具**: OpenStack-Ansible
