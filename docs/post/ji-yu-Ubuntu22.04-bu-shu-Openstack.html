@@ -10,39 +10,441 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="## 基于Ubuntu22.04部署openstack
-
-### 整体规划
-![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
-*   **操作系统**: Ubuntu 22.04 LTS
-*   **OpenStack 版本**: Zed
-*   **部署工具**: OpenStack-Ansible
-*   **节点1 (Controller)**: `controller`, IP `192.168.10.11` (也作为部署机)
-*   **节点2 (Compute)**: `compute`, IP `192.168.10.12`
-
+<meta name="description" content="
+> [!note]![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
+> *   **操作系统**: Ubuntu 22.04 LTS
 ---
 
-### 第一步：基础环境准备 (在两个节点上执行)
+# 方法一：官方部署
+### 一、环境准备
 
-1.  **硬件要求 & VMware 设置**:
-    *   Controller: 建议 4核 CPU, 8GB 内存, 60GB 硬盘。">
+1. **虚拟机配置要求**（每台）：
+
+   - 至少4GB内存（推荐8GB以上）
+   - 至少2个CPU核心
+   - 至少40GB磁盘空间
+   - 至少2块网卡（一块管理网络，一块数据网络）
+2. **网络规划**：
+
+   - 管理网络：用于OpenStack各组件通信（例如192.168.100.0/24）
+   - 数据网络：用于虚拟机实例通信（例如192.168.200.0/24）
+3. **修改主机名和hosts文件**：在第一台节点（控制节点）：
+
+   1. `sudo hostnamectl set-hostname controller`
+
+   在第二台节点（计算节点）：
+
+   1. `sudo hostnamectl set-hostname compute`
+
+   编辑`/etc/hosts`文件，添加：
+
+   1. `192.168.100.10 controller`
+   2. `192.168.100.20 compute`
+4. **安装依赖包**：
+
+   1. `sudo apt update && sudo apt upgrade -y`
+   2. `sudo apt install -y chrony python3-openstackclient`
+
+### 二、配置NTP时间同步
+
+1. 在控制节点配置chrony：
+
+   1. `sudo nano /etc/chrony/chrony.conf`
+
+   添加：
+
+   1. `allow 192.168.100.0/24`
+
+   重启服务：
+
+   1. `sudo systemctl restart chronyd`
+2. 在计算节点配置chrony同步到控制节点：
+
+   1. `sudo nano /etc/chrony/chrony.conf`
+
+   添加：
+
+   1. `server controller iburst`
+
+   重启服务并验证：
+
+   1. `sudo systemctl restart chronyd`
+   2. `chronyc sources`
+
+### 三、配置数据库（仅控制节点）
+
+1. 安装MariaDB：
+
+   1. `sudo apt install -y mariadb-server python3-pymysql`
+2. 配置MySQL：
+
+   1. `sudo nano /etc/mysql/mariadb.conf.d/99-openstack.cnf`
+
+   添加以下内容：
+
+   1. `[mysqld]`
+   2. `bind-address = 192.168.100.10`
+   3. `default-storage-engine = innodb`
+   4. `innodb_file_per_table = on`
+   5. `max_connections = 4096`
+   6. `collation-server = utf8_general_ci`
+   7. `character-set-server = utf8`
+3. 重启服务并设置root密码：
+
+   1. `sudo systemctl restart mariadb`
+   2. `sudo mysql_secure_installation`
+
+### 四、安装消息队列（仅控制节点）
+
+1. 安装RabbitMQ：
+
+   1. `sudo apt install -y rabbitmq-server`
+2. 创建OpenStack用户：
+
+   1. `sudo rabbitmqctl add_user openstack RABBIT_PASS`
+   2. `sudo rabbitmqctl set_permissions openstack '.*' '.*' '.*'`
+
+### 五、安装Memcached（仅控制节点）
+
+1. `sudo apt install -y memcached python3-memcache`
+2. `sudo nano /etc/memcached.conf`
+
+修改监听地址为控制节点管理IP：
+
+1. `-l 192.168.100.10`
+
+重启服务：
+
+1. `sudo systemctl restart memcached`
+
+### 六、安装OpenStack组件
+
+#### 1. 身份服务(Keystone) - 控制节点
+
+1. 创建数据库：
+
+   1. `mysql -u root -p`
+   2. `CREATE DATABASE keystone;`
+   3. `GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS';`
+   4. `GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS';`
+   5. `FLUSH PRIVILEGES;`
+   6. `exit`
+2. 安装Keystone：
+
+   1. `sudo apt install -y keystone`
+
+   如果出现安装问题
+
+```bash
+sudo apt update --fix-missing
+sudo apt install -f
+```
+
+3. 配置Keystone：
+
+   1. `sudo nano /etc/keystone/keystone.conf`
+
+   在`[database]`部分：
+
+   1. `connection = mysql+pymysql://keystone:KEYSTONE_DBPASS[@controller](https://github.com/controller '@controller')/keystone`
+
+   在`[token]`部分：
+
+   1. `provider = fernet`
+4. 同步数据库并初始化Fernet密钥：
+
+   1. `sudo su -s /bin/sh -c 'keystone-manage db_sync' keystone`
+   2. `sudo keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone`
+   3. `sudo keystone-manage credential_setup --keystone-user keystone --keystone-group keystone`
+5. 部署Keystone：
+
+   1. `sudo keystone-manage bootstrap --bootstrap-password ADMIN_PASS \`
+   2. `--bootstrap-admin-url http://controller:5000/v3/ \`
+   3. `--bootstrap-internal-url http://controller:5000/v3/ \`
+   4. `--bootstrap-public-url http://controller:5000/v3/ \`
+   5. `--bootstrap-region-id RegionOne`
+6. 配置Apache：
+
+   1. `sudo nano /etc/apache2/apache2.conf`
+
+   添加：
+
+   1. `ServerName controller`
+
+   重启Apache：
+
+   1. `sudo systemctl restart apache2`
+7. 配置环境变量：
+
+   1. `export OS_USER_DOMAIN_NAME=Default`
+   2. `export OS_PROJECT_DOMAIN_NAME=Default`
+   3. `export OS_PROJECT_NAME=admin`
+   4. `export OS_USERNAME=admin`
+   5. `export OS_PASSWORD=ADMIN_PASS`
+   6. `export OS_AUTH_URL=http://controller:5000/v3`
+   7. `export OS_IDENTITY_API_VERSION=3`
+   8. `export OS_IMAGE_API_VERSION=2`
+8. 创建域、项目、用户和角色：
+
+   1. `openstack domain create --description 'An Example Domain' example`
+   2. `openstack project create --domain default --description 'Service Project' service`
+   3. `openstack project create --domain default --description 'Demo Project' demo`
+   4. `openstack user create --domain default --password-prompt demo`
+   5. `openstack role create user`
+   6. `openstack role add --project demo --user demo user`
+
+#### 2. 镜像服务(Glance) - 控制节点
+
+1. 创建数据库：
+
+   1. `mysql -u root -p`
+   2. `CREATE DATABASE glance;`
+   3. `GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';`
+   4. `GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';`
+   5. `FLUSH PRIVILEGES;`
+   6. `exit`
+2. 创建服务凭证：
+
+   1. `openstack user create --domain default --password-prompt glance`
+   2. `openstack role add --project service --user glance admin`
+   3. `openstack service create --name glance --description 'OpenStack Image' image`
+   4. `openstack endpoint create --region RegionOne image public http://controller:9292`
+   5. `openstack endpoint create --region RegionOne image internal http://controller:9292`
+   6. `openstack endpoint create --region RegionOne image admin http://controller:9292`
+3. 安装Glance：
+
+   1. `sudo apt install -y glance`
+4. 配置Glance：
+
+   1. `sudo nano /etc/glance/glance-api.conf`
+
+找到`[database]`部分，添加以下内容（替换`GLANCE_DBPASS`为实际密码）：
+
+```ini
+[database]
+# 数据库连接字符串
+connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+```
+
+- 说明：这里的`glance:GLANCE_DBPASS`对应之前创建的数据库用户和密码，`controller`是数据库所在的控制节点主机名，`glance`是数据库名。">
 <meta property="og:title" content="基于Ubuntu22.04部署Openstack">
-<meta property="og:description" content="## 基于Ubuntu22.04部署openstack
-
-### 整体规划
-![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
-*   **操作系统**: Ubuntu 22.04 LTS
-*   **OpenStack 版本**: Zed
-*   **部署工具**: OpenStack-Ansible
-*   **节点1 (Controller)**: `controller`, IP `192.168.10.11` (也作为部署机)
-*   **节点2 (Compute)**: `compute`, IP `192.168.10.12`
-
+<meta property="og:description" content="
+> [!note]![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
+> *   **操作系统**: Ubuntu 22.04 LTS
 ---
 
-### 第一步：基础环境准备 (在两个节点上执行)
+# 方法一：官方部署
+### 一、环境准备
 
-1.  **硬件要求 & VMware 设置**:
-    *   Controller: 建议 4核 CPU, 8GB 内存, 60GB 硬盘。">
+1. **虚拟机配置要求**（每台）：
+
+   - 至少4GB内存（推荐8GB以上）
+   - 至少2个CPU核心
+   - 至少40GB磁盘空间
+   - 至少2块网卡（一块管理网络，一块数据网络）
+2. **网络规划**：
+
+   - 管理网络：用于OpenStack各组件通信（例如192.168.100.0/24）
+   - 数据网络：用于虚拟机实例通信（例如192.168.200.0/24）
+3. **修改主机名和hosts文件**：在第一台节点（控制节点）：
+
+   1. `sudo hostnamectl set-hostname controller`
+
+   在第二台节点（计算节点）：
+
+   1. `sudo hostnamectl set-hostname compute`
+
+   编辑`/etc/hosts`文件，添加：
+
+   1. `192.168.100.10 controller`
+   2. `192.168.100.20 compute`
+4. **安装依赖包**：
+
+   1. `sudo apt update && sudo apt upgrade -y`
+   2. `sudo apt install -y chrony python3-openstackclient`
+
+### 二、配置NTP时间同步
+
+1. 在控制节点配置chrony：
+
+   1. `sudo nano /etc/chrony/chrony.conf`
+
+   添加：
+
+   1. `allow 192.168.100.0/24`
+
+   重启服务：
+
+   1. `sudo systemctl restart chronyd`
+2. 在计算节点配置chrony同步到控制节点：
+
+   1. `sudo nano /etc/chrony/chrony.conf`
+
+   添加：
+
+   1. `server controller iburst`
+
+   重启服务并验证：
+
+   1. `sudo systemctl restart chronyd`
+   2. `chronyc sources`
+
+### 三、配置数据库（仅控制节点）
+
+1. 安装MariaDB：
+
+   1. `sudo apt install -y mariadb-server python3-pymysql`
+2. 配置MySQL：
+
+   1. `sudo nano /etc/mysql/mariadb.conf.d/99-openstack.cnf`
+
+   添加以下内容：
+
+   1. `[mysqld]`
+   2. `bind-address = 192.168.100.10`
+   3. `default-storage-engine = innodb`
+   4. `innodb_file_per_table = on`
+   5. `max_connections = 4096`
+   6. `collation-server = utf8_general_ci`
+   7. `character-set-server = utf8`
+3. 重启服务并设置root密码：
+
+   1. `sudo systemctl restart mariadb`
+   2. `sudo mysql_secure_installation`
+
+### 四、安装消息队列（仅控制节点）
+
+1. 安装RabbitMQ：
+
+   1. `sudo apt install -y rabbitmq-server`
+2. 创建OpenStack用户：
+
+   1. `sudo rabbitmqctl add_user openstack RABBIT_PASS`
+   2. `sudo rabbitmqctl set_permissions openstack '.*' '.*' '.*'`
+
+### 五、安装Memcached（仅控制节点）
+
+1. `sudo apt install -y memcached python3-memcache`
+2. `sudo nano /etc/memcached.conf`
+
+修改监听地址为控制节点管理IP：
+
+1. `-l 192.168.100.10`
+
+重启服务：
+
+1. `sudo systemctl restart memcached`
+
+### 六、安装OpenStack组件
+
+#### 1. 身份服务(Keystone) - 控制节点
+
+1. 创建数据库：
+
+   1. `mysql -u root -p`
+   2. `CREATE DATABASE keystone;`
+   3. `GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS';`
+   4. `GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS';`
+   5. `FLUSH PRIVILEGES;`
+   6. `exit`
+2. 安装Keystone：
+
+   1. `sudo apt install -y keystone`
+
+   如果出现安装问题
+
+```bash
+sudo apt update --fix-missing
+sudo apt install -f
+```
+
+3. 配置Keystone：
+
+   1. `sudo nano /etc/keystone/keystone.conf`
+
+   在`[database]`部分：
+
+   1. `connection = mysql+pymysql://keystone:KEYSTONE_DBPASS[@controller](https://github.com/controller '@controller')/keystone`
+
+   在`[token]`部分：
+
+   1. `provider = fernet`
+4. 同步数据库并初始化Fernet密钥：
+
+   1. `sudo su -s /bin/sh -c 'keystone-manage db_sync' keystone`
+   2. `sudo keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone`
+   3. `sudo keystone-manage credential_setup --keystone-user keystone --keystone-group keystone`
+5. 部署Keystone：
+
+   1. `sudo keystone-manage bootstrap --bootstrap-password ADMIN_PASS \`
+   2. `--bootstrap-admin-url http://controller:5000/v3/ \`
+   3. `--bootstrap-internal-url http://controller:5000/v3/ \`
+   4. `--bootstrap-public-url http://controller:5000/v3/ \`
+   5. `--bootstrap-region-id RegionOne`
+6. 配置Apache：
+
+   1. `sudo nano /etc/apache2/apache2.conf`
+
+   添加：
+
+   1. `ServerName controller`
+
+   重启Apache：
+
+   1. `sudo systemctl restart apache2`
+7. 配置环境变量：
+
+   1. `export OS_USER_DOMAIN_NAME=Default`
+   2. `export OS_PROJECT_DOMAIN_NAME=Default`
+   3. `export OS_PROJECT_NAME=admin`
+   4. `export OS_USERNAME=admin`
+   5. `export OS_PASSWORD=ADMIN_PASS`
+   6. `export OS_AUTH_URL=http://controller:5000/v3`
+   7. `export OS_IDENTITY_API_VERSION=3`
+   8. `export OS_IMAGE_API_VERSION=2`
+8. 创建域、项目、用户和角色：
+
+   1. `openstack domain create --description 'An Example Domain' example`
+   2. `openstack project create --domain default --description 'Service Project' service`
+   3. `openstack project create --domain default --description 'Demo Project' demo`
+   4. `openstack user create --domain default --password-prompt demo`
+   5. `openstack role create user`
+   6. `openstack role add --project demo --user demo user`
+
+#### 2. 镜像服务(Glance) - 控制节点
+
+1. 创建数据库：
+
+   1. `mysql -u root -p`
+   2. `CREATE DATABASE glance;`
+   3. `GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';`
+   4. `GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';`
+   5. `FLUSH PRIVILEGES;`
+   6. `exit`
+2. 创建服务凭证：
+
+   1. `openstack user create --domain default --password-prompt glance`
+   2. `openstack role add --project service --user glance admin`
+   3. `openstack service create --name glance --description 'OpenStack Image' image`
+   4. `openstack endpoint create --region RegionOne image public http://controller:9292`
+   5. `openstack endpoint create --region RegionOne image internal http://controller:9292`
+   6. `openstack endpoint create --region RegionOne image admin http://controller:9292`
+3. 安装Glance：
+
+   1. `sudo apt install -y glance`
+4. 配置Glance：
+
+   1. `sudo nano /etc/glance/glance-api.conf`
+
+找到`[database]`部分，添加以下内容（替换`GLANCE_DBPASS`为实际密码）：
+
+```ini
+[database]
+# 数据库连接字符串
+connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+```
+
+- 说明：这里的`glance:GLANCE_DBPASS`对应之前创建的数据库用户和密码，`controller`是数据库所在的控制节点主机名，`glance`是数据库名。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/ji-yu-Ubuntu22.04-bu-shu-Openstack.html">
 <meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
@@ -113,252 +515,900 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h2>基于Ubuntu22.04部署openstack</h2>
-<h3>整体规划</h3>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0867dcbd2599fa7f4c5db0044ee929f58bb555f3b4f3dff3dcccd18ac977d3ac/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f6e535a774c6132742e706e67"><img src="https://camo.githubusercontent.com/0867dcbd2599fa7f4c5db0044ee929f58bb555f3b4f3dff3dcccd18ac977d3ac/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f6e535a774c6132742e706e67" alt="截屏2025-09-23 22.42.05_副本.png" data-canonical-src="https://pic.myla.eu.org/file/nSZwLa2t.png" style="max-width: 100%;"></a></p>
+<div class="markdown-body" id="postBody"><blockquote>
+<p>[!note]<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0867dcbd2599fa7f4c5db0044ee929f58bb555f3b4f3dff3dcccd18ac977d3ac/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f6e535a774c6132742e706e67"><img src="https://camo.githubusercontent.com/0867dcbd2599fa7f4c5db0044ee929f58bb555f3b4f3dff3dcccd18ac977d3ac/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f6e535a774c6132742e706e67" alt="截屏2025-09-23 22.42.05_副本.png" data-canonical-src="https://pic.myla.eu.org/file/nSZwLa2t.png" style="max-width: 100%;"></a></p>
 <ul>
 <li><strong>操作系统</strong>: Ubuntu 22.04 LTS</li>
-<li><strong>OpenStack 版本</strong>: Zed</li>
-<li><strong>部署工具</strong>: OpenStack-Ansible</li>
-<li><strong>节点1 (Controller)</strong>: <code class="notranslate">controller</code>, IP <code class="notranslate">192.168.10.11</code> (也作为部署机)</li>
-<li><strong>节点2 (Compute)</strong>: <code class="notranslate">compute</code>, IP <code class="notranslate">192.168.10.12</code></li>
 </ul>
+</blockquote>
 <hr>
-<h3>第一步：基础环境准备 (在两个节点上执行)</h3>
+<h1>方法一：官方部署</h1>
+<h3>一、环境准备</h3>
 <ol>
 <li>
-<p><strong>硬件要求 &amp; VMware 设置</strong>:</p>
+<p><strong>虚拟机配置要求</strong>（每台）：</p>
 <ul>
-<li>Controller: 建议 4核 CPU, 8GB 内存, 60GB 硬盘。</li>
-<li>Compute: 建议 4核 CPU, 8GB 内存, 100GB 硬盘。</li>
-<li><strong>关键</strong>: 在 VMware 虚拟机的 "处理器" 设置中，必须勾选 <strong>"虚拟化Intel VT-x/EPT 或 AMD-V/RVI"</strong>。</li>
+<li>至少4GB内存（推荐8GB以上）</li>
+<li>至少2个CPU核心</li>
+<li>至少40GB磁盘空间</li>
+<li>至少2块网卡（一块管理网络，一块数据网络）</li>
 </ul>
 </li>
 <li>
-<p><strong>安装并配置全新的 Ubuntu 22.04 Server</strong>:</p>
+<p><strong>网络规划</strong>：</p>
 <ul>
-<li>在安装过程中，选择 "OpenSSH server" 以便远程连接。</li>
-<li>建议使用 LVM (逻辑卷管理) 进行磁盘分区，方便后续扩展。</li>
+<li>管理网络：用于OpenStack各组件通信（例如192.168.100.0/24）</li>
+<li>数据网络：用于虚拟机实例通信（例如192.168.200.0/24）</li>
 </ul>
 </li>
 <li>
-<p><strong>网络配置</strong>:<br>
-Ubuntu Server 使用 <code class="notranslate">netplan</code> 来管理网络。</p>
-<ul>
-<li>编辑配置文件：<code class="notranslate">sudo vi /etc/netplan/00-installer-config.yaml</code></li>
-<li>为每个节点配置静态IP。</li>
-</ul>
-<p><strong>Controller (<code class="notranslate">192.168.10.11</code>) 的配置示例</strong>:</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">network</span>:
-  <span class="pl-ent">ethernets</span>:
-    <span class="pl-ent">ens160</span>: <span class="pl-c"><span class="pl-c">#</span> 替换成你的实际网卡名</span>
-      <span class="pl-ent">dhcp4</span>: <span class="pl-s">no</span>
-      <span class="pl-ent">addresses</span>:
-        - <span class="pl-s">192.168.10.11/24</span>
-      <span class="pl-ent">gateway4</span>: <span class="pl-s">192.168.10.1 </span><span class="pl-c"><span class="pl-c">#</span> 替换成你的网关</span>
-      <span class="pl-ent">nameservers</span>:
-        <span class="pl-ent">addresses</span>: <span class="pl-s">[223.5.5.5, 119.29.29.29] </span><span class="pl-c"><span class="pl-c">#</span> 国内推荐的DNS</span>
-  <span class="pl-ent">version</span>: <span class="pl-c1">2</span></pre></div>
-<p><strong>Compute (<code class="notranslate">192.168.10.12</code>) 的配置示例</strong>:</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">network</span>:
-  <span class="pl-ent">ethernets</span>:
-    <span class="pl-ent">ens160</span>: <span class="pl-c"><span class="pl-c">#</span> 替换成你的实际网卡名</span>
-      <span class="pl-ent">dhcp4</span>: <span class="pl-s">no</span>
-      <span class="pl-ent">addresses</span>:
-        - <span class="pl-s">192.168.10.12/24</span>
-      <span class="pl-ent">gateway4</span>: <span class="pl-s">192.168.10.1 </span><span class="pl-c"><span class="pl-c">#</span> 替换成你的网关</span>
-      <span class="pl-ent">nameservers</span>:
-        <span class="pl-ent">addresses</span>: <span class="pl-s">[223.5.5.5, 119.29.29.29]</span>
-  <span class="pl-ent">version</span>: <span class="pl-c1">2</span></pre></div>
-<ul>
-<li>应用配置：<code class="notranslate">sudo netplan apply</code></li>
-</ul>
+<p><strong>修改主机名和hosts文件</strong>：在第一台节点（控制节点）：</p>
+<ol>
+<li><code class="notranslate">sudo hostnamectl set-hostname controller</code></li>
+</ol>
+<p>在第二台节点（计算节点）：</p>
+<ol>
+<li><code class="notranslate">sudo hostnamectl set-hostname compute</code></li>
+</ol>
+<p>编辑<code class="notranslate">/etc/hosts</code>文件，添加：</p>
+<ol>
+<li><code class="notranslate">192.168.100.10 controller</code></li>
+<li><code class="notranslate">192.168.100.20 compute</code></li>
+</ol>
 </li>
 <li>
-<p><strong>设置主机名和 hosts 文件</strong>:</p>
-<ul>
-<li>在 Controller 上: <code class="notranslate">sudo hostnamectl set-hostname controller</code></li>
-<li>在 Compute 上: <code class="notranslate">sudo hostnamectl set-hostname compute</code></li>
-<li><strong>在两个节点上</strong> 编辑 <code class="notranslate">/etc/hosts</code> 文件，添加IP和主机名映射：
-<pre class="notranslate"><code class="notranslate">192.168.10.11  controller
-192.168.10.12  compute
-</code></pre>
-</li>
-</ul>
-</li>
-<li>
-<p><strong>系统更新</strong>:</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt update
-sudo apt upgrade -y
-sudo reboot</pre></div>
-</li>
-<li>
-<p><strong>时间同步</strong>:<br>
-Ubuntu 默认使用 <code class="notranslate">systemd-timesyncd</code>，通常无需额外配置。确认其状态：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">timedatectl status
-<span class="pl-c"><span class="pl-c">#</span> 确保 "System clock synchronized: yes"</span></pre></div>
+<p><strong>安装依赖包</strong>：</p>
+<ol>
+<li><code class="notranslate">sudo apt update &amp;&amp; sudo apt upgrade -y</code></li>
+<li><code class="notranslate">sudo apt install -y chrony python3-openstackclient</code></li>
+</ol>
 </li>
 </ol>
-<hr>
-<h3>第二步：在 Controller 节点上准备部署环境</h3>
-<p><strong>接下来的操作只在 <code class="notranslate">controller</code> 节点上执行。</strong> Controller 节点将作为 "Deployment Host"，从中运行 Ansible 来配置所有节点（包括它自己）。</p>
+<h3>二、配置NTP时间同步</h3>
 <ol>
 <li>
-<p><strong>安装 Git 和依赖</strong>:</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt update
-sudo apt install -y git python3-venv</pre></div>
+<p>在控制节点配置chrony：</p>
+<ol>
+<li><code class="notranslate">sudo nano /etc/chrony/chrony.conf</code></li>
+</ol>
+<p>添加：</p>
+<ol>
+<li><code class="notranslate">allow 192.168.100.0/24</code></li>
+</ol>
+<p>重启服务：</p>
+<ol>
+<li><code class="notranslate">sudo systemctl restart chronyd</code></li>
+</ol>
 </li>
 <li>
-<p><strong>克隆 OpenStack-Ansible 仓库</strong>:<br>
-我们将克隆 <code class="notranslate">Zed</code> 版本的仓库。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">git clone https://opendev.org/openstack/openstack-ansible.git -b stable/zed
-<span class="pl-c1">cd</span> openstack-ansible</pre></div>
-</li>
-<li>
-<p><strong>运行引导脚本</strong>:<br>
-这个脚本会创建一个Python虚拟环境，并安装 Ansible 和其他所有必需的依赖项。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">scripts/bootstrap-ansible.sh</pre></div>
-<ul>
-<li>这个过程会下载很多包，需要一些时间。</li>
-</ul>
-</li>
-<li>
-<p><strong>激活虚拟环境</strong>:<br>
-引导脚本完成后，会提示你 <code class="notranslate">source</code> 一个激活脚本。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">source</span> /usr/local/bin/openstack-ansible.rc</pre></div>
-<ul>
-<li><strong>重要</strong>: 每次你新开一个终端准备运行 <code class="notranslate">openstack-playbook</code> 命令时，都需要先执行这个 <code class="notranslate">source</code> 命令。</li>
-</ul>
+<p>在计算节点配置chrony同步到控制节点：</p>
+<ol>
+<li><code class="notranslate">sudo nano /etc/chrony/chrony.conf</code></li>
+</ol>
+<p>添加：</p>
+<ol>
+<li><code class="notranslate">server controller iburst</code></li>
+</ol>
+<p>重启服务并验证：</p>
+<ol>
+<li><code class="notranslate">sudo systemctl restart chronyd</code></li>
+<li><code class="notranslate">chronyc sources</code></li>
+</ol>
 </li>
 </ol>
-<hr>
-<h3>第三步：配置 OpenStack-Ansible</h3>
-<p>配置文件位于 <code class="notranslate">/etc/openstack_deploy</code>。</p>
+<h3>三、配置数据库（仅控制节点）</h3>
 <ol>
 <li>
-<p><strong>复制示例配置文件</strong>:</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo cp -r etc/openstack_deploy /etc/</pre></div>
+<p>安装MariaDB：</p>
+<ol>
+<li><code class="notranslate">sudo apt install -y mariadb-server python3-pymysql</code></li>
+</ol>
 </li>
 <li>
-<p><strong>定义你的 OpenStack 环境 (<code class="notranslate">openstack_user_config.yml</code>)</strong>:<br>
-这是最重要的配置文件，它定义了你的节点角色和网络。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/openstack_deploy/openstack_user_config.yml</pre></div>
-<p>你需要修改 <code class="notranslate">hosts</code> 部分，告诉 Ansible 哪个 IP 对应哪个角色。</p>
-<p><strong>修改后的 <code class="notranslate">openstack_user_config.yml</code> 示例</strong>:</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> ... (文件顶部的注释保持不变) ...</span>
-
-<span class="pl-c"><span class="pl-c">#</span> 定义所有参与部署的主机，分为不同的组</span>
-<span class="pl-ent">shared-infra_hosts</span>:
-  <span class="pl-ent">controller</span>:
-    <span class="pl-ent">ip</span>: <span class="pl-s">192.168.10.11</span>
-
-<span class="pl-ent">os-infra_hosts</span>:
-  <span class="pl-ent">controller</span>:
-    <span class="pl-ent">ip</span>: <span class="pl-s">192.168.10.11</span>
-
-<span class="pl-ent">network_hosts</span>:
-  <span class="pl-ent">controller</span>:
-    <span class="pl-ent">ip</span>: <span class="pl-s">192.168.10.11</span>
-
-<span class="pl-ent">compute_hosts</span>:
-  <span class="pl-ent">compute</span>:
-    <span class="pl-ent">ip</span>: <span class="pl-s">192.168.10.12</span>
-
-<span class="pl-ent">storage_hosts</span>:
-  <span class="pl-c"><span class="pl-c">#</span> 我们先不部署Cinder/Swift，所以这里为空或注释掉</span>
-  <span class="pl-c"><span class="pl-c">#</span> controller:</span>
-  <span class="pl-c"><span class="pl-c">#</span>   ip: 192.168.10.11</span>
-
-<span class="pl-ent">log_hosts</span>:
-  <span class="pl-ent">controller</span>:
-    <span class="pl-ent">ip</span>: <span class="pl-s">192.168.10.11</span>
-
-<span class="pl-c"><span class="pl-c">#</span> ... (文件后面的内容可以保持默认) ...</span></pre></div>
-<ul>
-<li><strong>解释</strong>: 我们将<code class="notranslate">controller</code>节点分配给了所有基础设施、网络和日志角色，而<code class="notranslate">compute</code>节点只分配给了计算角色。</li>
-</ul>
+<p>配置MySQL：</p>
+<ol>
+<li><code class="notranslate">sudo nano /etc/mysql/mariadb.conf.d/99-openstack.cnf</code></li>
+</ol>
+<p>添加以下内容：</p>
+<ol>
+<li><code class="notranslate">[mysqld]</code></li>
+<li><code class="notranslate">bind-address = 192.168.100.10</code></li>
+<li><code class="notranslate">default-storage-engine = innodb</code></li>
+<li><code class="notranslate">innodb_file_per_table = on</code></li>
+<li><code class="notranslate">max_connections = 4096</code></li>
+<li><code class="notranslate">collation-server = utf8_general_ci</code></li>
+<li><code class="notranslate">character-set-server = utf8</code></li>
+</ol>
 </li>
 <li>
-<p><strong>设置密码 (<code class="notranslate">user_secrets.yml</code>)</strong>:<br>
-为了安全，所有密码都保存在一个受 Ansible Vault 加密的文件中。为了简化，我们先明文设置，再加密。</p>
-<ul>
-<li>复制模板：<code class="notranslate">sudo cp /etc/openstack_deploy/user_secrets.yml.example /etc/openstack_deploy/user_secrets.yml</code></li>
-<li>编辑文件：<code class="notranslate">sudo vi /etc/openstack_deploy/user_secrets.yml</code></li>
-<li><strong>务必</strong>找到并设置一个自己的密码，例如 <code class="notranslate">keystone_auth_admin_password</code>。</li>
-</ul>
-</li>
-<li>
-<p><strong>配置网络接口 (<code class="notranslate">user_variables.yml</code>)</strong>:<br>
-我们需要告诉 Ansible 使用哪个网络接口作为管理网络和外部网络桥接。</p>
-<ul>
-<li>编辑文件：<code class="notranslate">sudo vi /etc/openstack_deploy/user_variables.yml</code></li>
-<li>在文件末尾添加以下内容 (假设你的网卡是 <code class="notranslate">ens160</code>):</li>
-</ul>
-<div class="highlight highlight-source-yaml"><pre class="notranslate">---
-<span class="pl-c"><span class="pl-c">#</span> 全局覆盖变量</span>
-<span class="pl-ent">openstack_host_management_network_interface</span>: <span class="pl-s">ens160</span>
-<span class="pl-ent">neutron_provider_networks</span>:
-  - <span class="pl-ent">network_name</span>: <span class="pl-s">flat-provider</span>
-    <span class="pl-ent">network_type</span>: <span class="pl-s">flat</span>
-    <span class="pl-ent">network_flat_physical_network</span>: <span class="pl-s">physnet1</span>
-
-<span class="pl-c"><span class="pl-c">#</span> 对于计算节点，需要指定桥接的物理网卡</span>
-<span class="pl-ent">neutron_linuxbridge_agent_bridge_interfaces</span>:
-  - <span class="pl-s">physnet1:ens160</span></pre></div>
-<ul>
-<li><strong>解释</strong>: 这段配置定义了一个名为 <code class="notranslate">flat-provider</code> 的外部网络，它将通过 <code class="notranslate">linuxbridge</code> 直接桥接到每个节点上的 <code class="notranslate">ens160</code> 网卡。</li>
-</ul>
+<p>重启服务并设置root密码：</p>
+<ol>
+<li><code class="notranslate">sudo systemctl restart mariadb</code></li>
+<li><code class="notranslate">sudo mysql_secure_installation</code></li>
+</ol>
 </li>
 </ol>
-<hr>
-<h3>第四步：执行 Ansible Playbooks 进行部署</h3>
-<p><strong>所有命令都在 <code class="notranslate">controller</code> 节点的 <code class="notranslate">openstack-ansible</code> 目录下执行，并确保已激活虚拟环境 (<code class="notranslate">source ...</code>)</strong></p>
-<p>部署分为几个阶段：</p>
+<h3>四、安装消息队列（仅控制节点）</h3>
 <ol>
 <li>
-<p><strong>设置主机 (Setup Hosts)</strong>:<br>
-这个 playbook 会在所有节点上进行基础配置，如安装NTP、配置仓库等。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /opt/openstack-ansible <span class="pl-c"><span class="pl-c">#</span> openstack-ansible 克隆后的默认安装位置</span>
-openstack-playbook setup-hosts.yml</pre></div>
+<p>安装RabbitMQ：</p>
+<ol>
+<li><code class="notranslate">sudo apt install -y rabbitmq-server</code></li>
+</ol>
 </li>
 <li>
-<p><strong>部署基础设施 (Setup Infrastructure)</strong>:<br>
-安装核心服务，如MariaDB, RabbitMQ, Memcached。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">openstack-playbook setup-infrastructure.yml</pre></div>
-</li>
-<li>
-<p><strong>部署 OpenStack 服务 (Setup OpenStack)</strong>:<br>
-安装Keystone, Glance, Nova, Neutron等所有OpenStack核心服务。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">openstack-playbook setup-openstack.yml</pre></div>
-<ul>
-<li><strong>注意</strong>: 这一步是整个过程中最耗时的，可能会持续1-2小时，取决于你的硬件和网络。屏幕会滚动大量 Ansible 任务的输出。</li>
-</ul>
+<p>创建OpenStack用户：</p>
+<ol>
+<li><code class="notranslate">sudo rabbitmqctl add_user openstack RABBIT_PASS</code></li>
+<li><code class="notranslate">sudo rabbitmqctl set_permissions openstack ".*" ".*" ".*"</code></li>
+</ol>
 </li>
 </ol>
-<hr>
-<h3>第五步：验证部署</h3>
+<h3>五、安装Memcached（仅控制节点）</h3>
+<ol>
+<li><code class="notranslate">sudo apt install -y memcached python3-memcache</code></li>
+<li><code class="notranslate">sudo nano /etc/memcached.conf</code></li>
+</ol>
+<p>修改监听地址为控制节点管理IP：</p>
+<ol>
+<li><code class="notranslate">-l 192.168.100.10</code></li>
+</ol>
+<p>重启服务：</p>
+<ol>
+<li><code class="notranslate">sudo systemctl restart memcached</code></li>
+</ol>
+<h3>六、安装OpenStack组件</h3>
+<h4>1. 身份服务(Keystone) - 控制节点</h4>
 <ol>
 <li>
-<p><strong>访问 Horizon Dashboard</strong>:</p>
-<ul>
-<li>在浏览器中访问 <code class="notranslate">http://192.168.10.11</code> (默认没有<code class="notranslate">/dashboard</code>后缀)。</li>
-<li>用户名: <code class="notranslate">admin</code></li>
-<li>密码: 你在 <code class="notranslate">user_secrets.yml</code> 中为 <code class="notranslate">keystone_auth_admin_password</code> 设置的密码。</li>
-</ul>
+<p>创建数据库：</p>
+<ol>
+<li><code class="notranslate">mysql -u root -p</code></li>
+<li><code class="notranslate">CREATE DATABASE keystone;</code></li>
+<li><code class="notranslate">GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS';</code></li>
+<li><code class="notranslate">GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS';</code></li>
+<li><code class="notranslate">FLUSH PRIVILEGES;</code></li>
+<li><code class="notranslate">exit</code></li>
+</ol>
 </li>
 <li>
-<p><strong>使用命令行 (CLI)</strong>:</p>
+<p>安装Keystone：</p>
+<ol>
+<li><code class="notranslate">sudo apt install -y keystone</code></li>
+</ol>
+<p>如果出现安装问题</p>
+</li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt update --fix-missing
+sudo apt install -f</pre></div>
+<ol start="3">
+<li>
+<p>配置Keystone：</p>
+<ol>
+<li><code class="notranslate">sudo nano /etc/keystone/keystone.conf</code></li>
+</ol>
+<p>在<code class="notranslate">[database]</code>部分：</p>
+<ol>
+<li><code class="notranslate">connection = mysql+pymysql://keystone:KEYSTONE_DBPASS[@controller](https://github.com/controller "@controller")/keystone</code></li>
+</ol>
+<p>在<code class="notranslate">[token]</code>部分：</p>
+<ol>
+<li><code class="notranslate">provider = fernet</code></li>
+</ol>
+</li>
+<li>
+<p>同步数据库并初始化Fernet密钥：</p>
+<ol>
+<li><code class="notranslate">sudo su -s /bin/sh -c "keystone-manage db_sync" keystone</code></li>
+<li><code class="notranslate">sudo keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone</code></li>
+<li><code class="notranslate">sudo keystone-manage credential_setup --keystone-user keystone --keystone-group keystone</code></li>
+</ol>
+</li>
+<li>
+<p>部署Keystone：</p>
+<ol>
+<li><code class="notranslate">sudo keystone-manage bootstrap --bootstrap-password ADMIN_PASS \</code></li>
+<li><code class="notranslate">--bootstrap-admin-url http://controller:5000/v3/ \</code></li>
+<li><code class="notranslate">--bootstrap-internal-url http://controller:5000/v3/ \</code></li>
+<li><code class="notranslate">--bootstrap-public-url http://controller:5000/v3/ \</code></li>
+<li><code class="notranslate">--bootstrap-region-id RegionOne</code></li>
+</ol>
+</li>
+<li>
+<p>配置Apache：</p>
+<ol>
+<li><code class="notranslate">sudo nano /etc/apache2/apache2.conf</code></li>
+</ol>
+<p>添加：</p>
+<ol>
+<li><code class="notranslate">ServerName controller</code></li>
+</ol>
+<p>重启Apache：</p>
+<ol>
+<li><code class="notranslate">sudo systemctl restart apache2</code></li>
+</ol>
+</li>
+<li>
+<p>配置环境变量：</p>
+<ol>
+<li><code class="notranslate">export OS_USER_DOMAIN_NAME=Default</code></li>
+<li><code class="notranslate">export OS_PROJECT_DOMAIN_NAME=Default</code></li>
+<li><code class="notranslate">export OS_PROJECT_NAME=admin</code></li>
+<li><code class="notranslate">export OS_USERNAME=admin</code></li>
+<li><code class="notranslate">export OS_PASSWORD=ADMIN_PASS</code></li>
+<li><code class="notranslate">export OS_AUTH_URL=http://controller:5000/v3</code></li>
+<li><code class="notranslate">export OS_IDENTITY_API_VERSION=3</code></li>
+<li><code class="notranslate">export OS_IMAGE_API_VERSION=2</code></li>
+</ol>
+</li>
+<li>
+<p>创建域、项目、用户和角色：</p>
+<ol>
+<li><code class="notranslate">openstack domain create --description "An Example Domain" example</code></li>
+<li><code class="notranslate">openstack project create --domain default --description "Service Project" service</code></li>
+<li><code class="notranslate">openstack project create --domain default --description "Demo Project" demo</code></li>
+<li><code class="notranslate">openstack user create --domain default --password-prompt demo</code></li>
+<li><code class="notranslate">openstack role create user</code></li>
+<li><code class="notranslate">openstack role add --project demo --user demo user</code></li>
+</ol>
+</li>
+</ol>
+<h4>2. 镜像服务(Glance) - 控制节点</h4>
+<ol>
+<li>
+<p>创建数据库：</p>
+<ol>
+<li><code class="notranslate">mysql -u root -p</code></li>
+<li><code class="notranslate">CREATE DATABASE glance;</code></li>
+<li><code class="notranslate">GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';</code></li>
+<li><code class="notranslate">GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';</code></li>
+<li><code class="notranslate">FLUSH PRIVILEGES;</code></li>
+<li><code class="notranslate">exit</code></li>
+</ol>
+</li>
+<li>
+<p>创建服务凭证：</p>
+<ol>
+<li><code class="notranslate">openstack user create --domain default --password-prompt glance</code></li>
+<li><code class="notranslate">openstack role add --project service --user glance admin</code></li>
+<li><code class="notranslate">openstack service create --name glance --description "OpenStack Image" image</code></li>
+<li><code class="notranslate">openstack endpoint create --region RegionOne image public http://controller:9292</code></li>
+<li><code class="notranslate">openstack endpoint create --region RegionOne image internal http://controller:9292</code></li>
+<li><code class="notranslate">openstack endpoint create --region RegionOne image admin http://controller:9292</code></li>
+</ol>
+</li>
+<li>
+<p>安装Glance：</p>
+<ol>
+<li><code class="notranslate">sudo apt install -y glance</code></li>
+</ol>
+</li>
+<li>
+<p>配置Glance：</p>
+<ol>
+<li><code class="notranslate">sudo nano /etc/glance/glance-api.conf</code></li>
+</ol>
+</li>
+</ol>
+<p>找到<code class="notranslate">[database]</code>部分，添加以下内容（替换<code class="notranslate">GLANCE_DBPASS</code>为实际密码）：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[database]</span>
+<span class="pl-c"><span class="pl-c">#</span> 数据库连接字符串</span>
+<span class="pl-k">connection</span> = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance</pre></div>
 <ul>
-<li>在 <code class="notranslate">controller</code> 节点上，Ansible 会自动创建一个 admin 的 OpenRC 文件。</li>
-<li>加载环境变量：
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">source</span> /etc/openstack_deploy/openrc</pre></div>
-</li>
-<li>检查服务状态：<code class="notranslate">openstack service list</code></li>
-<li>检查计算节点状态：<code class="notranslate">openstack compute service list</code></li>
-<li>检查网络代理状态：<code class="notranslate">openstack network agent list</code></li>
+<li>说明：这里的<code class="notranslate">glance:GLANCE_DBPASS</code>对应之前创建的数据库用户和密码，<code class="notranslate">controller</code>是数据库所在的控制节点主机名，<code class="notranslate">glance</code>是数据库名。</li>
 </ul>
+<h3>2. 配置认证信息（对接 Keystone）</h3>
+<p>在同一文件中，找到并配置以下部分：</p>
+<h4>（1）<code class="notranslate">[keystone_authtoken]</code>部分</h4>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[keystone_authtoken]</span>
+<span class="pl-c"><span class="pl-c">#</span> Keystone认证服务地址</span>
+<span class="pl-k">www_authenticate_uri</span> = http://controller:5000
+<span class="pl-k">auth_url</span> = http://controller:5000
+<span class="pl-k">memcached_servers</span> = controller:11211
+<span class="pl-c"><span class="pl-c">#</span> 认证类型</span>
+<span class="pl-k">auth_type</span> = password
+<span class="pl-c"><span class="pl-c">#</span> 服务项目和用户信息（对应之前创建的服务凭证）</span>
+<span class="pl-k">project_domain_name</span> = Default
+<span class="pl-k">user_domain_name</span> = Default
+<span class="pl-k">project_name</span> = service
+<span class="pl-k">username</span> = glance
+<span class="pl-k">password</span> = GLANCE_PASS  <span class="pl-c"><span class="pl-c">#</span> 替换为创建glance用户时设置的密码</span></pre></div>
+<h4>（2）<code class="notranslate">[paste_deploy]</code>部分</h4>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[paste_deploy]</span>
+<span class="pl-c"><span class="pl-c">#</span> 启用Keystone认证模式</span>
+<span class="pl-k">flavor</span> = keystone</pre></div>
+<h3>3. 配置镜像存储位置</h3>
+<p>找到<code class="notranslate">[glance_store]</code>部分，配置本地文件存储（默认推荐方式）：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[glance_store]</span>
+<span class="pl-c"><span class="pl-c">#</span> 支持的存储类型</span>
+<span class="pl-k">stores</span> = file,http
+<span class="pl-c"><span class="pl-c">#</span> 默认存储类型</span>
+<span class="pl-k">default_store</span> = file
+<span class="pl-c"><span class="pl-c">#</span> 本地存储路径（确保glance用户有读写权限）</span>
+<span class="pl-k">filesystem_store_datadir</span> = /var/lib/glance/images/</pre></div>
+<p>配置完成后，按<code class="notranslate">Ctrl+O</code>保存，<code class="notranslate">Ctrl+X</code>退出编辑器。<br>
+然后同步数据库：</p>
+<ol>
+<li>
+<p><code class="notranslate">sudo su -s /bin/sh -c "glance-manage db_sync" glance</code></p>
 </li>
-</ol></div>
+<li>
+<p>重启服务：</p>
+<ol>
+<li><code class="notranslate">sudo systemctl restart glance-api</code></li>
+</ol>
+</li>
+</ol>
+<h3><strong>3. 计算服务 (Nova) 部署</strong></h3>
+<h4><strong>3.1 控制节点配置</strong></h4>
+<h5><strong>3.1.1 创建数据库和服务凭证</strong></h5>
+<h1>1. 创建Nova数据库</h1>
+<p>mysql -u root -p<br>
+CREATE DATABASE nova_api;<br>
+CREATE DATABASE nova;<br>
+CREATE DATABASE nova_cell0;</p>
+<p>GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';<br>
+GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';<br>
+GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';<br>
+GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';<br>
+GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';<br>
+GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';<br>
+FLUSH PRIVILEGES;<br>
+exit</p>
+<h1>2. 创建Nova服务凭证（需先加载admin环境变量）</h1>
+<p>source /etc/kolla/admin-openrc.sh</p>
+<h1>创建nova用户</h1>
+<p>openstack user create --domain default --password-prompt nova</p>
+<h1>为nova用户添加admin角色</h1>
+<p>openstack role add --project service --user nova admin</p>
+<h1>创建nova服务</h1>
+<p>openstack service create --name nova --description "OpenStack Compute" compute</p>
+<h1>创建API端点</h1>
+<p>openstack endpoint create --region RegionOne compute public <a href="http://controller:8774/v2.1" rel="nofollow">http://controller:8774/v2.1</a><br>
+openstack endpoint create --region RegionOne compute internal <a href="http://controller:8774/v2.1" rel="nofollow">http://controller:8774/v2.1</a><br>
+openstack endpoint create --region RegionOne compute admin <a href="http://controller:8774/v2.1" rel="nofollow">http://controller:8774/v2.1</a></p>
+<h5><strong>3.1.2 安装 Nova 控制组件</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y nova-api nova-conductor nova-novncproxy nova-scheduler</pre></div>
+<h5><strong>3.1.3 配置 Nova</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/nova/nova.conf</pre></div>
+<p>关键配置项：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[DEFAULT]</span>
+<span class="pl-c"><span class="pl-c">#</span> 启用计算API和元数据API</span>
+<span class="pl-k">enabled_apis</span> = osapi_compute,metadata
+<span class="pl-c"><span class="pl-c">#</span> 配置RabbitMQ消息队列</span>
+<span class="pl-k">transport_url</span> = rabbit://openstack:RABBIT_PASS@controller:5672/
+<span class="pl-c"><span class="pl-c">#</span> 配置控制节点主机名</span>
+<span class="pl-k">my_ip</span> = 192.168.3.131  <span class="pl-c"><span class="pl-c">#</span> 控制节点IP</span>
+<span class="pl-k">use_neutron</span> = True
+<span class="pl-k">firewall_driver</span> = nova.virt.firewall.NoopFirewallDriver
+
+<span class="pl-en">[api_database]</span>
+<span class="pl-k">connection</span> = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
+
+<span class="pl-en">[database]</span>
+<span class="pl-k">connection</span> = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
+
+<span class="pl-en">[keystone_authtoken]</span>
+<span class="pl-k">www_authenticate_uri</span> = http://controller:5000/
+<span class="pl-k">auth_url</span> = http://controller:5000/
+<span class="pl-k">memcached_servers</span> = controller:11211
+<span class="pl-k">auth_type</span> = password
+<span class="pl-k">project_domain_name</span> = Default
+<span class="pl-k">user_domain_name</span> = Default
+<span class="pl-k">project_name</span> = service
+<span class="pl-k">username</span> = nova
+<span class="pl-k">password</span> = NOVA_PASS  <span class="pl-c"><span class="pl-c">#</span> nova用户的密码</span>
+
+<span class="pl-en">[vnc]</span>
+<span class="pl-k">enabled</span> = True
+<span class="pl-k">server_listen</span> = $my_ip
+<span class="pl-k">server_proxyclient_address</span> = $my_ip
+
+<span class="pl-en">[glance]</span>
+<span class="pl-k">api_servers</span> = http://controller:9292
+
+<span class="pl-en">[oslo_concurrency]</span>
+<span class="pl-k">lock_path</span> = /var/lib/nova/tmp
+
+<span class="pl-en">[placement]</span>
+<span class="pl-k">region_name</span> = RegionOne
+<span class="pl-k">project_domain_name</span> = Default
+<span class="pl-k">project_name</span> = service
+<span class="pl-k">auth_type</span> = password
+<span class="pl-k">user_domain_name</span> = Default
+<span class="pl-k">auth_url</span> = http://controller:5000/v3
+<span class="pl-k">username</span> = placement
+<span class="pl-k">password</span> = PLACEMENT_PASS  <span class="pl-c"><span class="pl-c">#</span> placement用户的密码（需提前创建）</span></pre></div>
+<h5><strong>3.1.4 同步数据库并初始化 cell</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 同步API数据库</span>
+sudo su -s /bin/sh -c <span class="pl-s"><span class="pl-pds">"</span>nova-manage api_db sync<span class="pl-pds">"</span></span> nova
+
+<span class="pl-c"><span class="pl-c">#</span> 注册cell0数据库</span>
+sudo su -s /bin/sh -c <span class="pl-s"><span class="pl-pds">"</span>nova-manage cell_v2 map_cell0<span class="pl-pds">"</span></span> nova
+
+<span class="pl-c"><span class="pl-c">#</span> 创建cell1单元格</span>
+sudo su -s /bin/sh -c <span class="pl-s"><span class="pl-pds">"</span>nova-manage cell_v2 create_cell --name=cell1 --verbose<span class="pl-pds">"</span></span> nova
+
+<span class="pl-c"><span class="pl-c">#</span> 同步计算数据库</span>
+sudo su -s /bin/sh -c <span class="pl-s"><span class="pl-pds">"</span>nova-manage db sync<span class="pl-pds">"</span></span> nova
+
+<span class="pl-c"><span class="pl-c">#</span> 验证cell0和cell1是否注册成功</span>
+sudo su -s /bin/sh -c <span class="pl-s"><span class="pl-pds">"</span>nova-manage cell_v2 list_cells<span class="pl-pds">"</span></span> nova</pre></div>
+<h5><strong>3.1.5 重启 Nova 服务</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart nova-api nova-scheduler nova-conductor nova-novncproxy
+sudo systemctl <span class="pl-c1">enable</span> nova-api nova-scheduler nova-conductor nova-novncproxy</pre></div>
+<h4><strong>3.2 计算节点配置</strong></h4>
+<h5><strong>3.2.1 安装 Nova 计算组件</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 检查CPU是否支持虚拟化（输出非空则支持）</span>
+egrep -c <span class="pl-s"><span class="pl-pds">'</span>(vmx|svm)<span class="pl-pds">'</span></span> /proc/cpuinfo
+
+<span class="pl-c"><span class="pl-c">#</span> 安装计算组件</span>
+sudo apt install -y nova-compute</pre></div>
+<h5><strong>3.2.2 配置 Nova 连接控制节点</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/nova/nova.conf</pre></div>
+<p>关键配置：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[DEFAULT]</span>
+<span class="pl-k">enabled_apis</span> = osapi_compute,metadata
+<span class="pl-k">transport_url</span> = rabbit://openstack:RABBIT_PASS@controller:5672/
+<span class="pl-k">my_ip</span> = 192.168.3.132  <span class="pl-c"><span class="pl-c">#</span> 计算节点IP</span>
+<span class="pl-k">use_neutron</span> = True
+<span class="pl-k">firewall_driver</span> = nova.virt.firewall.NoopFirewallDriver
+
+<span class="pl-en">[keystone_authtoken]</span>
+<span class="pl-k">www_authenticate_uri</span> = http://controller:5000/
+<span class="pl-k">auth_url</span> = http://controller:5000/
+<span class="pl-k">memcached_servers</span> = controller:11211
+<span class="pl-k">auth_type</span> = password
+<span class="pl-k">project_domain_name</span> = Default
+<span class="pl-k">user_domain_name</span> = Default
+<span class="pl-k">project_name</span> = service
+<span class="pl-k">username</span> = nova
+<span class="pl-k">password</span> = NOVA_PASS
+
+<span class="pl-en">[vnc]</span>
+<span class="pl-k">enabled</span> = True
+<span class="pl-k">server_listen</span> = 0.0.0.0
+<span class="pl-k">server_proxyclient_address</span> = $my_ip
+<span class="pl-k">novncproxy_base_url</span> = http://controller:6080/vnc_auto.html
+
+<span class="pl-en">[glance]</span>
+<span class="pl-k">api_servers</span> = http://controller:9292
+
+<span class="pl-en">[oslo_concurrency]</span>
+<span class="pl-k">lock_path</span> = /var/lib/nova/tmp
+
+<span class="pl-en">[placement]</span>
+<span class="pl-k">region_name</span> = RegionOne
+<span class="pl-k">project_domain_name</span> = Default
+<span class="pl-k">project_name</span> = service
+<span class="pl-k">auth_type</span> = password
+<span class="pl-k">user_domain_name</span> = Default
+<span class="pl-k">auth_url</span> = http://controller:5000/v3
+<span class="pl-k">username</span> = placement
+<span class="pl-k">password</span> = PLACEMENT_PASS</pre></div>
+<h5><strong>3.2.3 重启计算服务</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 对于KVM虚拟化</span>
+sudo systemctl restart nova-compute
+sudo systemctl <span class="pl-c1">enable</span> nova-compute
+
+<span class="pl-c"><span class="pl-c">#</span> 检查计算节点是否注册到控制节点</span>
+<span class="pl-c"><span class="pl-c">#</span> 在控制节点执行：</span>
+<span class="pl-c1">source</span> /etc/kolla/admin-openrc.sh
+openstack compute service list --service nova-compute</pre></div>
+<h3><strong>4. 网络服务 (Neutron) 部署</strong></h3>
+<h4><strong>4.1 控制节点配置</strong></h4>
+<h5><strong>4.1.1 创建数据库和服务凭证</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 创建Neutron数据库</span>
+mysql -u root -p
+CREATE DATABASE neutron<span class="pl-k">;</span>
+GRANT ALL PRIVILEGES ON neutron.<span class="pl-k">*</span> TO <span class="pl-s"><span class="pl-pds">'</span>neutron<span class="pl-pds">'</span></span>@<span class="pl-s"><span class="pl-pds">'</span>localhost<span class="pl-pds">'</span></span> IDENTIFIED BY <span class="pl-s"><span class="pl-pds">'</span>NEUTRON_DBPASS<span class="pl-pds">'</span></span><span class="pl-k">;</span>
+GRANT ALL PRIVILEGES ON neutron.<span class="pl-k">*</span> TO <span class="pl-s"><span class="pl-pds">'</span>neutron<span class="pl-pds">'</span></span>@<span class="pl-s"><span class="pl-pds">'</span>%<span class="pl-pds">'</span></span> IDENTIFIED BY <span class="pl-s"><span class="pl-pds">'</span>NEUTRON_DBPASS<span class="pl-pds">'</span></span><span class="pl-k">;</span>
+FLUSH PRIVILEGES<span class="pl-k">;</span>
+<span class="pl-c1">exit</span>
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 创建服务凭证</span>
+<span class="pl-c1">source</span> /etc/kolla/admin-openrc.sh
+
+openstack user create --domain default --password-prompt neutron
+openstack role add --project service --user neutron admin
+openstack service create --name neutron --description <span class="pl-s"><span class="pl-pds">"</span>OpenStack Networking<span class="pl-pds">"</span></span> network
+
+<span class="pl-c"><span class="pl-c">#</span> 创建API端点</span>
+openstack endpoint create --region RegionOne network public http://controller:9696
+openstack endpoint create --region RegionOne network internal http://controller:9696
+openstack endpoint create --region RegionOne network admin http://controller:9696</pre></div>
+<h5><strong>4.1.2 安装 Neutron 控制组件</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y neutron-server neutron-plugin-ml2 neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent</pre></div>
+<h5><strong>4.1.3 配置 ML2 插件（核心网络插件）</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/neutron/plugins/ml2/ml2_conf.ini</pre></div>
+<p>配置：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[ml2]</span>
+<span class="pl-k">type_drivers</span> = flat,vlan,vxlan
+<span class="pl-k">tenant_network_types</span> = vxlan
+<span class="pl-k">mechanism_drivers</span> = linuxbridge,l2population
+<span class="pl-k">extension_drivers</span> = port_security
+
+<span class="pl-en">[ml2_type_flat]</span>
+<span class="pl-k">flat_networks</span> = provider
+
+<span class="pl-en">[ml2_type_vxlan]</span>
+<span class="pl-k">vni_ranges</span> = 1:1000
+
+<span class="pl-en">[securitygroup]</span>
+<span class="pl-k">enable_ipset</span> = True</pre></div>
+<h5><strong>4.1.4 配置 Neutron 服务器</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/neutron/neutron.conf</pre></div>
+<p>配置：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[DEFAULT]</span>
+<span class="pl-k">core_plugin</span> = ml2
+<span class="pl-k">service_plugins</span> =
+<span class="pl-k">transport_url</span> = rabbit://openstack:RABBIT_PASS@controller:5672/
+<span class="pl-k">auth_strategy</span> = keystone
+<span class="pl-k">notify_nova_on_port_status_changes</span> = True
+<span class="pl-k">notify_nova_on_port_data_changes</span> = True
+
+<span class="pl-en">[database]</span>
+<span class="pl-k">connection</span> = mysql+pymysql://neutron:NEUTRON_DBPASS@controller/neutron
+
+<span class="pl-en">[keystone_authtoken]</span>
+<span class="pl-k">www_authenticate_uri</span> = http://controller:5000/
+<span class="pl-k">auth_url</span> = http://controller:5000/
+<span class="pl-k">memcached_servers</span> = controller:11211
+<span class="pl-k">auth_type</span> = password
+<span class="pl-k">project_domain_name</span> = Default
+<span class="pl-k">user_domain_name</span> = Default
+<span class="pl-k">project_name</span> = service
+<span class="pl-k">username</span> = neutron
+<span class="pl-k">password</span> = NEUTRON_PASS
+
+<span class="pl-en">[nova]</span>
+<span class="pl-k">auth_url</span> = http://controller:5000/
+<span class="pl-k">auth_type</span> = password
+<span class="pl-k">project_domain_name</span> = Default
+<span class="pl-k">user_domain_name</span> = Default
+<span class="pl-k">region_name</span> = RegionOne
+<span class="pl-k">project_name</span> = service
+<span class="pl-k">username</span> = nova
+<span class="pl-k">password</span> = NOVA_PASS</pre></div>
+<h5><strong>4.1.5 配置 Linux 桥接代理</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/neutron/plugins/ml2/linuxbridge_agent.ini</pre></div>
+<p>配置：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[linux_bridge]</span>
+<span class="pl-k">physical_interface_mappings</span> = provider:ens34  <span class="pl-c"><span class="pl-c">#</span> 物理网卡替换为实际外部网络接口</span>
+
+<span class="pl-en">[vxlan]</span>
+<span class="pl-k">enable_vxlan</span> = True
+<span class="pl-k">local_ip</span> = 192.168.3.131  <span class="pl-c"><span class="pl-c">#</span> 控制节点管理IP</span>
+<span class="pl-k">l2_population</span> = True
+
+<span class="pl-en">[securitygroup]</span>
+<span class="pl-k">enable_security_group</span> = True
+<span class="pl-k">firewall_driver</span> = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver</pre></div>
+<h5><strong>4.1.6 配置 DHCP 和元数据代理</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> DHCP代理配置</span>
+sudo nano /etc/neutron/dhcp_agent.ini
+[DEFAULT]
+interface_driver = linuxbridge
+dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+enable_isolated_metadata = True
+
+<span class="pl-c"><span class="pl-c">#</span> 元数据代理配置</span>
+sudo nano /etc/neutron/metadata_agent.ini
+[DEFAULT]
+nova_metadata_host = controller
+metadata_proxy_shared_secret = METADATA_SECRET  <span class="pl-c"><span class="pl-c">#</span> 自定义密钥，需与Nova配置一致</span></pre></div>
+<h5><strong>4.1.7 同步 Neutron 数据库</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo su -s /bin/sh -c <span class="pl-s"><span class="pl-pds">"</span>neutron-db-manage --config-file /etc/neutron/neutron.conf <span class="pl-cce">\</span></span>
+<span class="pl-s">  --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head<span class="pl-pds">"</span></span> neutron</pre></div>
+<h5><strong>4.1.8 重启服务</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent
+sudo systemctl <span class="pl-c1">enable</span> neutron-server neutron-linuxbridge-agent neutron-dhcp-agent neutron-metadata-agent</pre></div>
+<h4><strong>4.2 计算节点配置</strong></h4>
+<h5><strong>4.2.1 安装 Neutron 组件</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y neutron-linuxbridge-agent</pre></div>
+<h5><strong>4.2.2 配置 Linux 桥接代理</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/neutron/plugins/ml2/linuxbridge_agent.ini</pre></div>
+<p>配置：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[linux_bridge]</span>
+<span class="pl-k">physical_interface_mappings</span> = provider:ens34  <span class="pl-c"><span class="pl-c">#</span> 计算节点外部网络接口</span>
+
+<span class="pl-en">[vxlan]</span>
+<span class="pl-k">enable_vxlan</span> = True
+<span class="pl-k">local_ip</span> = 192.168.3.132  <span class="pl-c"><span class="pl-c">#</span> 计算节点管理IP</span>
+<span class="pl-k">l2_population</span> = True
+
+<span class="pl-en">[securitygroup]</span>
+<span class="pl-k">enable_security_group</span> = True
+<span class="pl-k">firewall_driver</span> = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver</pre></div>
+<h5><strong>4.2.3 配置 Neutron 通用参数</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/neutron/neutron.conf</pre></div>
+<p>配置：</p>
+<div class="highlight highlight-source-ini"><pre class="notranslate"><span class="pl-en">[DEFAULT]</span>
+<span class="pl-k">transport_url</span> = rabbit://openstack:RABBIT_PASS@controller:5672/
+<span class="pl-k">auth_strategy</span> = keystone
+
+<span class="pl-en">[keystone_authtoken]</span>
+<span class="pl-k">www_authenticate_uri</span> = http://controller:5000/
+<span class="pl-k">auth_url</span> = http://controller:5000/
+<span class="pl-k">memcached_servers</span> = controller:11211
+<span class="pl-k">auth_type</span> = password
+<span class="pl-k">project_domain_name</span> = Default
+<span class="pl-k">user_domain_name</span> = Default
+<span class="pl-k">project_name</span> = service
+<span class="pl-k">username</span> = neutron
+<span class="pl-k">password</span> = NEUTRON_PASS</pre></div>
+<h5><strong>4.2.4 重启服务</strong></h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart neutron-linuxbridge-agent
+sudo systemctl <span class="pl-c1">enable</span> neutron-linuxbridge-agent</pre></div>
+<h3><strong>5. 仪表板 (Horizon) 部署（控制节点）</strong></h3>
+<h4><strong>5.1 安装 Horizon</strong></h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y openstack-dashboard</pre></div>
+<h4><strong>5.2 配置 Horizon</strong></h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/openstack-dashboard/local_settings.py</pre></div>
+<p>关键配置：</p>
+<p>python</p>
+<p>运行</p>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># 配置Keystone认证地址</span>
+<span class="pl-c1">OPENSTACK_HOST</span> <span class="pl-c1">=</span> <span class="pl-s">"controller"</span>
+<span class="pl-c1">OPENSTACK_KEYSTONE_URL</span> <span class="pl-c1">=</span> <span class="pl-s">"http://%s:5000/v3"</span> <span class="pl-c1">%</span> <span class="pl-c1">OPENSTACK_HOST</span>
+
+<span class="pl-c"># 配置默认域和项目</span>
+<span class="pl-c1">OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT</span> <span class="pl-c1">=</span> <span class="pl-c1">True</span>
+<span class="pl-c1">OPENSTACK_API_VERSIONS</span> <span class="pl-c1">=</span> {
+    <span class="pl-s">"identity"</span>: <span class="pl-c1">3</span>,
+    <span class="pl-s">"image"</span>: <span class="pl-c1">2</span>,
+    <span class="pl-s">"volume"</span>: <span class="pl-c1">3</span>,
+}
+<span class="pl-c1">OPENSTACK_KEYSTONE_DEFAULT_DOMAIN</span> <span class="pl-c1">=</span> <span class="pl-s">"Default"</span>
+<span class="pl-c1">OPENSTACK_KEYSTONE_DEFAULT_PROJECT</span> <span class="pl-c1">=</span> <span class="pl-s">"admin"</span>
+
+<span class="pl-c"># 配置允许的主机</span>
+<span class="pl-c1">ALLOWED_HOSTS</span> <span class="pl-c1">=</span> [<span class="pl-s">'*'</span>]  <span class="pl-c"># 生产环境需指定具体IP</span>
+
+<span class="pl-c"># 启用自助服务网络</span>
+<span class="pl-c1">OPENSTACK_NEUTRON_NETWORK</span> <span class="pl-c1">=</span> {
+    <span class="pl-s">'enable_router'</span>: <span class="pl-c1">True</span>,
+    <span class="pl-s">'enable_quotas'</span>: <span class="pl-c1">True</span>,
+    <span class="pl-s">'enable_distributed_router'</span>: <span class="pl-c1">False</span>,
+    <span class="pl-s">'enable_ha_router'</span>: <span class="pl-c1">False</span>,
+    <span class="pl-s">'enable_lb'</span>: <span class="pl-c1">False</span>,
+    <span class="pl-s">'enable_firewall'</span>: <span class="pl-c1">False</span>,
+    <span class="pl-s">'enable_vpn'</span>: <span class="pl-c1">False</span>,
+    <span class="pl-s">'enable_fip_topology_check'</span>: <span class="pl-c1">True</span>,
+}
+
+<span class="pl-c"># 配置会话存储</span>
+<span class="pl-c1">SESSION_ENGINE</span> <span class="pl-c1">=</span> <span class="pl-s">'django.contrib.sessions.backends.cache'</span>
+<span class="pl-c1">CACHES</span> <span class="pl-c1">=</span> {
+    <span class="pl-s">'default'</span>: {
+        <span class="pl-s">'BACKEND'</span>: <span class="pl-s">'django.core.cache.backends.memcached.MemcachedCache'</span>,
+        <span class="pl-s">'LOCATION'</span>: <span class="pl-s">'controller:11211'</span>,
+    }
+}</pre></div>
+<h4><strong>5.3 重启 Apache 服务</strong></h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart apache2</pre></div>
+<h4><strong>5.4 访问 Horizon 仪表板</strong></h4>
+<p>通过浏览器访问：<code class="notranslate">http://控制节点IP/horizon</code></p>
+<p>使用<code class="notranslate">admin</code>用户和对应密码登录（从<code class="notranslate">/etc/kolla/passwords.yml</code>获取）。</p>
+<h3>验证部署</h3>
+<p>所有服务部署完成后，在控制节点执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">source</span> /etc/kolla/admin-openrc.sh
+openstack service list  <span class="pl-c"><span class="pl-c">#</span> 查看所有服务状态</span>
+openstack compute service list  <span class="pl-c"><span class="pl-c">#</span> 查看计算服务</span>
+openstack network agent list  <span class="pl-c"><span class="pl-c">#</span> 查看网络代理</span></pre></div>
+<p>若所有服务状态为<code class="notranslate">up</code>，则部署成功。</p>
+<h3>七、验证安装</h3>
+<ol>
+<li>
+<p>下载一个测试镜像：</p>
+<ol>
+<li><code class="notranslate">wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img</code></li>
+<li><code class="notranslate">openstack image create "cirros" --file cirros-0.4.0-x86_64-disk.img --disk-format qcow2 --container-format bare --public</code></li>
+</ol>
+</li>
+<li>
+<p>创建网络、子网和路由</p>
+</li>
+<li>
+<p>启动一个实例进行测试</p>
+</li>
+</ol>
+<h1>方法二：All in one</h1>
+<h2>一.环境准备</h2>
+<p>本文以VMWare中创建的虚拟机为例</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">硬件</th>
+<th align="center">规格</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">网卡1</td>
+<td align="center"></td>
+<td align="center">已分配内网IP,以ens33为例</td>
+</tr>
+<tr>
+<td align="center">网卡2</td>
+<td align="center"></td>
+<td align="center">不需要分配IP,以ens37为例</td>
+</tr>
+<tr>
+<td align="center">系统盘</td>
+<td align="center">60G+</td>
+<td align="center">用于安装系统及挂载存储</td>
+</tr>
+<tr>
+<td align="center">数据盘</td>
+<td align="center">100G+</td>
+<td align="center">初始不需要分区,后续操作用</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>二.开启ROOT远程登录</h2>
+<ol>
+<li>使用现有账号登录设置root密码：</li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo passwd root</pre></div>
+<ol>
+<li>修改sshd配置开启远程登录：</li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sed -i <span class="pl-s"><span class="pl-pds">'</span>/PermitRootLogin/d<span class="pl-pds">'</span></span> /etc/ssh/sshd_config
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>PermitRootLogin yes<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /etc/ssh/sshd_config
+systemctl restart sshd</pre></div>
+<h2>三.常用工具</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center">工具名称</th>
+<th align="center">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">gparted</td>
+<td align="center">带图形化界面的分区工具</td>
+</tr>
+<tr>
+<td align="center">fdisk</td>
+<td align="center">命令行分区管理工具</td>
+</tr>
+<tr>
+<td align="center">net-tools</td>
+<td align="center">网络工具(使用ifconfig需要安装此包)</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>四.安装OpenStack</h2>
+<dl> 注：本次安装基于OpenStack官方文档，并且对遇到的安装问题进行补充。 <dd><a href="https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html" rel="nofollow">点击此处查看官方文档</a></dd></dl>
+<h3>1.基础工具安装</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装python工具等</span>
+apt install git python3-dev libffi-dev gcc libssl-dev -y</pre></div>
+<h3>2.安装并创建虚拟环境</h3>
+<p>虚拟环境路径可自定义，本文以"/opt/openstack/venv"为例。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装虚拟环境包</span>
+apt install python3-venv -y
+<span class="pl-c"><span class="pl-c">#</span> 创建虚拟环境</span>
+python3 -m venv /opt/openstack/venv</pre></div>
+<h3>3.进入虚拟环境</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">source</span> /opt/openstack/venv/bin/activate</pre></div>
+<p>注：后续操作都在虚拟环境下进行，如果要退出虚拟环境请使用一下命令``</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">deactivate</pre></div>
+<h3>4.升级pip并配置国内源</h3>
+<p>本地安装建议使用清华源，比阿里的源速度快N倍。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> pip3临时使用清华源更新pip</span>
+pip3 install -U pip -i https://pypi.tuna.tsinghua.edu.cn/simple
+<span class="pl-c"><span class="pl-c">#</span> pip设置清华源</span>
+pip config <span class="pl-c1">set</span> global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</pre></div>
+<h3>5.安装ansible</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install <span class="pl-s"><span class="pl-pds">'</span>ansible&gt;=4,&lt;6<span class="pl-pds">'</span></span></pre></div>
+<h3>6.安装对应openstack版本的kolla-ansible</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install git+https://opendev.org/openstack/kolla-ansible@stable/zed</pre></div>
+<h3>7.创建配置文件目录并附加权限</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/kolla
+sudo chown <span class="pl-smi">$USER</span>:<span class="pl-smi">$USER</span> /etc/kolla</pre></div>
+<h3>8.复制配置文件</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 复制配置文件到配置文件目录</span>
+cp -r /opt/openstack/venv/share/kolla-ansible/etc_examples/kolla/<span class="pl-k">*</span> /etc/kolla</pre></div>
+<h3>9.复制依赖文件到当前目录</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cp /opt/openstack/venv/share/kolla-ansible/ansible/inventory/all-in-one <span class="pl-c1">.</span></pre></div>
+<h3>10.安装ansible依赖</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kolla-ansible install-deps</pre></div>
+<h3>11.生成密码到/etc/kolla/passwords.yml文件中</h3>
+<p>注：要配置的密码有很多，可以手动编辑文件进行配置，也可以执行下面命令自动生成。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"> kolla-genpwd</pre></div>
+<h3>12.修改/etc/kolla/passwords.yml中登录密码</h3>
+<p>找到文件中key控制台登录密码的key：keystone_admin_password<br>
+或者直接使用命令替换</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sed -i <span class="pl-s"><span class="pl-pds">'</span>s/^keystone_admin_password.*/keystone_admin_password: 自定义密码/<span class="pl-pds">'</span></span> /etc/kolla/passwords.yml</pre></div>
+<h3>13.修改/etc/kolla/globals.yml文件,配置并开启服务</h3>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 基础配置:</span>
+<span class="pl-ent">kolla_base_distro</span>:          <span class="pl-s">系统配置，修改为ubuntu即可</span>
+<span class="pl-ent">openstack_release</span>:          <span class="pl-s">openstack版本，本文使用的zed</span>
+<span class="pl-ent">kolla_internal_vip_address</span>: <span class="pl-s">用来访问web控制台,</span>
+							<span class="pl-s">如果enable_haproxy为no则配置一个单独的IP,</span>
+							<span class="pl-s">否则使用network_interface网卡分配的IP</span>
+<span class="pl-ent">network_interface</span>:          <span class="pl-s">内部网卡名称，本文是ens33</span>
+<span class="pl-ent">neutron_external_interface</span>: <span class="pl-s">外部网卡名称，本文是ens37</span>
+<span class="pl-c"><span class="pl-c">#</span> 服务组件配置:</span>
+<span class="pl-ent">enable_haproxy</span>: <span class="pl-s"><span class="pl-pds">"</span>no<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span>高可用，如果为yes则kolla_internal_vip_address可以使用独立IP</span>
+<span class="pl-ent">enable_cinder</span>: <span class="pl-s"><span class="pl-pds">"</span>yes<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span>块存储</span>
+<span class="pl-ent">enable_cinder_backup</span>: <span class="pl-s"><span class="pl-pds">"</span>no<span class="pl-pds">"</span></span>
+<span class="pl-ent">enable_cinder_backend_lvm</span>: <span class="pl-s"><span class="pl-pds">"</span>yes<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span>使用逻辑存储</span>
+<span class="pl-ent">enable_neutron_provider_networks</span>: <span class="pl-s"><span class="pl-pds">"</span>yes<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span> 启用外部网络</span>
+<span class="pl-ent">nova_compute_virt_type</span>: <span class="pl-s"><span class="pl-pds">"</span>qemu<span class="pl-pds">"</span></span> <span class="pl-c"><span class="pl-c">#</span> 虚拟化类型(物理机用kvm,VMWare使用qemu)</span>
+<span class="pl-ent">nova_console</span>: <span class="pl-s"><span class="pl-pds">"</span>spice<span class="pl-pds">"</span></span></pre></div>
+<h3>14.cinder存储配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> a.查看存储节点的盘:</span>
+ansible -i all-in-one <span class="pl-s"><span class="pl-pds">"</span>storage*<span class="pl-pds">"</span></span> -a <span class="pl-s"><span class="pl-pds">"</span>lsblk<span class="pl-pds">"</span></span>
+<span class="pl-c"><span class="pl-c">#</span> b.格式化并且创建分区组</span>
+mkfs.ext4   /dev/sdb
+pvcreate    /dev/sdb
+vgcreate  cinder-volumes  /dev/sdb</pre></div>
+<h3>15.预配置</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 基础环境安装，比如docker等</span>
+kolla-ansible -i ./all-in-one bootstrap-servers</pre></div>
+<h3>16.环境检测</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kolla-ansible -i ./all-in-one prechecks</pre></div>
+<p>注意：如果检测在CheckingdockerSDK报错找不到docker模块的话，修改all-in-one文件内容如下。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">[deployment]
+localhost       ansible_connection=local  ansible_python_interpreter=<span class="pl-s"><span class="pl-pds">"</span>{{ ansible_playbook_python }}<span class="pl-pds">"</span></span></pre></div>
+<h3>17.开始部署</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kolla-ansible -i ./all-in-one deploy</pre></div>
+<h3>18.安装客户端</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pip install python-openstackclient -c https://releases.openstack.org/constraints/upper/master</pre></div>
+<h3>19.生成clouds.yaml文件</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kolla-ansible post-deploy</pre></div>
+<h3>20.访问web管理页面</h3>
+<p><a href="http://xn--kolla_internal_vip_addressip-ti92e887ie1zg/" rel="nofollow">http://kolla_internal_vip_address配置的ip/</a><br>
+用户名：admin<br>
+密码：/etc/kolla/passwords.yml中keystone_admin_password的密码</p>
+<h2>附</h2>
+<h3>一.修改web管理页面端口</h3>
+<h4>1.修改horizon端口并重启服务</h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /etc/kolla/horizon
+
+vim horizon.conf
+<span class="pl-c"><span class="pl-c">#</span> 修改内容如下</span>
+Listen ip:80 =<span class="pl-k">&gt;</span> Listen ip:想要使用的端口
+<span class="pl-k">&lt;</span>VirtualHost ip:<span class="pl-k">80&gt;</span> =<span class="pl-k">&gt;</span> <span class="pl-k">&lt;</span>VirtualHost ip:想要使用的端口<span class="pl-k">&gt;</span>
+<span class="pl-c"><span class="pl-c">#</span> 修改完后保存horizon.conf文件</span>
+
+vim local_settings
+<span class="pl-c"><span class="pl-c">#</span> 搜索80</span>
+/80
+<span class="pl-c"><span class="pl-c">#</span> 会看到如下节点</span>
+<span class="pl-s"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>: {
+        <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>HTTP<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>ip_protocol<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>tcp<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>from_port<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>80<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>to_port<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>80<span class="pl-pds">'</span></span>,
+    },
+<span class="pl-c"><span class="pl-c">#</span> 修改from_port和to_port为想要使用的端口</span>
+<span class="pl-s"><span class="pl-pds">'</span>http<span class="pl-pds">'</span></span>: {
+        <span class="pl-s"><span class="pl-pds">'</span>name<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>HTTP<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>ip_protocol<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>tcp<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>from_port<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>想要使用的端口<span class="pl-pds">'</span></span>,
+        <span class="pl-s"><span class="pl-pds">'</span>to_port<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>想要使用的端口<span class="pl-pds">'</span></span>,
+    },
+<span class="pl-c"><span class="pl-c">#</span> 修改完保存local_settings文件</span>
+
+<span class="pl-c"><span class="pl-c">#</span> docker重启horizon服务</span>
+docker stop  horizon
+docker start horizon</pre></div>
+<h4>2.修改haproxy代理的horizon端口并重启服务</h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /etc/kolla/haproxy/services.d/
+
+vim horizon.cfg
+<span class="pl-c"><span class="pl-c">#</span> 修改horizon_front和horizon_back中的80为想要使用的端口</span>
+
+<span class="pl-c"><span class="pl-c">#</span> docker重启haproxy服务</span>
+docker stop  haproxy
+docker start haproxy
+
+</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
