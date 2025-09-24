@@ -134,7 +134,7 @@ sudo apt install -f
 
    在`[database]`部分：
 
-   1. `connection = mysql+pymysql://keystone:KEYSTONE_DBPASS[@controller](https://github.com/controller "@controller")/keystone`
+   1. `connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@controller/keystone`
 
    在`[token]`部分：
 
