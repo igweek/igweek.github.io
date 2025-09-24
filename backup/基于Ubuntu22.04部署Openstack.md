@@ -1,5 +1,5 @@
-
-> [!note]![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
+> [!note]
+![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
 > *   **操作系统**: Ubuntu 22.04 LTS
 ---
 
