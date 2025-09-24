@@ -181,6 +181,8 @@ sudo apt install -f
    5. `openstack role create user`
    6. `openstack role add --project demo --user demo user`
 
+输入demo用户密码（用于界面登陆、测试）
+
 #### 2. 镜像服务(Glance) - 控制节点
 
 1. 创建数据库：
@@ -199,6 +201,9 @@ sudo apt install -f
    4. `openstack endpoint create --region RegionOne image public http://controller:9292`
    5. `openstack endpoint create --region RegionOne image internal http://controller:9292`
    6. `openstack endpoint create --region RegionOne image admin http://controller:9292`
+
+输入密码`GLANCE_PASS`
+
 3. 安装Glance：
 
    1. `sudo apt install -y glance`
@@ -210,7 +215,6 @@ sudo apt install -f
 
 ```ini
 [database]
-# 数据库连接字符串
 connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
 ```
 
@@ -224,25 +228,21 @@ connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
 
 ```ini
 [keystone_authtoken]
-# Keystone认证服务地址
 www_authenticate_uri = http://controller:5000
 auth_url = http://controller:5000
 memcached_servers = controller:11211
-# 认证类型
 auth_type = password
-# 服务项目和用户信息（对应之前创建的服务凭证）
 project_domain_name = Default
 user_domain_name = Default
 project_name = service
 username = glance
-password = GLANCE_PASS  # 替换为创建glance用户时设置的密码
+password = GLANCE_PASS
 ```
 
 #### （2）`[paste_deploy]`部分
 
 ```ini
 [paste_deploy]
-# 启用Keystone认证模式
 flavor = keystone
 ```
 
@@ -252,11 +252,8 @@ flavor = keystone
 
 ```ini
 [glance_store]
-# 支持的存储类型
 stores = file,http
-# 默认存储类型
 default_store = file
-# 本地存储路径（确保glance用户有读写权限）
 filesystem_store_datadir = /var/lib/glance/images/
 ```
 
@@ -295,8 +292,14 @@ source /etc/kolla/admin-openrc.sh
 # 创建nova用户
 openstack user create --domain default --password-prompt nova
 
+输入密码`NOVA_PASS`
+
 # 为nova用户添加admin角色
 openstack role add --project service --user nova admin
+
+# 添加PLACEMENT用户
+openstack user create --domain default --password PLACEMENT_PASS placement
+openstack role add --project service --user placement admin
 
 # 创建nova服务
 openstack service create --name nova --description "OpenStack Compute" compute
@@ -322,12 +325,9 @@ sudo nano /etc/nova/nova.conf
 
 ```ini
 [DEFAULT]
-# 启用计算API和元数据API
 enabled_apis = osapi_compute,metadata
-# 配置RabbitMQ消息队列
 transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
-# 配置控制节点主机名
-my_ip = 192.168.3.131  # 控制节点IP
+my_ip = 192.168.100.10
 use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 
@@ -346,7 +346,7 @@ project_domain_name = Default
 user_domain_name = Default
 project_name = service
 username = nova
-password = NOVA_PASS  # nova用户的密码
+password = NOVA_PASS
 
 [vnc]
 enabled = True
@@ -367,7 +367,20 @@ auth_type = password
 user_domain_name = Default
 auth_url = http://controller:5000/v3
 username = placement
-password = PLACEMENT_PASS  # placement用户的密码（需提前创建）
+password = PLACEMENT_PASS
+
+[neutron]
+url = http://controller:9696
+auth_url = http://controller:5000
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+region_name = RegionOne
+project_name = service
+username = neutron
+password = NEUTRON_PASS
+service_metadata_proxy = True
+metadata_proxy_shared_secret = METADATA_SECRET
 ```
 ##### **3.1.4 同步数据库并初始化 cell**
 
@@ -420,7 +433,7 @@ sudo nano /etc/nova/nova.conf
 [DEFAULT]
 enabled_apis = osapi_compute,metadata
 transport_url = rabbit://openstack:RABBIT_PASS@controller:5672/
-my_ip = 192.168.3.132  # 计算节点IP
+my_ip = 192.168.100.20  # 计算节点IP
 use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 
@@ -456,6 +469,10 @@ user_domain_name = Default
 auth_url = http://controller:5000/v3
 username = placement
 password = PLACEMENT_PASS
+
+[neutron]
+service_metadata_proxy = True
+metadata_proxy_shared_secret = METADATA_SECRET
 ```
 ##### **3.2.3 重启计算服务**
 
@@ -490,6 +507,7 @@ exit
 source /etc/kolla/admin-openrc.sh
 
 openstack user create --domain default --password-prompt neutron
+输入密码`NEUTRON_PASS`
 openstack role add --project service --user neutron admin
 openstack service create --name neutron --description "OpenStack Networking" network
 
@@ -586,7 +604,7 @@ physical_interface_mappings = provider:ens34  # 物理网卡替换为实际外�
 
 [vxlan]
 enable_vxlan = True
-local_ip = 192.168.3.131  # 控制节点管理IP
+local_ip = 192.168.100.10  # 控制节点管理IP
 l2_population = True
 
 [securitygroup]
@@ -647,7 +665,7 @@ physical_interface_mappings = provider:ens34  # 计算节点外部网络接口
 
 [vxlan]
 enable_vxlan = True
-local_ip = 192.168.3.132  # 计算节点管理IP
+local_ip = 192.168.100.20  # 计算节点管理IP
 l2_population = True
 
 [securitygroup]
@@ -784,271 +802,5 @@ openstack network agent list  # 查看网络代理
 
 
 
-
-
-# 方法二：All in one
-## 一.环境准备
-
-本文以VMWare中创建的虚拟机为例
-
-
-|  硬件  | 规格 |           备注           |
-| :----: | :---: | :-----------------------: |
-| 网卡1 |      | 已分配内网IP,以ens33为例 |
-| 网卡2 |      | 不需要分配IP,以ens37为例 |
-| 系统盘 | 60G+ |  用于安装系统及挂载存储  |
-| 数据盘 | 100G+ | 初始不需要分区,后续操作用 |
-
-## 二.开启ROOT远程登录
-
-1. 使用现有账号登录设置root密码：
-
-```bash
-sudo passwd root
-```
-
-1. 修改sshd配置开启远程登录：
-
-```bash
-sed -i '/PermitRootLogin/d' /etc/ssh/sshd_config
-echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-systemctl restart sshd
-```
-
-## 三.常用工具
-
-
-| 工具名称 |                用途                |
-| :-------: | :--------------------------------: |
-|  gparted  |       带图形化界面的分区工具       |
-|   fdisk   |         命令行分区管理工具         |
-| net-tools | 网络工具(使用ifconfig需要安装此包) |
-
-## 四.安装OpenStack
-
-<dl> 注：本次安装基于OpenStack官方文档，并且对遇到的安装问题进行补充。 <dd><a href="https://docs.openstack.org/kolla-ansible/latest/user/quickstart.html" rel="nofollow">点击此处查看官方文档</a></dd></dl>
-
-### 1.基础工具安装
-
-```bash
-# 安装python工具等
-apt install git python3-dev libffi-dev gcc libssl-dev -y
-```
-
-### 2.安装并创建虚拟环境
-
-虚拟环境路径可自定义，本文以"/opt/openstack/venv"为例。
-
-```bash
-# 安装虚拟环境包
-apt install python3-venv -y
-# 创建虚拟环境
-python3 -m venv /opt/openstack/venv
-```
-
-### 3.进入虚拟环境
-
-```bash
-source /opt/openstack/venv/bin/activate
-```
-
-注：后续操作都在虚拟环境下进行，如果要退出虚拟环境请使用一下命令``
-
-```bash
-deactivate
-```
-
-### 4.升级pip并配置国内源
-
-本地安装建议使用清华源，比阿里的源速度快N倍。
-
-```bash
-# pip3临时使用清华源更新pip
-pip3 install -U pip -i https://pypi.tuna.tsinghua.edu.cn/simple
-# pip设置清华源
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-```
-
-### 5.安装ansible
-
-```bash
-pip install 'ansible>=4,<6'
-```
-
-### 6.安装对应openstack版本的kolla-ansible
-
-```bash
-pip install git+https://opendev.org/openstack/kolla-ansible@stable/zed
-```
-
-### 7.创建配置文件目录并附加权限
-
-```bash
-sudo mkdir -p /etc/kolla
-sudo chown $USER:$USER /etc/kolla
-```
-
-### 8.复制配置文件
-
-```bash
-# 复制配置文件到配置文件目录
-cp -r /opt/openstack/venv/share/kolla-ansible/etc_examples/kolla/* /etc/kolla
-```
-
-### 9.复制依赖文件到当前目录
-
-```bash
-cp /opt/openstack/venv/share/kolla-ansible/ansible/inventory/all-in-one .
-```
-
-### 10.安装ansible依赖
-
-```bash
-kolla-ansible install-deps
-```
-
-### 11.生成密码到/etc/kolla/passwords.yml文件中
-
-注：要配置的密码有很多，可以手动编辑文件进行配置，也可以执行下面命令自动生成。
-
-```bash
- kolla-genpwd
-```
-
-### 12.修改/etc/kolla/passwords.yml中登录密码
-
-找到文件中key控制台登录密码的key：keystone_admin_password
-或者直接使用命令替换
-
-```bash
-sed -i 's/^keystone_admin_password.*/keystone_admin_password: 自定义密码/' /etc/kolla/passwords.yml
-```
-
-### 13.修改/etc/kolla/globals.yml文件,配置并开启服务
-
-```yaml
-# 基础配置:
-kolla_base_distro:          系统配置，修改为ubuntu即可
-openstack_release:          openstack版本，本文使用的zed
-kolla_internal_vip_address: 用来访问web控制台,
-							如果enable_haproxy为no则配置一个单独的IP,
-							否则使用network_interface网卡分配的IP
-network_interface:          内部网卡名称，本文是ens33
-neutron_external_interface: 外部网卡名称，本文是ens37
-# 服务组件配置:
-enable_haproxy: "no" #高可用，如果为yes则kolla_internal_vip_address可以使用独立IP
-enable_cinder: "yes" #块存储
-enable_cinder_backup: "no"
-enable_cinder_backend_lvm: "yes" #使用逻辑存储
-enable_neutron_provider_networks: "yes" # 启用外部网络
-nova_compute_virt_type: "qemu" # 虚拟化类型(物理机用kvm,VMWare使用qemu)
-nova_console: "spice"
-```
-
-### 14.cinder存储配置
-
-```bash
-# a.查看存储节点的盘:
-ansible -i all-in-one "storage*" -a "lsblk"
-# b.格式化并且创建分区组
-mkfs.ext4   /dev/sdb
-pvcreate    /dev/sdb
-vgcreate  cinder-volumes  /dev/sdb
-```
-
-### 15.预配置
-
-```bash
-# 基础环境安装，比如docker等
-kolla-ansible -i ./all-in-one bootstrap-servers
-```
-
-### 16.环境检测
-
-```bash
-kolla-ansible -i ./all-in-one prechecks
-```
-
-注意：如果检测在CheckingdockerSDK报错找不到docker模块的话，修改all-in-one文件内容如下。
-
-```bash
-[deployment]
-localhost       ansible_connection=local  ansible_python_interpreter="{{ ansible_playbook_python }}"
-```
-
-### 17.开始部署
-
-```bash
-kolla-ansible -i ./all-in-one deploy
-```
-
-### 18.安装客户端
-
-```bash
-pip install python-openstackclient -c https://releases.openstack.org/constraints/upper/master
-```
-
-### 19.生成clouds.yaml文件
-
-```bash
-kolla-ansible post-deploy
-```
-
-### 20.访问web管理页面
-
-[http://kolla_internal_vip_address配置的ip/](http://xn--kolla_internal_vip_addressip-ti92e887ie1zg/)
-用户名：admin
-密码：/etc/kolla/passwords.yml中keystone_admin_password的密码
-
-## 附
-
-### 一.修改web管理页面端口
-
-#### 1.修改horizon端口并重启服务
-
-```bash
-cd /etc/kolla/horizon
-
-vim horizon.conf
-# 修改内容如下
-Listen ip:80 => Listen ip:想要使用的端口
-<VirtualHost ip:80> => <VirtualHost ip:想要使用的端口>
-# 修改完后保存horizon.conf文件
-
-vim local_settings
-# 搜索80
-/80
-# 会看到如下节点
-'http': {
-        'name': 'HTTP',
-        'ip_protocol': 'tcp',
-        'from_port': '80',
-        'to_port': '80',
-    },
-# 修改from_port和to_port为想要使用的端口
-'http': {
-        'name': 'HTTP',
-        'ip_protocol': 'tcp',
-        'from_port': '想要使用的端口',
-        'to_port': '想要使用的端口',
-    },
-# 修改完保存local_settings文件
-
-# docker重启horizon服务
-docker stop  horizon
-docker start horizon
-```
-
-#### 2.修改haproxy代理的horizon端口并重启服务
-
-```bash
-cd /etc/kolla/haproxy/services.d/
-
-vim horizon.cfg
-# 修改horizon_front和horizon_back中的80为想要使用的端口
-
-# docker重启haproxy服务
-docker stop  haproxy
-docker start haproxy
 
 
