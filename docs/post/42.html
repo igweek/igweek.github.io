@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script><script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="## Windows
+### 直接扩大 ECS 原有数据盘
+1. 阿里云管理控制台，点击右侧的云盘，进入磁盘列表页面。">
+<meta property="og:title" content="阿里云ECS的存储扩容">
+<meta property="og:description" content="## Windows
+### 直接扩大 ECS 原有数据盘
+1. 阿里云管理控制台，点击右侧的云盘，进入磁盘列表页面。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.017121.xyz/post/42.html">
+<meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
+<title>阿里云ECS的存储扩容</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">阿里云ECS的存储扩容</h1>
+<div class="title-right">
+    <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/42" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>Windows</h2>
+<h3>直接扩大 ECS 原有数据盘</h3>
+<ol>
+<li>阿里云管理控制台，点击右侧的云盘，进入磁盘列表页面。</li>
+<li>点击数据盘右侧的更多，在弹出的列表中，点击磁盘扩容<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e0f56c59fdf2bcc2cdec4ef2196f364ebab34b0b7d0c33a763b13f40e977064f/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534313532372e706e67"><img src="https://camo.githubusercontent.com/e0f56c59fdf2bcc2cdec4ef2196f364ebab34b0b7d0c33a763b13f40e977064f/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534313532372e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171541527.png" style="max-width: 100%;"></a></li>
+<li>在弹出的对话框中，设置扩容后容量为100G 。完成后，点击 确定扩容 。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b2bb792c850f242b4be9546a2331700a66b648f4f2043c71bf434e6e948f1a60/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534323837332e706e67"><img src="https://camo.githubusercontent.com/b2bb792c850f242b4be9546a2331700a66b648f4f2043c71bf434e6e948f1a60/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534323837332e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171542873.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/9a5876efe807909f7a943b81cbe9fd2ba953f286cc78ccee8fcb4d954bed35c0/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534333534362e706e67"><img src="https://camo.githubusercontent.com/9a5876efe807909f7a943b81cbe9fd2ba953f286cc78ccee8fcb4d954bed35c0/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534333534362e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171543546.png" style="max-width: 100%;"></a><br>
+弹出扩容成功，点击返回云盘列表。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/7c5e63f9e4c294db2d8f93a35a24fc48d128b6af5b46e0324250cc4d4a914a51/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534343130342e706e67"><img src="https://camo.githubusercontent.com/7c5e63f9e4c294db2d8f93a35a24fc48d128b6af5b46e0324250cc4d4a914a51/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534343130342e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171544104.png" style="max-width: 100%;"></a></li>
+<li>重启实例后，扩容才会生效<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ccad30083b362474ee71c2cc746f4d879e12d6685820f832f9db6a1eab25a2a9/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534353537342e706e67"><img src="https://camo.githubusercontent.com/ccad30083b362474ee71c2cc746f4d879e12d6685820f832f9db6a1eab25a2a9/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534353537342e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171545574.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/be2c45d18517c29917b17246b54affdfa2b446771c1818af2f25bbfe430681f2/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534353032372e706e67"><img src="https://camo.githubusercontent.com/be2c45d18517c29917b17246b54affdfa2b446771c1818af2f25bbfe430681f2/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534353032372e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171545027.png" style="max-width: 100%;"></a></li>
+<li>扩容生效之后的磁盘，需要用户手动格式化扩展的存储空间。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3f399516503891bcc8e763764d09a793f8e3f689a642b66f2ff854898d5b9fe8/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363538322e706e67"><img src="https://camo.githubusercontent.com/3f399516503891bcc8e763764d09a793f8e3f689a642b66f2ff854898d5b9fe8/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363538322e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171546582.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/94efb6681ccd4890c1100bf25333dcb2f0b7bf4b07094d41cae489bd20bf50fc/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363139322e706e67"><img src="https://camo.githubusercontent.com/94efb6681ccd4890c1100bf25333dcb2f0b7bf4b07094d41cae489bd20bf50fc/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363139322e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171546192.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/8fa71370d0a22ec40a7aa48fb7e38a3e400d62766ade3df93883493aa508c005/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363831352e706e67"><img src="https://camo.githubusercontent.com/8fa71370d0a22ec40a7aa48fb7e38a3e400d62766ade3df93883493aa508c005/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363831352e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171546815.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a25f4a8989bea8f8fc2701d829ba0483b21a755f56b22a7f77eff8c3a11fb254/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363436382e706e67"><img src="https://camo.githubusercontent.com/a25f4a8989bea8f8fc2701d829ba0483b21a755f56b22a7f77eff8c3a11fb254/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363436382e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171546468.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/65bbe5242f10b8bf2687af63c8a5f795a51a08100831b32cdc3504e529162c67/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363038322e706e67"><img src="https://camo.githubusercontent.com/65bbe5242f10b8bf2687af63c8a5f795a51a08100831b32cdc3504e529162c67/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363038322e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171546082.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f9e7ca00bb7f6ca1df58c9867eec5d7b44972cd0621e2f646acdbbbae9c79920/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363739392e706e67"><img src="https://camo.githubusercontent.com/f9e7ca00bb7f6ca1df58c9867eec5d7b44972cd0621e2f646acdbbbae9c79920/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534363739392e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171546799.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/27cbf4acf366c6a1ce8ec6f42fa498f9d33f0193275e56b518d239cda037b43c/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534373437342e706e67"><img src="https://camo.githubusercontent.com/27cbf4acf366c6a1ce8ec6f42fa498f9d33f0193275e56b518d239cda037b43c/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534373437342e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171547474.png" style="max-width: 100%;"></a></li>
+<li>扩容成功</li>
+</ol>
+<h3>为 ECS 新增加一块数据盘</h3>
+<p>除了直接对已有磁盘进行磁盘扩容处理外，用户还可以通过新购一块云盘的方式，实现扩容云服务器ECS 的存储空间。<br>
+1. 通过如下步骤，新购一块数据盘。</p>
+<p>1） 返回阿里云ECS 管理控制台，并在左侧栏中，点击云盘 。</p>
+<p>2） 在右侧磁盘列表主页面中，选择实验提供的 地域 。此时，用户可以查看到当前有两块 使用中  的磁盘：20G 数据盘和 40G 系统盘。记录现有磁盘所在  可用区 ，例如：华东 1 可用区 E。</p>
+<p>3） 点击右上角的创建云盘  。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6a154cbc8c7130222ce4752cb6c1f02849b5353157d114baf42feda5580ff1e8/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534383134392e706e67"><img src="https://camo.githubusercontent.com/6a154cbc8c7130222ce4752cb6c1f02849b5353157d114baf42feda5580ff1e8/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313534383134392e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171548149.png" style="max-width: 100%;"></a><br>
+跳转到云盘购买页面，地域与实验提供的磁盘所在可用区一致。</p>
+<ol start="2">
+<li>购买磁盘<br>
+进入ECS 的云盘页面，用户可以查看到一块新增 待挂载 20G 的高效云盘。点击新购云盘右侧的更多和挂载<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/573a7c0f2d429d169ea9bb5697b289a80b7fc3b60228ac530b0e9d8ca90dac88/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535303334312e706e67"><img src="https://camo.githubusercontent.com/573a7c0f2d429d169ea9bb5697b289a80b7fc3b60228ac530b0e9d8ca90dac88/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535303334312e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171550341.png" style="max-width: 100%;"></a><br>
+注意：若目标实例中无任何实例，请检查新购云盘是否与ECS在相同可用区。只有在同一可用区的云盘，才能挂载到ECS实例上。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ee30ae62ca023be26142cbc7bcc7ba9502613aad827595a5fbdc364ada09fd44/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535313032342e706e67"><img src="https://camo.githubusercontent.com/ee30ae62ca023be26142cbc7bcc7ba9502613aad827595a5fbdc364ada09fd44/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535313032342e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171551024.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f2816e2296132ff0d1a4f623dff7022496235f26d93b423ce0db4042021ea922/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535313730342e706e67"><img src="https://camo.githubusercontent.com/f2816e2296132ff0d1a4f623dff7022496235f26d93b423ce0db4042021ea922/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535313730342e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171551704.png" style="max-width: 100%;"></a></li>
+<li>新挂载到ECS实例的数据盘无法直接使用，需要进行格式化。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e9e3020d2fe144040226fdbf84fe4e4e5aac2b30f662de2b0eb8fe39dfef6aab/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535323033372e706e67"><img src="https://camo.githubusercontent.com/e9e3020d2fe144040226fdbf84fe4e4e5aac2b30f662de2b0eb8fe39dfef6aab/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535323033372e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171552037.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/47a640b48426cfa3ef069c91ff95fc94ef895d6e02d0f55d3ad668391574a9b3/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535323434322e706e67"><img src="https://camo.githubusercontent.com/47a640b48426cfa3ef069c91ff95fc94ef895d6e02d0f55d3ad668391574a9b3/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535323434322e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171552442.png" style="max-width: 100%;"></a><br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/309b45a04bc88ac4986846934d1a93713d22f318f2965fed90d468ccf3f322e3/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535333930312e706e67"><img src="https://camo.githubusercontent.com/309b45a04bc88ac4986846934d1a93713d22f318f2965fed90d468ccf3f322e3/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313535333930312e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171553901.png" style="max-width: 100%;"></a></li>
+</ol>
+<h2>Linux (以Ubuntu为例)</h2>
+<h3>1. 确认数据盘设备名称</h3>
+<ul>
+<li>
+<p><strong>操作</strong>：使用以下命令查看所有磁盘及分区信息：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lsblk</pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d48a682568eef773a133ee59f4d8ab1e85bef176faa3e5cd365b6bfcd36811c1/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313632313738342e706e67"><img src="https://camo.githubusercontent.com/d48a682568eef773a133ee59f4d8ab1e85bef176faa3e5cd365b6bfcd36811c1/68747470733a2f2f696d672e636363622e72722e6e752f706174682f3230323530333137313632313738342e706e67" alt="image.png" data-canonical-src="https://img.cccb.rr.nu/path/202503171621784.png" style="max-width: 100%;"></a></p>
+</li>
+</ul>
+<h3>2. 对新磁盘进行分区（如果还未分区）</h3>
+<ul>
+<li>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo fdisk /dev/vdb</pre></div>
+<p>在 fdisk 交互界面中：</p>
+<ul>
+<li>输入 <code class="notranslate">n</code> 创建新分区</li>
+<li>根据提示选择分区类型和大小（通常选择默认即可）</li>
+<li>输入 <code class="notranslate">w</code> 保存退出</li>
+</ul>
+</li>
+</ul>
+<h3>3. 格式化分区</h3>
+<ul>
+<li>
+<p><strong>操作</strong>：假设新创建的分区为 <code class="notranslate">/dev/vdb1</code>，执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkfs.ext4 /dev/vdb1</pre></div>
+</li>
+</ul>
+<h3>4. 挂载数据盘</h3>
+<ul>
+<li><strong>操作</strong>：
+<ol>
+<li>
+<p>创建挂载点目录，例如：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir /mnt/data_disk</pre></div>
+</li>
+<li>
+<p>挂载分区到该目录：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mount /dev/vdb1 /mnt/data_disk</pre></div>
+</li>
+</ol>
+</li>
+</ul>
+<h3>5. 设置开机自动挂载（可选，但推荐）</h3>
+<ul>
+<li>
+<p><strong>操作</strong>：编辑 <code class="notranslate">/etc/fstab</code> 文件：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/fstab</pre></div>
+<p>添加以下一行：</p>
+<pre lang="plaintext" class="notranslate"><code class="notranslate">/dev/vdb1   /mnt/data_disk   ext4   defaults   0   0
+</code></pre>
+<p>保存退出后，可用 <code class="notranslate">sudo mount -a</code> 测试配置。</p>
+</li>
+<li>
+<p><code class="notranslate">/etc/fstab</code> 文件定义系统启动时自动挂载的文件系统。确保填写正确的设备名称、挂载点和文件系统类型。</p>
+</li>
+</ul>
+<h3>注意事项</h3>
+<ul>
+<li>
+<p><strong>设备名称变化</strong>：在云环境中，设备名称有时可能因重启或实例变化而不同，建议使用UUID或LABEL挂载，可以通过命令 <code class="notranslate">blkid</code> 获取UUID信息，然后在 <code class="notranslate">/etc/fstab</code> 中使用类似格式：</p>
+<pre lang="plaintext" class="notranslate"><code class="notranslate">UUID=xxxx-xxxx   /mnt/data_disk   ext4   defaults   0   0
+</code></pre>
+</li>
+</ul></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.017121.xyz">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='../assets/ArticleTOC.js'></script><script src='../assets/lightbox.js'></script><script>document.querySelectorAll('a').forEach(anchor => {const img = anchor.querySelector('img');if (img && img.hasAttribute('data-canonical-src')) {const canonicalSrc = img.getAttribute('data-canonical-src');anchor.setAttribute('href', canonicalSrc);img.setAttribute('src', canonicalSrc);img.removeAttribute('data-canonical-src');}});</script>
+
+</html>
