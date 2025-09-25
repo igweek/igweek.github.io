@@ -4,7 +4,7 @@
 ---
 
 > [!important]
-##准备工作
+> ## 准备工作
 
 1. 控制节点（controller）
 sudo passwd root    (改root密码)
@@ -41,7 +41,6 @@ bash <(curl -sSL https://linuxmirrors.cn/main.sh)
 
 ---
 
-# 方法一：官方部署
 ### 一、环境准备
 
 1. **虚拟机配置要求**（每台）：
