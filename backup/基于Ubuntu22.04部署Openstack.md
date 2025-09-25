@@ -1,12 +1,12 @@
 > [!note]
-![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
+![M 192.168.100.10.png](https://pic.myla.eu.org/file/1alvKqWr.png)
 > *   **操作系统**: Ubuntu 22.04 LTS
 ---
 
 > [!important]
 > ## 准备工作
 
-1. 控制节点（controller）
+### 1. 控制节点（controller）
 sudo passwd root    (改root密码)
 
 sed -i '/PermitRootLogin/d' /etc/ssh/sshd_config
@@ -35,7 +35,7 @@ sudo netplan apply
 
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
 
-2. compute节点
+### 2. compute节点
 过程同上
 在设置静态ip的时候 compute节点的IP是192.168.100.20
 
