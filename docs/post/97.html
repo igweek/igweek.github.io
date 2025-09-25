@@ -26,7 +26,7 @@ echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 systemctl restart sshd                  （设置SSH root登录）
 
 sudo nano /etc/netplan/01-netcfg.yaml  #文件名因人而异
-
+```json
 network:
   version: 2
   renderer: networkd
@@ -42,7 +42,7 @@ network:
       #   addresses: [8.8.8.8, 114.114.114.114]
       dhcp4: false
       optional: true
-
+```
 sudo netplan apply
 
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
@@ -285,7 +285,7 @@ echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 systemctl restart sshd                  （设置SSH root登录）
 
 sudo nano /etc/netplan/01-netcfg.yaml  #文件名因人而异
-
+```json
 network:
   version: 2
   renderer: networkd
@@ -301,7 +301,7 @@ network:
       #   addresses: [8.8.8.8, 114.114.114.114]
       dhcp4: false
       optional: true
-
+```
 sudo netplan apply
 
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
@@ -612,21 +612,21 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 echo "PermitRootLogin yes" &gt;&gt; /etc/ssh/sshd_config<br>
 systemctl restart sshd                  （设置SSH root登录）</p>
 <p>sudo nano /etc/netplan/01-netcfg.yaml  #文件名因人而异</p>
-<p>network:<br>
-version: 2<br>
-renderer: networkd<br>
-ethernets:<br>
-ens33:<br>
-dhcp4: true<br>
-optional: true<br>
-ens34:<br>
-addresses: [192.168.100.10/24]<br>
-# 如果你的仅主机网络不需要网关和DNS，可以省略以下两行<br>
-# gateway4: 192.168.100.1<br>
-# nameservers:<br>
-#   addresses: [8.8.8.8, 114.114.114.114]<br>
-dhcp4: false<br>
-optional: true</p>
+<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-ii">network:</span>
+  <span class="pl-ii">version: 2</span>
+  <span class="pl-ii">renderer: networkd</span>
+  <span class="pl-ii">ethernets:</span>
+    <span class="pl-ii">ens33:</span>
+      <span class="pl-ii">dhcp4: true</span>
+      <span class="pl-ii">optional: true</span>
+    <span class="pl-ii">ens34:</span>
+      <span class="pl-ii">addresses: [192.168.100.10/24]</span>
+      <span class="pl-ii"># 如果你的仅主机网络不需要网关和DNS，可以省略以下两行</span>
+      <span class="pl-ii"># gateway4: 192.168.100.1</span>
+      <span class="pl-ii"># nameservers:</span>
+      <span class="pl-ii">#   addresses: [8.8.8.8, 114.114.114.114]</span>
+      <span class="pl-ii">dhcp4: false</span>
+      <span class="pl-ii">optional: true</span></pre></div>
 <p>sudo netplan apply</p>
 <p>bash &lt;(curl -sSL <a href="https://linuxmirrors.cn/main.sh" rel="nofollow">https://linuxmirrors.cn/main.sh</a>)</p>
 <h3>2. compute节点</h3>

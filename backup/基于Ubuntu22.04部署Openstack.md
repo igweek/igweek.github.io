@@ -14,7 +14,7 @@ echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
 systemctl restart sshd                  （设置SSH root登录）
 
 sudo nano /etc/netplan/01-netcfg.yaml  #文件名因人而异
-
+```json
 network:
   version: 2
   renderer: networkd
@@ -30,7 +30,7 @@ network:
       #   addresses: [8.8.8.8, 114.114.114.114]
       dhcp4: false
       optional: true
-
+```
 sudo netplan apply
 
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
