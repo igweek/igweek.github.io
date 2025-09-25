@@ -308,7 +308,7 @@ filesystem_store_datadir = /var/lib/glance/images/
 
 ##### **3.1.1 创建数据库和服务凭证**
 
-# 1. 创建Nova数据库
+###### 1. 创建Nova数据库
 mysql -u root -p
 CREATE DATABASE nova_api;
 CREATE DATABASE nova;
@@ -323,7 +323,7 @@ GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
 FLUSH PRIVILEGES;
 exit
 
-# 2. 创建Nova服务凭证（需先加载admin环境变量）
+###### 2. 创建Nova服务凭证（需先加载admin环境变量）
 export OS_USER_DOMAIN_NAME=Default
 export OS_PROJECT_DOMAIN_NAME=Default
 export OS_PROJECT_NAME=admin
@@ -333,22 +333,22 @@ export OS_AUTH_URL=http://controller:5000/v3
 export OS_IDENTITY_API_VERSION=3
 export OS_IMAGE_API_VERSION=2
 
-# 创建nova用户
+###### 创建nova用户
 openstack user create --domain default --password-prompt nova
 
 输入密码`NOVA_PASS`
 
-# 为nova用户添加admin角色
+###### 为nova用户添加admin角色
 openstack role add --project service --user nova admin
 
-# 添加PLACEMENT用户
+###### 添加PLACEMENT用户
 openstack user create --domain default --password PLACEMENT_PASS placement
 openstack role add --project service --user placement admin
 
-# 创建nova服务
+###### 创建nova服务
 openstack service create --name nova --description "OpenStack Compute" compute
 
-# 创建API端点
+###### 创建API端点
 openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
 openstack endpoint create --region RegionOne compute internal http://controller:8774/v2.1
 openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1

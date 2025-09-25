@@ -948,7 +948,7 @@ sudo apt install -f</pre></div>
 <h3><strong>3. 计算服务 (Nova) 部署</strong></h3>
 <h4><strong>3.1 控制节点配置</strong></h4>
 <h5><strong>3.1.1 创建数据库和服务凭证</strong></h5>
-<h1>1. 创建Nova数据库</h1>
+<h6>1. 创建Nova数据库</h6>
 <p>mysql -u root -p<br>
 CREATE DATABASE nova_api;<br>
 CREATE DATABASE nova;<br>
@@ -961,7 +961,7 @@ GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_D
 GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';<br>
 FLUSH PRIVILEGES;<br>
 exit</p>
-<h1>2. 创建Nova服务凭证（需先加载admin环境变量）</h1>
+<h6>2. 创建Nova服务凭证（需先加载admin环境变量）</h6>
 <p>export OS_USER_DOMAIN_NAME=Default<br>
 export OS_PROJECT_DOMAIN_NAME=Default<br>
 export OS_PROJECT_NAME=admin<br>
@@ -970,17 +970,17 @@ export OS_PASSWORD=ADMIN_PASS<br>
 export OS_AUTH_URL=<a href="http://controller:5000/v3" rel="nofollow">http://controller:5000/v3</a><br>
 export OS_IDENTITY_API_VERSION=3<br>
 export OS_IMAGE_API_VERSION=2</p>
-<h1>创建nova用户</h1>
+<h6>创建nova用户</h6>
 <p>openstack user create --domain default --password-prompt nova</p>
 <p>输入密码<code class="notranslate">NOVA_PASS</code></p>
-<h1>为nova用户添加admin角色</h1>
+<h6>为nova用户添加admin角色</h6>
 <p>openstack role add --project service --user nova admin</p>
-<h1>添加PLACEMENT用户</h1>
+<h6>添加PLACEMENT用户</h6>
 <p>openstack user create --domain default --password PLACEMENT_PASS placement<br>
 openstack role add --project service --user placement admin</p>
-<h1>创建nova服务</h1>
+<h6>创建nova服务</h6>
 <p>openstack service create --name nova --description "OpenStack Compute" compute</p>
-<h1>创建API端点</h1>
+<h6>创建API端点</h6>
 <p>openstack endpoint create --region RegionOne compute public <a href="http://controller:8774/v2.1" rel="nofollow">http://controller:8774/v2.1</a><br>
 openstack endpoint create --region RegionOne compute internal <a href="http://controller:8774/v2.1" rel="nofollow">http://controller:8774/v2.1</a><br>
 openstack endpoint create --region RegionOne compute admin <a href="http://controller:8774/v2.1" rel="nofollow">http://controller:8774/v2.1</a></p>
