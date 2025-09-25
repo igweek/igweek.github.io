@@ -773,7 +773,11 @@ sudo systemctl restart apache2
 
 通过浏览器访问：`http://控制节点IP/horizon`
 
-使用`admin`用户和对应密码登录（从`/etc/kolla/passwords.yml`获取）。
+账号：admin
+密码：ADMIN_PASS （前面设置的）
+域：Default
+
+![image.png](https://pic.myla.eu.org/file/1758768041634_image.png)
 
 ### 验证部署
 
