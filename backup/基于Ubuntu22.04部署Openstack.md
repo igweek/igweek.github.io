@@ -3,6 +3,44 @@
 > *   **操作系统**: Ubuntu 22.04 LTS
 ---
 
+> [!important]
+##准备工作
+
+1. 控制节点（controller）
+sudo passwd root    (改root密码)
+
+sed -i '/PermitRootLogin/d' /etc/ssh/sshd_config
+echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+systemctl restart sshd                  （设置SSH root登录）
+
+sudo nano /etc/netplan/01-netcfg.yaml  #文件名因人而异
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens33:
+      dhcp4: true
+      optional: true
+    ens34:
+      addresses: [192.168.100.10/24]
+      # 如果你的仅主机网络不需要网关和DNS，可以省略以下两行
+      # gateway4: 192.168.100.1
+      # nameservers:
+      #   addresses: [8.8.8.8, 114.114.114.114]
+      dhcp4: false
+      optional: true
+
+sudo netplan apply
+
+bash <(curl -sSL https://linuxmirrors.cn/main.sh)
+
+2. compute节点
+过程同上
+在设置静态ip的时候 compute节点的IP是192.168.100.20
+
+---
+
 # 方法一：官方部署
 ### 一、环境准备
 
@@ -287,7 +325,14 @@ FLUSH PRIVILEGES;
 exit
 
 # 2. 创建Nova服务凭证（需先加载admin环境变量）
-source /etc/kolla/admin-openrc.sh
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_PROJECT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=ADMIN_PASS
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
 
 # 创建nova用户
 openstack user create --domain default --password-prompt nova
@@ -484,7 +529,16 @@ sudo systemctl enable nova-compute
 
 # 检查计算节点是否注册到控制节点
 # 在控制节点执行：
-source /etc/kolla/admin-openrc.sh
+
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_PROJECT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=ADMIN_PASS
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+
 openstack compute service list --service nova-compute
 ```
 ### **4. 网络服务 (Neutron) 部署**
@@ -504,7 +558,15 @@ FLUSH PRIVILEGES;
 exit
 
 # 2. 创建服务凭证
-source /etc/kolla/admin-openrc.sh
+
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_PROJECT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=ADMIN_PASS
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
 
 openstack user create --domain default --password-prompt neutron
 输入密码`NEUTRON_PASS`
@@ -783,9 +845,16 @@ sudo systemctl restart apache2
 
 所有服务部署完成后，在控制节点执行：
 
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_PROJECT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=ADMIN_PASS
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
 
 ```bash
-source /etc/kolla/admin-openrc.sh
 openstack service list  # 查看所有服务状态
 openstack compute service list  # 查看计算服务
 openstack network agent list  # 查看网络代理

@@ -1,7 +1,45 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 24 Sep 2025 15:00:57 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于Ubuntu22.04部署Openstack</title><link>https://bbs.017121.xyz/post/97.html</link><description>&gt; [!note]
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 25 Sep 2025 05:41:50 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于Ubuntu22.04部署Openstack</title><link>https://bbs.017121.xyz/post/97.html</link><description>&gt; [!note]
 ![截屏2025-09-23 22.42.05_副本.png](https://pic.myla.eu.org/file/nSZwLa2t.png)
 &gt; *   **操作系统**: Ubuntu 22.04 LTS
+---
+
+&gt; [!important]
+##准备工作
+
+1. 控制节点（controller）
+sudo passwd root    (改root密码)
+
+sed -i '/PermitRootLogin/d' /etc/ssh/sshd_config
+echo 'PermitRootLogin yes' &gt;&gt; /etc/ssh/sshd_config
+systemctl restart sshd                  （设置SSH root登录）
+
+sudo nano /etc/netplan/01-netcfg.yaml  #文件名因人而异
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens33:
+      dhcp4: true
+      optional: true
+    ens34:
+      addresses: [192.168.100.10/24]
+      # 如果你的仅主机网络不需要网关和DNS，可以省略以下两行
+      # gateway4: 192.168.100.1
+      # nameservers:
+      #   addresses: [8.8.8.8, 114.114.114.114]
+      dhcp4: false
+      optional: true
+
+sudo netplan apply
+
+bash &lt;(curl -sSL https://linuxmirrors.cn/main.sh)
+
+2. compute节点
+过程同上
+在设置静态ip的时候 compute节点的IP是192.168.100.20
+
 ---
 
 # 方法一：官方部署
