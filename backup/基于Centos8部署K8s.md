@@ -1,3 +1,7 @@
+> [!important]
+> [有关于K8S的部署可以参考官方文档](https://kubernetes.io/zh-cn/docs/home/)
+
+
 ## 1. 环境准备
 
 ### 1.1 系统要求
