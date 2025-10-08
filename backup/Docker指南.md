@@ -1677,10 +1677,6 @@ docker-machine ssh test
 # 九、Docker安装Centos
 
 
-[免费加速镜像，付费体验更佳 — 限时低至5元](https://dev.xuanyuan.dev/)
-
-[首页](https://dockerdocs.xuanyuan.me/)
-
 Docker 安装 CentOS
 
 ## Docker 安装 CentOS
