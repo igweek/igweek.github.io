@@ -126,88 +126,71 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><strong>网络连接</strong>：确保系统可以访问互联网以下载Docker软件包和镜像。</li>
 <li><strong>更新系统</strong>：在安装任何新软件之前，始终建议更新系统软件包到最新版本，以确保兼容性和安全性 [1]。</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf update -y
-sudo dnf install -y yum-utils device-mapper-persistent-data lvm2</pre></div>
-<h2>2.2 Docker Engine安装 (CentOS 8)</h2>
-<p>由于CentOS 8的官方软件源中可能不包含最新版本的Docker Engine，我们将使用Docker官方提供的仓库进行安装。以下是详细的安装步骤 [2]：</p>
-<ol>
-<li><strong>添加Docker官方仓库</strong>：</li>
-</ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo</pre></div>
-<ol start="2">
-<li>
-<p><strong>安装Docker Engine</strong>：</p>
-<p>安装最新版本的Docker Engine、Containerd和Docker Compose插件。</p>
-</li>
-</ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y</pre></div>
-<ol start="3">
-<li>
-<p><strong>启动Docker服务</strong>：</p>
-<p>安装完成后，启动Docker服务并设置开机自启。</p>
-</li>
-</ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl start docker
-sudo systemctl <span class="pl-c1">enable</span> docker</pre></div>
-<ol start="4">
-<li>
-<p><strong>验证安装</strong>：</p>
-<p>运行一个简单的<code class="notranslate">hello-world</code>容器来验证Docker是否成功安装并正常运行。</p>
-</li>
-</ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker run hello-world</pre></div>
-<pre class="notranslate"><code class="notranslate">如果一切正常，您将看到一条消息，表明Docker已成功安装。
-</code></pre>
-<h2>2.3 配置国内镜像加速</h2>
-<p>在中国大陆地区，由于网络环境的限制，直接从Docker Hub拉取镜像可能会非常缓慢甚至失败。配置镜像加速器可以显著提高镜像下载速度。您可以选择阿里云、腾讯云、网易云等提供的公共镜像加速服务，或者使用DaoCloud等第三方服务 [3]。</p>
-<p>以下以配置阿里云镜像加速器为例：</p>
-<ol>
-<li>
-<p><strong>获取镜像加速地址</strong>：</p>
-<p>访问阿里云容器镜像服务官网 (<a href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)%EF%BC%8C%E7%99%BB%E5%BD%95%E5%90%8E%E5%8D%B3%E5%8F%AF%E8%8E%B7%E5%8F%96%E6%82%A8%E7%9A%84%E4%B8%93%E5%B1%9E%E9%95%9C%E5%83%8F%E5%8A%A0%E9%80%9F%E5%9C%B0%E5%9D%80%E3%80%82" rel="nofollow">https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors)，登录后即可获取您的专属镜像加速地址。</a></p>
-</li>
-<li>
-<p><strong>创建或修改Daemon配置文件</strong>：</p>
-<p>Docker Daemon的配置文件位于<code class="notranslate">/etc/docker/daemon.json</code>。如果文件不存在，请创建它；如果存在，请编辑它。</p>
-</li>
-</ol>
+<p><strong>一步修复方案：替换为国内源</strong></p>
+<p>执行以下命令（逐行复制）👇：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 删除掉官方 Docker 源</span>
+sudo rm -f /etc/yum.repos.d/docker-ce.repo
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 添加阿里云镜像源</span>
+sudo tee /etc/yum.repos.d/docker-ce.repo <span class="pl-s"><span class="pl-k">&lt;&lt;</span>-'<span class="pl-k">EOF</span>'</span>
+<span class="pl-s">[docker-ce-stable]</span>
+<span class="pl-s">name=Docker CE Stable - mirror.aliyun.com</span>
+<span class="pl-s">baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgcheck=0</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 清理缓存并刷新源</span>
+sudo dnf clean all
+sudo dnf makecache</pre></div>
+<p>然后重新安装：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install -y docker-ce docker-ce-cli containerd.io</pre></div>
+<blockquote>
+<p>✅ 这会从 <strong>mirrors.aliyun.com</strong> 下载所有 Docker 相关 RPM 包，国内速度飞快。</p>
+</blockquote>
+<hr>
+<p><strong>启动 Docker 服务</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> --now docker</pre></div>
+<p>测试是否可用：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker version</pre></div>
+<p>若输出 Client/Server 版本号即安装成功。</p>
+<hr>
+<p><strong>配置镜像加速（国内拉取镜像也更快）</strong></p>
+<p>编辑配置文件：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/docker
-sudo tee /etc/docker/daemon.json <span class="pl-s"><span class="pl-k">&lt;&lt;</span>-"<span class="pl-k">EOF</span>"</span>
+sudo tee /etc/docker/daemon.json <span class="pl-s"><span class="pl-k">&lt;&lt;</span>-'<span class="pl-k">EOF</span>'</span>
 <span class="pl-s">{</span>
-<span class="pl-s">  "registry-mirrors": ["https://&lt;your-mirror-id&gt;.mirror.aliyuncs.com"]</span>
+<span class="pl-s">  "registry-mirrors": [</span>
+<span class="pl-s">    "https://docker.1panel.live",</span>
+<span class="pl-s">    "https://mirror.ccs.tencentyun.com",</span>
+<span class="pl-s">    "https://docker.m.daocloud.io",</span>
+<span class="pl-s">    "https://hub-mirror.c.163.com"</span>
+<span class="pl-s">  ]</span>
 <span class="pl-s">}</span>
 <span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
-<pre class="notranslate"><code class="notranslate">**注意**：请将`https://&lt;your-mirror-id&gt;.mirror.aliyuncs.com`替换为您在阿里云获取的实际加速地址。
-</code></pre>
-<ol start="3">
-<li>
-<p><strong>重新加载并重启Docker服务</strong>：</p>
-<p>修改配置文件后，需要重新加载systemd配置并重启Docker服务以使更改生效。</p>
-</li>
-</ol>
+<p>重启服务：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl daemon-reload
 sudo systemctl restart docker</pre></div>
-<pre class="notranslate"><code class="notranslate">您可以通过`docker info`命令查看`Registry Mirrors`部分，确认加速器是否配置成功。
-</code></pre>
-<h2>2.4 非root用户使用Docker</h2>
-<p>默认情况下，<code class="notranslate">docker</code>命令需要root权限才能运行。为了方便日常操作，可以将当前用户添加到<code class="notranslate">docker</code>用户组，这样无需<code class="notranslate">sudo</code>即可运行Docker命令 [2]。</p>
+<p>验证：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker info <span class="pl-k">|</span> grep -A3 <span class="pl-s"><span class="pl-pds">"</span>Registry Mirrors<span class="pl-pds">"</span></span></pre></div>
+<hr>
+<h2>🧰 如果仍然失败（内网或无公网的情况）</h2>
+<p>你可以：</p>
 <ol>
-<li><strong>创建docker用户组（如果不存在）</strong>：</li>
-</ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo groupadd docker</pre></div>
-<ol start="2">
-<li><strong>将当前用户添加到docker用户组</strong>：</li>
-</ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo usermod -aG docker <span class="pl-smi">$USER</span></pre></div>
-<ol start="3">
 <li>
-<p><strong>重新登录或重启</strong>：</p>
-<p>为了使更改生效，您需要注销并重新登录您的会话，或者重启系统。执行以下命令可以测试是否生效：</p>
+<p>手动下载 RPM 包：<br>
+在一台能上网的机器上访问<br>
+<a href="https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/Packages/" rel="nofollow">https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/Packages/</a><br>
+下载以下三个包：</p>
+<pre class="notranslate"><code class="notranslate">containerd.io-xxxx.rpm
+docker-ce-xxxx.rpm
+docker-ce-cli-xxxx.rpm
+</code></pre>
+<p>然后拷贝到服务器执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf localinstall <span class="pl-k">*</span>.rpm -y</pre></div>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run hello-world</pre></div>
-<pre class="notranslate"><code class="notranslate">如果不再需要`sudo`即可运行`hello-world`，则表示配置成功。
-</code></pre>
+<hr>
 <h2>2.5 Docker服务管理</h2>
 <p>了解如何管理Docker服务对于日常维护至关重要。以下是一些常用的<code class="notranslate">systemctl</code>命令，用于管理Docker守护进程：</p>
 <ul>
