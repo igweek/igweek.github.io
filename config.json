@@ -7,7 +7,7 @@
     "exlink":{"file":"https://img.myla.eu.org","link":"https://s.myla.eu.org/dashboard","github":"https://github.com/igweek/igweek.github.io"},
     "commentLabelColor":"#006b75",
     "urlMode":"issue",
-    "onePageListNum":100,
+    "onePageListNum":15,
     "rssSplit":"sentence",
     "yearColorList":["#bc4c00", "#0969da", "#1f883d", "#A333D0"],
     "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
