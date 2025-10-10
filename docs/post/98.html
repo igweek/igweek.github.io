@@ -361,7 +361,7 @@ kubectl get pods --all-namespaces
 <meta property="og:url" content="https://bbs.017121.xyz/post/98.html">
 <meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
 <title>基于Centos8部署K8s</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -385,7 +385,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
 <style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-important {border-left-color:var(--borderColor-done-emphasis, var(--color-done-emphasis));background-color:var(--color-done-subtle);}.markdown-alert.markdown-alert-important .markdown-alert-title {color: var(--fgColor-done,var(--color-done-fg));}</style>
 
@@ -427,118 +437,107 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>网络互通（关闭防火墙或配置规则）</li>
 </ul>
 <h3>1.2 配置主机名和 hosts 文件（所有节点）</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 设置主机名（以 master 节点为例）
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 设置主机名（以 master 节点为例）</span>
 hostnamectl set-hostname k8s-master
 
-# 编辑 /etc/hosts，添加所有节点的 IP 和主机名
-echo "192.168.1.100 k8s-master" &gt;&gt; /etc/hosts
-echo "192.168.1.101 k8s-node1" &gt;&gt; /etc/hosts
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 编辑 /etc/hosts，添加所有节点的 IP 和主机名</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>192.168.1.100 k8s-master<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /etc/hosts
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>192.168.1.101 k8s-node1<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /etc/hosts</pre></div>
 <h3>1.3 关闭防火墙、SELinux 和 Swap（所有节点）</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 关闭防火墙
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 关闭防火墙</span>
 systemctl stop firewalld
 systemctl disable firewalld
 
-# 关闭 SELinux
+<span class="pl-c"><span class="pl-c">#</span> 关闭 SELinux</span>
 setenforce 0
-sed -i 's/^SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+sed -i <span class="pl-s"><span class="pl-pds">'</span>s/^SELINUX=enforcing/SELINUX=disabled/<span class="pl-pds">'</span></span> /etc/selinux/config
 
-# 关闭 Swap
+<span class="pl-c"><span class="pl-c">#</span> 关闭 Swap</span>
 swapoff -a
-sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
-</code></pre>
+sed -i <span class="pl-s"><span class="pl-pds">'</span>/ swap / s/^\(.*\)$/#\1/g<span class="pl-pds">'</span></span> /etc/fstab</pre></div>
 <h3>1.4 配置内核参数（所有节点）</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf
-overlay
-br_netfilter
-EOF
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> | sudo tee /etc/modules-load.d/k8s.conf</span>
+<span class="pl-s">overlay</span>
+<span class="pl-s">br_netfilter</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
 
 modprobe overlay
 modprobe br_netfilter
 
-cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv4.ip_forward = 1
-EOF
+cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> | sudo tee /etc/sysctl.d/k8s.conf</span>
+<span class="pl-s">net.bridge.bridge-nf-call-ip6tables = 1</span>
+<span class="pl-s">net.bridge.bridge-nf-call-iptables = 1</span>
+<span class="pl-s">net.ipv4.ip_forward = 1</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
 
-sysctl --system
-</code></pre>
+sysctl --system</pre></div>
 <hr>
 <h2>2. 安装容器运行时（所有节点）</h2>
 <h3>2.1 安装 Docker</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 添加 Docker 仓库
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 添加 Docker 仓库</span>
 dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 
-# 安装 Docker
+<span class="pl-c"><span class="pl-c">#</span> 安装 Docker</span>
 dnf install docker-ce docker-ce-cli containerd.io -y
 
-# 启动并设置开机自启
-systemctl enable --now docker
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 启动并设置开机自启</span>
+systemctl <span class="pl-c1">enable</span> --now docker</pre></div>
 <h3>2.2 配置 Docker 使用 systemd 作为 cgroup driver</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">cat &gt; /etc/docker/daemon.json &lt;&lt;EOF
-{
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-k">&gt;</span> /etc/docker/daemon.json <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span></span>
+<span class="pl-s">{</span>
+<span class="pl-s">  "exec-opts": ["native.cgroupdriver=systemd"],</span>
+<span class="pl-s">  "log-driver": "json-file",</span>
+<span class="pl-s">  "log-opts": {</span>
+<span class="pl-s">    "max-size": "100m"</span>
+<span class="pl-s">  },</span>
+<span class="pl-s">  "storage-driver": "overlay2"</span>
+<span class="pl-s">}</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
 
-systemctl restart docker
-</code></pre>
+systemctl restart docker</pre></div>
 <hr>
 <h2>3. 安装 Kubernetes 组件（所有节点）</h2>
 <h3>3.1 添加 Kubernetes 仓库</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">cat &lt;&lt;EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-EOF
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> | sudo tee /etc/yum.repos.d/kubernetes.repo</span>
+<span class="pl-s">[kubernetes]</span>
+<span class="pl-s">name=Kubernetes</span>
+<span class="pl-s">baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-<span class="pl-cce">\$</span>basearch</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgcheck=1</span>
+<span class="pl-s">repo_gpgcheck=1</span>
+<span class="pl-s">gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
 <h3>3.2 安装 kubelet、kubeadm、kubectl</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 安装指定版本（例如 1.23.0）
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装指定版本（例如 1.23.0）</span>
 dnf install kubelet-1.23.0 kubeadm-1.23.0 kubectl-1.23.0 -y
 
-# 启动 kubelet 并设置开机自启
-systemctl enable --now kubelet
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 启动 kubelet 并设置开机自启</span>
+systemctl <span class="pl-c1">enable</span> --now kubelet</pre></div>
 <hr>
 <h2>4. 初始化 Master 节点</h2>
 <h3>4.1 使用 kubeadm 初始化集群</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 初始化集群（替换 --apiserver-advertise-address 为 Master 节点 IP）
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 初始化集群（替换 --apiserver-advertise-address 为 Master 节点 IP）</span>
 kubeadm init --apiserver-advertise-address=192.168.1.100 --pod-network-cidr=10.244.0.0/16
 
-# 初始化成功后，按提示配置 kubectl
-mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 初始化成功后，按提示配置 kubectl</span>
+mkdir -p <span class="pl-smi">$HOME</span>/.kube
+sudo cp -i /etc/kubernetes/admin.conf <span class="pl-smi">$HOME</span>/.kube/config
+sudo chown <span class="pl-s"><span class="pl-pds">$(</span>id -u<span class="pl-pds">)</span></span>:<span class="pl-s"><span class="pl-pds">$(</span>id -g<span class="pl-pds">)</span></span> <span class="pl-smi">$HOME</span>/.kube/config</pre></div>
 <h3>4.2 安装网络插件（例如 Flannel）</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 应用 Flannel 配置
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 应用 Flannel 配置</span>
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml</pre></div>
 <hr>
 <h2>5. 加入 Worker 节点</h2>
 <p>在每个 Node 节点上执行以下命令（来自 <code class="notranslate">kubeadm init</code> 输出的提示）：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">kubeadm join 192.168.1.100:6443 --token &lt;token&gt; --discovery-token-ca-cert-hash &lt;hash&gt;
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubeadm join 192.168.1.100:6443 --token <span class="pl-k">&lt;</span>token<span class="pl-k">&gt;</span> --discovery-token-ca-cert-hash <span class="pl-k">&lt;</span>hash<span class="pl-k">&gt;</span></pre></div>
 <hr>
 <h2>6. 验证集群状态</h2>
 <p>在 Master 节点上运行：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 查看节点状态
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看节点状态</span>
 kubectl get nodes
 
-# 查看所有 Pod 状态
-kubectl get pods --all-namespaces
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 查看所有 Pod 状态</span>
+kubectl get pods --all-namespaces</pre></div>
 <hr>
 <h2>7. 常见问题及解决</h2>
 <ul>
@@ -555,40 +554,36 @@ kubectl get pods --all-namespaces
 </ul>
 <h2>9. 部署 Kubernetes Dashboard（可视化界面）</h2>
 <h3>9.1 安装 Dashboard</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 部署 Dashboard
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 部署 Dashboard</span>
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml</pre></div>
 <h3>9.2 创建访问服务（NodePort 方式）</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 编辑 Dashboard 服务类型为 NodePort
-kubectl patch svc kubernetes-dashboard -n kubernetes-dashboard -p '{"spec": {"type": "NodePort"}}'
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 编辑 Dashboard 服务类型为 NodePort</span>
+kubectl patch svc kubernetes-dashboard -n kubernetes-dashboard -p <span class="pl-s"><span class="pl-pds">'</span>{"spec": {"type": "NodePort"}}<span class="pl-pds">'</span></span></pre></div>
 <h3>9.3 创建管理员账户和授权</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 创建服务账户和集群角色绑定
-cat &lt;&lt;EOF | kubectl apply -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: admin-user
-  namespace: kubernetes-dashboard
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: admin-user
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: admin-user
-  namespace: kubernetes-dashboard
-EOF
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 创建服务账户和集群角色绑定</span>
+cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> | kubectl apply -f -</span>
+<span class="pl-s">apiVersion: v1</span>
+<span class="pl-s">kind: ServiceAccount</span>
+<span class="pl-s">metadata:</span>
+<span class="pl-s">  name: admin-user</span>
+<span class="pl-s">  namespace: kubernetes-dashboard</span>
+<span class="pl-s">---</span>
+<span class="pl-s">apiVersion: rbac.authorization.k8s.io/v1</span>
+<span class="pl-s">kind: ClusterRoleBinding</span>
+<span class="pl-s">metadata:</span>
+<span class="pl-s">  name: admin-user</span>
+<span class="pl-s">roleRef:</span>
+<span class="pl-s">  apiGroup: rbac.authorization.k8s.io</span>
+<span class="pl-s">  kind: ClusterRole</span>
+<span class="pl-s">  name: cluster-admin</span>
+<span class="pl-s">subjects:</span>
+<span class="pl-s">- kind: ServiceAccount</span>
+<span class="pl-s">  name: admin-user</span>
+<span class="pl-s">  namespace: kubernetes-dashboard</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
 <h3>9.4 获取访问令牌</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 获取 Token 用于登录
-kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 获取 Token 用于登录</span>
+kubectl -n kubernetes-dashboard describe secret <span class="pl-s"><span class="pl-pds">$(</span>kubectl -n kubernetes-dashboard get secret <span class="pl-k">|</span> grep admin-user <span class="pl-k">|</span> awk <span class="pl-s"><span class="pl-pds">'</span>{print $1}<span class="pl-pds">'</span></span><span class="pl-pds">)</span></span></pre></div>
 <h3>9.5 访问 Dashboard</h3>
 <ul>
 <li>浏览器访问：<code class="notranslate">https://&lt;Master节点IP&gt;:&lt;NodePort端口&gt;</code></li>
@@ -597,84 +592,75 @@ kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboar
 <hr>
 <h2>10. 配置持久化存储（NFS 示例）</h2>
 <h3>10.1 安装 NFS 服务器（可选，在存储节点操作）</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 安装 NFS 服务端
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装 NFS 服务端</span>
 dnf install nfs-utils -y
 
-# 创建共享目录
+<span class="pl-c"><span class="pl-c">#</span> 创建共享目录</span>
 mkdir /nfsdata
 chmod 777 /nfsdata
 
-# 配置导出目录
-echo "/nfsdata *(rw,sync,no_root_squash)" &gt;&gt; /etc/exports
+<span class="pl-c"><span class="pl-c">#</span> 配置导出目录</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>/nfsdata *(rw,sync,no_root_squash)<span class="pl-pds">"</span></span> <span class="pl-k">&gt;&gt;</span> /etc/exports
 
-# 启动服务
-systemctl enable --now nfs-server
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 启动服务</span>
+systemctl <span class="pl-c1">enable</span> --now nfs-server</pre></div>
 <h3>10.2 在所有节点安装 NFS 客户端</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">dnf install nfs-utils -y
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">dnf install nfs-utils -y</pre></div>
 <h3>10.3 创建 PersistentVolume 和 PersistentVolumeClaim</h3>
-<pre lang="yaml" class="notranslate"><code class="notranslate"># nfs-pv.yaml
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nfs-pv
-spec:
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteMany
-  nfs:
-    server: &lt;NFS服务器IP&gt;
-    path: "/nfsdata"
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> nfs-pv.yaml</span>
+<span class="pl-ent">apiVersion</span>: <span class="pl-c1">v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">PersistentVolume</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">nfs-pv</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">capacity</span>:
+    <span class="pl-ent">storage</span>: <span class="pl-s">10Gi</span>
+  <span class="pl-ent">accessModes</span>:
+    - <span class="pl-s">ReadWriteMany</span>
+  <span class="pl-ent">nfs</span>:
+    <span class="pl-ent">server</span>: <span class="pl-s">&lt;NFS服务器IP&gt;</span>
+    <span class="pl-ent">path</span>: <span class="pl-s"><span class="pl-pds">"</span>/nfsdata<span class="pl-pds">"</span></span>
 ---
-# nfs-pvc.yaml
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nfs-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 10Gi
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> nfs-pvc.yaml</span>
+<span class="pl-ent">apiVersion</span>: <span class="pl-c1">v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">PersistentVolumeClaim</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">nfs-pvc</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">accessModes</span>:
+    - <span class="pl-s">ReadWriteMany</span>
+  <span class="pl-ent">resources</span>:
+    <span class="pl-ent">requests</span>:
+      <span class="pl-ent">storage</span>: <span class="pl-s">10Gi</span></pre></div>
 <p>应用配置：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">kubectl apply -f nfs-pv.yaml
-kubectl apply -f nfs-pvc.yaml
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl apply -f nfs-pv.yaml
+kubectl apply -f nfs-pvc.yaml</pre></div>
 <hr>
 <h2>11. 安装 Ingress 控制器（以 Nginx Ingress 为例）</h2>
 <h3>11.1 部署 Ingress Controller</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 使用 Helm 安装（需先安装 Helm）
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 使用 Helm 安装（需先安装 Helm）</span>
 helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
-  --namespace ingress-nginx --create-namespace
-</code></pre>
+  --namespace ingress-nginx --create-namespace</pre></div>
 <h3>11.2 验证安装</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">kubectl get pods -n ingress-nginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl get pods -n ingress-nginx</pre></div>
 <hr>
 <h2>12. 日常维护命令</h2>
 <h3>12.1 查看集群信息</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">kubectl cluster-info
-kubectl get componentstatuses
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl cluster-info
+kubectl get componentstatuses</pre></div>
 <h3>12.2 管理节点</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 驱逐节点（维护前）
-kubectl drain &lt;节点名&gt; --ignore-daemonsets
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 驱逐节点（维护前）</span>
+kubectl drain <span class="pl-k">&lt;</span>节点名<span class="pl-k">&gt;</span> --ignore-daemonsets
 
-# 恢复节点
-kubectl uncordon &lt;节点名&gt;
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 恢复节点</span>
+kubectl uncordon <span class="pl-k">&lt;</span>节点名<span class="pl-k">&gt;</span></pre></div>
 <h3>12.3 日志排查</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 查看 Pod 日志
-kubectl logs &lt;pod-name&gt; -n &lt;namespace&gt;
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看 Pod 日志</span>
+kubectl logs <span class="pl-k">&lt;</span>pod-name<span class="pl-k">&gt;</span> -n <span class="pl-k">&lt;</span>namespace<span class="pl-k">&gt;</span>
 
-# 查看节点事件
-kubectl describe node &lt;节点名&gt;
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 查看节点事件</span>
+kubectl describe node <span class="pl-k">&lt;</span>节点名<span class="pl-k">&gt;</span></pre></div>
 <hr>
 <h2>13. 安全建议</h2>
 <ol>
@@ -707,7 +693,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -780,7 +766,70 @@ function iFrameLoading(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>
