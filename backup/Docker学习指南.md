@@ -32,25 +32,15 @@ Docker的核心优势在于其**环境一致性**、**快速部署**、**资源�
 
 本章节将详细指导如何在CentOS 8系统上安装Docker Engine，并进行必要的配置，包括国内镜像加速和非root用户使用Docker的设置。这些步骤旨在为后续的Docker实验提供一个稳定且高效的基础环境。
 
-## 2.1 系统要求与准备
+## 2.1 更换源及Docker镜像加速
 
-在开始安装Docker之前，请确保您的CentOS 8系统满足以下基本要求并完成必要的准备工作：
-
-*   **操作系统**：CentOS 8 (或兼容的RHEL 8发行版)。
-*   **内核版本**：Docker要求Linux内核版本为3.10或更高。CentOS 8通常已满足此要求。
-*   **硬件资源**：建议至少2GB内存和20GB磁盘空间。
-*   **网络连接**：确保系统可以访问互联网以下载Docker软件包和镜像。
-*   **更新系统**：在安装任何新软件之前，始终建议更新系统软件包到最新版本，以确保兼容性和安全性 [1]。
-
-**更换yum源**
-
-为了防止出错，先备份现有的 yum 源文件：
+**为了防止出错，先备份现有的 yum 源文件：**
 
 ```bash
 sudo mkdir -p /etc/yum.repos.d/backup
 sudo mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
 ```
-更换阿里云yum源：
+**更换阿里云yum源：**
 
 ```bash
 sudo tee /etc/yum.repos.d/CentOS-Base.repo << 'EOF'
@@ -77,7 +67,7 @@ gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Offic
 EOF
 ```
 
-清除缓存并重建
+**清除缓存并重建**
 
 ```bash
 sudo dnf clean all
@@ -107,7 +97,7 @@ sudo dnf clean all
 sudo dnf makecache
 ```
 
-然后重新安装：
+**安装docker**
 
 ```bash
 sudo dnf install -y docker-ce docker-ce-cli containerd.io
@@ -123,7 +113,7 @@ sudo dnf install -y docker-ce docker-ce-cli containerd.io
 sudo systemctl enable --now docker
 ```
 
-测试是否可用：
+**测试是否可用：**
 
 ```bash
 docker version
@@ -133,7 +123,7 @@ docker version
 
 ---
 
-**配置镜像加速（国内拉取镜像也更快）**
+**配置镜像加速**
 
 编辑配置文件：
 

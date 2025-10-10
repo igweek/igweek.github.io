@@ -117,20 +117,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>通过完成本手册中的所有实验，您将能够自信地在实际项目中运用Docker技术，提升您的开发和运维效率。</p>
 <h1>2. Docker安装与配置</h1>
 <p>本章节将详细指导如何在CentOS 8系统上安装Docker Engine，并进行必要的配置，包括国内镜像加速和非root用户使用Docker的设置。这些步骤旨在为后续的Docker实验提供一个稳定且高效的基础环境。</p>
-<h2>2.1 系统要求与准备</h2>
-<p>在开始安装Docker之前，请确保您的CentOS 8系统满足以下基本要求并完成必要的准备工作：</p>
-<ul>
-<li><strong>操作系统</strong>：CentOS 8 (或兼容的RHEL 8发行版)。</li>
-<li><strong>内核版本</strong>：Docker要求Linux内核版本为3.10或更高。CentOS 8通常已满足此要求。</li>
-<li><strong>硬件资源</strong>：建议至少2GB内存和20GB磁盘空间。</li>
-<li><strong>网络连接</strong>：确保系统可以访问互联网以下载Docker软件包和镜像。</li>
-<li><strong>更新系统</strong>：在安装任何新软件之前，始终建议更新系统软件包到最新版本，以确保兼容性和安全性 [1]。</li>
-</ul>
-<p><strong>更换yum源</strong></p>
-<p>为了防止出错，先备份现有的 yum 源文件：</p>
+<h2>2.1 更换源及Docker镜像加速</h2>
+<p><strong>为了防止出错，先备份现有的 yum 源文件：</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/yum.repos.d/backup
 sudo mv /etc/yum.repos.d/<span class="pl-k">*</span>.repo /etc/yum.repos.d/backup/</pre></div>
-<p>更换阿里云yum源：</p>
+<p><strong>更换阿里云yum源：</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo tee /etc/yum.repos.d/CentOS-Base.repo <span class="pl-s"><span class="pl-k">&lt;&lt;</span> '<span class="pl-k">EOF</span>'</span>
 <span class="pl-s">[BaseOS]</span>
 <span class="pl-s">name=CentOS-$releasever - Base - mirrors.aliyun.com</span>
@@ -153,7 +144,7 @@ sudo mv /etc/yum.repos.d/<span class="pl-k">*</span>.repo /etc/yum.repos.d/backu
 <span class="pl-s">enabled=1</span>
 <span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
 <span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
-<p>清除缓存并重建</p>
+<p><strong>清除缓存并重建</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf clean all
 sudo dnf makecache</pre></div>
 <p><strong>一步修复方案：替换为国内docker源</strong></p>
@@ -173,7 +164,7 @@ sudo tee /etc/yum.repos.d/docker-ce.repo <span class="pl-s"><span class="pl-k">&
 <span class="pl-c"><span class="pl-c">#</span> 3. 清理缓存并刷新源</span>
 sudo dnf clean all
 sudo dnf makecache</pre></div>
-<p>然后重新安装：</p>
+<p><strong>安装docker</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install -y docker-ce docker-ce-cli containerd.io</pre></div>
 <blockquote>
 <p>✅ 这会从 <strong>mirrors.aliyun.com</strong> 下载所有 Docker 相关 RPM 包，国内速度飞快。</p>
@@ -181,11 +172,11 @@ sudo dnf makecache</pre></div>
 <hr>
 <p><strong>启动 Docker 服务</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> --now docker</pre></div>
-<p>测试是否可用：</p>
+<p><strong>测试是否可用：</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">docker version</pre></div>
 <p>若输出 Client/Server 版本号即安装成功。</p>
 <hr>
-<p><strong>配置镜像加速（国内拉取镜像也更快）</strong></p>
+<p><strong>配置镜像加速</strong></p>
 <p>编辑配置文件：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/docker
 sudo tee /etc/docker/daemon.json <span class="pl-s"><span class="pl-k">&lt;&lt;</span>-'<span class="pl-k">EOF</span>'</span>
