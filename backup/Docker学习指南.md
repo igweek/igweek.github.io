@@ -42,7 +42,50 @@ Docker的核心优势在于其**环境一致性**、**快速部署**、**资源�
 *   **网络连接**：确保系统可以访问互联网以下载Docker软件包和镜像。
 *   **更新系统**：在安装任何新软件之前，始终建议更新系统软件包到最新版本，以确保兼容性和安全性 [1]。
 
-**一步修复方案：替换为国内源**
+**更换yum源**
+
+为了防止出错，先备份现有的 yum 源文件：
+
+```bash
+sudo mkdir -p /etc/yum.repos.d/backup
+sudo mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
+```
+更换阿里云yum源：
+
+```bash
+sudo tee /etc/yum.repos.d/CentOS-Base.repo << 'EOF'
+[BaseOS]
+name=CentOS-$releasever - Base - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/BaseOS/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+
+[AppStream]
+name=CentOS-$releasever - AppStream - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/AppStream/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+
+[extras]
+name=CentOS-$releasever - Extras - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/extras/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+EOF
+```
+
+清除缓存并重建
+
+```bash
+sudo dnf clean all
+sudo dnf makecache
+```
+
+
+**一步修复方案：替换为国内docker源**
 
 执行以下命令（逐行复制）👇：
 

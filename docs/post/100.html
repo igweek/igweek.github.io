@@ -126,7 +126,37 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><strong>网络连接</strong>：确保系统可以访问互联网以下载Docker软件包和镜像。</li>
 <li><strong>更新系统</strong>：在安装任何新软件之前，始终建议更新系统软件包到最新版本，以确保兼容性和安全性 [1]。</li>
 </ul>
-<p><strong>一步修复方案：替换为国内源</strong></p>
+<p><strong>更换yum源</strong></p>
+<p>为了防止出错，先备份现有的 yum 源文件：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/yum.repos.d/backup
+sudo mv /etc/yum.repos.d/<span class="pl-k">*</span>.repo /etc/yum.repos.d/backup/</pre></div>
+<p>更换阿里云yum源：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo tee /etc/yum.repos.d/CentOS-Base.repo <span class="pl-s"><span class="pl-k">&lt;&lt;</span> '<span class="pl-k">EOF</span>'</span>
+<span class="pl-s">[BaseOS]</span>
+<span class="pl-s">name=CentOS-$releasever - Base - mirrors.aliyun.com</span>
+<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/BaseOS/\$basearch/os/</span>
+<span class="pl-s">gpgcheck=1</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
+<span class="pl-s"></span>
+<span class="pl-s">[AppStream]</span>
+<span class="pl-s">name=CentOS-$releasever - AppStream - mirrors.aliyun.com</span>
+<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/AppStream/\$basearch/os/</span>
+<span class="pl-s">gpgcheck=1</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
+<span class="pl-s"></span>
+<span class="pl-s">[extras]</span>
+<span class="pl-s">name=CentOS-$releasever - Extras - mirrors.aliyun.com</span>
+<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/extras/\$basearch/os/</span>
+<span class="pl-s">gpgcheck=1</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<p>清除缓存并重建</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf clean all
+sudo dnf makecache</pre></div>
+<p><strong>一步修复方案：替换为国内docker源</strong></p>
 <p>执行以下命令（逐行复制）👇：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 删除掉官方 Docker 源</span>
 sudo rm -f /etc/yum.repos.d/docker-ce.repo
