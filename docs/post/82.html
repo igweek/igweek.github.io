@@ -10,7 +10,9 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="- **GNU/Linux 更换系统软件源**
+<meta name="description" content="## 一键脚本
+
+- **GNU/Linux 更换系统软件源**
 
 ```bash
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
@@ -23,9 +25,84 @@ bash <(curl -sSL https://linuxmirrors.cn/docker.sh)
 - **Docker 更换镜像加速器**
 ```bash
 bash <(curl -sSL https://linuxmirrors.cn/docker.sh) --only-registry
-```。">
+```
+
+## 传统方式 （centos8为例）
+
+**为了防止出错，先备份现有的 yum 源文件：**
+
+```bash
+sudo mkdir -p /etc/yum.repos.d/backup
+sudo mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
+```
+**更换阿里云yum源：**
+
+```bash
+sudo tee /etc/yum.repos.d/CentOS-Base.repo << 'EOF'
+[BaseOS]
+name=CentOS-$releasever - Base - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/BaseOS/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+
+[AppStream]
+name=CentOS-$releasever - AppStream - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/AppStream/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+
+[extras]
+name=CentOS-$releasever - Extras - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/extras/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+EOF
+```
+
+**清除缓存并重建**
+
+```bash
+sudo dnf clean all
+sudo dnf makecache
+```
+
+
+**替换为国内docker源**
+
+执行以下命令（逐行复制）👇：
+
+```bash
+# 1. 删除掉官方 Docker 源
+sudo rm -f /etc/yum.repos.d/docker-ce.repo
+
+# 2. 添加阿里云镜像源
+sudo tee /etc/yum.repos.d/docker-ce.repo <<-'EOF'
+[docker-ce-stable]
+name=Docker CE Stable - mirror.aliyun.com
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/
+enabled=1
+gpgcheck=0
+EOF
+
+# 3. 清理缓存并刷新源
+sudo dnf clean all
+sudo dnf makecache
+```
+
+**安装docker**
+
+```bash
+sudo dnf install -y docker-ce docker-ce-cli containerd.io
+```
+
+> ✅ 这会从 **mirrors.aliyun.com** 下载所有 Docker 相关 RPM 包，国内速度飞快。">
 <meta property="og:title" content="Linux、Docker换源及镜像加速">
-<meta property="og:description" content="- **GNU/Linux 更换系统软件源**
+<meta property="og:description" content="## 一键脚本
+
+- **GNU/Linux 更换系统软件源**
 
 ```bash
 bash <(curl -sSL https://linuxmirrors.cn/main.sh)
@@ -38,7 +115,80 @@ bash <(curl -sSL https://linuxmirrors.cn/docker.sh)
 - **Docker 更换镜像加速器**
 ```bash
 bash <(curl -sSL https://linuxmirrors.cn/docker.sh) --only-registry
-```。">
+```
+
+## 传统方式 （centos8为例）
+
+**为了防止出错，先备份现有的 yum 源文件：**
+
+```bash
+sudo mkdir -p /etc/yum.repos.d/backup
+sudo mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
+```
+**更换阿里云yum源：**
+
+```bash
+sudo tee /etc/yum.repos.d/CentOS-Base.repo << 'EOF'
+[BaseOS]
+name=CentOS-$releasever - Base - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/BaseOS/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+
+[AppStream]
+name=CentOS-$releasever - AppStream - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/AppStream/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+
+[extras]
+name=CentOS-$releasever - Extras - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/extras/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+EOF
+```
+
+**清除缓存并重建**
+
+```bash
+sudo dnf clean all
+sudo dnf makecache
+```
+
+
+**替换为国内docker源**
+
+执行以下命令（逐行复制）👇：
+
+```bash
+# 1. 删除掉官方 Docker 源
+sudo rm -f /etc/yum.repos.d/docker-ce.repo
+
+# 2. 添加阿里云镜像源
+sudo tee /etc/yum.repos.d/docker-ce.repo <<-'EOF'
+[docker-ce-stable]
+name=Docker CE Stable - mirror.aliyun.com
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/
+enabled=1
+gpgcheck=0
+EOF
+
+# 3. 清理缓存并刷新源
+sudo dnf clean all
+sudo dnf makecache
+```
+
+**安装docker**
+
+```bash
+sudo dnf install -y docker-ce docker-ce-cli containerd.io
+```
+
+> ✅ 这会从 **mirrors.aliyun.com** 下载所有 Docker 相关 RPM 包，国内速度飞快。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/82.html">
 <meta property="og:image" content="https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png">
@@ -109,7 +259,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><ul>
+<div class="markdown-body" id="postBody"><h2>一键脚本</h2>
+<ul>
 <li><strong>GNU/Linux 更换系统软件源</strong></li>
 </ul>
 <div class="highlight highlight-source-shell"><pre class="notranslate">bash <span class="pl-s"><span class="pl-pds">&lt;(</span>curl -sSL https://linuxmirrors.cn/main.sh<span class="pl-pds">)</span></span></pre></div>
@@ -120,7 +271,101 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <ul>
 <li><strong>Docker 更换镜像加速器</strong></li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">bash <span class="pl-s"><span class="pl-pds">&lt;(</span>curl -sSL https://linuxmirrors.cn/docker.sh<span class="pl-pds">)</span></span> --only-registry</pre></div></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">bash <span class="pl-s"><span class="pl-pds">&lt;(</span>curl -sSL https://linuxmirrors.cn/docker.sh<span class="pl-pds">)</span></span> --only-registry</pre></div>
+<h2>传统方式 （centos8为例）</h2>
+<p><strong>为了防止出错，先备份现有的 yum 源文件：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/yum.repos.d/backup
+sudo mv /etc/yum.repos.d/<span class="pl-k">*</span>.repo /etc/yum.repos.d/backup/</pre></div>
+<p><strong>更换阿里云yum源：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo tee /etc/yum.repos.d/CentOS-Base.repo <span class="pl-s"><span class="pl-k">&lt;&lt;</span> '<span class="pl-k">EOF</span>'</span>
+<span class="pl-s">[BaseOS]</span>
+<span class="pl-s">name=CentOS-$releasever - Base - mirrors.aliyun.com</span>
+<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/BaseOS/\$basearch/os/</span>
+<span class="pl-s">gpgcheck=1</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
+<span class="pl-s"></span>
+<span class="pl-s">[AppStream]</span>
+<span class="pl-s">name=CentOS-$releasever - AppStream - mirrors.aliyun.com</span>
+<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/AppStream/\$basearch/os/</span>
+<span class="pl-s">gpgcheck=1</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
+<span class="pl-s"></span>
+<span class="pl-s">[extras]</span>
+<span class="pl-s">name=CentOS-$releasever - Extras - mirrors.aliyun.com</span>
+<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/extras/\$basearch/os/</span>
+<span class="pl-s">gpgcheck=1</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<p><strong>清除缓存并重建</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf clean all
+sudo dnf makecache</pre></div>
+<p><strong>替换为国内docker源</strong></p>
+<p>执行以下命令（逐行复制）👇：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 删除掉官方 Docker 源</span>
+sudo rm -f /etc/yum.repos.d/docker-ce.repo
+
+<span class="pl-c"><span class="pl-c">#</span> 2. 添加阿里云镜像源</span>
+sudo tee /etc/yum.repos.d/docker-ce.repo <span class="pl-s"><span class="pl-k">&lt;&lt;</span>-'<span class="pl-k">EOF</span>'</span>
+<span class="pl-s">[docker-ce-stable]</span>
+<span class="pl-s">name=Docker CE Stable - mirror.aliyun.com</span>
+<span class="pl-s">baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/</span>
+<span class="pl-s">enabled=1</span>
+<span class="pl-s">gpgcheck=0</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 3. 清理缓存并刷新源</span>
+sudo dnf clean all
+sudo dnf makecache</pre></div>
+<p><strong>安装docker</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install -y docker-ce docker-ce-cli containerd.io</pre></div>
+<blockquote>
+<p>✅ 这会从 <strong>mirrors.aliyun.com</strong> 下载所有 Docker 相关 RPM 包，国内速度飞快。</p>
+</blockquote>
+<hr>
+<p><strong>启动 Docker 服务</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> --now docker</pre></div>
+<p><strong>测试是否可用：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker version</pre></div>
+<p>若输出 Client/Server 版本号即安装成功。</p>
+<hr>
+<p><strong>配置镜像加速</strong></p>
+<p>编辑配置文件：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <span class="pl-s"><span class="pl-k">&lt;&lt;</span>-'<span class="pl-k">EOF</span>'</span>
+<span class="pl-s">{</span>
+<span class="pl-s">  "registry-mirrors": [</span>
+<span class="pl-s">    "https://docker.1panel.live",</span>
+<span class="pl-s">    "https://mirror.ccs.tencentyun.com",</span>
+<span class="pl-s">    "https://docker.m.daocloud.io",</span>
+<span class="pl-s">    "https://hub-mirror.c.163.com"</span>
+<span class="pl-s">  ]</span>
+<span class="pl-s">}</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<p>重启服务：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl daemon-reload
+sudo systemctl restart docker</pre></div>
+<p>验证：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker info <span class="pl-k">|</span> grep -A3 <span class="pl-s"><span class="pl-pds">"</span>Registry Mirrors<span class="pl-pds">"</span></span></pre></div>
+<hr>
+<h2>🧰 如果仍然失败（内网或无公网的情况）</h2>
+<p>你可以：</p>
+<ol>
+<li>
+<p>手动下载 RPM 包：<br>
+在一台能上网的机器上访问<br>
+<a href="https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/Packages/" rel="nofollow">https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/Packages/</a><br>
+下载以下三个包：</p>
+<pre class="notranslate"><code class="notranslate">containerd.io-xxxx.rpm
+docker-ce-xxxx.rpm
+docker-ce-cli-xxxx.rpm
+</code></pre>
+<p>然后拷贝到服务器执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf localinstall <span class="pl-k">*</span>.rpm -y</pre></div>
+</li>
+</ol></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
