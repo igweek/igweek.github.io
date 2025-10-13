@@ -1,7 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 13 Oct 2025 08:41:23 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>K8S安装与部署</title><link>https://bbs.017121.xyz/post/102.html</link><description>![](https://www.kubernetes.org.cn/img/2017/11/2017110203.jpg)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 13 Oct 2025 14:43:14 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>K8S安装与部署</title><link>https://bbs.017121.xyz/post/102.html</link><description>## 总览
 
-Kubernetes 提供了许多云端平台与操作系统的安装方式，本章将以全手动安装方式来部署，主要是学习与了解 Kubernetes 创建流程。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/102.html</guid><pubDate>Mon, 13 Oct 2025 08:40:50 +0000</pubDate></item><item><title>Docker安装wordpress</title><link>https://bbs.017121.xyz/post/101.html</link><description># Docker安装WordPress实验手册 (CentOS 8)
+1.  准备三台虚拟机Ubuntu系统
+2.  为Ubuntu系统初始化一些配置
+3.  安装容器运行时（cri-docker或者containerd，两种方式都介绍）
+4.  安装并部署k8s集群
+5.  验证集群
+6.  如果安装错了，回退它！`kubeadm reset`
+
+## 一、准备三台虚拟机
+
+k8s集群至少准备3台机器，一台master，两台worker。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/102.html</guid><pubDate>Mon, 13 Oct 2025 08:40:50 +0000</pubDate></item><item><title>Docker安装wordpress</title><link>https://bbs.017121.xyz/post/101.html</link><description># Docker安装WordPress实验手册 (CentOS 8)
 
 ## 1. 引言
 
