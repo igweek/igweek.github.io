@@ -371,7 +371,8 @@ tar xf cri-dockerd-0.3.16.amd64.tgz
 
 
 ```bash
-mv cri-dockerd/cri-dockerd /usr/local/bin/
+cp cri-dockerd/cri-dockerd /usr/local/bin/
+cp cri-dockerd/cri-dockerd /usr/bin/
 ```
 
 查看版本号（只为验证）
@@ -395,7 +396,7 @@ Description=CRI Interface for Docker Application Container Engine
 Documentation=https://docs.mirantis.com
 After=network-online.target firewalld.service docker.service
 Wants=network-online.target
-Requires=cri-docker.socket     #system cri-docker.socket  文件名
+Requires=cri-dockerd.socket     #system cri-docker.socket  文件名
 
 [Service]
 Type=notify
@@ -426,7 +427,7 @@ EOF
 cat > /etc/systemd/system/cri-docker.socket <<-EOF
 [Unit]
 Description=CRI Docker Socket for the API
-PartOf=cri-docker.service    #systemd cri-docker.servics 文件名
+PartOf=cri-dockerd.service    #systemd cri-docker.servics 文件名
 
 [Socket]
 ListenStream=/var/run/cri-dockerd.sock
