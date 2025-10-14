@@ -1,5 +1,79 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 13 Oct 2025 14:43:14 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>K8S安装与部署</title><link>https://bbs.017121.xyz/post/102.html</link><description>## 总览
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://pic.myla.eu.org/file/29b29c1e2f4b11671ddca.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 14 Oct 2025 05:32:54 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>安装k8s(kubernetes)+containerd</title><link>https://bbs.017121.xyz/post/103.html</link><description>### 准备环境
+
+centos8
+| 机器名      | IP              | 角色     | CPU | 内存  |
+| -------- | --------------- | ------ | --- | --- |
+| centos01 | 192.168.109.130 | master | 4核  | 2G  |
+| centos02 | 192.168.109.131 | node   | 4核  | 2G  |
+
+###### 设置主机名，所有节点都执行
+
+
+```shell
+vim /etc/hosts
+#增加
+192.168.109.130 centos01
+192.168.109.131 centos02
+```
+
+###### 关闭防火墙，所有节点都执行
+
+
+```shell
+systemctl stop firewalld
+systemctl disable firewalld
+setenforce 0
+vim /etc/selinux/config
+#修改SELINUX的值
+SELINUX=disabled
+```
+
+###### 关闭swap内存，所有节点都执行
+
+
+```shell
+swapoff -a
+vim /etc/fstab
+# 将该行注释掉
+#/dev/mapper/cs-swap swap
+```
+
+###### 配置网桥，所有节点都执行
+
+1.修改参数
+
+```shell
+vim /etc/sysctl.conf
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables 	= 1
+net.ipv4.ip_forward 				= 1
+vm.swappiness 						= 0
+```
+
+2.然后，加载如下两个模块，所有节点都执行
+
+
+
+```shell
+modprobe ip_vs_rr
+modprobe br_netfilter
+```
+
+3.生效配置
+
+
+```shell
+[root@centos01 opt]# sysctl -p
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+vm.swappiness = 0
+```
+
+### 安装containerd
+
+以下步骤所有节点都执行。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/103.html</guid><pubDate>Tue, 14 Oct 2025 05:32:29 +0000</pubDate></item><item><title>K8S安装与部署</title><link>https://bbs.017121.xyz/post/102.html</link><description>## 总览
 
 1.  准备三台虚拟机Ubuntu系统
 2.  为Ubuntu系统初始化一些配置
