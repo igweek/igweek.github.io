@@ -372,7 +372,6 @@ tar xf cri-dockerd-0.3.16.amd64.tgz
 
 ```bash
 mv cri-dockerd/cri-dockerd /usr/local/bin/
-mv cri-dockerd/cri-dockerd /usr/bin/
 ```
 
 查看版本号（只为验证）
@@ -748,9 +747,6 @@ k8snode2    NotReady    <none>          15h   v1.32.2
 
 **4.7 章节的命令，请在master上操作**
 
-官网：[calico](https://link.juejin.cn/?target=https%3A%2F%2Fdocs.tigera.io%2Fcalico%2Flatest%2Fgetting-started%2F "https://docs.tigera.io/calico/latest/getting-started/")：[docs.tigera.io/calico/late…](https://link.juejin.cn/?target=https%3A%2F%2Fdocs.tigera.io%2Fcalico%2Flatest%2Fgetting-started%2F "https://docs.tigera.io/calico/latest/getting-started/")
-
-![image.png](https://p3-xtjj-sign.byteimg.com/tos-cn-i-73owjymdk6/bc02d67aea2b486c8552d135499c9f56~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5b-15b-15riF5pmw:q75.awebp?rk3s=f64ab15b&x-expires=1745031407&x-signature=N38fMV%2F3FftM%2F2kMaqrszBrYeb8%3D)
 
 #### 4.7.1 安装
 
@@ -793,7 +789,7 @@ vim custom-resources.yaml
 
 修改其中的网段为之前规划好的pod网段`10.244.0.0/16`（4.6.1规划的，可以回去看一看）
 
-![image.png](https://p3-xtjj-sign.byteimg.com/tos-cn-i-73owjymdk6/43afcec9d60e411bbd4666a12fa09180~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAg5b-15b-15riF5pmw:q75.awebp?rk3s=f64ab15b&x-expires=1745031407&x-signature=lD4kxAE%2FMaWLglNlevkghN1HEqg%3D)
+
 
 #### 4.7.4 运行calico
 
