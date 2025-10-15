@@ -396,11 +396,11 @@ Description=CRI Interface for Docker Application Container Engine
 Documentation=https://docs.mirantis.com
 After=network-online.target firewalld.service docker.service
 Wants=network-online.target
-Requires=cri-dockerd.socket     #system cri-docker.socket  文件名
+Requires=cri-dockerd.socket     # 修正为 cri-dockerd.socket（与文件名一致）
 
 [Service]
 Type=notify
-ExecStart=/usr/local/bin/cri-dockerd --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.10
+ExecStart=/usr/local/bin/cri-dockerd --pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.10 \
  --network-plugin=cni --cni-conf-dir=/etc/cni/net.d --cni-bin-dir=/opt/cni/bin --container-runtime-endpoint=unix:///var/run/cri-dockerd.sock --cri-dockerd-root-directory=/var/lib/dockershim --docker-endpoint=unix:///var/run/docker.sock --cri-dockerd-root-directory=/var/lib/docker
 ExecReload=/bin/kill -s HUP $MAINPID
 TimeoutSec=0
@@ -424,10 +424,10 @@ EOF
 
 
 ```toml
-cat > /etc/systemd/system/cri-docker.socket <<-EOF
+cat > /etc/systemd/system/cri-dockerd.socket <<-EOF
 [Unit]
 Description=CRI Docker Socket for the API
-PartOf=cri-dockerd.service    #systemd cri-docker.servics 文件名
+PartOf=cri-dockerd.service    # 保持与服务文件名一致
 
 [Socket]
 ListenStream=/var/run/cri-dockerd.sock

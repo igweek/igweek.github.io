@@ -325,11 +325,11 @@ cp cri-dockerd/cri-dockerd /usr/bin/</pre></div>
 <span class="pl-smi">Documentation</span>=h<span class="pl-ii">ttps://docs.mirantis.com</span>
 <span class="pl-smi">After</span>=n<span class="pl-ii">etwork-online.target firewalld.service docker.service</span>
 <span class="pl-smi">Wants</span>=n<span class="pl-ii">etwork-online.target</span>
-<span class="pl-smi">Requires</span>=c<span class="pl-ii">ri-dockerd.socket     </span><span class="pl-c"><span class="pl-c">#</span>system cri-docker.socket  文件名</span>
+<span class="pl-smi">Requires</span>=c<span class="pl-ii">ri-dockerd.socket     </span><span class="pl-c"><span class="pl-c">#</span> 修正为 cri-dockerd.socket（与文件名一致）</span>
 
 [<span class="pl-en">Service</span>]
 <span class="pl-smi">Type</span>=n<span class="pl-ii">otify</span>
-<span class="pl-smi">ExecStart</span>=/<span class="pl-ii">usr/local/bin/cri-dockerd </span><span class="pl-smi">--pod-infra-container-image</span>=r<span class="pl-ii">egistry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.10</span>
+<span class="pl-smi">ExecStart</span>=/<span class="pl-ii">usr/local/bin/cri-dockerd </span><span class="pl-smi">--pod-infra-container-image</span>=r<span class="pl-ii">egistry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.10 \</span>
  <span class="pl-smi">--network-plugin</span>=c<span class="pl-ii">ni </span><span class="pl-smi">--cni-conf-dir</span>=/<span class="pl-ii">etc/cni/net.d </span><span class="pl-smi">--cni-bin-dir</span>=/<span class="pl-ii">opt/cni/bin </span><span class="pl-smi">--container-runtime-endpoint</span>=u<span class="pl-ii">nix:///var/run/cri-dockerd.sock </span><span class="pl-smi">--cri-dockerd-root-directory</span>=/<span class="pl-ii">var/lib/dockershim </span><span class="pl-smi">--docker-endpoint</span>=u<span class="pl-ii">nix:///var/run/docker.sock </span><span class="pl-smi">--cri-dockerd-root-directory</span>=/<span class="pl-ii">var/lib/docker</span>
 <span class="pl-smi">ExecReload</span>=/<span class="pl-ii">bin/kill -s HUP $MAINPID</span>
 <span class="pl-smi">TimeoutSec</span>=<span class="pl-c1">0</span>
@@ -347,10 +347,10 @@ cp cri-dockerd/cri-dockerd /usr/bin/</pre></div>
 <span class="pl-smi">WantedBy</span>=m<span class="pl-ii">ulti-user.target</span>
 <span class="pl-ii">EOF</span></pre></div>
 <p>创建 <code class="notranslate">/etc/systemd/system/cri-docker.socket</code> 文件，并写入如下内容</p>
-<div class="highlight highlight-source-toml"><pre class="notranslate"><span class="pl-ii">cat &gt; /etc/systemd/system/cri-docker.socket &lt;&lt;-EOF</span>
+<div class="highlight highlight-source-toml"><pre class="notranslate"><span class="pl-ii">cat &gt; /etc/systemd/system/cri-dockerd.socket &lt;&lt;-EOF</span>
 [<span class="pl-en">Unit</span>]
 <span class="pl-smi">Description</span>=C<span class="pl-ii">RI Docker Socket for the API</span>
-<span class="pl-smi">PartOf</span>=c<span class="pl-ii">ri-dockerd.service    </span><span class="pl-c"><span class="pl-c">#</span>systemd cri-docker.servics 文件名</span>
+<span class="pl-smi">PartOf</span>=c<span class="pl-ii">ri-dockerd.service    </span><span class="pl-c"><span class="pl-c">#</span> 保持与服务文件名一致</span>
 
 [<span class="pl-en">Socket</span>]
 <span class="pl-smi">ListenStream</span>=/<span class="pl-ii">var/run/cri-dockerd.sock</span>
