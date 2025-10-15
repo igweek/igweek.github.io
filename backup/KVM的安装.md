@@ -1,5 +1,3 @@
-### KVM软件安装
-
 ### 1、 环境准备
 
 关闭SELinux，将 /etc/sysconfig/selinux 中的 SELinux=enforcing 修改为 SELinux=disabled
