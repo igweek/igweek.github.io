@@ -1,4 +1,4 @@
-### 准备环境
+## 准备环境
 
 centos8
 | 机器名      | IP              | 角色     | CPU | 内存  |
@@ -6,7 +6,7 @@ centos8
 | centos01 | 192.168.109.130 | master | 4核  | 2G  |
 | centos02 | 192.168.109.131 | node   | 4核  | 2G  |
 
-###### 设置主机名，所有节点都执行
+### 设置主机名，所有节点都执行
 
 
 ```shell
@@ -16,7 +16,7 @@ vim /etc/hosts
 192.168.109.131 centos02
 ```
 
-###### 关闭防火墙，所有节点都执行
+### 关闭防火墙，所有节点都执行
 
 
 ```shell
@@ -38,7 +38,7 @@ vim /etc/fstab
 #/dev/mapper/cs-swap swap
 ```
 
-###### 配置网桥，所有节点都执行
+### 配置网桥，所有节点都执行
 
 1.修改参数
 
@@ -70,11 +70,11 @@ net.ipv4.ip_forward = 1
 vm.swappiness = 0
 ```
 
-### 安装containerd
+## 安装containerd
 
 以下步骤所有节点都执行。
 
-###### 安装
+### 安装
 
 
 
@@ -83,7 +83,7 @@ wget https://github.com/containerd/containerd/releases/download/v1.7.2/container
 tar xzvf containerd-1.7.25-linux-amd64.tar.gz -C /usr/local
 ```
 
-###### 修改配置
+### 修改配置
 
 
 
@@ -97,7 +97,7 @@ SystemdCgroup = true
 sandbox_image = "registry.aliyuncs.com/google_containers/pause:3.9"
 ```
 
-###### 启动服务
+### 启动服务
 
 
 
@@ -109,7 +109,7 @@ systemctl daemon-reload
 systemctl enable --now containerd
 ```
 
-###### 验证安装
+### 验证安装
 
 
 
@@ -126,11 +126,11 @@ Server:
   UUID: 747cbf1b-17d4-4124-987a-203d8c72de7c
 ```
 
-### 安装runc
+## 安装runc
 
 以下步骤所有节点都执行。
 
-###### 准备文件
+### 准备文件
 
 
 
@@ -139,7 +139,7 @@ wget https://github.com//opencontainers/runc/releases/download/v1.1.7/runc.amd64
 chmod +x runc.amd64
 ```
 
-###### 查找containerd安装时已安装的runc所在的位置，如果不存在runc文件，则直接进行下一步
+### 查找containerd安装时已安装的runc所在的位置，如果不存在runc文件，则直接进行下一步
 
 
 
@@ -148,7 +148,7 @@ chmod +x runc.amd64
 /usr/bin/runc
 ```
 
-###### 替换上一步的结果文件
+### 替换上一步的结果文件
 
 
 
@@ -156,7 +156,7 @@ chmod +x runc.amd64
 mv -f runc.amd64 /usr/bin/runc
 ```
 
-###### 验证安装
+### 验证安装
 
 
 
@@ -169,9 +169,9 @@ go: go1.20.3
 libseccomp: 2.5.4
 ```
 
-### 安装kubernetes
+## 安装kubernetes
 
-###### 添加阿里云的kubernetes源，所有节点都执行
+### 添加阿里云的kubernetes源，所有节点都执行
 
 
 
@@ -187,7 +187,7 @@ gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors
 EOF
 ```
 
-###### 安装最新版，所有节点都执行
+### 安装最新版，所有节点都执行
 
 
 
@@ -195,7 +195,7 @@ EOF
 yum install -y kubeadm kubelet kubectl
 ```
 
-###### 开机自启动，所有节点都执行
+### 开机自启动，所有节点都执行
 
 
 
@@ -203,7 +203,7 @@ yum install -y kubeadm kubelet kubectl
 systemctl enable kubelet
 ```
 
-###### 验证安装，所有节点都执行
+### 验证安装，所有节点都执行
 
 
 
@@ -212,7 +212,7 @@ systemctl enable kubelet
 kubeadm version: &version.Info{Major:"1", Minor:"27", GitVersion:"v1.27.1", GitCommit:"4c9411232e10168d7b050c49a1b59f6df9d7ea4b", GitTreeState:"clean", BuildDate:"2023-04-14T13:20:04Z", GoVersion:"go1.20.3", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
-###### 初始化集群，仅在master(centos01)上执行
+### 初始化集群，仅在master(centos01)上执行
 
 
 ```shell
@@ -323,7 +323,7 @@ kube-flannel-ds-qll8g   1/1     Running   12 (13m ago)   6d1h
 [root@centos02 opt]# kubeadm join 192.168.109.130:6443 --token osh87v.zvo010kamsr8esmp --discovery-token-ca-cert-hash sha256:ff4607c7c194e9f756b1eb509e64d2d926b5f8f9556a85c3c14a2d25add28230
 ```
 
-###### 验证安装结果，仅在master节点执行
+### 验证安装结果，仅在master节点执行
 
 
 

@@ -10,7 +10,7 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="### 准备环境
+<meta name="description" content="## 准备环境
 
 centos8
 | 机器名      | IP              | 角色     | CPU | 内存  |
@@ -18,7 +18,7 @@ centos8
 | centos01 | 192.168.109.130 | master | 4核  | 2G  |
 | centos02 | 192.168.109.131 | node   | 4核  | 2G  |
 
-###### 设置主机名，所有节点都执行
+### 设置主机名，所有节点都执行
 
 
 ```shell
@@ -28,7 +28,7 @@ vim /etc/hosts
 192.168.109.131 centos02
 ```
 
-###### 关闭防火墙，所有节点都执行
+### 关闭防火墙，所有节点都执行
 
 
 ```shell
@@ -50,7 +50,7 @@ vim /etc/fstab
 #/dev/mapper/cs-swap swap
 ```
 
-###### 配置网桥，所有节点都执行
+### 配置网桥，所有节点都执行
 
 1.修改参数
 
@@ -82,11 +82,11 @@ net.ipv4.ip_forward = 1
 vm.swappiness = 0
 ```
 
-### 安装containerd
+## 安装containerd
 
 以下步骤所有节点都执行。">
 <meta property="og:title" content="安装k8s(kubernetes)+containerd">
-<meta property="og:description" content="### 准备环境
+<meta property="og:description" content="## 准备环境
 
 centos8
 | 机器名      | IP              | 角色     | CPU | 内存  |
@@ -94,7 +94,7 @@ centos8
 | centos01 | 192.168.109.130 | master | 4核  | 2G  |
 | centos02 | 192.168.109.131 | node   | 4核  | 2G  |
 
-###### 设置主机名，所有节点都执行
+### 设置主机名，所有节点都执行
 
 
 ```shell
@@ -104,7 +104,7 @@ vim /etc/hosts
 192.168.109.131 centos02
 ```
 
-###### 关闭防火墙，所有节点都执行
+### 关闭防火墙，所有节点都执行
 
 
 ```shell
@@ -126,7 +126,7 @@ vim /etc/fstab
 #/dev/mapper/cs-swap swap
 ```
 
-###### 配置网桥，所有节点都执行
+### 配置网桥，所有节点都执行
 
 1.修改参数
 
@@ -158,7 +158,7 @@ net.ipv4.ip_forward = 1
 vm.swappiness = 0
 ```
 
-### 安装containerd
+## 安装containerd
 
 以下步骤所有节点都执行。">
 <meta property="og:type" content="article">
@@ -231,7 +231,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h3>准备环境</h3>
+<div class="markdown-body" id="postBody"><h2>准备环境</h2>
 <p>centos8</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
@@ -260,12 +260,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<h6>设置主机名，所有节点都执行</h6>
+<h3>设置主机名，所有节点都执行</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">vim /etc/hosts
 <span class="pl-c"><span class="pl-c">#</span>增加</span>
 192.168.109.130 centos01
 192.168.109.131 centos02</pre></div>
-<h6>关闭防火墙，所有节点都执行</h6>
+<h3>关闭防火墙，所有节点都执行</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">systemctl stop firewalld
 systemctl disable firewalld
 setenforce 0
@@ -277,7 +277,7 @@ SELINUX=disabled</pre></div>
 vim /etc/fstab
 <span class="pl-c"><span class="pl-c">#</span> 将该行注释掉</span>
 <span class="pl-c"><span class="pl-c">#</span>/dev/mapper/cs-swap swap</span></pre></div>
-<h6>配置网桥，所有节点都执行</h6>
+<h3>配置网桥，所有节点都执行</h3>
 <p>1.修改参数</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">vim /etc/sysctl.conf
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -293,12 +293,12 @@ net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 vm.swappiness = 0</pre></div>
-<h3>安装containerd</h3>
+<h2>安装containerd</h2>
 <p>以下步骤所有节点都执行。</p>
-<h6>安装</h6>
+<h3>安装</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">wget https://github.com/containerd/containerd/releases/download/v1.7.2/containerd-1.7.2-linux-amd64.tar.gz
 tar xzvf containerd-1.7.25-linux-amd64.tar.gz -C /usr/local</pre></div>
-<h6>修改配置</h6>
+<h3>修改配置</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">mkdir /etc/containerd
 containerd config default <span class="pl-k">&gt;</span> /etc/containerd/config.toml
 vim /etc/containerd/config.toml
@@ -306,13 +306,13 @@ vim /etc/containerd/config.toml
 SystemdCgroup = <span class="pl-c1">true</span>
 <span class="pl-c"><span class="pl-c">#</span>由于国内下载不到registry.k8s.io的镜像，修改sandbox_image的值为：</span>
 sandbox_image = <span class="pl-s"><span class="pl-pds">"</span>registry.aliyuncs.com/google_containers/pause:3.9<span class="pl-pds">"</span></span></pre></div>
-<h6>启动服务</h6>
+<h3>启动服务</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p /usr/local/lib/systemd/system
 wget https://raw.githubusercontent.com/containerd/containerd/main/containerd.service
 mv containerd.service /usr/local/lib/systemd/system
 systemctl daemon-reload
 systemctl <span class="pl-c1">enable</span> --now containerd</pre></div>
-<h6>验证安装</h6>
+<h3>验证安装</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">[root@centos01 opt]<span class="pl-c"><span class="pl-c">#</span> ctr version</span>
 Client:
   Version:  v1.7.2
@@ -323,25 +323,25 @@ Server:
   Version:  v1.7.2
   Revision: 0cae528dd6cb557f7201036e9f43420650207b58
   UUID: 747cbf1b-17d4-4124-987a-203d8c72de7c</pre></div>
-<h3>安装runc</h3>
+<h2>安装runc</h2>
 <p>以下步骤所有节点都执行。</p>
-<h6>准备文件</h6>
+<h3>准备文件</h3>
 <div class="highlight highlight-text-adblock"><pre class="notranslate">wget https://github.com//opencontainers/runc/releases/download/v1.1.7/runc.amd64
 chmod +x runc.amd64</pre></div>
-<h6>查找containerd安装时已安装的runc所在的位置，如果不存在runc文件，则直接进行下一步</h6>
+<h3>查找containerd安装时已安装的runc所在的位置，如果不存在runc文件，则直接进行下一步</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">[root@centos01 opt]<span class="pl-c"><span class="pl-c">#</span> which runc</span>
 /usr/bin/runc</pre></div>
-<h6>替换上一步的结果文件</h6>
+<h3>替换上一步的结果文件</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">mv -f runc.amd64 /usr/bin/runc</pre></div>
-<h6>验证安装</h6>
+<h3>验证安装</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">[root@centos01 opt]<span class="pl-c"><span class="pl-c">#</span> runc -v</span>
 runc version 1.1.7
 commit: v1.1.7-0-g860f061b
 spec: 1.0.2-dev
 go: go1.20.3
 libseccomp: 2.5.4</pre></div>
-<h3>安装kubernetes</h3>
-<h6>添加阿里云的kubernetes源，所有节点都执行</h6>
+<h2>安装kubernetes</h2>
+<h3>添加阿里云的kubernetes源，所有节点都执行</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; /etc/yum.repos.d/kubernetes.repo</span>
 <span class="pl-s">[kubernetes]</span>
 <span class="pl-s">name=Kubernetes</span>
@@ -351,14 +351,14 @@ libseccomp: 2.5.4</pre></div>
 <span class="pl-s">repo_gpgcheck=1</span>
 <span class="pl-s">gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg</span>
 <span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
-<h6>安装最新版，所有节点都执行</h6>
+<h3>安装最新版，所有节点都执行</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">yum install -y kubeadm kubelet kubectl</pre></div>
-<h6>开机自启动，所有节点都执行</h6>
+<h3>开机自启动，所有节点都执行</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">systemctl <span class="pl-c1">enable</span> kubelet</pre></div>
-<h6>验证安装，所有节点都执行</h6>
+<h3>验证安装，所有节点都执行</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">[root@centos01 opt]<span class="pl-c"><span class="pl-c">#</span> kubeadm version</span>
 kubeadm version: <span class="pl-k">&amp;</span>version.Info{Major:<span class="pl-s"><span class="pl-pds">"</span>1<span class="pl-pds">"</span></span>, Minor:<span class="pl-s"><span class="pl-pds">"</span>27<span class="pl-pds">"</span></span>, GitVersion:<span class="pl-s"><span class="pl-pds">"</span>v1.27.1<span class="pl-pds">"</span></span>, GitCommit:<span class="pl-s"><span class="pl-pds">"</span>4c9411232e10168d7b050c49a1b59f6df9d7ea4b<span class="pl-pds">"</span></span>, GitTreeState:<span class="pl-s"><span class="pl-pds">"</span>clean<span class="pl-pds">"</span></span>, BuildDate:<span class="pl-s"><span class="pl-pds">"</span>2023-04-14T13:20:04Z<span class="pl-pds">"</span></span>, GoVersion:<span class="pl-s"><span class="pl-pds">"</span>go1.20.3<span class="pl-pds">"</span></span>, Compiler:<span class="pl-s"><span class="pl-pds">"</span>gc<span class="pl-pds">"</span></span>, Platform:<span class="pl-s"><span class="pl-pds">"</span>linux/amd64<span class="pl-pds">"</span></span>}</pre></div>
-<h6>初始化集群，仅在master(centos01)上执行</h6>
+<h3>初始化集群，仅在master(centos01)上执行</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">[root@centos01 opt]<span class="pl-c"><span class="pl-c">#</span> kubeadm init --apiserver-advertise-address 192.168.109.130 --image-repository registry.aliyuncs.com/google_containers --kubernetes-version v1.27.1 --pod-network-cidr=10.244.0.0/16</span>
 
 ...
@@ -417,7 +417,7 @@ kube-flannel-ds-dfngh   1/1     Running   17 (13m ago)   6d1h
 kube-flannel-ds-qll8g   1/1     Running   12 (13m ago)   6d1h</pre></div>
 <p>3.其他节点加入集群，非master节点都执行</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">[root@centos02 opt]<span class="pl-c"><span class="pl-c">#</span> kubeadm join 192.168.109.130:6443 --token osh87v.zvo010kamsr8esmp --discovery-token-ca-cert-hash sha256:ff4607c7c194e9f756b1eb509e64d2d926b5f8f9556a85c3c14a2d25add28230</span></pre></div>
-<h6>验证安装结果，仅在master节点执行</h6>
+<h3>验证安装结果，仅在master节点执行</h3>
 <div class="highlight highlight-source-shell"><pre class="notranslate">[root@centos01 opt]<span class="pl-c"><span class="pl-c">#</span> kubectl get nodes</span>
 NAME       STATUS   ROLES           AGE    VERSION
 centos01   Ready    control-plane   134m   v1.27.1
