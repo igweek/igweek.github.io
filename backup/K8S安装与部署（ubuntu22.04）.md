@@ -846,6 +846,7 @@ csi-node-driver-w49l8                      2/2     Running   0          15h
 csi-node-driver-zx9d2                      2/2     Running   0          15h
 ```
 
+![tempsnip.png](https://pic.myla.eu.org/file/1760512742231_tempsnip.png)
 此刻再次查看node状态，就会是Ready了
 
 
