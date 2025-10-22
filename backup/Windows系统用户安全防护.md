@@ -18,6 +18,10 @@
 运行---gpedit.msc
 ![image.png](https://pic.myla.eu.org/file/1760928079266_image.png)
 
+>[!note]
+如果重命名后，后续操作有问题了，请尽量对虚拟机进行重启
+原因是“用户名”映射到“安全标识符（SID）重命名后映射关系出现问题
+
 **新建test用户**
 [![](https://s2.loli.net/2024/12/02/waUZBepJqmWisjR.jpg)](https://s2.loli.net/2024/12/02/waUZBepJqmWisjR.jpg)
 [![](https://s2.loli.net/2024/12/02/GAekuIQ4DYFRMCp.jpg)](https://s2.loli.net/2024/12/02/GAekuIQ4DYFRMCp.jpg)
