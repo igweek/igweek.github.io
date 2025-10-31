@@ -6,11 +6,15 @@
 
 ![image.png](https://pic.myla.eu.org/file/KYrTfhvn.png)
 
+![image.png](https://pic.myla.eu.org/file/qjozYANS.png)
+
 ### 是否活动分区
 活动分区（80）非活动分区（00） 即系统盘还是非系统盘
 ### 分区类型：
 ![image.png](https://pic.myla.eu.org/file/fYcm1LMD.png)
 ### 起始扇区号
 ### 分区总扇区数
-由于题目中只有一个分区
-所以 分区总扇区数=硬盘总扇区数-分区起始扇区
+由于题目中只有一个分区，所以
+```txt
+分区总扇区数=硬盘总扇区数-分区起始扇区
+```
