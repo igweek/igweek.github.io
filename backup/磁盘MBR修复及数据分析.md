@@ -8,6 +8,8 @@
 
 ![image.png](https://pic.myla.eu.org/file/qjozYANS.png)
 
+![image.png](https://pic.myla.eu.org/file/1762139120755_image.png)
+
 ### 是否活动分区
 活动分区（80）非活动分区（00） 即系统盘还是非系统盘
 ### 分区类型：
