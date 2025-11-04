@@ -4,9 +4,8 @@
 
 **MBR（Master Boot Record，主引导记录） 是硬盘最前端的一个特殊扇区（第 0 扇区，512 字节），它在计算机启动和硬盘分区管理中起核心作用。可以把它理解为 硬盘的“启动导航员”。**
 
-![image.png](https://pic.myla.eu.org/file/KYrTfhvn.png)
+![image.png](https://pic.myla.eu.org/file/1762221072370_image.png)
 
-![image.png](https://pic.myla.eu.org/file/qjozYANS.png)
 
 ![image.png](https://pic.myla.eu.org/file/1762139120755_image.png)
 
