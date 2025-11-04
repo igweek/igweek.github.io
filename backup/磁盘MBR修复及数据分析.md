@@ -20,5 +20,7 @@
 分区总扇区数=硬盘总扇区数-分区起始扇区
 ```
 
-**详细操作视频**
-https://short.myla.eu.org/rLvl
+### 详细操作视频
+**MBR修复**
+https://pic.geek.nyc.mn/mbr.mp4
+https://pic.geek.nyc.mn/mbr2.mp4
