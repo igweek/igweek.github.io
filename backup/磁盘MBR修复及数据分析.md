@@ -28,3 +28,6 @@ https://pic.geek.nyc.mn/mbr.mp4
 **数据包分析**
 将test.vhd磁盘修复后，磁盘的文件拷贝到桌面，并用wireshark软件打开。
 https://pic.geek.nyc.mn/mbr1.mp4
+
+**各类型文件文件头尾**
+![image.png](https://pic.myla.eu.org/file/1762239099000_image.png)
