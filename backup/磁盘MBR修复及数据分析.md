@@ -23,4 +23,4 @@
 ### 详细操作视频
 **MBR修复**
 https://pic.geek.nyc.mn/mbr.mp4
-https://pic.geek.nyc.mn/mbr2.mp4
+https://pic.geek.nyc.mn/mbr1.mp4
