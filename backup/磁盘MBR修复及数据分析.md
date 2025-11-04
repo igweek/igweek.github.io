@@ -21,4 +21,4 @@
 ```
 
 **详细操作视频**
-[https://short.myla.eu.org/rLvl](url)
+https://short.myla.eu.org/rLvl
