@@ -21,4 +21,4 @@
 ```
 
 **详细操作视频**
-[https://noteyd.chaoxing.com/pc/6ca48820-3bb9-45f2-8580-6e5b0802f606](url)
+[https://short.myla.eu.org/rLvl](url)
