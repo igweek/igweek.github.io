@@ -45,9 +45,9 @@ vim /etc/fstab
 ```shell
 vim /etc/sysctl.conf
 net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables 	= 1
-net.ipv4.ip_forward 				= 1
-vm.swappiness 						= 0
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+vm.swappiness = 0
 ```
 
 2.然后，加载如下两个模块，所有节点都执行
