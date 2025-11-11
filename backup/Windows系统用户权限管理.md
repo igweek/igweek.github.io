@@ -5,26 +5,27 @@
 **结论：拒绝优先**
 
 **创建test1用户**
-![image.png](https://pic.myla.eu.org/file/1761034676445_image.png)
-![image.png](https://pic.myla.eu.org/file/1761034708252_image.png)
-![image.png](https://pic.myla.eu.org/file/1761034811469_image.png)
+`Gmeek-html<img src="/img/windowsxtyhqxgl/1.png">`
+`Gmeek-html<img src="/img/windowsxtyhqxgl/2.png">`
+`Gmeek-html<img src="/img/windowsxtyhqxgl/3.png">`
+
 
 **创建组别**
-![image.png](https://pic.myla.eu.org/file/1761034849757_image.png)
-![image.png](https://pic.myla.eu.org/file/1761034895935_image.png)
-![image.png](https://pic.myla.eu.org/file/1761034917514_image.png)
+`Gmeek-html<img src="/img/windowsxtyhqxgl/4.png">`
+`Gmeek-html<img src="/img/windowsxtyhqxgl/5.png">`
+`Gmeek-html<img src="/img/windowsxtyhqxgl/6.png">`
 
 **创建文件**
 在C盘新建文件夹test，test文件夹中，新建任意txt文件，并写入任意内容
 
 **指定权限**
 右键--test文件夹--属性
-![image.png](https://pic.myla.eu.org/file/1761035391736_image.png)
-![image.png](https://pic.myla.eu.org/file/1761035478193_image.png)
+`Gmeek-html<img src="/img/windowsxtyhqxgl/7.png">`
+`Gmeek-html<img src="/img/windowsxtyhqxgl/8.png">`
 **group1赋予读取写入权限**
-![image.png](https://pic.myla.eu.org/file/1761035518913_image.png)
+`Gmeek-html<img src="/img/windowsxtyhqxgl/9.png">`
 **group2赋予拒绝读取写入权限**
-![image.png](https://pic.myla.eu.org/file/1761035591636_image.png)
+`Gmeek-html<img src="/img/windowsxtyhqxgl/10.png">`
 
 **验证**
 注销--使用test1用户登录--验证权限
