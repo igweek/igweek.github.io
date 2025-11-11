@@ -2,29 +2,30 @@
 >1.用户密码必须符合复杂度要求。用户密码长度最小为5。用户密码最短使用期限为15天。用户密码最长使用期限为30天。强制用户密码历史为5个。用户锁定阈值为3次锁定时间为30分钟。
 2.禁用来宾账户。重命名系统管理员名称为@Dm1n。新建test用户并设置其只能在周一至周五的9:00-17:00可以登录。设置取得文件或其他对象的所有权只指派给Administrators用户组。
 ### 1、密码策略
-[![](https://s2.loli.net/2024/12/02/YSlPzvICRTJgdyw.jpg)](https://s2.loli.net/2024/12/02/YSlPzvICRTJgdyw.jpg)
-[![](https://s2.loli.net/2024/12/02/Y5lLgROXVpP2ua8.jpg)](https://s2.loli.net/2024/12/02/Y5lLgROXVpP2ua8.jpg)
-[![](https://s2.loli.net/2024/12/02/oysmBOJ76t5Eqgl.jpg)](https://s2.loli.net/2024/12/02/oysmBOJ76t5Eqgl.jpg)
+`Gmeek-html<img src="/img/windowsxtyhaqfh/1.jfif">`
+`Gmeek-html<img src="/img/windowsxtyhaqfh/2.jfif">`
+`Gmeek-html<img src="/img/windowsxtyhaqfh/3.jfif">`
+
 ### 2、用户设置
 **右键---我的电脑---管理**
-[![](https://s2.loli.net/2024/12/02/CiyTvrUBSzhlZu1.jpg)](https://s2.loli.net/2024/12/02/CiyTvrUBSzhlZu1.jpg)
-[![](https://s2.loli.net/2024/12/02/wiEjyD17rL6oNUd.jpg)](https://s2.loli.net/2024/12/02/wiEjyD17rL6oNUd.jpg)
+`Gmeek-html<img src="/img/windowsxtyhaqfh/4.jfif">`
+`Gmeek-html<img src="/img/windowsxtyhaqfh/5.jfif">`
 
 **禁用guest用户**
 右键guest---属性---勾选账户已禁用
-![image.png](https://pic.myla.eu.org/file/1760927575390_image.png)
+`Gmeek-html<img src="/img/windowsxtyhaqfh/6.png">`
 
 **重命名administrator**
 运行---gpedit.msc
-![image.png](https://pic.myla.eu.org/file/1760928079266_image.png)
+`Gmeek-html<img src="/img/windowsxtyhaqfh/7.png">`
 
 >[!note]
 如果重命名后，后续操作有问题了，请尽量对虚拟机进行重启
 原因是“用户名”映射到“安全标识符（SID）重命名后映射关系出现问题
 
 **新建test用户**
-[![](https://s2.loli.net/2024/12/02/waUZBepJqmWisjR.jpg)](https://s2.loli.net/2024/12/02/waUZBepJqmWisjR.jpg)
-[![](https://s2.loli.net/2024/12/02/GAekuIQ4DYFRMCp.jpg)](https://s2.loli.net/2024/12/02/GAekuIQ4DYFRMCp.jpg)
+`Gmeek-html<img src="/img/windowsxtyhaqfh/8.jfif">`
+`Gmeek-html<img src="/img/windowsxtyhaqfh/9.jfif">`
 
 **设置其只能在周一至周五的9:00-17:00可以登录**
 打开 命令提示符（管理员权限），执行：
@@ -40,9 +41,8 @@ M-F 代表 Monday–Friday；
 ```shell
 net user test
 ```
-![image.png](https://pic.myla.eu.org/file/1760928306991_image.png)
-
+`Gmeek-html<img src="/img/windowsxtyhaqfh/10.png">`
 **设置取得文件或其他对象的所有权只指派给Administrators用户组**
 运行---gpedit.msc
-![image.png](https://pic.myla.eu.org/file/1760928409395_image.png)
+`Gmeek-html<img src="/img/windowsxtyhaqfh/11.png">`
 
