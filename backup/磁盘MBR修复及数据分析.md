@@ -4,15 +4,17 @@
 
 **MBR（Master Boot Record，主引导记录） 是硬盘最前端的一个特殊扇区（第 0 扇区，512 字节），它在计算机启动和硬盘分区管理中起核心作用。可以把它理解为 硬盘的“启动导航员”。**
 
-![image.png](https://pic.myla.eu.org/file/1762221072370_image.png)
+`Gmeek-html<img src="https://pic.myla.eu.org/file/1762221072370_image.png">`
 
 
-![image.png](https://pic.myla.eu.org/file/1762139120755_image.png)
+`Gmeek-html<img src="https://pic.myla.eu.org/file/1762139120755_image.png">`
+
+
 
 ### 是否活动分区
 活动分区（80）非活动分区（00） 即系统盘还是非系统盘
 ### 分区类型：
-![image.png](https://pic.myla.eu.org/file/fYcm1LMD.png)
+`Gmeek-html<img src="https://pic.myla.eu.org/file/fYcm1LMD.png">`
 ### 起始扇区号
 ### 分区总扇区数
 由于题目中只有一个分区，所以
@@ -29,4 +31,4 @@
 将test.vhd磁盘修复后，磁盘的文件拷贝到桌面，并用wireshark软件打开。
 `Gmeek-html<video src="https://img.gweek.nyc.mn/mbr1.mp4" controls allowfullscreen="true" width="100%" height="460px"></video>`
 **各类型文件文件头尾**
-![image.png](https://pic.myla.eu.org/file/1762239099000_image.png)
+`Gmeek-html<img src="https://pic.myla.eu.org/file/1762239099000_image.png">`
