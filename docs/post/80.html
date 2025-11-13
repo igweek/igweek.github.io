@@ -84,7 +84,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><strong>每行代表一个共享配置</strong>：每行表示一个要共享的目录以及该目录的共享参数。</p>
 <p><strong>目录路径</strong>：在每行的开头指定要共享的目录路径。</p>
 <p><strong>共享参数</strong>：在目录路径之后，您可以指定一系列的共享参数，用于控制客户端对共享的访问权限和行为。</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2155614cad22c41f8c2295454f7c24ea6a36d02e73ea7a4761b5010f8d8105b7/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739313436303734335f696d6167652e706e67"><img src="https://camo.githubusercontent.com/2155614cad22c41f8c2295454f7c24ea6a36d02e73ea7a4761b5010f8d8105b7/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739313436303734335f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1756791460743_image.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/72fe85ced4c485a4135769fab506559492129db90767e67e83c7947d0590025f/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739313436303734335f696d6167652e706e67"><img src="https://camo.githubusercontent.com/72fe85ced4c485a4135769fab506559492129db90767e67e83c7947d0590025f/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739313436303734335f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1756791460743_image.png" style="max-width: 100%;"></a></p>
 <p>以上配置表示共享了 /data 目录给所有客户端，允许读写操作，并禁用了根用户映射；同时，将 /home 目录只读共享给 192.168.1.0/24 子网下的客户端，并要求数据同步写入磁盘。</p>
 <p>常用的共享参数：</p>
 <p><strong>rw</strong>：可读可写，允许客户端对共享目录执行读取和写入操作。</p>
@@ -142,7 +142,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><code class="notranslate">systemctl enable nfs</code></p>
 <p>步骤 2：编辑配置文件</p>
 <p><code class="notranslate">vim /etc/exports</code></p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/7b9405b5f0ddbe37661eb4173486afdce77031f6342dca2145069d9fef10203e/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739313438343234345f696d6167652e706e67"><img src="https://camo.githubusercontent.com/7b9405b5f0ddbe37661eb4173486afdce77031f6342dca2145069d9fef10203e/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739313438343234345f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1756791484244_image.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/28c5d273e8b3eae5f821de857f1202ed1e993fc6ff399b42dcc138cfdd0874af/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739313438343234345f696d6167652e706e67"><img src="https://camo.githubusercontent.com/28c5d273e8b3eae5f821de857f1202ed1e993fc6ff399b42dcc138cfdd0874af/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739313438343234345f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1756791484244_image.png" style="max-width: 100%;"></a></p>
 <p>步骤 3：配置共享目录</p>
 <p><code class="notranslate">mkdir /data_share</code>    创建目录</p>
 <p><code class="notranslate">echo share_test &gt; /data_share/share.txt</code>  创建并写入share.txt文档</p>

@@ -101,7 +101,7 @@ TCP 端口 445：新版本的 SMB 服务通常使用此端口，它提供了更�
 <p><code class="notranslate">mkdir /share</code></p>
 <h2>编辑配置文件 /etc/samba/smb.conf</h2>
 <p><code class="notranslate">vim /etc/samba/smb.conf</code></p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/110bf6cec55869d328e44604acd95fe78fa4f86f5b0b96b70b29cefd9f45b549/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739303734343532345f696d6167652e706e67"><img src="https://camo.githubusercontent.com/110bf6cec55869d328e44604acd95fe78fa4f86f5b0b96b70b29cefd9f45b549/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739303734343532345f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1756790744524_image.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/69971eeaac1ded07a30bce836f52ba1dc92cee6b58126ebd7e955fd4f734cf13/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739303734343532345f696d6167652e706e67"><img src="https://camo.githubusercontent.com/69971eeaac1ded07a30bce836f52ba1dc92cee6b58126ebd7e955fd4f734cf13/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739303734343532345f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1756790744524_image.png" style="max-width: 100%;"></a></p>
 <h2>设置 SELinux 上下文</h2>
 <div class="highlight highlight-source-shell"><pre class="notranslate">chcon -t samba_share_t /share
 restorecon -R /share</pre></div>
@@ -151,7 +151,7 @@ chmod 775 /home/student</pre></div>
 smbpasswd -a user2</pre></div>
 <p><strong>6.编辑samba配置文件</strong></p>
 <p><code class="notranslate">vim /etc/samba/smb.conf</code></p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/459d024141969396c4659c234628a42b7514d67d34115b212d046459c9b1d561/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739303832383938325f696d6167652e706e67"><img src="https://camo.githubusercontent.com/459d024141969396c4659c234628a42b7514d67d34115b212d046459c9b1d561/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739303832383938325f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1756790828982_image.png" style="max-width: 100%;"></a><br>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4f2746d99665eacf12daa912eaa34be1bc02d9da13c9bbb5a7b275836d1c55ea/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739303832383938325f696d6167652e706e67"><img src="https://camo.githubusercontent.com/4f2746d99665eacf12daa912eaa34be1bc02d9da13c9bbb5a7b275836d1c55ea/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313735363739303832383938325f696d6167652e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/1756790828982_image.png" style="max-width: 100%;"></a><br>
 <strong>7.设置防火墙</strong></p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">firewall-cmd --permanent --add-service=samba
 firewall-cmd --reload</pre></div>
