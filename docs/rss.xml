@@ -1,5 +1,39 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 25 Nov 2025 02:45:13 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>SSH防护Fail2ban</title><link>https://bbs.017121.xyz/post/108.html</link><description>在 **Debian 13** 上，`fail2ban` 是防止 SSH 暴力破解的利器，它会自动监控登录失败并封禁恶意 IP。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/108.html</guid><pubDate>Mon, 24 Nov 2025 13:00:40 +0000</pubDate></item><item><title>磁盘MBR修复及数据分析</title><link>https://bbs.017121.xyz/post/107.html</link><description>&lt;img width='934' height='138' alt='Image' src='https://github.com/user-attachments/assets/e8040944-c3c3-4eaf-8312-26039f859000' /&gt;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 25 Nov 2025 06:15:13 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>解决Github图片无法显示问题</title><link>https://bbs.017121.xyz/post/109.html</link><description>&gt; 由于DNS污染，导致图片无法显示，通过修改文件解决
+
+**修改HOSTS文件 并添加如下内容**
+
+```txt
+# GitHub Start 
+140.82.113.3      github.com
+140.82.114.20     gist.github.com
+ 
+151.101.184.133    assets-cdn.github.com
+151.101.184.133    raw.githubusercontent.com
+151.101.184.133    gist.githubusercontent.com
+151.101.184.133    cloud.githubusercontent.com
+151.101.184.133    camo.githubusercontent.com
+151.101.184.133    avatars0.githubusercontent.com
+199.232.68.133     avatars0.githubusercontent.com
+199.232.28.133     avatars1.githubusercontent.com
+151.101.184.133    avatars1.githubusercontent.com
+151.101.184.133    avatars2.githubusercontent.com
+199.232.28.133     avatars2.githubusercontent.com
+151.101.184.133    avatars3.githubusercontent.com
+199.232.68.133     avatars3.githubusercontent.com
+151.101.184.133    avatars4.githubusercontent.com
+199.232.68.133     avatars4.githubusercontent.com
+151.101.184.133    avatars5.githubusercontent.com
+199.232.68.133     avatars5.githubusercontent.com
+151.101.184.133    avatars6.githubusercontent.com
+199.232.68.133     avatars6.githubusercontent.com
+151.101.184.133    avatars7.githubusercontent.com
+199.232.68.133     avatars7.githubusercontent.com
+151.101.184.133    avatars8.githubusercontent.com
+199.232.68.133     avatars8.githubusercontent.com
+ 
+# GitHub End
+```。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/109.html</guid><pubDate>Tue, 25 Nov 2025 06:14:44 +0000</pubDate></item><item><title>SSH防护Fail2ban</title><link>https://bbs.017121.xyz/post/108.html</link><description>在 **Debian 13** 上，`fail2ban` 是防止 SSH 暴力破解的利器，它会自动监控登录失败并封禁恶意 IP。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/108.html</guid><pubDate>Mon, 24 Nov 2025 13:00:40 +0000</pubDate></item><item><title>磁盘MBR修复及数据分析</title><link>https://bbs.017121.xyz/post/107.html</link><description>&lt;img width='934' height='138' alt='Image' src='https://github.com/user-attachments/assets/e8040944-c3c3-4eaf-8312-26039f859000' /&gt;
 
 
 &gt;利用电子取证技术恢复虚拟磁盘（c:\files\test.vhd）唯一分区中的机密文件，并获取机密文件内容。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/107.html</guid><pubDate>Thu, 30 Oct 2025 15:04:53 +0000</pubDate></item><item><title>取证技术应用</title><link>https://bbs.017121.xyz/post/106.html</link><description>## 取证技术应用
