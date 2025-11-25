@@ -1,3 +1,6 @@
+<img width="934" height="138" alt="Image" src="https://github.com/user-attachments/assets/e8040944-c3c3-4eaf-8312-26039f859000" />
+
+
 >利用电子取证技术恢复虚拟磁盘（c:\files\test.vhd）唯一分区中的机密文件，并获取机密文件内容。
 
 ## MBR结构
