@@ -1,5 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 26 Nov 2025 11:39:26 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>解决此博客图片无法显示问题</title><link>https://bbs.017121.xyz/post/109.html</link><description>&gt; 由于DNS污染，导致图片无法显示，通过修改文件解决
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 01 Dec 2025 08:16:52 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>MBR修复与数据包深度解析综合案例</title><link>https://bbs.017121.xyz/post/110.html</link><description>## 数据泄密
+
+`Gmeek-html&lt;video src='https://img.gweek.nyc.mn/sjxl.mp4' controls allowfullscreen='true' width='100%' height='460px'&gt;&lt;/video&gt;`
+
+&gt; 思考：如何杜绝 
+
+## 案例解析
+
+。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/110.html</guid><pubDate>Mon, 01 Dec 2025 08:13:55 +0000</pubDate></item><item><title>解决此博客图片无法显示问题</title><link>https://bbs.017121.xyz/post/109.html</link><description>&gt; 由于DNS污染，导致图片无法显示，通过修改文件解决
 
 **修改HOSTS文件 并添加如下内容**
 
