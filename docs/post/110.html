@@ -18,7 +18,9 @@
 
 ## 案例解析
 
-。">
+### 企业内部资料泄露取证案例
+
+- 某家从事人形机器人研发的科技公司，近期刚完成新款人形机器人核心图纸与物料清单（BOM）。">
 <meta property="og:title" content="MBR修复与数据包深度解析综合案例">
 <meta property="og:description" content="## 数据泄密
 
@@ -28,7 +30,9 @@
 
 ## 案例解析
 
-。">
+### 企业内部资料泄露取证案例
+
+- 某家从事人形机器人研发的科技公司，近期刚完成新款人形机器人核心图纸与物料清单（BOM）。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/110.html">
 <meta property="og:image" content="/img/123.png">
@@ -94,7 +98,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <blockquote>
 <p>思考：如何杜绝</p>
 </blockquote>
-<h2>案例解析</h2></div>
+<h2>案例解析</h2>
+<h3>企业内部资料泄露取证案例</h3>
+<ul>
+<li>某家从事人形机器人研发的科技公司，近期刚完成新款人形机器人核心图纸与物料清单（BOM）。这些文件被存放在公司内部 FTP 服务器中，由研发与运维共同维护。</li>
+<li>研发部门员工 李某 因受外部犯罪分子蛊惑，被许诺“如果能拿到机器人图纸和物料清单，将获得高额酬金”。在利益驱使下，李某利用自己对内部系统的熟悉，绕过权限控制，成功登录公司 FTP，并将机密文件下载到一块移动磁盘里。</li>
+<li>为了掩盖行为，他故意破坏了磁盘的 MBR，让磁盘表现为“无法识别”“文件系统损坏”。他企图让公司误以为磁盘自然损坏，从而拖延调查时间。</li>
+<li>公司随后发现 FTP 在异常时间段出现过李某的访问记录，并从其办公桌中找到这块“损坏”的磁盘。初步检查发现磁盘 MBR 被覆盖，但深度扇区扫描显示磁盘内部存在 pcapng 抓包文件的文件头特征。</li>
+<li>公司将此磁盘交由企业运维团队进行进一步取证。</li>
+</ul></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
