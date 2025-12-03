@@ -1,5 +1,391 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 02 Dec 2025 02:49:39 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>MBR修复与数据包深度解析综合案例</title><link>https://bbs.017121.xyz/post/110.html</link><description>## 回顾
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 03 Dec 2025 07:31:52 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>VPS常用测试脚本</title><link>https://bbs.017121.xyz/post/111.html</link><description>## 1、DD重装脚本
+
+[https://www.nodeseek.com/post-116193-1](https://www.nodeseek.com/post-116193-1)
+
+史上最强脚本
+
+```
+wget --no-check-certificate -qO InstallNET.sh 'https://raw.githubusercontent.com/leitbogioro/Tools/master/Linux_reinstall/InstallNET.sh' &amp;&amp; chmod a+x InstallNET.sh &amp;&amp; bash InstallNET.sh -debian 12 -pwd 'password'
+```
+
+萌咖大佬的脚本
+
+```
+bash &lt;(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/MoeClub/Note/master/InstallNET.sh') -d 11 -v 64 -p 密码 -port 端口 -a -firmware
+```
+
+beta.gs大佬的脚本
+
+```
+wget --no-check-certificate -O NewReinstall.sh https://raw.githubusercontent.com/fcurrk/reinstall/master/NewReinstall.sh &amp;&amp; chmod a+x NewReinstall.sh &amp;&amp; bash NewReinstall.sh
+```
+
+DD windows（使用史上最强DD脚本）
+
+```
+bash &lt;(curl -sSL https://raw.githubusercontent.com/leitbogioro/Tools/master/Linux_reinstall/InstallNET.sh) -windows 10  -lang 'cn'
+```
+
+```
+账户：Administrator
+密码：Teddysun.com
+```
+
+使用Windows徽标+R快捷键打开运行框，输入powershell运行，弹出powershell命名输入窗口，输入以下命令：irm [https://get.activated.win](https://www.nodeseek.com/jump?to=https%3A%2F%2Fget.activated.win) | iex
+
+## 2、综合测试脚本
+
+[bench.sh](https://www.nodeseek.com/jump?to=http%3A%2F%2Fbench.sh)
+
+```
+wget -qO- bench.sh | bash
+```
+
+LemonBench
+
+```
+wget -qO- https://raw.githubusercontent.com/LemonBench/LemonBench/main/LemonBench.sh | bash -s -- --fast
+```
+
+融合怪
+
+```
+bash &lt;(wget -qO- --no-check-certificate https://gitlab.com/spiritysdx/za/-/raw/main/ecs.sh)
+```
+
+NodeBench
+
+```
+bash &lt;(curl -sL https://raw.githubusercontent.com/LloydAsp/NodeBench/main/NodeBench.sh)
+```
+
+## 3、性能测试
+
+yabs
+
+```
+curl -sL yabs.sh | bash
+```
+
+跳过网络，测GB5
+
+```
+curl -sL yabs.sh | bash -s -- -i5
+```
+
+跳过网络和磁盘，测GB5
+
+```
+curl -sL yabs.sh | bash -s -- -if5
+```
+
+改测GB5不测GB6
+
+```
+curl -sL yabs.sh | bash -s -- -5
+```
+
+## 4、流媒体及IP质量测试
+
+最常用版本
+
+```
+bash &lt;(curl -L -s check.unlock.media)
+```
+
+原生检测脚本
+
+```
+bash &lt;(curl -sL Media.Check.Place)
+```
+
+准确度最高
+
+```
+bash &lt;(curl -L -s https://github.com/1-stream/RegionRestrictionCheck/raw/main/check.sh)
+```
+
+IP质量体检脚本
+
+```
+bash &lt;(curl -sL IP.Check.Place)
+```
+
+一键修改解锁DNS
+
+```
+wget https://raw.githubusercontent.com/Jimmyzxk/DNS-Alice-Unlock/refs/heads/main/dns-unlock.sh &amp;&amp; bash dns-unlock.sh
+```
+
+## 5、测速脚本
+
+Speedtest
+
+```
+bash &lt;(curl -sL bash.icu/speedtest)
+```
+
+Taier
+
+```
+bash &lt;(curl -sL res.yserver.ink/taier.sh)
+```
+
+hyperspeed
+
+```
+bash &lt;(curl -Lso- https://bench.im/hyperspeed)
+```
+
+全球测速
+
+```
+wget -qO- nws.sh | bash
+```
+
+区域速度测试
+
+```
+wget -qO- nws.sh | bash -s -- -r region_name
+```
+
+Ping 和路由测试
+
+```
+wget -qO- nws.sh | bash -s -- -rt [region]
+```
+
+## 6、回程测试
+
+直接显示回程（小白用这个）
+
+```
+curl https://raw.githubusercontent.com/ludashi2020/backtrace/main/install.sh -sSf | sh
+```
+
+回程详细测试（推荐）
+
+```
+wget -N --no-check-certificate https://raw.githubusercontent.com/Chennhaoo/Shell_Bash/master/AutoTrace.sh &amp;&amp; chmod +x AutoTrace.sh &amp;&amp; bash AutoTrace.sh
+```
+
+```
+wget https://ghproxy.com/https://raw.githubusercontent.com/vpsxb/testrace/main/testrace.sh -O testrace.sh &amp;&amp; bash testrace.sh
+```
+
+## 7、功能脚本
+
+添加SWAP
+
+```
+wget https://www.moerats.com/usr/shell/swap.sh &amp;&amp; bash swap.sh
+```
+
+Fail2ban
+
+```
+wget --no-check-certificate https://raw.githubusercontent.com/FunctionClub/Fail2ban/master/fail2ban.sh &amp;&amp; bash fail2ban.sh 2&gt;&amp;1 | tee fail2ban.log
+```
+
+一键开启BBR，适用于较新的Debian、Ubuntu
+
+```bash
+echo 'net.core.default_qdisc=fq' &gt;&gt; /etc/sysctl.conf
+echo 'net.ipv4.tcp_congestion_control=bbr' &gt;&gt; /etc/sysctl.conf
+sysctl -p
+sysctl net.ipv4.tcp_available_congestion_control
+lsmod | grep bbr
+```
+
+多功能BBR安装脚本
+
+```
+wget -N --no-check-certificate 'https://gist.github.com/zeruns/a0ec603f20d1b86de6a774a8ba27588f/raw/4f9957ae23f5efb2bb7c57a198ae2cffebfb1c56/tcp.sh' &amp;&amp; chmod +x tcp.sh &amp;&amp; ./tcp.sh
+```
+
+锐速/BBRPLUS/BBR2/BBR3
+
+```
+wget -O tcpx.sh 'https://github.com/ylx2016/Linux-NetSpeed/raw/master/tcpx.sh' &amp;&amp; chmod +x tcpx.sh &amp;&amp; ./tcpx.sh
+```
+
+TCP窗口调优
+
+```
+wget http://sh.nekoneko.cloud/tools.sh -O tools.sh &amp;&amp; bash tools.sh
+```
+
+添加warp
+
+```
+wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh &amp;&amp; bash menu.sh [option] [lisence/url/token]
+```
+
+25端口开放测试
+
+```
+telnet smtp.aol.com 25
+```
+
+## 8、一键安装常用环境及软件
+
+docker
+
+```
+bash &lt;(curl -sL 'https://get.docker.com')
+```
+
+Python
+
+```
+curl -O https://raw.githubusercontent.com/lx969788249/lxspacepy/master/pyinstall.sh &amp;&amp; chmod +x pyinstall.sh &amp;&amp; ./pyinstall.sh
+```
+
+iperf3
+
+```
+apt install iperf3
+```
+
+realm
+
+```
+bash &lt;(curl -L https://raw.githubusercontent.com/zhouh047/realm-oneclick-install/main/realm.sh) -i
+```
+
+gost
+
+```
+wget --no-check-certificate -O gost.sh https://raw.githubusercontent.com/qqrrooty/EZgost/main/gost.sh &amp;&amp; chmod +x gost.sh &amp;&amp; ./gost.sh
+```
+
+极光面板
+
+```
+bash &lt;(curl -fsSL https://raw.githubusercontent.com/Aurora-Admin-Panel/deploy/main/install.sh)
+```
+
+哪吒监控
+
+```
+curl -L https://raw.githubusercontent.com/naiba/nezha/master/script/install.sh  -o nezha.sh &amp;&amp; chmod +x nezha.sh &amp;&amp; sudo ./nezha.sh
+```
+
+```html
+&lt;script&gt;
+window.ShowNetTransfer = true;
+window.FixedTopServerName = true;
+window.DisableAnimatedMan = true
+```
+
+WARP
+
+```
+wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh &amp;&amp; bash menu.sh
+```
+
+Aria2
+
+```
+wget -N git.io/aria2.sh &amp;&amp; chmod +x aria2.sh &amp;&amp; ./aria2.sh
+```
+
+宝塔
+
+```
+wget -O install.sh http://v7.hostcli.com/install/install-ubuntu_6.0.sh &amp;&amp; sudo bash install.sh
+```
+
+PVE虚拟化
+
+```
+bash &lt;(wget -qO- --no-check-certificate https://raw.githubusercontent.com/oneclickvirt/pve/main/scripts/build_backend.sh)
+```
+
+Argox
+
+```
+bash &lt;(wget -qO- https://raw.githubusercontent.com/fscarmen/argox/main/argox.sh)
+```
+
+## 9、综合功能脚本
+
+科技lion
+
+```
+apt update -y  &amp;&amp; apt install -y curl
+
+bash &lt;(curl -sL kejilion.sh)
+```
+
+SKY-BOX
+
+```
+wget -O box.sh https://raw.githubusercontent.com/BlueSkyXN/SKY-BOX/main/box.sh &amp;&amp; chmod +x box.sh &amp;&amp; clear &amp;&amp; ./box.sh
+```
+
+## 10、其它
+
+TG中文汉化
+
+```
+https://t.me/setlanguage/classic-zh-cn
+```
+
+送中报告地址，去Google的帮助中心，[报告IP问题](https://www.nodeseek.com/jump?to=https%3A%2F%2Fsupport.google.com%2Fwebsearch%2Fcontact%2Fip%3Fhl%3Dzh-CN)
+
+[TCP 迷之调参](https://www.nodeseek.com/jump?to=https%3A%2F%2Fomnitt.com)
+
+[awesome_docker](https://www.nodeseek.com/jump?to=https%3A%2F%2Fgithub.com%2Fcoracoo%2Fawesome_docker_cn)
+
+## 11.VPS常备小命令【非脚本】
+
+[https://www.nodeseek.com/post-424648-1](https://www.nodeseek.com/post-424648-1)
+
+## 12.杜甫检测脚本
+
+```
+curl -sL https://sick.onl | bash
+
+```
+
+```
+wget https://github.com/Aniverse/A/raw/i/a &amp;&amp; bash a
+
+```
+
+```
+wget -qO- nws.sh | bash
+
+```
+
+```markdown
+# 下载脚本
+
+wget --no-check-certificate -qO InstallNET.sh 'https://raw.githubusercontent.com/leitbogioro/Tools/master/Linux_reinstall/InstallNET.sh' &amp;&amp; chmod a+x InstallNET.sh
+
+# 开始 dd
+
+bash InstallNET.sh -debian 12
+
+# 杜甫指定raid dd
+
+bash InstallNET.sh -debian 12 -raid '0'
+
+# 杜甫指定网络 dd
+
+bash InstallNET.sh -debian 12 --ip-addr 139.162.52.1 --ip-mask 24 --ip-gate 139.162.52.1 --ip6-addr 2a07:e040:2:1d3::1 --ip6-gate 2a07:e040::1 --ip6-mask 32
+
+# 指定密码 dd
+
+bash InstallNET.sh -debian 12 -pwd 'password'
+```
+
+```
+curl -sL https://raw.githubusercontent.com/Yuri-NagaSaki/SICK/refs/heads/main/hardware_info.sh | bash -s -- -cn
+```
+。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/111.html</guid><pubDate>Wed, 03 Dec 2025 07:31:21 +0000</pubDate></item><item><title>MBR修复与数据包深度解析综合案例</title><link>https://bbs.017121.xyz/post/110.html</link><description>## 回顾
 **MBR结构**
 
 MBR（Master Boot Record，主引导记录） 是硬盘最前端的一个特殊扇区（第 0 扇区，512 字节），它在计算机启动和硬盘分区管理中起核心作用。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/110.html</guid><pubDate>Mon, 01 Dec 2025 08:13:55 +0000</pubDate></item><item><title>解决此博客图片无法显示问题</title><link>https://bbs.017121.xyz/post/109.html</link><description>&gt; 由于DNS污染，导致图片无法显示，通过修改文件解决
