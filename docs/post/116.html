@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script><script src='/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="/img/123.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="> 我们校园网需要认证，认证后所有校园内网用户可以互访。">
+<meta property="og:title" content="FNOS需校园网认证时，怎样让不同网段的内网用户访问？">
+<meta property="og:description" content="> 我们校园网需要认证，认证后所有校园内网用户可以互访。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.017121.xyz/post/116.html">
+<meta property="og:image" content="/img/123.png">
+<title>FNOS需校园网认证时，怎样让不同网段的内网用户访问？</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>.box-sizing:border-box}body{min-width:200px;max-width:760px;margin:0 auto;padding:1em;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;color:#595959;font-size:16px;line-height:1.8em;background-image:linear-gradient(90deg,rgba(60,10,30,.05) 3%,transparent 0),linear-gradient(1turn,rgba(60,10,30,.05) 3%,transparent 0);background-size:20px 20px;background-position:50%;word-break:break-all}blockquote{margin-left:0;background-color:#ebf4ff;border-color:#7f9cf5;padding-top:.5rem;padding-bottom:.5rem;color:#667eea}strong{color:#5a67d8}code,a{color:#5a67d8}a{border-color:#667eea}code{background-color:#ebf4ff}blockquote,details,dl,ol,p,pre,table,ul{margin-bottom:1rem}ol{list-style:decimal}ul{list-style:disc}ol,ul{padding-left:2em}h1,h2{border-color:#5a67d8;border-style:solid;border-top-width:0;border-right-width:0;font-weight:500;padding-top:.25rem;padding-bottom:.25rem;padding-left:.75rem}h1{border-bottom:1px solid #eaecef !important;border-left-width:0}h2{border-bottom:1px solid #eaecef !important;border-left-width:6px}h1,h2,h3,h4,h5,h6{margin-bottom:16px;line-height:1.25}blockquote{padding-top:.5rem;padding-bottom:.5rem;padding-left:1rem;padding-right:.5rem;border-left:.25em solid}blockquote>:last-child{margin-bottom:0}blockquote>:first-child{margin-top:0}strong{font-weight:700}strong::before{content:'「'}strong::after{content:'」'}code,a{font-weight:500}code,a{font-size:unset}a{text-decoration:none;border-bottom:1px solid}.footnote-ref{border-width:0}code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace}pre>code{font-weight:400;color:unset;line-height:1.6}picture img{border-radius:6px;display:block;margin:10px 0;object-fit:contain;box-shadow:2px 4px 7px #999}img{max-width:100%;display:block;margin:10px 0;object-fit:contain;border-radius:6px;box-shadow:2px 4px 7px #999}picture{display:flex;flex-direction:column;align-items:flex-start;margin-top:6px;margin-bottom:6px}pre,pre code[class*=\"language-\"]{display:block;overflow-x:auto;padding:0}pre code[class*=\"language-\"]{padding:12px;padding-top:6px}.svg-markmap-box{min-height:20rem;width:100%}.footnotes{padding-top:.5rem;padding-bottom:.5rem}code[class*=\"language-\"],pre[class*=\"language-\"]{color:#f8f8f2;background:none;text-shadow:0 1px rgba(0,0,0,.3);font-family:Consolas,Monaco,'Andale Mono','Ubuntu Mono',monospace;font-size:1em;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=\"language-\"]{padding:1em;margin:.5em 0;overflow:auto;border-radius:6px}:not(pre)>code[class*=\"language-\"],pre[class*=\"language-\"]{background:#272822}:not(pre)>code[class*=\"language-\" ]{padding:.1em;border-radius:.3em;white-space:normal}.token.comment,.token.prolog,.token.doctype,.token.cdata{color:#8292a2}.token.punctuation{color:#f8f8f2}.token.namespace{opacity:.7}.token.property,.token.tag,.token.constant,.token.symbol,.token.deleted{color:#f92672}.token.boolean,.token.number{color:#ae81ff}.token.selector,.token.attr-name,.token.string,.token.char,.token.builtin,.token.inserted{color:#a6e22e}.token.operator,.token.entity,.token.url,.language-css .token.string,.style .token.string,.token.variable{color:#f8f8f2}.token.atrule,.token.attr-value,.token.function,.token.class-name{color:#e6db74}.token.keyword{color:#66d9ef}.token.regex,.token.important{color:#fd971f}.token.important,.token.bold{font-weight:700}.token.italic{font-style:italic}.token.entity{cursor:help}h3{padding-left:.75rem;border-left:4px solid #5a67d8}</style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">FNOS需校园网认证时，怎样让不同网段的内网用户访问？</h1>
+<div class="title-right">
+    <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/116" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><blockquote>
+<p>我们校园网需要认证，认证后所有校园内网用户可以互访。我在校园内搭建了飞牛os，网卡分配的地址是172.17.170.170，用飞牛系统的docker应用浏览器进行了校园网认证，并通过飞牛的docker的浏览器可以上网了。但是校园网内的其他ip比如172.17.78.199并不能访问飞牛。只有和飞牛os同一网段的其他用户可以访问，比如172.17.170.169。如何解决校园网认证，让飞牛网卡分配的ip地址与其他内网用户互联？</p>
+</blockquote>
+<h2>问题分析</h2>
+<p>核心原因是认证可能仅限于容器网络，未完全绑定到主机，导致主机在校园网的内网互访权限受限。校园网认证（通常为网页门户认证）往往基于MAC地址或IP绑定，如果容器使用默认的bridge网络模式，认证效果可能无法扩展到主机级别，从而影响跨子网的内网互联。</p>
+<h2>解决办法</h2>
+<p>使用host网络模式运行fnos里的chromium浏览器容器。<br>
+因为默认bridge模式下，容器有独立网络栈，认证可能只绑定容器的虚拟IP/MAC，无法让主机受益。切换到host模式，容器直接共享主机的网络（包括IP和MAC），这样认证就相当于在主机上操作，认证成功后主机即可获得完整的上网和内网互访权限。</p>
+<p><strong>1.删除旧容器</strong><br>
+<strong>2.修改yuml配置文件</strong></p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">services</span>:
+  <span class="pl-ent">chromium</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">registry.cn-guangzhou.aliyuncs.com/fnapp/trim-chromium:latest</span>
+    <span class="pl-ent">container_name</span>: <span class="pl-s">chromium</span>
+    <span class="pl-ent">security_opt</span>:
+      - <span class="pl-s">seccomp:unconfined</span>
+    <span class="pl-ent">network_mode</span>: <span class="pl-s"><span class="pl-pds">"</span>host<span class="pl-pds">"</span></span>
+    <span class="pl-ent">environment</span>:
+      - <span class="pl-s">TZ=Etc/UTC</span>
+      - <span class="pl-s">SUBFOLDER=/chromium/</span>
+      - <span class="pl-s">LC_ALL=zh_CN.UTF-8</span>
+      - <span class="pl-s">CUSTOM_USER=admin</span>
+      - <span class="pl-s">PASSWORD=admin</span>
+    <span class="pl-ent">volumes</span>:
+      - <span class="pl-s">/var/apps/docker-chromium/shares/chromium/config:/config</span>
+    <span class="pl-ent">shm_size</span>: <span class="pl-s"><span class="pl-pds">"</span>1gb<span class="pl-pds">"</span></span>
+    <span class="pl-ent">restart</span>: <span class="pl-s">unless-stopped</span></pre></div>
+<p><strong>3.启动容器</strong><br>
+<strong>4.账号密码</strong><br>
+默认admin admin<br>
+<strong>5.验证</strong><br>
+验证发现，fnos可以ping通www.baidu.com,但是仍然ping不通内网172.17.78.100这些其他的网段的内网ip</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">root@ys501:<span class="pl-k">~</span><span class="pl-c"><span class="pl-c">#</span> ip a</span>
+1: lo: <span class="pl-k">&lt;</span>LOOPBACK,UP,LOWER_UP<span class="pl-k">&gt;</span> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute
+       valid_lft forever preferred_lft forever
+2: enp12s0: <span class="pl-k">&lt;</span>BROADCAST,MULTICAST,UP,LOWER_UP<span class="pl-k">&gt;</span> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether d8:bb:c1:83:bd:ee brd ff:ff:ff:ff:ff:ff
+    inet 172.17.170.170/24 brd 172.17.170.255 scope global noprefixroute enp12s0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::230e:526a:615f:3203/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+3: br-8fbf28b3bef5: <span class="pl-k">&lt;</span>NO-CARRIER,BROADCAST,MULTICAST,UP<span class="pl-k">&gt;</span> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether f6:69:06:61:30:ba brd ff:ff:ff:ff:ff:ff
+    inet 172.18.0.1/16 brd 172.18.255.255 scope global br-8fbf28b3bef5
+       valid_lft forever preferred_lft forever
+    inet6 fe80::f469:6ff:fe61:30ba/64 scope link
+       valid_lft forever preferred_lft forever
+4: docker0: <span class="pl-k">&lt;</span>NO-CARRIER,BROADCAST,MULTICAST,UP<span class="pl-k">&gt;</span> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 26:5a:fd:5e:3e:22 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+root@ys501:<span class="pl-k">~</span><span class="pl-c"><span class="pl-c">#</span> ping www.baidu.com</span>
+PING www.baidu.com (180.101.51.73) 56(84) bytes of data.
+64 bytes from 180.101.51.73 (180.101.51.73): icmp_seq=1 ttl=52 time=7.24 ms
+64 bytes from 180.101.51.73 (180.101.51.73): icmp_seq=2 ttl=52 time=7.19 ms
+64 bytes from 180.101.51.73 (180.101.51.73): icmp_seq=3 ttl=52 time=7.09 ms
+64 bytes from 180.101.51.73 (180.101.51.73): icmp_seq=4 ttl=52 time=7.15 ms
+64 bytes from 180.101.51.73 (180.101.51.73): icmp_seq=5 ttl=52 time=7.13 ms
+64 bytes from 180.101.51.73 (180.101.51.73): icmp_seq=6 ttl=52 time=7.28 ms
+64 bytes from 180.101.51.73 (180.101.51.73): icmp_seq=7 ttl=52 time=7.24 ms
+64 bytes from 180.101.51.73 (180.101.51.73): icmp_seq=8 ttl=52 time=7.26 ms
+^C64 bytes from 180.101.51.73: icmp_seq=9 ttl=52 time=7.14 ms
+
+--- www.baidu.com ping statistics ---
+9 packets transmitted, 9 received, 0% packet loss, <span class="pl-k">time</span> 8739ms
+rtt min/avg/max/mdev = 7.091/7.191/7.283/0.062 ms
+root@ys501:<span class="pl-k">~</span><span class="pl-c"><span class="pl-c">#</span> ping 172.17.78.199</span>
+PING 172.17.78.199 (172.17.78.199) 56(84) bytes of data.
+From 172.17.0.1 icmp_seq=1 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=2 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=3 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=4 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=5 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=6 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=7 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=8 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=9 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=10 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=11 Destination Host Unreachable
+From 172.17.0.1 icmp_seq=12 Destination Host Unreachable
+^C
+--- 172.17.78.199 ping statistics ---
+15 packets transmitted, 0 received, +12 errors, 100% packet loss, <span class="pl-k">time</span> 14337ms</pre></div>
+<p><strong>问题分析</strong><br>
+因为主机网卡是 172.17.170.170/24，而 Docker 默认网段正好也是 172.17.0.0/16，子网冲突了。<br>
+Linux 路由表优先匹配最长前缀，所以去 172.17.78.x 的包傻乎乎地走了本地的 docker0 接口，结果就出不去了。</p>
+<p><strong>解决方法</strong><br>
+修改docker默认网桥ip</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">ip link <span class="pl-c1">set</span> docker0 down <span class="pl-k">2&gt;</span>/dev/null <span class="pl-k">||</span> <span class="pl-c1">true</span>
+ip route del 172.17.0.0/16 <span class="pl-k">2&gt;</span>/dev/null <span class="pl-k">||</span> <span class="pl-c1">true</span>
+
+mkdir -p /etc/docker
+cat <span class="pl-k">&gt;</span> /etc/docker/daemon.json <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span></span>
+<span class="pl-s">{</span>
+<span class="pl-s">  "bip": "10.99.0.1/24",</span>
+<span class="pl-s">  "default-address-pools": [{ "base": "10.99.0.0/16", "size": 24 }]</span>
+<span class="pl-s">}</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span>
+
+systemctl restart docker</pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.017121.xyz">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='/plugins/GmeekTOC.js'></script>
+
+</html>
