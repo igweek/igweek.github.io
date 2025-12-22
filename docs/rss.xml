@@ -1,17 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 18 Dec 2025 01:31:03 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Realm端口转发</title><link>https://bbs.017121.xyz/post/118.html</link><description>![image.png](https://pic.myla.eu.org/file/A1AZiPoP.png)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 22 Dec 2025 12:09:38 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Realm端口转发</title><link>https://bbs.017121.xyz/post/118.html</link><description>![image.png](https://pic.myla.eu.org/file/A1AZiPoP.png)
 &gt; Realm是一款由rust语言编写的开源高性能端口转发软件，支持多组端点转发，支持tcp&amp;udp和域名解析
 网络部署中常会遇到需要平衡速度与IP信誉的情况。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/118.html</guid><pubDate>Thu, 18 Dec 2025 01:30:38 +0000</pubDate></item><item><title>PVE的一些基础设置</title><link>https://bbs.017121.xyz/post/117.html</link><description>![image.png](https://pic.myla.eu.org/file/XccFyQC8.png)
 
 ## 换源 [​](#换源)
 
-PVE 9.0 基于 Debian 13，除了换 Debian 的软件源以外，还需要编辑企业源、Ceph 源、无订阅源以及 CT 模板源。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/117.html</guid><pubDate>Thu, 18 Dec 2025 01:25:40 +0000</pubDate></item><item><title>FNOS需校园网认证时，怎样让不同网段的内网用户访问？</title><link>https://bbs.017121.xyz/post/116.html</link><description>&gt; 我们校园网需要认证，认证后所有校园内网用户可以互访。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/116.html</guid><pubDate>Thu, 11 Dec 2025 11:23:57 +0000</pubDate></item><item><title>Warp</title><link>https://bbs.017121.xyz/post/115.html</link><description>![image.png](https://pic.myla.eu.org/file/tK4dnqkp.png)
-
-
-
-## [https://gitlab.com/fscarmen/warp.git](https://www.nodeseek.com/jump?to=https%3A%2F%2Fgitlab.com%2Ffscarmen%2Fwarp.git)
-
-地球不爆炸，menu 不放假；宇宙不重启，warp-go 不休息。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/115.html</guid><pubDate>Thu, 11 Dec 2025 11:22:57 +0000</pubDate></item><item><title>openlist天翼云盘关闭设备锁</title><link>https://bbs.017121.xyz/post/114.html</link><description>&gt; openlist挂在天翼云盘的必要步骤就是关闭设备锁
+PVE 9.0 基于 Debian 13，除了换 Debian 的软件源以外，还需要编辑企业源、Ceph 源、无订阅源以及 CT 模板源。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/117.html</guid><pubDate>Thu, 18 Dec 2025 01:25:40 +0000</pubDate></item><item><title>FNOS需校园网认证时，怎样让不同网段的内网用户访问？</title><link>https://bbs.017121.xyz/post/116.html</link><description>&gt; 我们校园网需要认证，认证后所有校园内网用户可以互访。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/116.html</guid><pubDate>Thu, 11 Dec 2025 11:23:57 +0000</pubDate></item><item><title>openlist天翼云盘关闭设备锁</title><link>https://bbs.017121.xyz/post/114.html</link><description>&gt; openlist挂在天翼云盘的必要步骤就是关闭设备锁
 
 可通过在网页端登录天翼账号 https://e.dlife.cn/user/index.do 在这里关闭设备锁
 
