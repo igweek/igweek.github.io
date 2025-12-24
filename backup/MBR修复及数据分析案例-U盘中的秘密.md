@@ -9,11 +9,11 @@
 
 ### 修复原理
 
-`Gmeek-html<img src="/img/updmm/1MBR.mp4">`
+`Gmeek-html<video src="/img/updmm/1MBR.mp4">`
 `Gmeek-html<img src="/img/updmm/2.png">`
 ### 修复实操
 
-`Gmeek-html<img src="/img/updmm/2.mp4">`
+`Gmeek-html<video src="/img/updmm/2.mp4">`
 
 ### 注意事项
 - 分区类型：
