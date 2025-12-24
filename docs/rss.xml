@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 22 Dec 2025 12:09:38 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Realm端口转发</title><link>https://bbs.017121.xyz/post/118.html</link><description>![image.png](https://pic.myla.eu.org/file/A1AZiPoP.png)
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 24 Dec 2025 06:39:43 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Realm端口转发</title><link>https://bbs.017121.xyz/post/118.html</link><description>![image.png](https://pic.myla.eu.org/file/A1AZiPoP.png)
 &gt; Realm是一款由rust语言编写的开源高性能端口转发软件，支持多组端点转发，支持tcp&amp;udp和域名解析
 网络部署中常会遇到需要平衡速度与IP信誉的情况。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/118.html</guid><pubDate>Thu, 18 Dec 2025 01:30:38 +0000</pubDate></item><item><title>PVE的一些基础设置</title><link>https://bbs.017121.xyz/post/117.html</link><description>![image.png](https://pic.myla.eu.org/file/XccFyQC8.png)
 
@@ -414,34 +414,14 @@ MBR（Master Boot Record，主引导记录） 是硬盘最前端的一个特殊�
 编辑 c:/windows/system32/drivers/etc/hosts 添加以下内容
 
 ```txt
-# GitHub Start 
-140.82.113.3      github.com
-140.82.114.20     gist.github.com
- 
+
+# Git Start 
 151.101.184.133    assets-cdn.github.com
 151.101.184.133    raw.githubusercontent.com
 151.101.184.133    gist.githubusercontent.com
 151.101.184.133    cloud.githubusercontent.com
 151.101.184.133    camo.githubusercontent.com
-151.101.184.133    avatars0.githubusercontent.com
-199.232.68.133     avatars0.githubusercontent.com
-199.232.28.133     avatars1.githubusercontent.com
-151.101.184.133    avatars1.githubusercontent.com
-151.101.184.133    avatars2.githubusercontent.com
-199.232.28.133     avatars2.githubusercontent.com
-151.101.184.133    avatars3.githubusercontent.com
-199.232.68.133     avatars3.githubusercontent.com
-151.101.184.133    avatars4.githubusercontent.com
-199.232.68.133     avatars4.githubusercontent.com
-151.101.184.133    avatars5.githubusercontent.com
-199.232.68.133     avatars5.githubusercontent.com
-151.101.184.133    avatars6.githubusercontent.com
-199.232.68.133     avatars6.githubusercontent.com
-151.101.184.133    avatars7.githubusercontent.com
-199.232.68.133     avatars7.githubusercontent.com
-151.101.184.133    avatars8.githubusercontent.com
-199.232.68.133     avatars8.githubusercontent.com
- 
+
 # GitHub End
 ```。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/109.html</guid><pubDate>Tue, 25 Nov 2025 06:14:44 +0000</pubDate></item><item><title>SSH防护Fail2ban</title><link>https://bbs.017121.xyz/post/108.html</link><description>在 **Debian 13** 上，`fail2ban` 是防止 SSH 暴力破解的利器，它会自动监控登录失败并封禁恶意 IP。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/108.html</guid><pubDate>Mon, 24 Nov 2025 13:00:40 +0000</pubDate></item><item><title>磁盘MBR修复及数据分析</title><link>https://bbs.017121.xyz/post/107.html</link><description>&lt;img width='934' height='138' alt='Image' src='https://github.com/user-attachments/assets/e8040944-c3c3-4eaf-8312-26039f859000' /&gt;
 
