@@ -9,8 +9,7 @@
 
 ### 修复原理
 
-`Gmeek-html<video src="/img/updmm/1MBR.mp4" controls allowfullscreen="true" width="100%" height="460px"></video>`
-`Gmeek-html<img src="/img/updmm/2.png">`
+`Gmeek-html<video src="/img/updmm/MBR.mp4" controls allowfullscreen="true" width="100%" height="460px"></video>`
 
 ### 修复实操
 
