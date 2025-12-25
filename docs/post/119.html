@@ -106,8 +106,8 @@ NTFS文件格式的磁盘分区开头是<strong>EB5290</strong><br>
 </ul>
 <div class="highlight highlight-source-shell"><pre class="notranslate">分区大小=硬盘总扇区数-分区起始扇区号</pre></div>
 <h2>数据分析</h2>
-<p><video src="/img/updmm/wjfx.mp4" controls allowfullscreen="true" width="100%" height="460px"></video><br>
-<img src="/img/updmm/4.png"></p>
+<p><video src="/img/updmm/wjfx.mp4" controls allowfullscreen="true" width="100%" height="460px"></video></p>
+<p><img src="/img/updmm/4.png"></p>
 <h3>原理</h3>
 <p>根据不同文件格式在二进制层面具有<strong>固定且唯一的文件特征（Magic Number）</strong> 这一特性，对目标文件进行十六进制分析。<br>
 通过定位文件的<strong>文件头（Header）与文件尾（Footer）</strong>，可以在不依赖文件扩展名的情况下，准确识别并分离隐藏文件。<br>
