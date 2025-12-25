@@ -112,9 +112,7 @@ NTFS文件格式的磁盘分区开头是<strong>EB5290</strong><br>
 通过定位文件的<strong>文件头（Header）与文件尾（Footer）</strong>，可以在不依赖文件扩展名的情况下，准确识别并分离隐藏文件。<br>
 在分析过程中发现，JPEG 文件以 <strong><code class="notranslate">FFD8</code></strong> 作为文件头，以 <strong><code class="notranslate">FFD9</code></strong> 作为文件尾。当在第一张 JPG 图片的 <strong><code class="notranslate">FFD9</code> 文件尾之后</strong>，紧跟着再次出现 <strong><code class="notranslate">FFD8</code> 文件头</strong>，说明该图片后部被追加并隐藏了<strong>另一张 JPG 图片</strong>。<br>
 继续向后定位第二张 JPG 的文件尾 <strong><code class="notranslate">FFD9</code></strong>，其后紧接着出现 <strong><code class="notranslate">D0 CF 11 E0</code></strong> 的文件头特征，该特征对应 <strong>OLE 复合文档格式</strong>，表明此处隐藏的是一个 <strong>Excel（.xls）文件</strong>。<br>
-通过依次定位各隐藏文件的起始与结束特征，并将对应数据片段分别提取、重组，最终成功恢复出所有被刻意隐藏的文件，从而深度挖掘并还原了李某相关的犯罪证据。</p>
-<h2>课后作业</h2>
-<p>理解如何通过在文件中嵌入隐藏信息而不影响文件的正常使用。然后，请自己动手设计一个隐写文件，保存好作品。下次课堂上，我们将进行作品交换，同学们将尝试从同伴的文件中挖掘出隐藏的信息，并分享各自的设计思路与发现方法。</p></div>
+通过依次定位各隐藏文件的起始与结束特征，并将对应数据片段分别提取、重组，最终成功恢复出所有被刻意隐藏的文件，从而深度挖掘并还原了李某相关的犯罪证据。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
