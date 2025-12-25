@@ -30,6 +30,7 @@ NTFS文件格式的磁盘分区开头是**EB5290**
 
 ## 数据分析
 
+`Gmeek-html<video src="/img/updmm/fjfx.mp4" controls allowfullscreen="true" width="100%" height="460px"></video>`
 `Gmeek-html<img src="/img/updmm/4.png">`
 
 ### 原理
