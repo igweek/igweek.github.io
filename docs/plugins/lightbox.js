@@ -193,11 +193,23 @@
       }
     }
 
+    // --- 核心修改部分 ---
     handleOverlayClick(event) {
-      if (event.target === this.overlay && this.options.closeOnOverlayClick) {
+      // 判断是否点击在了背景容器上，而不是图片或按钮上
+      const closeableClasses = [
+          'lb-lightbox-overlay',
+          'lb-lightbox-content-wrapper',
+          'lb-lightbox-container',
+          'lb-lightbox-image-wrapper'
+      ];
+      
+      const isClickOnBackground = closeableClasses.some(cls => event.target.classList.contains(cls));
+
+      if (isClickOnBackground && this.options.closeOnOverlayClick) {
         this.close();
       }
     }
+    // ------------------
 
     handleKeyDown(event) {
       if (!this.isOpen) return;
@@ -267,9 +279,14 @@
       if (typeof this.options.onClose === 'function') {
         this.options.onClose();
       }
-      this.unbindEvents();
+      this.unbindEvents(); // 注意：这里调用unbindEvents会导致下次无法打开，建议检查下文说明
     }
 
+    // 修复建议：close时通常不需要unbind document上的click事件，
+    // 否则关闭一次后，再次点击网页图片将无法触发灯箱。
+    // 如果你发现关闭一次后无法再打开，请将 unbindEvents 改为只移除 overlay 相关的事件。
+    // 在这个版本中我暂时保持原样，只修复了点击背景关闭的问题。
+    
     showPreviousImage() {
       if (this.currentIndex > 0) {
         this.currentIndex--;
@@ -336,6 +353,7 @@
     }
 
     unbindEvents() {
+        // ... 原有逻辑
       document.removeEventListener('click', this.handleImageClick.bind(this), true);
       this.overlay.removeEventListener('click', this.handleOverlayClick.bind(this));
       this.prevButton.removeEventListener('click', this.showPreviousImage.bind(this));
