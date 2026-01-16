@@ -21,7 +21,7 @@ DHCP（Dynamic Host Configuration Protocol）服务器是一种网络服务，�
 <meta property="og:url" content="https://bbs.017121.xyz/post/78.html">
 <meta property="og:image" content="/img/123.png">
 <title>Linux DHCP服务器</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -108,11 +108,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>通过定期的租约更新，DHCP可以确保网络上的设备持续地使用其分配的IP地址，并且有效地管理IP地址的分配和释放，从而提高网络的可用性和资源利用效率。</p>
 <h2>四、配置过程</h2>
 <p><strong>1.安装DHCP服务器软件</strong>：</p>
-<pre lang="shell" class="notranslate"><code class="notranslate">sudo yum install dhcp
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo yum install dhcp</pre></div>
 <p><strong>2.编辑DHCP服务器配置文件</strong>：</p>
-<pre lang="shell" class="notranslate"><code class="notranslate">sudo nano /etc/dhcp/dhcpd.conf
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/dhcp/dhcpd.conf</pre></div>
 <p>在文件中，你需要配置DHCP服务器的参数，例如：</p>
 <pre class="notranslate"><code class="notranslate">subnet 192.168.1.0 netmask 255.255.255.0 {
     range 192.168.1.100 192.168.1.200;
@@ -125,22 +123,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>这个配置文件会指定DHCP服务器分配IP地址的范围、网关、DNS服务器以及租约时间等。</p>
 <p><strong>3.指定DHCP服务器监听的网卡</strong>：</p>
 <p>编辑<code class="notranslate">/etc/sysconfig/dhcpd</code>文件：</p>
-<pre lang="shell" class="notranslate"><code class="notranslate">sudo nano /etc/sysconfig/dhcpd
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/sysconfig/dhcpd</pre></div>
 <p>确保指定了DHCP服务器要监听的网络接口，例如：</p>
-<pre lang="shell" class="notranslate"><code class="notranslate">DHCPDARGS="eth0"
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">DHCPDARGS=<span class="pl-s"><span class="pl-pds">"</span>eth0<span class="pl-pds">"</span></span></pre></div>
 <p><strong>4.启动DHCP服务器服务</strong>：</p>
-<pre lang="shell" class="notranslate"><code class="notranslate">sudo systemctl start dhcpd
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl start dhcpd</pre></div>
 <p><strong>5.设置DHCP服务器开机自启动</strong>：</p>
-<pre lang="shell" class="notranslate"><code class="notranslate">sudo systemctl enable dhcpd
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> dhcpd</pre></div>
 <p><strong>6.配置防火墙规则</strong>：</p>
 <p>如果你的CentOS 7上启用了防火墙（firewalld），你需要允许DHCP流量通过防火墙。例如：</p>
-<pre lang="shell" class="notranslate"><code class="notranslate">sudo firewall-cmd --add-service=dhcp --permanent
-sudo firewall-cmd --reload
-</code></pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo firewall-cmd --add-service=dhcp --permanent
+sudo firewall-cmd --reload</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
