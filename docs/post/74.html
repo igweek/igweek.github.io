@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/74.html">
 <meta property="og:image" content="/img/123.png">
 <title>LVM逻辑卷管理</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -157,7 +157,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <h2>实验步骤</h2>
 <h3>1️⃣ 查看新硬盘</h3>
-<div class="highlight highlight-source-shell"><pre class="notranslate">lsblk</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">lsblk
+</code></pre>
 <p>你会看到类似：</p>
 <pre class="notranslate"><code class="notranslate">sda   40G  (系统盘)
 sdb    2G
@@ -165,9 +166,11 @@ sdc    2G
 </code></pre>
 <hr>
 <h3>2️⃣ 创建 PV（物理卷）</h3>
-<div class="highlight highlight-source-shell"><pre class="notranslate">pvcreate /dev/sdb /dev/sdc</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">pvcreate /dev/sdb /dev/sdc
+</code></pre>
 <p>验证：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">pvs</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">pvs
+</code></pre>
 <p>输出：</p>
 <pre class="notranslate"><code class="notranslate">PV         VG   Fmt  Attr PSize   PFree
 /dev/sdb        lvm2 ---  2.00g  2.00g
@@ -175,9 +178,11 @@ sdc    2G
 </code></pre>
 <hr>
 <h3>3️⃣ 创建 VG（卷组）</h3>
-<div class="highlight highlight-source-shell"><pre class="notranslate">vgcreate myvg /dev/sdb /dev/sdc</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">vgcreate myvg /dev/sdb /dev/sdc
+</code></pre>
 <p>查看：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">vgs</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">vgs
+</code></pre>
 <p>结果：</p>
 <pre class="notranslate"><code class="notranslate">VG    #PV #LV #SN Attr   VSize  VFree
 myvg   2   0   0 wz--n-  3.99g  3.99g
@@ -185,34 +190,40 @@ myvg   2   0   0 wz--n-  3.99g  3.99g
 <hr>
 <h3>4️⃣ 创建 LV（逻辑卷）</h3>
 <p>比如创建一个 3G 的逻辑卷：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">lvcreate -L 3G -n mylv myvg</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">lvcreate -L 3G -n mylv myvg
+</code></pre>
 <p>查看：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">lvs</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">lvs
+</code></pre>
 <p>输出：</p>
 <pre class="notranslate"><code class="notranslate">LV   VG   Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
 mylv myvg -wi-a----- 3.00g
 </code></pre>
 <hr>
 <h3>5️⃣ 格式化并挂载</h3>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkfs.ext4 /dev/myvg/mylv
+<pre lang="bash" class="notranslate"><code class="notranslate">mkfs.ext4 /dev/myvg/mylv
 mkdir /mnt/mylvm
 mount /dev/myvg/mylv /mnt/mylvm
-df -h /mnt/mylvm</pre></div>
+df -h /mnt/mylvm
+</code></pre>
 <p>能看到一个 3GB 的新分区。</p>
 <hr>
 <h3>6️⃣ 动态扩容（体验 LVM 的强大）</h3>
 <p>比如再扩容 1GB：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">lvextend -L +1G /dev/myvg/mylv
-resize2fs /dev/myvg/mylv</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">lvextend -L +1G /dev/myvg/mylv
+resize2fs /dev/myvg/mylv
+</code></pre>
 <p>再看：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">df -h /mnt/mylvm</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">df -h /mnt/mylvm
+</code></pre>
 <p>容量已经变大了！</p>
 <hr>
 <h3>7️⃣ 卸载与删除（清理实验环境）</h3>
-<div class="highlight highlight-source-shell"><pre class="notranslate">umount /mnt/mylvm
+<pre lang="bash" class="notranslate"><code class="notranslate">umount /mnt/mylvm
 lvremove /dev/myvg/mylv
 vgremove myvg
-pvremove /dev/sdb /dev/sdc</pre></div>
+pvremove /dev/sdb /dev/sdc
+</code></pre>
 <hr>
 <h2>✅ 实验总结</h2>
 <ul>
@@ -223,13 +234,14 @@ pvremove /dev/sdb /dev/sdc</pre></div>
 <hr>
 <h2>注意事项</h2>
 <p>在vmware中添加磁盘后，记得要扫描下，否则lsblk无法显示磁盘</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 查看所有SCSI主机总线</span>
+<pre lang="bash" class="notranslate"><code class="notranslate"># 查看所有SCSI主机总线
 ls /sys/class/scsi_host/
 
-<span class="pl-c"><span class="pl-c">#</span> 对每个host执行扫描(例如host0, host1, host2)</span>
-<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>- - -<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /sys/class/scsi_host/host0/scan
-<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>- - -<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /sys/class/scsi_host/host1/scan
-<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>- - -<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /sys/class/scsi_host/host2/scan</pre></div></div>
+# 对每个host执行扫描(例如host0, host1, host2)
+echo "- - -" &gt; /sys/class/scsi_host/host0/scan
+echo "- - -" &gt; /sys/class/scsi_host/host1/scan
+echo "- - -" &gt; /sys/class/scsi_host/host2/scan
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
