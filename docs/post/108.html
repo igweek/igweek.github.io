@@ -100,19 +100,24 @@ sudo apt install fail2ban -y</pre></div>
 <hr>
 <h2><strong>3. 配置 SSH 监控</strong></h2>
 <p>找到 <code class="notranslate">[sshd]</code> 部分，修改或确认如下配置：</p>
-<pre class="notranslate"><code class="notranslate">[sshd]
+<pre class="notranslate"><code class="notranslate">[DEFAULT]
+bantime = 1d
+findtime = 5m
+maxretry = 3
+backend = systemd
+ignoreip = 127.0.0.1/8
+
+[sshd]
 enabled = true
-filter = sshd
-maxretry = 5
-bantime = 3600
-findtime = 600
+port = 22
+logpath = %(sshd_log)s
 </code></pre>
 <p>说明：</p>
 <ul>
 <li><code class="notranslate">enabled = true</code> → 启用 SSH 防护</li>
-<li><code class="notranslate">maxretry = 5</code> → 允许失败尝试次数</li>
-<li><code class="notranslate">bantime = 3600</code> → 封禁时间（秒，1小时）</li>
-<li><code class="notranslate">findtime = 600</code> → 在多少秒内失败超过 maxretry 才封禁</li>
+<li><code class="notranslate">maxretry = 3</code> → 允许失败尝试次数</li>
+<li><code class="notranslate">bantime = 1d</code> → 封禁时间（1day）</li>
+<li><code class="notranslate">findtime = 5m</code> → 在多少秒内失败超过 maxretry 才封禁</li>
 </ul>
 <hr>
 <h2><strong>4. 重启 Fail2Ban</strong></h2>

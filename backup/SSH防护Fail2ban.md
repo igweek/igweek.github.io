@@ -31,19 +31,24 @@ sudo nano /etc/fail2ban/jail.conf
 ## **3. 配置 SSH 监控**
 找到 `[sshd]` 部分，修改或确认如下配置：
 ```
+[DEFAULT]
+bantime = 1d
+findtime = 5m
+maxretry = 3
+backend = systemd
+ignoreip = 127.0.0.1/8
+
 [sshd]
 enabled = true
-filter = sshd
-maxretry = 5
-bantime = 3600
-findtime = 600
+port = 22
+logpath = %(sshd_log)s
 ```
 
 说明：
 - `enabled = true` → 启用 SSH 防护  
-- `maxretry = 5` → 允许失败尝试次数  
-- `bantime = 3600` → 封禁时间（秒，1小时）  
-- `findtime = 600` → 在多少秒内失败超过 maxretry 才封禁  
+- `maxretry = 3` → 允许失败尝试次数  
+- `bantime = 1d` → 封禁时间（1day）  
+- `findtime = 5m` → 在多少秒内失败超过 maxretry 才封禁  
 
 ---
 
