@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script><script src='/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="/img/123.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="**引言**
+
+Kubernetes作为容器编排的领导者，极大地简化了应用程序的部署和管理。">
+<meta property="og:title" content="探索Kubernetes Ingress：实现外部访问的艺术">
+<meta property="og:description" content="**引言**
+
+Kubernetes作为容器编排的领导者，极大地简化了应用程序的部署和管理。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.017121.xyz/post/127.html">
+<meta property="og:image" content="/img/123.png">
+<title>探索Kubernetes Ingress：实现外部访问的艺术</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">探索Kubernetes Ingress：实现外部访问的艺术</h1>
+<div class="title-right">
+    <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/127" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><p><strong>引言</strong></p>
+<p>Kubernetes作为容器编排的领导者，极大地简化了应用程序的部署和管理。然而，如何让集群内部运行的服务安全、高效地暴露给外部用户访问，却常常是初学者面临的挑战。NodePort和LoadBalancer提供了基础的解决方案，但在面对复杂的路由需求、SSL终止以及多服务管理时，它们显得力不从心。这时，Kubernetes Ingress便应运而生，它提供了一种优雅而强大的方式来管理外部对集群服务的访问。</p>
+<h2>什么是Kubernetes Ingress？</h2>
+<p>在Kubernetes中，Ingress是一个API对象，它管理着从集群外部到集群内部服务的HTTP和HTTPS路由。简单来说，Ingress就像是你的Kubernetes集群的智能门卫，根据你定义的规则，将外部请求转发到正确的内部服务。它允许你集中管理外部访问，包括主机名路由、路径路由、SSL/TLS终止以及负载均衡等高级功能。</p>
+<p>没有Ingress，你需要为每个需要外部访问的服务手动配置端口映射（NodePort）或专用的云提供商负载均衡器（LoadBalancer），这不仅增加了配置的复杂性，也可能带来不必要的成本。Ingress通过提供一个统一的入口点，极大地简化了这一过程。</p>
+<h2>Ingress Controller 的作用</h2>
+<p>Ingress本身只是一个“规则集合”，它定义了如何路由流量。要让这些规则生效，集群中必须运行一个“Ingress Controller”。Ingress Controller是一个实际运行的应用程序，它监听Kubernetes API服务器，实时监控Ingress资源的创建、更新和删除。当检测到新的Ingress规则时，Ingress Controller会根据这些规则配置其底层的反向代理（如Nginx、HAProxy、Traefik或GCP的GLBC等），从而实现流量的转发。</p>
+<p>最常用的Ingress Controller是Nginx Ingress Controller。它部署在集群内部，并通过一个Service（通常是LoadBalancer类型或NodePort类型，以便外部访问）暴露给外部。</p>
+<h2>Ingress 资源的配置</h2>
+<p>Ingress资源定义了流量路由的规则。以下是一个简单的Ingress配置示例，它将所有到<code class="notranslate">example.com</code>的HTTP请求路由到名为<code class="notranslate">my-service</code>的80端口：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">apiVersion</span>: <span class="pl-s">networking.k8s.io/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Ingress</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">basic-ingress</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">rules</span>:
+  - <span class="pl-ent">host</span>: <span class="pl-s">example.com</span>
+    <span class="pl-ent">http</span>:
+      <span class="pl-ent">paths</span>:
+      - <span class="pl-ent">path</span>: <span class="pl-s">/</span>
+        <span class="pl-ent">pathType</span>: <span class="pl-s">Prefix</span>
+        <span class="pl-ent">backend</span>:
+          <span class="pl-ent">service</span>:
+            <span class="pl-ent">name</span>: <span class="pl-s">my-service</span>
+            <span class="pl-ent">port</span>:
+              <span class="pl-ent">number</span>: <span class="pl-c1">80</span></pre></div>
+<p>在这个例子中：</p>
+<ul>
+<li><code class="notranslate">host: example.com</code>：指定了该规则适用的域名。</li>
+<li><code class="notranslate">path: /</code>：表示所有路径的请求。<code class="notranslate">pathType: Prefix</code>意味着所有以<code class="notranslate">/</code>开头的路径都将匹配。</li>
+<li><code class="notranslate">backend.service.name: my-service</code>：指定了流量要转发到的后端Service。</li>
+<li><code class="notranslate">backend.service.port.number: 80</code>：指定了后端Service的端口。</li>
+</ul>
+<p>你还可以定义更复杂的规则，例如基于路径的路由、多个主机名以及TLS配置：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">apiVersion</span>: <span class="pl-s">networking.k8s.io/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Ingress</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">complex-ingress</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">tls</span>:
+  - <span class="pl-ent">hosts</span>:
+    - <span class="pl-s">example.com</span>
+    <span class="pl-ent">secretName</span>: <span class="pl-s">example-tls-secret </span><span class="pl-c"><span class="pl-c">#</span> 存储TLS证书的Secret</span>
+  <span class="pl-ent">rules</span>:
+  - <span class="pl-ent">host</span>: <span class="pl-s">example.com</span>
+    <span class="pl-ent">http</span>:
+      <span class="pl-ent">paths</span>:
+      - <span class="pl-ent">path</span>: <span class="pl-s">/app1</span>
+        <span class="pl-ent">pathType</span>: <span class="pl-s">Prefix</span>
+        <span class="pl-ent">backend</span>:
+          <span class="pl-ent">service</span>:
+            <span class="pl-ent">name</span>: <span class="pl-s">app1-service</span>
+            <span class="pl-ent">port</span>:
+              <span class="pl-ent">number</span>: <span class="pl-c1">80</span>
+      - <span class="pl-ent">path</span>: <span class="pl-s">/app2</span>
+        <span class="pl-ent">pathType</span>: <span class="pl-s">Prefix</span>
+        <span class="pl-ent">backend</span>:
+          <span class="pl-ent">service</span>:
+            <span class="pl-ent">name</span>: <span class="pl-s">app2-service</span>
+            <span class="pl-ent">port</span>:
+              <span class="pl-ent">number</span>: <span class="pl-c1">80</span></pre></div>
+<p>这里，我们为<code class="notranslate">example.com</code>配置了HTTPS，并使用<code class="notranslate">example-tls-secret</code>中的证书。同时，<code class="notranslate">/app1</code>路径的请求会路由到<code class="notranslate">app1-service</code>，<code class="notranslate">/app2</code>路径的请求会路由到<code class="notranslate">app2-service</code>。</p>
+<h2>Ingress 对比 NodePort 和 LoadBalancer</h2>
+<p>为了更好地理解Ingress的价值，我们来对比一下Kubernetes中服务暴露的三种主要方式：</p>
+<ul>
+<li><strong>NodePort</strong>: 最简单的方式，它在每个节点上打开一个静态端口，并将流量转发到服务。缺点是端口范围有限，且需要记住每个服务的端口号，不适合生产环境的直接访问。</li>
+<li><strong>LoadBalancer</strong>: 云服务商提供的解决方案，会为你的服务创建一个专用的外部负载均衡器，提供一个稳定的IP地址。优点是稳定且易用，但缺点是成本较高，每个LoadBalancer通常对应一个外部IP，对于大量服务而言成本和管理开销会很大，且不支持路径路由和基于主机名的路由。</li>
+<li><strong>Ingress</strong>: 作为HTTP/HTTPS层面的智能路由器，它利用一个或少数几个外部IP（通过Ingress Controller的Service暴露）来管理所有HTTP/HTTPS流量。它提供了高级路由、SSL终止、虚拟主机、URL重写等功能，成本效率高，且更易于管理。</li>
+</ul>
+<p>简而言之，NodePort适用于开发测试环境或内部服务，LoadBalancer适用于需要独立外部IP且路由简单的关键服务，而Ingress则是管理大量HTTP/HTTPS服务外部访问的最佳实践，尤其是在生产环境中。</p>
+<h2>实际案例：使用 Nginx Ingress</h2>
+<p>让我们通过一个完整的例子来演示如何使用Nginx Ingress Controller来暴露一个简单的Web应用。</p>
+<p>首先，你需要部署一个Web应用和一个对应的Service：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> deployment.yaml</span>
+<span class="pl-ent">apiVersion</span>: <span class="pl-s">apps/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Deployment</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">webapp-deployment</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">replicas</span>: <span class="pl-c1">2</span>
+  <span class="pl-ent">selector</span>:
+    <span class="pl-ent">matchLabels</span>:
+      <span class="pl-ent">app</span>: <span class="pl-s">webapp</span>
+  <span class="pl-ent">template</span>:
+    <span class="pl-ent">metadata</span>:
+      <span class="pl-ent">labels</span>:
+        <span class="pl-ent">app</span>: <span class="pl-s">webapp</span>
+    <span class="pl-ent">spec</span>:
+      <span class="pl-ent">containers</span>:
+      - <span class="pl-ent">name</span>: <span class="pl-s">webapp</span>
+        <span class="pl-ent">image</span>: <span class="pl-s">nginx:latest </span><span class="pl-c"><span class="pl-c">#</span> 使用Nginx作为示例应用</span>
+        <span class="pl-ent">ports</span>:
+        - <span class="pl-ent">containerPort</span>: <span class="pl-c1">80</span>
+---
+<span class="pl-c"><span class="pl-c">#</span> service.yaml</span>
+<span class="pl-ent">apiVersion</span>: <span class="pl-c1">v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Service</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">webapp-service</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">selector</span>:
+    <span class="pl-ent">app</span>: <span class="pl-s">webapp</span>
+  <span class="pl-ent">ports</span>:
+    - <span class="pl-ent">protocol</span>: <span class="pl-s">TCP</span>
+      <span class="pl-ent">port</span>: <span class="pl-c1">80</span>
+      <span class="pl-ent">targetPort</span>: <span class="pl-c1">80</span></pre></div>
+<p>接着，你需要确保你的集群中已经安装了Nginx Ingress Controller。安装方式因集群环境（Minikube, GKE, AWS EKS等）而异，通常涉及部署其相关的Deployment、Service和RBAC规则。这里我们假设Nginx Ingress Controller已成功运行。</p>
+<p>最后，我们定义一个Ingress资源，将外部流量路由到<code class="notranslate">webapp-service</code>：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> ingress.yaml</span>
+<span class="pl-ent">apiVersion</span>: <span class="pl-s">networking.k8s.io/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Ingress</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">webapp-ingress</span>
+  <span class="pl-ent">annotations</span>:
+    <span class="pl-ent">nginx.ingress.kubernetes.io/rewrite-target</span>: / <span class="pl-c"><span class="pl-c">#</span> Nginx Ingress特定的注解，用于路径重写</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">rules</span>:
+  - <span class="pl-ent">host</span>: <span class="pl-s">myapp.example.com </span><span class="pl-c"><span class="pl-c">#</span> 替换为你的域名</span>
+    <span class="pl-ent">http</span>:
+      <span class="pl-ent">paths</span>:
+      - <span class="pl-ent">path</span>: <span class="pl-s">/</span>
+        <span class="pl-ent">pathType</span>: <span class="pl-s">Prefix</span>
+        <span class="pl-ent">backend</span>:
+          <span class="pl-ent">service</span>:
+            <span class="pl-ent">name</span>: <span class="pl-s">webapp-service</span>
+            <span class="pl-ent">port</span>:
+              <span class="pl-ent">number</span>: <span class="pl-c1">80</span></pre></div>
+<p>应用这些YAML文件后，一旦DNS解析将<code class="notranslate">myapp.example.com</code>指向你的Ingress Controller的外部IP，你就可以通过<code class="notranslate">http://myapp.example.com</code>访问你的Web应用了。如果配置了TLS，则可以通过<code class="notranslate">https://myapp.example.com</code>访问。</p>
+<p><strong>总结</strong></p>
+<p>Kubernetes Ingress是管理集群外部访问的关键组件，它通过提供灵活的路由规则、SSL终止和负载均衡功能，极大地简化了复杂应用的暴露。结合强大的Ingress Controller，开发者和运维人员可以高效、安全地将服务提供给最终用户，同时保持Kubernetes集群的整洁和可维护性。掌握Ingress不仅能提升你对Kubernetes网络层的理解，更是构建高性能、高可用云原生应用不可或缺的技能。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.017121.xyz">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='/plugins/articletoc.js'></script><script src='/plugins/lightbox.js'></script>
+
+</html>
