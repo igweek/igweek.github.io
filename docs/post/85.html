@@ -21,7 +21,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/85.html">
 <meta property="og:image" content="/img/123.png">
 <title>Docker 相关实验</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -45,7 +45,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
 </style>
 <style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style>
 
@@ -94,121 +104,102 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h3><strong>实验步骤：</strong></h3>
 <h4><strong>1. 安装 Docker</strong></h4>
 <p>首先，在 CentOS 8 上安装 Docker。让学生按照以下步骤进行安装。</p>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 更新系统
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 更新系统</span>
 sudo dnf update -y
 
-# 安装依赖
+<span class="pl-c"><span class="pl-c">#</span> 安装依赖</span>
 sudo dnf install -y yum-utils device-mapper-persistent-data lvm2
 
-# 设置 Docker 仓库
+<span class="pl-c"><span class="pl-c">#</span> 设置 Docker 仓库</span>
 sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-# 安装 Docker
+<span class="pl-c"><span class="pl-c">#</span> 安装 Docker</span>
 sudo dnf install -y docker-ce docker-ce-cli containerd.io
 
-# 启动 Docker 并设置开机自启
+<span class="pl-c"><span class="pl-c">#</span> 启动 Docker 并设置开机自启</span>
 sudo systemctl start docker
-sudo systemctl enable docker
+sudo systemctl <span class="pl-c1">enable</span> docker
 
-# 检查 Docker 状态
+<span class="pl-c"><span class="pl-c">#</span> 检查 Docker 状态</span>
 sudo systemctl status docker
 
-# 测试 Docker 是否安装成功
-sudo docker --version
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 测试 Docker 是否安装成功</span>
+sudo docker --version</pre></div>
 <h4><strong>2. 基本 Docker 命令</strong></h4>
 <p>熟练掌握 Docker 的常见命令。</p>
 <ul>
 <li>
 <p><strong>运行第一个容器</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker run hello-world
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker run hello-world</pre></div>
 <p>该命令将下载并运行一个简单的镜像，验证 Docker 是否安装成功。</p>
 </li>
 <li>
 <p><strong>查看所有镜像</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker images
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker images</pre></div>
 </li>
 <li>
 <p><strong>查看所有容器</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker ps -a
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker ps -a</pre></div>
 </li>
 <li>
 <p><strong>启动容器</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker run -d --name mynginx nginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker run -d --name mynginx nginx</pre></div>
 </li>
 <li>
 <p><strong>停止容器</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker stop mynginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker stop mynginx</pre></div>
 </li>
 <li>
 <p><strong>启动已停止的容器</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker start mynginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker start mynginx</pre></div>
 </li>
 <li>
 <p><strong>删除容器</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker rm mynginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker rm mynginx</pre></div>
 </li>
 <li>
 <p><strong>删除镜像</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker rmi nginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker rmi nginx</pre></div>
 </li>
 <li>
 <p><strong>查看容器日志</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker logs mynginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker logs mynginx</pre></div>
 </li>
 </ul>
 <h4><strong>3. Docker 网络管理</strong></h4>
 <p>了解 Docker 网络的基本管理。</p>
 <ul>
 <li><strong>查看网络配置</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker network ls
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker network ls</pre></div>
 </li>
 <li><strong>创建一个自定义网络</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker network create my_network
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker network create my_network</pre></div>
 </li>
 <li><strong>将容器连接到网络</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker run -d --name container1 --network my_network nginx
-sudo docker run -d --name container2 --network my_network nginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker run -d --name container1 --network my_network nginx
+sudo docker run -d --name container2 --network my_network nginx</pre></div>
 </li>
 <li><strong>查看容器的网络设置</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker inspect container1
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker inspect container1</pre></div>
 </li>
 </ul>
 <h4><strong>4. Docker 数据卷（Volumes）管理</strong></h4>
 <p>掌握如何管理 Docker 数据卷。</p>
 <ul>
 <li><strong>创建一个数据卷</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker volume create my_volume
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker volume create my_volume</pre></div>
 </li>
 <li><strong>查看数据卷</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker volume ls
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker volume ls</pre></div>
 </li>
 <li><strong>使用数据卷启动容器</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker run -d --name my_container -v my_volume:/data nginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker run -d --name my_container -v my_volume:/data nginx</pre></div>
 </li>
 <li><strong>查看容器的数据卷挂载</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker inspect my_container
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker inspect my_container</pre></div>
 </li>
 <li><strong>删除数据卷</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker volume rm my_volume
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker volume rm my_volume</pre></div>
 </li>
 </ul>
 <h4><strong>5. 构建自定义 Docker 镜像</strong></h4>
@@ -216,82 +207,68 @@ sudo docker run -d --name container2 --network my_network nginx
 <ul>
 <li><strong>创建 Dockerfile</strong><br>
 创建一个 <code class="notranslate">Dockerfile</code>，让学生使用下面的内容：
-<pre lang="dockerfile" class="notranslate"><code class="notranslate">FROM nginx:latest
-COPY ./index.html /usr/share/nginx/html/index.html
-</code></pre>
+<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">FROM</span> nginx:latest
+<span class="pl-k">COPY</span> ./index.html /usr/share/nginx/html/index.html</pre></div>
 </li>
 <li><strong>构建 Docker 镜像</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker build -t custom_nginx .
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker build -t custom_nginx <span class="pl-c1">.</span></pre></div>
 </li>
 <li><strong>查看自定义镜像</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker images
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker images</pre></div>
 </li>
 <li><strong>运行自定义镜像</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker run -d --name custom_nginx_container custom_nginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker run -d --name custom_nginx_container custom_nginx</pre></div>
 </li>
 </ul>
 <h4><strong>6. 使用 Docker Compose</strong></h4>
 <p>通过 Docker Compose 来管理多容器应用。</p>
 <ul>
 <li><strong>安装 Docker Compose</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo curl -L <span class="pl-s"><span class="pl-pds">"</span>https://github.com/docker/compose/releases/download/1.29.2/docker-compose-<span class="pl-s"><span class="pl-pds">$(</span>uname -s<span class="pl-pds">)</span></span>-<span class="pl-s"><span class="pl-pds">$(</span>uname -m<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span> -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose</pre></div>
 </li>
 <li><strong>创建 <code class="notranslate">docker-compose.yml</code> 文件</strong><br>
 创建一个 <code class="notranslate">docker-compose.yml</code> 文件，定义一个包含 Nginx 和 Redis 的多容器应用：
-<pre lang="yaml" class="notranslate"><code class="notranslate">version: '3'
-services:
-  web:
-    image: nginx
-    ports:
-      - "80:80"
-  redis:
-    image: redis
-</code></pre>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3<span class="pl-pds">'</span></span>
+<span class="pl-ent">services</span>:
+  <span class="pl-ent">web</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">nginx</span>
+    <span class="pl-ent">ports</span>:
+      - <span class="pl-s"><span class="pl-pds">"</span>80:80<span class="pl-pds">"</span></span>
+  <span class="pl-ent">redis</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">redis</span></pre></div>
 </li>
 <li><strong>启动 Docker Compose 应用</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker-compose up -d
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker-compose up -d</pre></div>
 </li>
 <li><strong>查看应用状态</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker-compose ps
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker-compose ps</pre></div>
 </li>
 <li><strong>停止和删除容器</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker-compose down
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker-compose down</pre></div>
 </li>
 </ul>
 <h4><strong>7. Docker 安全管理</strong></h4>
 <p>了解如何进行 Docker 容器的安全配置。</p>
 <ul>
 <li><strong>查看容器资源限制</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker run -d --name limited_container --memory="512m" --cpus="1.0" nginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker run -d --name limited_container --memory=<span class="pl-s"><span class="pl-pds">"</span>512m<span class="pl-pds">"</span></span> --cpus=<span class="pl-s"><span class="pl-pds">"</span>1.0<span class="pl-pds">"</span></span> nginx</pre></div>
 </li>
 <li><strong>限制容器的权限</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker run -d --name secure_container --cap-drop=ALL nginx
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker run -d --name secure_container --cap-drop=ALL nginx</pre></div>
 </li>
 </ul>
 <h4><strong>8. 高级命令与调试</strong></h4>
 <p>一些高级命令，如查看容器的文件系统、调试等。</p>
 <ul>
 <li><strong>查看容器的文件系统</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker exec -it container_name /bin/bash
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker <span class="pl-c1">exec</span> -it container_name /bin/bash</pre></div>
 </li>
 <li><strong>进入容器交互式模式</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker exec -it mynginx bash
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker <span class="pl-c1">exec</span> -it mynginx bash</pre></div>
 </li>
 <li><strong>监控容器资源</strong>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker stats
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker stats</pre></div>
 </li>
 </ul>
 <hr>
@@ -320,125 +297,116 @@ services:
 <ul>
 <li>
 <p>安装 Docker：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo dnf install -y docker-ce docker-ce-cli containerd.io
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install -y docker-ce docker-ce-cli containerd.io
 sudo systemctl start docker
-sudo systemctl enable docker
-</code></pre>
+sudo systemctl <span class="pl-c1">enable</span> docker</pre></div>
 </li>
 <li>
 <p>安装 Docker Compose：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo curl -L <span class="pl-s"><span class="pl-pds">"</span>https://github.com/docker/compose/releases/download/1.29.2/docker-compose-<span class="pl-s"><span class="pl-pds">$(</span>uname -s<span class="pl-pds">)</span></span>-<span class="pl-s"><span class="pl-pds">$(</span>uname -m<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span> -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose</pre></div>
 </li>
 </ul>
 <h4><strong>2. 创建项目目录结构：</strong></h4>
 <p>在 <code class="notranslate">~/docker-lnmp</code> 目录下创建文件和子目录，组织 Docker 配置文件。</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">mkdir -p ~/docker-lnmp
-cd ~/docker-lnmp
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p <span class="pl-k">~</span>/docker-lnmp
+<span class="pl-c1">cd</span> <span class="pl-k">~</span>/docker-lnmp</pre></div>
 <h4><strong>3. 创建 <code class="notranslate">docker-compose.yml</code> 文件：</strong></h4>
 <p>使用 Docker Compose 来定义 Nginx、MySQL 和 PHP 容器，简化多容器的管理。</p>
 <p><code class="notranslate">docker-compose.yml</code>:</p>
-<pre lang="yaml" class="notranslate"><code class="notranslate">version: '3.8'
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3.8<span class="pl-pds">'</span></span>
 
-services:
-  web:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./html:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - php
-      - db
+<span class="pl-ent">services</span>:
+  <span class="pl-ent">web</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">nginx:latest</span>
+    <span class="pl-ent">container_name</span>: <span class="pl-s">nginx</span>
+    <span class="pl-ent">ports</span>:
+      - <span class="pl-s"><span class="pl-pds">"</span>80:80<span class="pl-pds">"</span></span>
+    <span class="pl-ent">volumes</span>:
+      - <span class="pl-s">./html:/usr/share/nginx/html</span>
+      - <span class="pl-s">./nginx.conf:/etc/nginx/conf.d/default.conf</span>
+    <span class="pl-ent">depends_on</span>:
+      - <span class="pl-s">php</span>
+      - <span class="pl-s">db</span>
 
-  php:
-    image: php:7.4-fpm
-    container_name: php
-    volumes:
-      - ./html:/var/www/html
+  <span class="pl-ent">php</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">php:7.4-fpm</span>
+    <span class="pl-ent">container_name</span>: <span class="pl-s">php</span>
+    <span class="pl-ent">volumes</span>:
+      - <span class="pl-s">./html:/var/www/html</span>
 
-  db:
-    image: mysql:5.7
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: blog_db
-    volumes:
-      - db_data:/var/lib/mysql
+  <span class="pl-ent">db</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">mysql:5.7</span>
+    <span class="pl-ent">container_name</span>: <span class="pl-s">mysql</span>
+    <span class="pl-ent">environment</span>:
+      <span class="pl-ent">MYSQL_ROOT_PASSWORD</span>: <span class="pl-s">rootpassword</span>
+      <span class="pl-ent">MYSQL_DATABASE</span>: <span class="pl-s">blog_db</span>
+    <span class="pl-ent">volumes</span>:
+      - <span class="pl-s">db_data:/var/lib/mysql</span>
 
-volumes:
-  db_data:
-</code></pre>
+<span class="pl-ent">volumes</span>:
+  <span class="pl-ent">db_data</span>:</pre></div>
 <h4><strong>4. 创建 Nginx 配置文件：</strong></h4>
 <p>创建一个简单的 <code class="notranslate">nginx.conf</code> 文件，配置 Nginx 来处理 PHP 请求。</p>
 <p><code class="notranslate">nginx.conf</code>:</p>
-<pre lang="nginx" class="notranslate"><code class="notranslate">server {
-    listen 80;
-    server_name localhost;
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">server_name</span> localhost<span class="pl-c1">;</span>
 
-    root /usr/share/nginx/html;
-    index index.php index.html;
+    <span class="pl-c1">root</span> /usr/share/nginx/html<span class="pl-c1">;</span>
+    <span class="pl-c1">index</span> <span class="pl-c1">index</span>.php <span class="pl-c1">index</span>.html<span class="pl-c1">;</span>
 
-    location / {
-        try_files $uri $uri/ =404;
-    }
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">try_files</span> <span class="pl-v">$uri</span> <span class="pl-v">$uri</span>/ =<span class="pl-c1">404</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
 
-    location ~ \.php$ {
-        fastcgi_pass php:9000;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME /var/www/html$document_root$fastcgi_script_name;
-        include fastcgi_params;
-    }
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span> <span class="pl-sr">\.php$ </span><span class="pl-c1">{</span>
+        <span class="pl-c1">fastcgi_pass</span> php:<span class="pl-c1">9000</span><span class="pl-c1">;</span>
+        <span class="pl-c1">fastcgi_index</span> <span class="pl-c1">index</span>.php<span class="pl-c1">;</span>
+        <span class="pl-c1">fastcgi_param</span> SCRIPT_FILENAME /var/www/html<span class="pl-v">$document_root$fastcgi_script_name</span><span class="pl-c1">;</span>
+        <span class="pl-c1">include</span> fastcgi_params<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
 
-    error_log  /var/log/nginx/error.log;
-    access_log /var/log/nginx/access.log;
-}
-</code></pre>
+    <span class="pl-c1">error_log</span>  /var/log/nginx/error.log<span class="pl-c1">;</span>
+    <span class="pl-c1">access_log</span> /var/log/nginx/access.log<span class="pl-c1">;</span>
+<span class="pl-c1">}</span></pre></div>
 <h4><strong>5. 创建博客 HTML 文件（可选）：</strong></h4>
 <p>创建一个简单的 HTML 文件或者下载 WordPress 来作为博客系统的前端展示。</p>
 <p><code class="notranslate">html/index.html</code>:</p>
-<pre lang="html" class="notranslate"><code class="notranslate">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-    &lt;title&gt;Docker Blog&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;h1&gt;Welcome to the Docker Blog!&lt;/h1&gt;
-    &lt;p&gt;This is a simple blog deployed using Docker.&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
+<div class="highlight highlight-text-html-basic"><pre class="notranslate"><span class="pl-c1">&lt;!DOCTYPE html<span class="pl-kos">&gt;</span></span>
+<span class="pl-kos">&lt;</span><span class="pl-ent">html</span> <span class="pl-c1">lang</span>="<span class="pl-s">en</span>"<span class="pl-kos">&gt;</span>
+<span class="pl-kos">&lt;</span><span class="pl-ent">head</span><span class="pl-kos">&gt;</span>
+    <span class="pl-kos">&lt;</span><span class="pl-ent">meta</span> <span class="pl-c1">charset</span>="<span class="pl-s">UTF-8</span>"<span class="pl-kos">&gt;</span>
+    <span class="pl-kos">&lt;</span><span class="pl-ent">meta</span> <span class="pl-c1">name</span>="<span class="pl-s">viewport</span>" <span class="pl-c1">content</span>="<span class="pl-s">width=device-width, initial-scale=1.0</span>"<span class="pl-kos">&gt;</span>
+    <span class="pl-kos">&lt;</span><span class="pl-ent">title</span><span class="pl-kos">&gt;</span>Docker Blog<span class="pl-kos">&lt;/</span><span class="pl-ent">title</span><span class="pl-kos">&gt;</span>
+<span class="pl-kos">&lt;/</span><span class="pl-ent">head</span><span class="pl-kos">&gt;</span>
+<span class="pl-kos">&lt;</span><span class="pl-ent">body</span><span class="pl-kos">&gt;</span>
+    <span class="pl-kos">&lt;</span><span class="pl-ent">h1</span><span class="pl-kos">&gt;</span>Welcome to the Docker Blog!<span class="pl-kos">&lt;/</span><span class="pl-ent">h1</span><span class="pl-kos">&gt;</span>
+    <span class="pl-kos">&lt;</span><span class="pl-ent">p</span><span class="pl-kos">&gt;</span>This is a simple blog deployed using Docker.<span class="pl-kos">&lt;/</span><span class="pl-ent">p</span><span class="pl-kos">&gt;</span>
+<span class="pl-kos">&lt;/</span><span class="pl-ent">body</span><span class="pl-kos">&gt;</span>
+<span class="pl-kos">&lt;/</span><span class="pl-ent">html</span><span class="pl-kos">&gt;</span></pre></div>
 <h4><strong>6. 启动 LNMP 环境：</strong></h4>
 <p>使用 Docker Compose 启动整个环境。</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">cd ~/docker-lnmp
-sudo docker-compose up -d
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> <span class="pl-k">~</span>/docker-lnmp
+sudo docker-compose up -d</pre></div>
 <p>该命令会启动 Nginx、PHP 和 MySQL 容器，并通过 Docker Compose 管理它们。<code class="notranslate">-d</code> 参数让容器在后台运行。</p>
 <h4><strong>7. 部署 WordPress（可选）：</strong></h4>
 <p>如果想要部署一个动态博客系统（如 WordPress），可以修改 <code class="notranslate">docker-compose.yml</code> 配置文件，替换为 WordPress 服务。</p>
 <p>修改 <code class="notranslate">docker-compose.yml</code> 文件，增加 WordPress 服务：</p>
-<pre lang="yaml" class="notranslate"><code class="notranslate">  wordpress:
-    image: wordpress:latest
-    container_name: wordpress
-    environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: blog_db
-      WORDPRESS_DB_USER: root
-      WORDPRESS_DB_PASSWORD: rootpassword
-    ports:
-      - "8080:80"
-    depends_on:
-      - db
-</code></pre>
+<div class="highlight highlight-source-yaml"><pre class="notranslate">  <span class="pl-ent">wordpress</span>:
+    <span class="pl-ent">image</span>: <span class="pl-s">wordpress:latest</span>
+    <span class="pl-ent">container_name</span>: <span class="pl-s">wordpress</span>
+    <span class="pl-ent">environment</span>:
+      <span class="pl-ent">WORDPRESS_DB_HOST</span>: <span class="pl-s">db:3306</span>
+      <span class="pl-ent">WORDPRESS_DB_NAME</span>: <span class="pl-s">blog_db</span>
+      <span class="pl-ent">WORDPRESS_DB_USER</span>: <span class="pl-s">root</span>
+      <span class="pl-ent">WORDPRESS_DB_PASSWORD</span>: <span class="pl-s">rootpassword</span>
+    <span class="pl-ent">ports</span>:
+      - <span class="pl-s"><span class="pl-pds">"</span>8080:80<span class="pl-pds">"</span></span>
+    <span class="pl-ent">depends_on</span>:
+      - <span class="pl-s">db</span></pre></div>
 <p>然后，重新启动 Docker Compose：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker-compose up -d
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker-compose up -d</pre></div>
 <h4><strong>8. 测试与访问：</strong></h4>
 <ul>
 <li>打开浏览器，访问 <code class="notranslate">http://&lt;your_server_ip&gt;</code>，查看是否可以看到博客页面（静态或 WordPress 博客）。</li>
@@ -448,25 +416,21 @@ sudo docker-compose up -d
 <ul>
 <li>
 <p><strong>查看容器：</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker ps
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker ps</pre></div>
 </li>
 <li>
 <p><strong>查看容器日志：</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker logs nginx
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker logs nginx
 sudo docker logs php
-sudo docker logs mysql
-</code></pre>
+sudo docker logs mysql</pre></div>
 </li>
 <li>
 <p><strong>停止和删除容器：</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker-compose down
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker-compose down</pre></div>
 </li>
 <li>
 <p><strong>清理容器和镜像：</strong></p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo docker system prune -a
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo docker system prune -a</pre></div>
 </li>
 </ul>
 <h4><strong>10. 扩展与优化：</strong></h4>
@@ -508,7 +472,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -582,7 +546,70 @@ function iFrameLoading(){
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
 
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
 
 </script>
 <script src='/plugins/articletoc.js'></script><script src='/plugins/lightbox.js'></script>
