@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/43.html">
 <meta property="og:image" content="/img/123.png">
 <title>基于ECS和NAS搭建个人网盘</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -232,18 +232,17 @@ wget --no-check-certificate https://download.opensuse.org/repositories/isv:ownCl
 <pre class="notranslate"><code class="notranslate">vim /etc/httpd/conf/httpd.conf
 </code></pre>
 <p>4.2 按i键进入文件编辑模式，添加以下内容：</p>
-<pre lang="php" class="notranslate"><code class="notranslate"># owncloud config
-Alias /owncloud "/var/www/html/owncloud/"
+<div class="highlight highlight-text-html-php"><pre class="notranslate"><span class="pl-c"># owncloud config</span>
+Alias /owncloud <span class="pl-s">"<span class="pl-s">/var/www/html/owncloud/</span>"</span>
 &lt;Directory /var/www/html/owncloud/&gt;
     Options +FollowSymlinks
     AllowOverride All
     &lt;IfModule mod_dav.c&gt;
         Dav off
     &lt;/IfModule&gt;
-    SetEnv HOME /var/www/html/owncloud
-    SetEnv HTTP_HOME /var/www/html/owncloud
-&lt;/Directory&gt;
-</code></pre>
+    SetEnv <span class="pl-c1">HOME</span> /var/www/html/owncloud
+    SetEnv <span class="pl-c1">HTTP_HOME</span> /var/www/html/owncloud
+&lt;/Directory&gt;</pre></div>
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/937ffdeacb4f2acd1a34595c1ab90fcd1b98ec9754b3c65275a16c3a3903558b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f627535773463356467327867735f31623965396664613331656434336432393039613462633230633337656664622e706e67"><img src="https://camo.githubusercontent.com/937ffdeacb4f2acd1a34595c1ab90fcd1b98ec9754b3c65275a16c3a3903558b/68747470733a2f2f7563632e616c6963646e2e636f6d2f7069632f646576656c6f7065722d65636f6c6f67792f627535773463356467327867735f31623965396664613331656434336432393039613462633230633337656664622e706e67" alt="" data-canonical-src="https://ucc.alicdn.com/pic/developer-ecology/bu5w4c5dg2xgs_1b9e9fda31ed43d2909a4bc20c37efdb.png" style="max-width: 100%;"></a></p>
 <p>4.3 按esc键退出编辑模式，然后输入:wq保存并退出配置文件。<br>
 由于OwnCloud是基于PHP开发的云存储软件，需要PHP运行环境，请根据以下步骤完成OwnCloud工作环境的配置。</p>

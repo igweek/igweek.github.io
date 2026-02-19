@@ -17,7 +17,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/113.html">
 <meta property="og:image" content="/img/123.png">
 <title>自建git仓库并运行workflow流水线</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -94,33 +94,37 @@ Gitea的首要目标是创建一个极易安装，运行非常快速，安装和
 <h2>搭建</h2>
 <p>使用docker进行安装</p>
 <p>安装目录，其实是数据存放目录</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir /opt/gitea</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">mkdir /opt/gitea
+</code></pre>
 <p>创建docker-compose.yml文件</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">vi /opt/gitea/docker-compose.yml</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">vi /opt/gitea/docker-compose.yml
+</code></pre>
 <p>路径/opt/gitea/data用来存储持久化数据</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">networks</span>:
-  <span class="pl-ent">gitea</span>:
-    <span class="pl-ent">external</span>: <span class="pl-c1">false</span>
+<pre lang="yaml" class="notranslate"><code class="notranslate">networks:
+  gitea:
+    external: false
 
-<span class="pl-ent">services</span>:
-  <span class="pl-ent">server</span>:
-    <span class="pl-ent">image</span>: <span class="pl-s">docker.gitea.com/gitea:1.24.2</span>
-    <span class="pl-ent">container_name</span>: <span class="pl-s">gitea</span>
-    <span class="pl-ent">environment</span>:
-      - <span class="pl-s">USER_UID=1000</span>
-      - <span class="pl-s">USER_GID=1000</span>
-    <span class="pl-ent">restart</span>: <span class="pl-s">always</span>
-    <span class="pl-ent">networks</span>:
-      - <span class="pl-s">gitea</span>
-    <span class="pl-ent">volumes</span>:
-      - <span class="pl-s">/opt/gitea/data:/data</span>
-      - <span class="pl-s">/etc/timezone:/etc/timezone:ro</span>
-      - <span class="pl-s">/etc/localtime:/etc/localtime:ro</span>
-    <span class="pl-ent">ports</span>:
-      - <span class="pl-s"><span class="pl-pds">"</span>3000:3000<span class="pl-pds">"</span></span>
-      - <span class="pl-s"><span class="pl-pds">"</span>222:22<span class="pl-pds">"</span></span></pre></div>
+services:
+  server:
+    image: docker.gitea.com/gitea:1.24.2
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+    restart: always
+    networks:
+      - gitea
+    volumes:
+      - /opt/gitea/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "222:22"
+</code></pre>
 <p>一键启动</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose -f /opt/gitea/docker-compose.yml up -d</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose -f /opt/gitea/docker-compose.yml up -d
+</code></pre>
 <p>然后访问服务器IP的3000端口即可进入安装页面</p>
 <p>如果没什么要求，直接滑到下面直接点击安装即可，gitea有汉化翻译，下面选中即可<br>
 <a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ea1e18f42a2a23e753f76d491627e70e1325bcb6dafb7a93d131a128714ea2a3/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f56304a38524a664a2e706e67"><img src="https://camo.githubusercontent.com/ea1e18f42a2a23e753f76d491627e70e1325bcb6dafb7a93d131a128714ea2a3/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f56304a38524a664a2e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/V0J8RJfJ.png" style="max-width: 100%;"></a></p>
@@ -139,11 +143,14 @@ REQUIRE_SIGNIN_VIEW  = false
 <p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/36225e0ea404dc43baaf9239e43cb4ba87e3155498abc4d59c1afb2106134694/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f515a4b565376684e2e706e67"><img src="https://camo.githubusercontent.com/36225e0ea404dc43baaf9239e43cb4ba87e3155498abc4d59c1afb2106134694/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f515a4b565376684e2e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/QZKVSvhN.png" style="max-width: 100%;"></a></p>
 <p>我这里是使用docker来执行，所以后续操作都要在已安装docker的机器上进行</p>
 <p>创建安装目录</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir /opt/act_runner/</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">mkdir /opt/act_runner/
+</code></pre>
 <p>生成一个默认配置文件</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run --entrypoint=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span> --rm -it docker.io/gitea/act_runner:0.2.12 act_runner generate-config <span class="pl-k">&gt;</span> /opt/act_runner/config.yaml</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run --entrypoint="" --rm -it docker.io/gitea/act_runner:0.2.12 act_runner generate-config &gt; /opt/act_runner/config.yaml
+</code></pre>
 <h2>启动</h2>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run --name act_runner -v /opt/act_runner/config.yaml:/config.yaml -v /opt/act_runner/data:/data -v /var/run/docker.sock:/var/run/docker.sock -e CONFIG_FILE=/config.yaml -e GITEA_INSTANCE_URL=http://服务器IP:3000/ -e GITEA_RUNNER_REGISTRATION_TOKEN=ra7uppoCcCq5O4NME0cCLOajZs0OnRVKP8nkWodv -e GITEA_RUNNER_NAME=act_runner -e GITEA_RUNNER_LABELS=local -d --restart unless-stopped gitea/act_runner:0.2.12</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run --name act_runner -v /opt/act_runner/config.yaml:/config.yaml -v /opt/act_runner/data:/data -v /var/run/docker.sock:/var/run/docker.sock -e CONFIG_FILE=/config.yaml -e GITEA_INSTANCE_URL=http://服务器IP:3000/ -e GITEA_RUNNER_REGISTRATION_TOKEN=ra7uppoCcCq5O4NME0cCLOajZs0OnRVKP8nkWodv -e GITEA_RUNNER_NAME=act_runner -e GITEA_RUNNER_LABELS=local -d --restart unless-stopped gitea/act_runner:0.2.12
+</code></pre>
 <p>/var/run/docker.sock这个映射就是用来和系统上已经安装的docker进行通信的。</p>
 <p>如果正常，在Runners Management里面应该可以看到一个runner了,他的标签是ubuntu-latest ubuntu-22.04 ubuntu-20.04这三个</p>
 <h2>使用action执行任务</h2>
@@ -153,139 +160,144 @@ REQUIRE_SIGNIN_VIEW  = false
 <p>先获取操作仓库的token用来给脚本执行删除分支使用。在用户的 设置-&gt; 应用 -&gt; 管理 Access Token 这里新建一个token就可以了，权限主要是把repository的读写勾选上，生之后只会展示一次，所以要记得及时保存。</p>
 <p>在仓库的 设置 -&gt; action -&gt; 密钥 中新增一个secret，值就是生成的token，名字我这里写的是RELEASE_TOKEN，同时因为要执行curl请求，所以我也设置了一个RELEASE_URL 值是当前gitea服务器:端口</p>
 <p>从develop新建一个分支feature/clean-merged-branch-action</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">git checkout -b feature/clean-merged-branch-action</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">git checkout -b feature/clean-merged-branch-action
+</code></pre>
 <p>编辑文件.gitea/workflows/clean_merged_branch.yaml并写入以下内容</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 名称</span>
-<span class="pl-ent">name</span>: <span class="pl-s">Clean Merged Feature Branches (Gitea)</span>
+<pre lang="yaml" class="notranslate"><code class="notranslate"># 名称
+name: Clean Merged Feature Branches (Gitea)
 
-<span class="pl-c"><span class="pl-c">#</span> 触发任务的时机</span>
-<span class="pl-ent">on</span>:
-  <span class="pl-ent">pull_request</span>:
-    <span class="pl-c"><span class="pl-c">#</span> 目标分支是develop</span>
-    <span class="pl-ent">branches</span>: <span class="pl-s">["develop"]</span>
-    <span class="pl-c"><span class="pl-c">#</span> 状态关闭，合并完成的话就是关闭</span>
-    <span class="pl-ent">types</span>: <span class="pl-s">["closed"]</span>
+# 触发任务的时机
+on:
+  pull_request:
+    # 目标分支是develop
+    branches: ["develop"]
+    # 状态关闭，合并完成的话就是关闭
+    types: ["closed"]
 
-<span class="pl-c"><span class="pl-c">#</span> 定义任务</span>
-<span class="pl-ent">jobs</span>:
-  <span class="pl-ent">cleanup-feature-branch</span>:
-    <span class="pl-c"><span class="pl-c">#</span> 判断确实是合并完成并且触发任务的分支名称是feature/开头</span>
-    <span class="pl-ent">if</span>: <span class="pl-s">${{ github.event.pull_request.merged &amp;&amp; startsWith(github.event.pull_request.head.ref, 'feature/') }}</span>
-    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
-    <span class="pl-c"><span class="pl-c">#</span> 操作步骤</span>
-    <span class="pl-ent">steps</span>:
-      <span class="pl-c"><span class="pl-c">#</span> 就一步，执行curl用API请求一下就删除了</span>
-      - <span class="pl-ent">name</span>: <span class="pl-s">Delete feature branch</span>
-        <span class="pl-ent">env</span>:
-          <span class="pl-ent">GITEA_URL</span>: <span class="pl-s">${{ secrets.RELEASE_URL }}</span>
-          <span class="pl-ent">GITEA_TOKEN</span>: <span class="pl-s">${{ secrets.RELEASE_TOKEN }}</span>
-          <span class="pl-ent">BRANCH</span>: <span class="pl-s">${{ github.event.pull_request.head.ref }}</span>
-          <span class="pl-ent">REPO_OWNER</span>: <span class="pl-s">${{ github.repository_owner }}</span>
-          <span class="pl-ent">REPO_NAME</span>: <span class="pl-s">${{ github.event.repository.name }}</span>
-        <span class="pl-ent">run</span>: <span class="pl-s">|</span>
-<span class="pl-s">          curl -X DELETE \</span>
-<span class="pl-s">            -H "Authorization: token $GITEA_TOKEN" \</span>
-<span class="pl-s">            -H "Content-Type: application/json" \</span>
-<span class="pl-s">            "$GITEA_URL/api/v1/repos/$REPO_OWNER/$REPO_NAME/branches/$BRANCH"</span></pre></div>
+# 定义任务
+jobs:
+  cleanup-feature-branch:
+    # 判断确实是合并完成并且触发任务的分支名称是feature/开头
+    if: ${{ github.event.pull_request.merged &amp;&amp; startsWith(github.event.pull_request.head.ref, 'feature/') }}
+    runs-on: ubuntu-latest
+    # 操作步骤
+    steps:
+      # 就一步，执行curl用API请求一下就删除了
+      - name: Delete feature branch
+        env:
+          GITEA_URL: ${{ secrets.RELEASE_URL }}
+          GITEA_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          curl -X DELETE \
+            -H "Authorization: token $GITEA_TOKEN" \
+            -H "Content-Type: application/json" \
+            "$GITEA_URL/api/v1/repos/$REPO_OWNER/$REPO_NAME/branches/$BRANCH"
+</code></pre>
 <p>github的版本如下<code class="notranslate">.github/workflows/rm-merged-feature.yml</code>，直接使用actions/github-script@v7利用api操作即可</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">name</span>: <span class="pl-s">Clean Merged Feature Branches</span>
+<pre lang="yaml" class="notranslate"><code class="notranslate">name: Clean Merged Feature Branches
 
-<span class="pl-ent">on</span>:
-  <span class="pl-ent">pull_request</span>:
-    <span class="pl-ent">branches</span>: <span class="pl-s">["develop"]</span>
-    <span class="pl-ent">types</span>: <span class="pl-s">["closed"]</span>
+on:
+  pull_request:
+    branches: ["develop"]
+    types: ["closed"]
 
-<span class="pl-ent">jobs</span>:
-  <span class="pl-ent">cleanup-feature-branch</span>:
-    <span class="pl-ent">if</span>: <span class="pl-s">github.event.pull_request.merged == true &amp;&amp; startsWith(github.head_ref, 'feature/')</span>
-    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
-    <span class="pl-ent">steps</span>:
-      - <span class="pl-ent">name</span>: <span class="pl-s">Delete feature branch</span>
-        <span class="pl-ent">uses</span>: <span class="pl-s">actions/github-script@v7</span>
-        <span class="pl-ent">with</span>:
-          <span class="pl-ent">github-token</span>: <span class="pl-s">${{ secrets.RELEASE_TOKEN }}</span>
-          <span class="pl-ent">script</span>: <span class="pl-s">|</span>
-<span class="pl-s">            await github.rest.git.deleteRef({</span>
-<span class="pl-s">              owner: context.repo.owner,</span>
-<span class="pl-s">              repo: context.repo.repo,</span>
-<span class="pl-s">              ref: `heads/${context.payload.pull_request.head.ref}`</span>
-<span class="pl-s">            })</span></pre></div>
+jobs:
+  cleanup-feature-branch:
+    if: github.event.pull_request.merged == true &amp;&amp; startsWith(github.head_ref, 'feature/')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete feature branch
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.RELEASE_TOKEN }}
+          script: |
+            await github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `heads/${context.payload.pull_request.head.ref}`
+            })
+</code></pre>
 <h2>自动发布打包</h2>
 <p>以前学rust的时候写的github上用的，当打tag比如v1，v1.2之类的标签推到远程时，会自动发布release。打三个平台版本的包</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">name</span>: <span class="pl-s">Release</span>
+<pre lang="yaml" class="notranslate"><code class="notranslate">name: Release
 
-<span class="pl-ent">on</span>:
-  <span class="pl-ent">push</span>:
-    <span class="pl-ent">tags</span>:
-      - <span class="pl-s"><span class="pl-pds">"</span>v*<span class="pl-pds">"</span></span>
+on:
+  push:
+    tags:
+      - "v*"
 
-<span class="pl-ent">jobs</span>:
-  <span class="pl-ent">create-release</span>:
-    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
-    <span class="pl-ent">steps</span>:
-      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v4</span>
-      - <span class="pl-ent">uses</span>: <span class="pl-s">taiki-e/create-gh-release-action@v1</span>
-        <span class="pl-ent">with</span>:
-          <span class="pl-ent">token</span>: <span class="pl-s">${{ secrets.RELEASE_TOKEN }}</span>
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/create-gh-release-action@v1
+        with:
+          token: ${{ secrets.RELEASE_TOKEN }}
 
-  <span class="pl-ent">upload-assets</span>:
-    <span class="pl-ent">needs</span>: <span class="pl-s">create-release</span>
-    <span class="pl-ent">strategy</span>:
-      <span class="pl-ent">matrix</span>:
-        <span class="pl-ent">include</span>:
-          - <span class="pl-ent">target</span>: <span class="pl-s">x86_64-unknown-linux-gnu</span>
-            <span class="pl-ent">os</span>: <span class="pl-s">ubuntu-latest</span>
-          - <span class="pl-ent">target</span>: <span class="pl-s">x86_64-apple-darwin</span>
-            <span class="pl-ent">os</span>: <span class="pl-s">macos-latest</span>
-          - <span class="pl-ent">target</span>: <span class="pl-s">x86_64-pc-windows-msvc</span>
-            <span class="pl-ent">os</span>: <span class="pl-s">windows-latest</span>
-    <span class="pl-ent">runs-on</span>: <span class="pl-s">${{ matrix.os }}</span>
-    <span class="pl-ent">steps</span>:
-      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v4</span>
-      - <span class="pl-ent">uses</span>: <span class="pl-s">taiki-e/upload-rust-binary-action@v1</span>
-        <span class="pl-ent">with</span>:
-          <span class="pl-ent">bin</span>: <span class="pl-s">http_echo_ip</span>
-          <span class="pl-ent">target</span>: <span class="pl-s">${{ matrix.target }}</span>
-          <span class="pl-ent">tar</span>: <span class="pl-s">unix</span>
-          <span class="pl-ent">zip</span>: <span class="pl-s">windows</span>
-          <span class="pl-ent">token</span>: <span class="pl-s">${{ secrets.RELEASE_TOKEN }}</span></pre></div>
+  upload-assets:
+    needs: create-release
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+          - target: x86_64-apple-darwin
+            os: macos-latest
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: taiki-e/upload-rust-binary-action@v1
+        with:
+          bin: http_echo_ip
+          target: ${{ matrix.target }}
+          tar: unix
+          zip: windows
+          token: ${{ secrets.RELEASE_TOKEN }}
+</code></pre>
 <h2>自动发布docker镜像</h2>
 <p>和上面一样在github上写的，要先设置docker的secret</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">name</span>: <span class="pl-s">Publish Version</span>
-<span class="pl-ent">on</span>:
-  <span class="pl-ent">push</span>:
-    <span class="pl-ent">tags</span>:
-      - <span class="pl-s"><span class="pl-pds">"</span>v*<span class="pl-pds">"</span></span>
+<pre lang="yaml" class="notranslate"><code class="notranslate">name: Publish Version
+on:
+  push:
+    tags:
+      - "v*"
 
-<span class="pl-ent">env</span>:
-  <span class="pl-ent">DOCKERHUB_REPO</span>: <span class="pl-s">evlan/http_echo_ip</span>
-  <span class="pl-ent">APP_VERSION</span>: <span class="pl-s">${{ github.ref_name }}</span>
+env:
+  DOCKERHUB_REPO: evlan/http_echo_ip
+  APP_VERSION: ${{ github.ref_name }}
 
-<span class="pl-ent">jobs</span>:
-  <span class="pl-ent">pulish-docker-images</span>:
-    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
-    <span class="pl-ent">steps</span>:
-      - <span class="pl-ent">name</span>: <span class="pl-s">Checkout</span>
-        <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v4</span>
+jobs:
+  pulish-docker-images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - <span class="pl-ent">name</span>: <span class="pl-s">Set up QEMU</span>
-        <span class="pl-ent">uses</span>: <span class="pl-s">docker/setup-qemu-action@v3</span>
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
-      - <span class="pl-ent">name</span>: <span class="pl-s">Set up Docker Buildx</span>
-        <span class="pl-ent">uses</span>: <span class="pl-s">docker/setup-buildx-action@v3</span>
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - <span class="pl-ent">name</span>: <span class="pl-s">Login to Docker Hub</span>
-        <span class="pl-ent">uses</span>: <span class="pl-s">docker/login-action@v3</span>
-        <span class="pl-ent">with</span>:
-          <span class="pl-ent">username</span>: <span class="pl-s">${{ secrets.DOCKERHUB_USERNAME }}</span>
-          <span class="pl-ent">password</span>: <span class="pl-s">${{ secrets.DOCKERHUB_TOKEN }}</span>
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - <span class="pl-ent">name</span>: <span class="pl-s">Build and push</span>
-        <span class="pl-ent">uses</span>: <span class="pl-s">docker/build-push-action@v5</span>
-        <span class="pl-ent">with</span>:
-          <span class="pl-ent">push</span>: <span class="pl-c1">true</span>
-          <span class="pl-ent">platforms</span>: <span class="pl-s">linux/amd64,linux/arm64</span>
-          <span class="pl-ent">tags</span>: <span class="pl-s">${{ env.DOCKERHUB_REPO }}:latest,${{ env.DOCKERHUB_REPO }}:${{ env.APP_VERSION }}</span></pre></div></div>
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ env.DOCKERHUB_REPO }}:latest,${{ env.DOCKERHUB_REPO }}:${{ env.APP_VERSION }}
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
