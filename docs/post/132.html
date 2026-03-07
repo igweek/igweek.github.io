@@ -71,7 +71,7 @@ Header.Payload.Signature
 <meta property="og:url" content="https://bbs.017121.xyz/post/132.html">
 <meta property="og:image" content="/img/123.png">
 <title>什么是JWT</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -155,12 +155,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <h2>第一步：用户登录</h2>
 <p>前端发送：</p>
-<pre lang="js" class="notranslate"><code class="notranslate">POST /api/login
-{
-  "username": "tom",
-  "password": "123456"
-}
-</code></pre>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-c1">POST</span> <span class="pl-c1">/</span><span class="pl-s1">api</span><span class="pl-c1">/</span><span class="pl-s1">login</span>
+<span class="pl-kos">{</span>
+  <span class="pl-s">"username"</span>: <span class="pl-s">"tom"</span><span class="pl-kos">,</span>
+  <span class="pl-s">"password"</span>: <span class="pl-s">"123456"</span>
+<span class="pl-kos">}</span></pre></div>
 <hr>
 <h2>第二步：后端验证账号密码</h2>
 <p>后端：</p>
@@ -175,18 +174,16 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>或 Python 里的 PyJWT</li>
 </ul>
 <p>生成 token：</p>
-<pre lang="js" class="notranslate"><code class="notranslate">jwt.sign(
-  { userId: 123 },
-  "secret_key",
-  { expiresIn: "7d" }
-)
-</code></pre>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">jwt</span><span class="pl-kos">.</span><span class="pl-en">sign</span><span class="pl-kos">(</span>
+  <span class="pl-kos">{</span> <span class="pl-c1">userId</span>: <span class="pl-c1">123</span> <span class="pl-kos">}</span><span class="pl-kos">,</span>
+  <span class="pl-s">"secret_key"</span><span class="pl-kos">,</span>
+  <span class="pl-kos">{</span> <span class="pl-c1">expiresIn</span>: <span class="pl-s">"7d"</span> <span class="pl-kos">}</span>
+<span class="pl-kos">)</span></pre></div>
 <hr>
 <h2>第三步：后端把 JWT 返回给前端</h2>
-<pre lang="json" class="notranslate"><code class="notranslate">{
-  "token": "eyJhbGciOiJIUzI1NiIs..."
-}
-</code></pre>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"token"</span>: <span class="pl-s"><span class="pl-pds">"</span>eyJhbGciOiJIUzI1NiIs...<span class="pl-pds">"</span></span>
+}</pre></div>
 <hr>
 <h2>第四步：前端保存 Token</h2>
 <p>通常保存到：</p>
@@ -194,21 +191,18 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>localStorage</li>
 <li>或 cookie（更安全）</li>
 </ul>
-<pre lang="js" class="notranslate"><code class="notranslate">localStorage.setItem("token", token)
-</code></pre>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">localStorage</span><span class="pl-kos">.</span><span class="pl-en">setItem</span><span class="pl-kos">(</span><span class="pl-s">"token"</span><span class="pl-kos">,</span> <span class="pl-s1">token</span><span class="pl-kos">)</span></pre></div>
 <hr>
 <h2>第五步：之后所有请求都带上 Token</h2>
-<pre lang="js" class="notranslate"><code class="notranslate">fetch("/api/user", {
-  headers: {
-    Authorization: "Bearer " + token
-  }
-})
-</code></pre>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-en">fetch</span><span class="pl-kos">(</span><span class="pl-s">"/api/user"</span><span class="pl-kos">,</span> <span class="pl-kos">{</span>
+  <span class="pl-c1">headers</span>: <span class="pl-kos">{</span>
+    <span class="pl-c1">Authorization</span>: <span class="pl-s">"Bearer "</span> <span class="pl-c1">+</span> <span class="pl-s1">token</span>
+  <span class="pl-kos">}</span>
+<span class="pl-kos">}</span><span class="pl-kos">)</span></pre></div>
 <hr>
 <h2>第六步：后端验证 Token</h2>
 <p>后端中间件：</p>
-<pre lang="js" class="notranslate"><code class="notranslate">jwt.verify(token, "secret_key")
-</code></pre>
+<div class="highlight highlight-source-js"><pre class="notranslate"><span class="pl-s1">jwt</span><span class="pl-kos">.</span><span class="pl-en">verify</span><span class="pl-kos">(</span><span class="pl-s1">token</span><span class="pl-kos">,</span> <span class="pl-s">"secret_key"</span><span class="pl-kos">)</span></pre></div>
 <p>验证通过：</p>
 <p>✅ 允许访问<br>
 验证失败：</p>
@@ -250,12 +244,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <h1>五、JWT 里面存什么？</h1>
 <p>通常存：</p>
-<pre lang="json" class="notranslate"><code class="notranslate">{
-  "userId": 123,
-  "role": "admin",
-  "exp": 1710000000
-}
-</code></pre>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"userId"</span>: <span class="pl-c1">123</span>,
+  <span class="pl-ent">"role"</span>: <span class="pl-s"><span class="pl-pds">"</span>admin<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"exp"</span>: <span class="pl-c1">1710000000</span>
+}</pre></div>
 <p><g-emoji class="g-emoji" alias="warning">⚠️</g-emoji> 注意：</p>
 <p>JWT 不是加密，只是签名。<br>
 不要放密码！</p>
