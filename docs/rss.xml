@@ -1,5 +1,29 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 09 Mar 2026 13:53:37 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>磁盘虚拟化LVM</title><link>https://bbs.017121.xyz/post/134.html</link><description>## 1. 为什么会出现 LVM？（解决传统磁盘的“痛点”）
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 09 Mar 2026 14:08:49 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>玩转LVM</title><link>https://bbs.017121.xyz/post/135.html</link><description>
+# 常用 LVM 命令总结
+
+| 类型 | 命令 |
+|---|---|
+| 查看磁盘 | lsblk |
+| 创建PV | pvcreate |
+| 查看PV | pvs |
+| 创建VG | vgcreate |
+| 查看VG | vgs |
+| 创建LV | lvcreate |
+| 查看LV | lvs |
+| 扩展LV | lvextend |
+| 缩小LV | lvreduce |
+| 扩展文件系统 | resize2fs |
+| 删除LV | lvremove |
+
+---
+
+
+
+实验一：创建 LVM 并挂载使用
+
+实验目标  
+系统新增两块磁盘 `/dev/sdb`、`/dev/sdc`，将它们创建为 LVM 存储，并创建逻辑卷挂载到 `/data` 目录。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/135.html</guid><pubDate>Mon, 09 Mar 2026 14:08:21 +0000</pubDate></item><item><title>磁盘虚拟化LVM</title><link>https://bbs.017121.xyz/post/134.html</link><description>## 1. 为什么会出现 LVM？（解决传统磁盘的“痛点”）
 
 在 LVM 出现之前，由于 Linux/Unix 沿用传统的磁盘分区表（如 MBR 或 GPT），工程师们面临着三大“噩梦”：
 
