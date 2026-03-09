@@ -65,7 +65,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/135.html">
 <meta property="og:image" content="/img/123.png">
 <title>玩转LVM</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -192,8 +192,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 系统新增两块磁盘 <code class="notranslate">/dev/sdb</code>、<code class="notranslate">/dev/sdc</code>，将它们创建为 LVM 存储，并创建逻辑卷挂载到 <code class="notranslate">/data</code> 目录。</p>
 <hr>
 <p>步骤 1：查看当前磁盘</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">lsblk
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lsblk</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">lsblk</code>：列出系统中所有块设备（block device），包括硬盘、分区、LVM 等。</li>
@@ -201,8 +200,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 2：创建物理卷 PV</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">pvcreate /dev/sdb /dev/sdc
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pvcreate /dev/sdb /dev/sdc</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">pvcreate</code>：将普通磁盘初始化为 <strong>LVM 物理卷（Physical Volume）</strong>。</li>
@@ -210,8 +208,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>初始化后，这些磁盘可以加入 LVM 卷组。</li>
 </ul>
 <p>查看 PV</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">pvs
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pvs</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">pvs</code>：显示系统中的所有物理卷信息。</li>
@@ -219,8 +216,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 3：创建卷组 VG</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">vgcreate vg_data /dev/sdb /dev/sdc
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">vgcreate vg_data /dev/sdb /dev/sdc</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">vgcreate</code>：创建 <strong>卷组（Volume Group）</strong>。</li>
@@ -228,8 +224,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><code class="notranslate">/dev/sdb /dev/sdc</code>：加入卷组的物理卷。</li>
 </ul>
 <p>查看卷组</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">vgs
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">vgs</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">vgs</code>：查看卷组信息。</li>
@@ -237,8 +232,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 4：创建逻辑卷 LV</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">lvcreate -L 5G -n lv_data vg_data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lvcreate -L 5G -n lv_data vg_data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">lvcreate</code>：创建逻辑卷（Logical Volume）。</li>
@@ -247,16 +241,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><code class="notranslate">vg_data</code>：逻辑卷所在的卷组。</li>
 </ul>
 <p>查看逻辑卷</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">lvs
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lvs</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">lvs</code>：查看系统中所有逻辑卷信息。</li>
 </ul>
 <hr>
 <p>步骤 5：格式化逻辑卷</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">mkfs.ext4 /dev/vg_data/lv_data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkfs.ext4 /dev/vg_data/lv_data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">mkfs.ext4</code>：创建 ext4 文件系统。</li>
@@ -265,8 +257,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>这一步相当于给磁盘创建文件系统，才能存储数据。</p>
 <hr>
 <p>步骤 6：创建挂载目录</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">mkdir /data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir /data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">mkdir</code>：创建目录。</li>
@@ -274,8 +265,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 7：挂载逻辑卷</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">mount /dev/vg_data/lv_data /data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mount /dev/vg_data/lv_data /data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">mount</code>：将设备挂载到目录。</li>
@@ -284,8 +274,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 8：查看挂载情况</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">df -h
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">df -h</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">df</code>：查看文件系统磁盘使用情况。</li>
@@ -294,8 +283,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <p>步骤 9：设置开机自动挂载</p>
 <p>编辑配置文件</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">vi /etc/fstab
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">vi /etc/fstab</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">/etc/fstab</code>：系统启动时自动挂载文件系统的配置文件。</li>
@@ -312,8 +300,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><code class="notranslate">0 0</code>：dump 和 fsck 设置</li>
 </ul>
 <p>测试配置</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">mount -a
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mount -a</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">mount -a</code>：根据 <code class="notranslate">/etc/fstab</code> 挂载所有未挂载的设备，用于测试配置是否正确。</li>
@@ -324,8 +311,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 将逻辑卷 <code class="notranslate">lv_data</code> 从 <strong>5G 扩展到 8G</strong>。</p>
 <hr>
 <p>步骤 1：扩展逻辑卷</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">lvextend -L +3G /dev/vg_data/lv_data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lvextend -L +3G /dev/vg_data/lv_data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">lvextend</code>：扩展逻辑卷容量。</li>
@@ -334,8 +320,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 2：扩展文件系统</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">resize2fs /dev/vg_data/lv_data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">resize2fs /dev/vg_data/lv_data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">resize2fs</code>：调整 ext2/ext3/ext4 文件系统大小。</li>
@@ -343,8 +328,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 3：查看结果</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">df -h
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">df -h</pre></div>
 <p>用于确认容量已经变为 8G。</p>
 <hr>
 <p>实验三：缩小 LVM 容量</p>
@@ -354,8 +338,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 缩小 LVM 必须先缩小文件系统，否则会导致数据损坏。</p>
 <hr>
 <p>步骤 1：卸载分区</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">umount /data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">umount /data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">umount</code>：卸载挂载的文件系统。</li>
@@ -363,8 +346,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 2：检查文件系统</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">e2fsck -f /dev/vg_data/lv_data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">e2fsck -f /dev/vg_data/lv_data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">e2fsck</code>：检查 ext 文件系统。</li>
@@ -373,16 +355,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 3：缩小文件系统</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">resize2fs /dev/vg_data/lv_data 6G
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">resize2fs /dev/vg_data/lv_data 6G</pre></div>
 <p>命令解释</p>
 <ul>
 <li>将文件系统缩小到 6GB。</li>
 </ul>
 <hr>
 <p>步骤 4：缩小逻辑卷</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">lvreduce -L 6G /dev/vg_data/lv_data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lvreduce -L 6G /dev/vg_data/lv_data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">lvreduce</code>：缩小逻辑卷。</li>
@@ -390,12 +370,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 5：重新挂载</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">mount /dev/vg_data/lv_data /data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mount /dev/vg_data/lv_data /data</pre></div>
 <hr>
 <p>步骤 6：验证结果</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">df -h
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">df -h</pre></div>
 <p>查看容量是否为 6GB。</p>
 <hr>
 <p>实验四：删除 LVM</p>
@@ -405,12 +383,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>逻辑卷 → 卷组 → 物理卷</p>
 <hr>
 <p>步骤 1：卸载分区</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">umount /data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">umount /data</pre></div>
 <hr>
 <p>步骤 2：删除逻辑卷</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">lvremove /dev/vg_data/lv_data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lvremove /dev/vg_data/lv_data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">lvremove</code>：删除逻辑卷。</li>
@@ -418,26 +394,23 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <hr>
 <p>步骤 3：删除卷组</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">vgremove vg_data
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">vgremove vg_data</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">vgremove</code>：删除卷组。</li>
 </ul>
 <hr>
 <p>步骤 4：删除物理卷</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">pvremove /dev/sdb /dev/sdc
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">pvremove /dev/sdb /dev/sdc</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">pvremove</code>：清除磁盘上的 LVM 元数据，使其恢复为普通磁盘。</li>
 </ul>
 <hr>
 <p>步骤 5：验证</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">pvs
+<div class="highlight highlight-source-shell"><pre class="notranslate">pvs
 vgs
-lvs
-</code></pre>
+lvs</pre></div>
 <p>命令解释</p>
 <ul>
 <li><code class="notranslate">pvs</code>：查看物理卷</li>
