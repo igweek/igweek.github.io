@@ -31,7 +31,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/100.html">
 <meta property="og:image" content="/img/123.png">
 <title>Docker学习指南</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -119,81 +119,91 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>本章节将详细指导如何在CentOS 8系统上安装Docker Engine，并进行必要的配置，包括国内镜像加速和非root用户使用Docker的设置。这些步骤旨在为后续的Docker实验提供一个稳定且高效的基础环境。</p>
 <h2>2.1 更换源及Docker镜像加速</h2>
 <p><strong>为了防止出错，先备份现有的 yum 源文件：</strong></p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/yum.repos.d/backup
-sudo mv /etc/yum.repos.d/<span class="pl-k">*</span>.repo /etc/yum.repos.d/backup/</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo mkdir -p /etc/yum.repos.d/backup
+sudo mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/backup/
+</code></pre>
 <p><strong>更换阿里云yum源：</strong></p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo tee /etc/yum.repos.d/CentOS-Base.repo <span class="pl-s"><span class="pl-k">&lt;&lt;</span> '<span class="pl-k">EOF</span>'</span>
-<span class="pl-s">[BaseOS]</span>
-<span class="pl-s">name=CentOS-$releasever - Base - mirrors.aliyun.com</span>
-<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/BaseOS/\$basearch/os/</span>
-<span class="pl-s">gpgcheck=1</span>
-<span class="pl-s">enabled=1</span>
-<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
-<span class="pl-s"></span>
-<span class="pl-s">[AppStream]</span>
-<span class="pl-s">name=CentOS-$releasever - AppStream - mirrors.aliyun.com</span>
-<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/AppStream/\$basearch/os/</span>
-<span class="pl-s">gpgcheck=1</span>
-<span class="pl-s">enabled=1</span>
-<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
-<span class="pl-s"></span>
-<span class="pl-s">[extras]</span>
-<span class="pl-s">name=CentOS-$releasever - Extras - mirrors.aliyun.com</span>
-<span class="pl-s">baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/extras/\$basearch/os/</span>
-<span class="pl-s">gpgcheck=1</span>
-<span class="pl-s">enabled=1</span>
-<span class="pl-s">gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo tee /etc/yum.repos.d/CentOS-Base.repo &lt;&lt; 'EOF'
+[BaseOS]
+name=CentOS-$releasever - Base - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/BaseOS/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+
+[AppStream]
+name=CentOS-$releasever - AppStream - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/AppStream/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+
+[extras]
+name=CentOS-$releasever - Extras - mirrors.aliyun.com
+baseurl=https://mirrors.aliyun.com/centos-vault/8.5.2111/extras/\$basearch/os/
+gpgcheck=1
+enabled=1
+gpgkey=https://mirrors.aliyun.com/centos-vault/8.5.2111/RPM-GPG-KEY-CentOS-Official
+EOF
+</code></pre>
 <p><strong>清除缓存并重建</strong></p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf clean all
-sudo dnf makecache</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo dnf clean all
+sudo dnf makecache
+</code></pre>
 <p><strong>一步修复方案：替换为国内docker源</strong></p>
 <p>执行以下命令（逐行复制）👇：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 1. 删除掉官方 Docker 源</span>
+<pre lang="bash" class="notranslate"><code class="notranslate"># 1. 删除掉官方 Docker 源
 sudo rm -f /etc/yum.repos.d/docker-ce.repo
 
-<span class="pl-c"><span class="pl-c">#</span> 2. 添加阿里云镜像源</span>
-sudo tee /etc/yum.repos.d/docker-ce.repo <span class="pl-s"><span class="pl-k">&lt;&lt;</span>-'<span class="pl-k">EOF</span>'</span>
-<span class="pl-s">[docker-ce-stable]</span>
-<span class="pl-s">name=Docker CE Stable - mirror.aliyun.com</span>
-<span class="pl-s">baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/</span>
-<span class="pl-s">enabled=1</span>
-<span class="pl-s">gpgcheck=0</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span>
+# 2. 添加阿里云镜像源
+sudo tee /etc/yum.repos.d/docker-ce.repo &lt;&lt;-'EOF'
+[docker-ce-stable]
+name=Docker CE Stable - mirror.aliyun.com
+baseurl=https://mirrors.aliyun.com/docker-ce/linux/centos/8/x86_64/stable/
+enabled=1
+gpgcheck=0
+EOF
 
-<span class="pl-c"><span class="pl-c">#</span> 3. 清理缓存并刷新源</span>
+# 3. 清理缓存并刷新源
 sudo dnf clean all
-sudo dnf makecache</pre></div>
+sudo dnf makecache
+</code></pre>
 <p><strong>安装docker</strong></p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf install -y docker-ce docker-ce-cli containerd.io</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo dnf install -y docker-ce docker-ce-cli containerd.io
+</code></pre>
 <blockquote>
 <p>✅ 这会从 <strong>mirrors.aliyun.com</strong> 下载所有 Docker 相关 RPM 包，国内速度飞快。</p>
 </blockquote>
 <hr>
 <p><strong>启动 Docker 服务</strong></p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> --now docker</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl enable --now docker
+</code></pre>
 <p><strong>测试是否可用：</strong></p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker version</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker version
+</code></pre>
 <p>若输出 Client/Server 版本号即安装成功。</p>
 <hr>
 <p><strong>配置镜像加速</strong></p>
 <p>编辑配置文件：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /etc/docker
-sudo tee /etc/docker/daemon.json <span class="pl-s"><span class="pl-k">&lt;&lt;</span>-'<span class="pl-k">EOF</span>'</span>
-<span class="pl-s">{</span>
-<span class="pl-s">  "registry-mirrors": [</span>
-<span class="pl-s">    "https://docker.1panel.live",</span>
-<span class="pl-s">    "https://mirror.ccs.tencentyun.com",</span>
-<span class="pl-s">    "https://docker.m.daocloud.io",</span>
-<span class="pl-s">    "https://hub-mirror.c.163.com"</span>
-<span class="pl-s">  ]</span>
-<span class="pl-s">}</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json &lt;&lt;-'EOF'
+{
+  "registry-mirrors": [
+    "https://docker.1panel.live",
+    "https://mirror.ccs.tencentyun.com",
+    "https://docker.m.daocloud.io",
+    "https://hub-mirror.c.163.com"
+  ]
+}
+EOF
+</code></pre>
 <p>重启服务：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl daemon-reload
-sudo systemctl restart docker</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl daemon-reload
+sudo systemctl restart docker
+</code></pre>
 <p>验证：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker info <span class="pl-k">|</span> grep -A3 <span class="pl-s"><span class="pl-pds">"</span>Registry Mirrors<span class="pl-pds">"</span></span></pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker info | grep -A3 "Registry Mirrors"
+</code></pre>
 <hr>
 <h2>🧰 如果仍然失败（内网或无公网的情况）</h2>
 <p>你可以：</p>
@@ -208,7 +218,8 @@ docker-ce-xxxx.rpm
 docker-ce-cli-xxxx.rpm
 </code></pre>
 <p>然后拷贝到服务器执行：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo dnf localinstall <span class="pl-k">*</span>.rpm -y</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo dnf localinstall *.rpm -y
+</code></pre>
 </li>
 </ol>
 <hr>
@@ -217,27 +228,33 @@ docker-ce-cli-xxxx.rpm
 <ul>
 <li><strong>启动Docker服务</strong>：</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl start docker</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl start docker
+</code></pre>
 <ul>
 <li><strong>停止Docker服务</strong>：</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl stop docker</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl stop docker
+</code></pre>
 <ul>
 <li><strong>重启Docker服务</strong>：</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart docker</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl restart docker
+</code></pre>
 <ul>
 <li><strong>查看Docker服务状态</strong>：</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl status docker</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl status docker
+</code></pre>
 <ul>
 <li><strong>设置Docker服务开机自启</strong>：</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> docker</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl enable docker
+</code></pre>
 <ul>
 <li><strong>禁用Docker服务开机自启</strong>：</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl disable docker</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo systemctl disable docker
+</code></pre>
 <h1>3. Docker容器管理</h1>
 <p>Docker容器是Docker的核心概念，它是一个轻量级、可移植、自给自足的软件包，包含运行应用程序所需的一切：代码、运行时、系统工具、系统库等。本章节将详细介绍如何管理Docker容器的生命周期、进行常用操作、配置网络以及管理数据卷。</p>
 <h2>3.1 容器生命周期管理</h2>
@@ -245,7 +262,8 @@ docker-ce-cli-xxxx.rpm
 <h3>3.1.1 创建与启动容器 (<code class="notranslate">docker run</code>)</h3>
 <p><code class="notranslate">docker run</code> 命令用于创建并启动一个新的容器。它是Docker中最常用的命令之一，拥有丰富的参数来控制容器的行为。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run [OPTIONS] IMAGE [COMMAND] [ARG...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-d</code> 或 <code class="notranslate">--detach</code>：后台运行容器。</li>
@@ -260,19 +278,22 @@ docker-ce-cli-xxxx.rpm
 <ol>
 <li><strong>运行一个Nginx Web服务器容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 8080:80 --name my-nginx nginx:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run -d -p 8080:80 --name my-nginx nginx:latest
+</code></pre>
 <pre class="notranslate"><code class="notranslate">此命令将从Docker Hub拉取`nginx:latest`镜像（如果本地没有），然后在后台运行一个名为`my-nginx`的容器，并将宿主机的8080端口映射到容器的80端口。
 </code></pre>
 <ol start="2">
 <li><strong>运行一个交互式Ubuntu容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -it --rm ubuntu:latest bash</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run -it --rm ubuntu:latest bash
+</code></pre>
 <pre class="notranslate"><code class="notranslate">此命令将启动一个Ubuntu容器，并进入其bash shell。`-it` 选项使得容器可以交互式运行，`--rm` 选项确保容器退出后自动删除。
 </code></pre>
 <h3>3.1.2 查看运行中的容器 (<code class="notranslate">docker ps</code>)</h3>
 <p><code class="notranslate">docker ps</code> 命令用于列出当前正在运行的容器。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker ps [OPTIONS]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker ps [OPTIONS]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-a</code> 或 <code class="notranslate">--all</code>：显示所有容器，包括已停止的。</li>
@@ -283,34 +304,41 @@ docker-ce-cli-xxxx.rpm
 <ol>
 <li><strong>查看所有运行中的容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker ps</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker ps
+</code></pre>
 <ol start="2">
 <li><strong>查看所有容器（包括已停止的）</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker ps -a</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker ps -a
+</code></pre>
 <h3>3.1.3 停止、启动与重启容器 (<code class="notranslate">docker stop</code>, <code class="notranslate">docker start</code>, <code class="notranslate">docker restart</code>)</h3>
 <p>这些命令用于控制容器的运行状态。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker stop [OPTIONS] CONTAINER [CONTAINER...]
+<pre lang="bash" class="notranslate"><code class="notranslate">docker stop [OPTIONS] CONTAINER [CONTAINER...]
 docker start [OPTIONS] CONTAINER [CONTAINER...]
-docker restart [OPTIONS] CONTAINER [CONTAINER...]</pre></div>
+docker restart [OPTIONS] CONTAINER [CONTAINER...]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>停止名为<code class="notranslate">my-nginx</code>的容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker stop my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker stop my-nginx
+</code></pre>
 <ol start="2">
 <li><strong>启动已停止的<code class="notranslate">my-nginx</code>容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker start my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker start my-nginx
+</code></pre>
 <ol start="3">
 <li><strong>重启<code class="notranslate">my-nginx</code>容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker restart my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker restart my-nginx
+</code></pre>
 <h3>3.1.4 删除容器 (<code class="notranslate">docker rm</code>)</h3>
 <p><code class="notranslate">docker rm</code> 命令用于删除一个或多个已停止的容器。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rm [OPTIONS] CONTAINER [CONTAINER...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rm [OPTIONS] CONTAINER [CONTAINER...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-f</code> 或 <code class="notranslate">--force</code>：强制删除运行中的容器。</li>
@@ -320,17 +348,20 @@ docker restart [OPTIONS] CONTAINER [CONTAINER...]</pre></div>
 <ol>
 <li><strong>删除已停止的<code class="notranslate">my-nginx</code>容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rm my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rm my-nginx
+</code></pre>
 <ol start="2">
 <li><strong>强制删除运行中的容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rm -f my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rm -f my-nginx
+</code></pre>
 <h2>3.2 容器操作</h2>
 <p>除了生命周期管理，Docker还提供了一系列命令来与容器进行交互和监控。</p>
 <h3>3.2.1 进入容器 (<code class="notranslate">docker exec</code>)</h3>
 <p><code class="notranslate">docker exec</code> 命令用于在运行中的容器内部执行命令，常用于进入容器的shell进行调试或配置。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker <span class="pl-c1">exec</span> [OPTIONS] CONTAINER COMMAND [ARG...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-it</code>：交互式运行，并分配一个伪TTY。</li>
@@ -339,13 +370,15 @@ docker restart [OPTIONS] CONTAINER [CONTAINER...]</pre></div>
 <ol>
 <li><strong>进入<code class="notranslate">my-nginx</code>容器的bash shell</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker <span class="pl-c1">exec</span> -it my-nginx bash</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker exec -it my-nginx bash
+</code></pre>
 <pre class="notranslate"><code class="notranslate">在容器内部，您可以像操作普通Linux系统一样执行命令，例如`ls -l /usr/share/nginx/html`。
 </code></pre>
 <h3>3.2.2 查看容器日志 (<code class="notranslate">docker logs</code>)</h3>
 <p><code class="notranslate">docker logs</code> 命令用于获取容器的日志输出。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker logs [OPTIONS] CONTAINER</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker logs [OPTIONS] CONTAINER
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-f</code> 或 <code class="notranslate">--follow</code>：持续输出日志。</li>
@@ -356,29 +389,35 @@ docker restart [OPTIONS] CONTAINER [CONTAINER...]</pre></div>
 <ol>
 <li><strong>查看<code class="notranslate">my-nginx</code>容器的实时日志</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker logs -f my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker logs -f my-nginx
+</code></pre>
 <h3>3.2.3 查看容器详细信息 (<code class="notranslate">docker inspect</code>)</h3>
 <p><code class="notranslate">docker inspect</code> 命令返回Docker对象的低级信息，包括容器、镜像、网络、数据卷等。它以JSON格式输出详细配置。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker inspect [OPTIONS] NAME<span class="pl-k">|</span>ID [NAME<span class="pl-k">|</span>ID...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker inspect [OPTIONS] NAME|ID [NAME|ID...]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>查看<code class="notranslate">my-nginx</code>容器的详细信息</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker inspect my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker inspect my-nginx
+</code></pre>
 <h3>3.2.4 查看容器内进程 (<code class="notranslate">docker top</code>)</h3>
 <p><code class="notranslate">docker top</code> 命令用于查看容器内部运行的进程。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker top CONTAINER [ps OPTIONS]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker top CONTAINER [ps OPTIONS]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>查看<code class="notranslate">my-nginx</code>容器内的进程</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker top my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker top my-nginx
+</code></pre>
 <h3>3.2.5 查看容器资源使用 (<code class="notranslate">docker stats</code>)</h3>
 <p><code class="notranslate">docker stats</code> 命令用于实时显示一个或多个容器的资源使用情况，包括CPU、内存、网络I/O和块I/O。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker stats [OPTIONS] [CONTAINER...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker stats [OPTIONS] [CONTAINER...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">--no-stream</code>：不持续输出，只显示一次。</li>
@@ -387,22 +426,26 @@ docker restart [OPTIONS] CONTAINER [CONTAINER...]</pre></div>
 <ol>
 <li><strong>查看所有运行中容器的资源使用情况</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker stats</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker stats
+</code></pre>
 <h2>3.3 容器网络</h2>
 <p>Docker提供了强大的网络功能，允许容器之间以及容器与宿主机之间进行通信。Docker默认提供多种网络驱动，如<code class="notranslate">bridge</code>、<code class="notranslate">host</code>、<code class="notranslate">none</code>等，并支持用户自定义网络。</p>
 <h3>3.3.1 查看网络 (<code class="notranslate">docker network ls</code>)</h3>
 <p><code class="notranslate">docker network ls</code> 命令用于列出所有Docker网络。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network ls [OPTIONS]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network ls [OPTIONS]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>列出所有Docker网络</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network ls</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network ls
+</code></pre>
 <h3>3.3.2 创建自定义网络 (<code class="notranslate">docker network create</code>)</h3>
 <p>创建自定义网络可以更好地隔离容器，并允许容器通过名称进行通信。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network create [OPTIONS] NETWORK</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network create [OPTIONS] NETWORK
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">--driver</code>：指定网络驱动，默认为<code class="notranslate">bridge</code>。</li>
@@ -411,84 +454,100 @@ docker restart [OPTIONS] CONTAINER [CONTAINER...]</pre></div>
 <ol>
 <li><strong>创建一个名为<code class="notranslate">my-app-network</code>的bridge网络</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network create my-app-network</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network create my-app-network
+</code></pre>
 <h3>3.3.3 连接容器到网络 (<code class="notranslate">docker network connect</code>)</h3>
 <p>将运行中的容器连接到指定的网络。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network connect [OPTIONS] NETWORK CONTAINER</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network connect [OPTIONS] NETWORK CONTAINER
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>将<code class="notranslate">my-nginx</code>容器连接到<code class="notranslate">my-app-network</code></strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network connect my-app-network my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network connect my-app-network my-nginx
+</code></pre>
 <h3>3.3.4 断开容器与网络的连接 (<code class="notranslate">docker network disconnect</code>)</h3>
 <p>将容器从指定的网络中移除。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network disconnect [OPTIONS] NETWORK CONTAINER</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network disconnect [OPTIONS] NETWORK CONTAINER
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>将<code class="notranslate">my-nginx</code>容器从<code class="notranslate">my-app-network</code>断开</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network disconnect my-app-network my-nginx</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network disconnect my-app-network my-nginx
+</code></pre>
 <h3>3.3.5 删除网络 (<code class="notranslate">docker network rm</code>)</h3>
 <p>删除一个或多个自定义网络。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network rm NETWORK [NETWORK...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network rm NETWORK [NETWORK...]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>删除<code class="notranslate">my-app-network</code></strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker network rm my-app-network</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker network rm my-app-network
+</code></pre>
 <h2>3.4 容器数据卷</h2>
 <p>数据卷是用于持久化Docker容器数据或在容器之间共享数据的首选机制。它独立于容器的生命周期，即使容器被删除，数据卷中的数据也不会丢失。</p>
 <h3>3.4.1 创建数据卷 (<code class="notranslate">docker volume create</code>)</h3>
 <p><code class="notranslate">docker volume create</code> 命令用于创建一个新的数据卷。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume create [OPTIONS] VOLUME</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume create [OPTIONS] VOLUME
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>创建一个名为<code class="notranslate">my-data</code>的数据卷</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume create my-data</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume create my-data
+</code></pre>
 <h3>3.4.2 查看数据卷 (<code class="notranslate">docker volume ls</code>)</h3>
 <p><code class="notranslate">docker volume ls</code> 命令用于列出所有Docker数据卷。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume ls [OPTIONS]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume ls [OPTIONS]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>列出所有数据卷</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume ls</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume ls
+</code></pre>
 <h3>3.4.3 挂载数据卷到容器 (<code class="notranslate">docker run -v</code>)</h3>
 <p>在<code class="notranslate">docker run</code>命令中使用<code class="notranslate">-v</code>选项可以将数据卷挂载到容器内部。</p>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>运行一个Nginx容器，并将<code class="notranslate">my-data</code>数据卷挂载到<code class="notranslate">/usr/share/nginx/html</code></strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 8081:80 --name nginx-with-volume -v my-data:/usr/share/nginx/html nginx:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run -d -p 8081:80 --name nginx-with-volume -v my-data:/usr/share/nginx/html nginx:latest
+</code></pre>
 <pre class="notranslate"><code class="notranslate">现在，`my-data`数据卷中的内容将作为Nginx的网页根目录。
 </code></pre>
 <ol start="2">
 <li><strong>通过绑定挂载（Bind Mount）将宿主机目录挂载到容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p <span class="pl-k">~</span>/nginx-html
-<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;h1&gt;Hello from Host!&lt;/h1&gt;<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> <span class="pl-k">~</span>/nginx-html/index.html
-docker run -d -p 8082:80 --name nginx-bind-mount -v <span class="pl-k">~</span>/nginx-html:/usr/share/nginx/html nginx:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">mkdir -p ~/nginx-html
+echo "&lt;h1&gt;Hello from Host!&lt;/h1&gt;" &gt; ~/nginx-html/index.html
+docker run -d -p 8082:80 --name nginx-bind-mount -v ~/nginx-html:/usr/share/nginx/html nginx:latest
+</code></pre>
 <pre class="notranslate"><code class="notranslate">这会将宿主机的`~/nginx-html`目录内容映射到容器的Nginx网页根目录。
 </code></pre>
 <h3>3.4.4 查看数据卷详细信息 (<code class="notranslate">docker volume inspect</code>)</h3>
 <p><code class="notranslate">docker volume inspect</code> 命令用于查看数据卷的详细信息，包括其挂载点等。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume inspect [OPTIONS] VOLUME [VOLUME...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume inspect [OPTIONS] VOLUME [VOLUME...]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>查看<code class="notranslate">my-data</code>数据卷的详细信息</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume inspect my-data</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume inspect my-data
+</code></pre>
 <h3>3.4.5 删除数据卷 (<code class="notranslate">docker volume rm</code>)</h3>
 <p><code class="notranslate">docker volume rm</code> 命令用于删除一个或多个数据卷。请注意，只有当数据卷没有被任何容器使用时才能被删除。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume rm [OPTIONS] VOLUME [VOLUME...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume rm [OPTIONS] VOLUME [VOLUME...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-f</code> 或 <code class="notranslate">--force</code>：强制删除正在使用的数据卷（不推荐）。</li>
@@ -497,23 +556,27 @@ docker run -d -p 8082:80 --name nginx-bind-mount -v <span class="pl-k">~</span>/
 <ol>
 <li><strong>删除<code class="notranslate">my-data</code>数据卷</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume rm my-data</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume rm my-data
+</code></pre>
 <h3>3.4.6 清理未使用的本地数据卷 (<code class="notranslate">docker volume prune</code>)</h3>
 <p><code class="notranslate">docker volume prune</code> 命令用于删除所有未被任何容器引用的本地数据卷。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume prune [OPTIONS]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume prune [OPTIONS]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>清理所有未使用的本地数据卷</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker volume prune</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker volume prune
+</code></pre>
 <p>通过本章节的学习和实践，您应该已经掌握了Docker容器的基本管理和操作，包括容器的生命周期、交互、监控、网络配置以及数据持久化。这些是构建和管理基于Docker的应用程序的关键技能。</p>
 <h1>4. Docker镜像管理</h1>
 <p>Docker镜像是一个轻量级、独立、可执行的软件包，它包含了运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。本章节将详细介绍如何获取、查看、删除、构建、标记、推送以及导入/导出Docker镜像。</p>
 <h2>4.1 镜像获取 (<code class="notranslate">docker pull</code>)</h2>
 <p><code class="notranslate">docker pull</code> 命令用于从远程镜像仓库（默认为Docker Hub）下载镜像到本地。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker pull [OPTIONS] NAME[:TAG<span class="pl-k">|</span>@DIGEST]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker pull [OPTIONS] NAME[:TAG|@DIGEST]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">--all-tags</code>：下载仓库中的所有标签镜像。</li>
@@ -522,15 +585,18 @@ docker run -d -p 8082:80 --name nginx-bind-mount -v <span class="pl-k">~</span>/
 <ol>
 <li><strong>拉取最新版Ubuntu镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker pull ubuntu:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker pull ubuntu:latest
+</code></pre>
 <ol start="2">
 <li><strong>拉取指定版本的Nginx镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker pull nginx:1.21</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker pull nginx:1.21
+</code></pre>
 <h2>4.2 镜像查看 (<code class="notranslate">docker images</code>)</h2>
 <p><code class="notranslate">docker images</code> 或 <code class="notranslate">docker image ls</code> 命令用于列出本地主机上的所有镜像。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker images [OPTIONS] [REPOSITORY]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker images [OPTIONS] [REPOSITORY]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-a</code> 或 <code class="notranslate">--all</code>：显示所有镜像（包括中间层镜像）。</li>
@@ -541,19 +607,23 @@ docker run -d -p 8082:80 --name nginx-bind-mount -v <span class="pl-k">~</span>/
 <ol>
 <li><strong>列出所有本地镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker images</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker images
+</code></pre>
 <ol start="2">
 <li><strong>只显示镜像ID</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker images -q</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker images -q
+</code></pre>
 <ol start="3">
 <li><strong>查看特定仓库的镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker images ubuntu</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker images ubuntu
+</code></pre>
 <h2>4.3 镜像删除 (<code class="notranslate">docker rmi</code>)</h2>
 <p><code class="notranslate">docker rmi</code> 命令用于删除一个或多个本地镜像。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rmi [OPTIONS] IMAGE [IMAGE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rmi [OPTIONS] IMAGE [IMAGE...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-f</code> 或 <code class="notranslate">--force</code>：强制删除镜像，即使它被容器使用。</li>
@@ -563,19 +633,23 @@ docker run -d -p 8082:80 --name nginx-bind-mount -v <span class="pl-k">~</span>/
 <ol>
 <li><strong>删除<code class="notranslate">nginx:1.21</code>镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rmi nginx:1.21</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rmi nginx:1.21
+</code></pre>
 <ol start="2">
 <li><strong>强制删除一个被容器使用的镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rmi -f ubuntu:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rmi -f ubuntu:latest
+</code></pre>
 <ol start="3">
 <li><strong>删除所有悬空镜像（没有被任何标签引用的镜像）</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker image prune</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker image prune
+</code></pre>
 <h2>4.4 镜像构建 (<code class="notranslate">docker build</code>)</h2>
 <p><code class="notranslate">docker build</code> 命令用于根据Dockerfile文件和上下文构建新的Docker镜像。Dockerfile是一个文本文件，包含了一系列构建镜像的指令。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker build [OPTIONS] PATH <span class="pl-k">|</span> URL <span class="pl-k">|</span> -</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker build [OPTIONS] PATH | URL | -
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-t</code> 或 <code class="notranslate">--tag</code>：为构建的镜像指定名称和标签，格式为 <code class="notranslate">name:tag</code>。</li>
@@ -589,49 +663,53 @@ docker run -d -p 8082:80 --name nginx-bind-mount -v <span class="pl-k">~</span>/
 <p>首先，创建一个名为<code class="notranslate">my-app</code>的目录，并在其中创建<code class="notranslate">Dockerfile</code>文件和<code class="notranslate">app.py</code>文件。</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p my-app
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; my-app/Dockerfile</span>
-<span class="pl-s">FROM python:3.9-slim-buster</span>
-<span class="pl-s">WORKDIR /app</span>
-<span class="pl-s">COPY . .</span>
-<span class="pl-s">RUN pip install Flask</span>
-<span class="pl-s">EXPOSE 5000</span>
-<span class="pl-s">CMD ["python", "app.py"]</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span>
+<pre lang="bash" class="notranslate"><code class="notranslate">mkdir -p my-app
+cat &lt;&lt;EOF &gt; my-app/Dockerfile
+FROM python:3.9-slim-buster
+WORKDIR /app
+COPY . .
+RUN pip install Flask
+EXPOSE 5000
+CMD ["python", "app.py"]
+EOF
 
-<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Flask<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> requirements.txt
+echo "Flask" &gt; requirements.txt
 
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; my-app/app.py</span>
-<span class="pl-s">from flask import Flask</span>
-<span class="pl-s">app = Flask(__name__)</span>
-<span class="pl-s"></span>
-<span class="pl-s">@app.route("/")</span>
-<span class="pl-s">def hello():</span>
-<span class="pl-s">    return "Hello from Docker!"</span>
-<span class="pl-s"></span>
-<span class="pl-s">if __name__ == "__main__":</span>
-<span class="pl-s">    app.run(host="0.0.0.0", port=5000)</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+cat &lt;&lt;EOF &gt; my-app/app.py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello from Docker!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+EOF
+</code></pre>
 <ol start="2">
 <li>
 <p><strong>构建镜像</strong>：</p>
 <p>在<code class="notranslate">my-app</code>目录下执行：</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker build -t my-python-app:1.0 my-app</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker build -t my-python-app:1.0 my-app
+</code></pre>
 <pre class="notranslate"><code class="notranslate">这里的`my-app`表示Dockerfile所在的上下文路径。
 </code></pre>
 <ol start="3">
 <li><strong>运行构建的镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 5000:5000 --name my-web-app my-python-app:1.0</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run -d -p 5000:5000 --name my-web-app my-python-app:1.0
+</code></pre>
 <pre class="notranslate"><code class="notranslate">访问 `http://localhost:5000` 即可看到 "Hello from Docker!"。
 </code></pre>
 <h2>4.5 镜像标签与推送 (<code class="notranslate">docker tag</code>, <code class="notranslate">docker push</code>)</h2>
 <p><code class="notranslate">docker tag</code> 命令用于为镜像添加一个额外的标签，通常用于将本地镜像标记为准备推送到远程仓库的格式。<code class="notranslate">docker push</code> 命令用于将本地镜像推送到远程镜像仓库。</p>
 <h3>4.5.1 标记镜像 (<code class="notranslate">docker tag</code>)</h3>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li>
@@ -639,32 +717,38 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <p>假设您的Docker Hub用户名为<code class="notranslate">your_dockerhub_username</code>。</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker tag my-python-app:1.0 your_dockerhub_username/my-python-app:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker tag my-python-app:1.0 your_dockerhub_username/my-python-app:latest
+</code></pre>
 <h3>4.5.2 登录Docker Hub (<code class="notranslate">docker login</code>)</h3>
 <p>在推送镜像之前，您需要登录到Docker Hub或其他远程仓库。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker login [OPTIONS] [SERVER]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker login [OPTIONS] [SERVER]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>登录Docker Hub</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker login</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker login
+</code></pre>
 <pre class="notranslate"><code class="notranslate">系统会提示您输入Docker Hub用户名和密码。
 </code></pre>
 <h3>4.5.3 推送镜像 (<code class="notranslate">docker push</code>)</h3>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker push [OPTIONS] NAME[:TAG]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker push [OPTIONS] NAME[:TAG]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>推送<code class="notranslate">my-python-app</code>镜像到Docker Hub</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker push your_dockerhub_username/my-python-app:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker push your_dockerhub_username/my-python-app:latest
+</code></pre>
 <h2>4.6 镜像导入导出 (<code class="notranslate">docker save</code>, <code class="notranslate">docker load</code>)</h2>
 <p><code class="notranslate">docker save</code> 和 <code class="notranslate">docker load</code> 命令用于将镜像打包成文件进行传输，或从文件加载镜像。</p>
 <h3>4.6.1 导出镜像 (<code class="notranslate">docker save</code>)</h3>
 <p><code class="notranslate">docker save</code> 命令将一个或多个镜像保存到一个tar归档文件中。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker save [OPTIONS] IMAGE [IMAGE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker save [OPTIONS] IMAGE [IMAGE...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-o</code> 或 <code class="notranslate">--output</code>：指定输出文件路径。</li>
@@ -673,11 +757,13 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>将<code class="notranslate">my-python-app:1.0</code>镜像保存到<code class="notranslate">my-python-app.tar</code>文件</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker save -o my-python-app.tar my-python-app:1.0</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker save -o my-python-app.tar my-python-app:1.0
+</code></pre>
 <h3>4.6.2 导入镜像 (<code class="notranslate">docker load</code>)</h3>
 <p><code class="notranslate">docker load</code> 命令从一个tar归档文件或标准输入中加载镜像。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker load [OPTIONS]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker load [OPTIONS]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-i</code> 或 <code class="notranslate">--input</code>：指定输入文件路径。</li>
@@ -686,7 +772,8 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>从<code class="notranslate">my-python-app.tar</code>文件加载镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker load -i my-python-app.tar</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker load -i my-python-app.tar
+</code></pre>
 <p>通过本章节的学习和实践，您应该已经掌握了Docker镜像的完整生命周期管理，包括从远程仓库获取、本地查看与删除、通过Dockerfile构建自定义镜像、以及镜像的标记、推送、导入和导出。这些技能是高效利用Docker进行应用部署和分发的基础。</p>
 <h1>5. Dockerfile</h1>
 <p>Dockerfile是用于构建Docker镜像的文本文件，它包含了一系列指令，每条指令都在镜像中创建一个层。通过Dockerfile，我们可以自动化镜像的创建过程，实现可重复、版本化的镜像构建。本章节将深入探讨Dockerfile的基本语法、常用指令、构建自定义镜像、多阶段构建以及最佳实践。</p>
@@ -695,8 +782,9 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <h3>5.1.1 <code class="notranslate">FROM</code></h3>
 <p><code class="notranslate">FROM</code> 指令指定了新镜像所基于的基础镜像。所有Dockerfile都必须以 <code class="notranslate">FROM</code> 指令开始。</p>
 <p><strong>语法</strong>：<code class="notranslate">FROM &lt;image&gt;[:&lt;tag&gt;] [AS &lt;name&gt;]</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">FROM</span> ubuntu:22.04
-<span class="pl-k">FROM</span> python:3.9-slim-buster AS builder</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">FROM ubuntu:22.04
+FROM python:3.9-slim-buster AS builder
+</code></pre>
 <h3>5.1.2 <code class="notranslate">RUN</code></h3>
 <p><code class="notranslate">RUN</code> 指令用于在当前镜像层上执行命令，并提交结果。它通常用于安装软件包、创建文件或目录等。</p>
 <p><strong>语法</strong>：</p>
@@ -704,8 +792,9 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <li><code class="notranslate">RUN &lt;command&gt;</code> (shell 格式，命令在 <code class="notranslate">/bin/sh -c</code> 中运行)</li>
 <li><code class="notranslate">RUN ["executable", "param1", "param2"]</code> (exec 格式，推荐，避免shell解释器问题)</li>
 </ul>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">RUN</span> apt-get update &amp;&amp; apt-get install -y curl
-<span class="pl-k">RUN</span> [<span class="pl-s">"/bin/bash"</span>, <span class="pl-s">"-c"</span>, <span class="pl-s">"echo hello"</span>]</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">RUN apt-get update &amp;&amp; apt-get install -y curl
+RUN ["/bin/bash", "-c", "echo hello"]
+</code></pre>
 <h3>5.1.3 <code class="notranslate">CMD</code></h3>
 <p><code class="notranslate">CMD</code> 指令为执行中的容器提供默认的执行命令。如果 <code class="notranslate">docker run</code> 命令中指定了其他命令，则 <code class="notranslate">CMD</code> 命令会被覆盖。一个Dockerfile中只能有一个 <code class="notranslate">CMD</code> 指令，如果有多个，只有最后一个生效。</p>
 <p><strong>语法</strong>：</p>
@@ -714,8 +803,9 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <li><code class="notranslate">CMD ["param1","param2"]</code> (作为 <code class="notranslate">ENTRYPOINT</code> 的默认参数)</li>
 <li><code class="notranslate">CMD command param1 param2</code> (shell 格式)</li>
 </ul>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">CMD</span> [<span class="pl-s">"nginx"</span>, <span class="pl-s">"-g"</span>, <span class="pl-s">"daemon off;"</span>]
-<span class="pl-k">CMD</span> [<span class="pl-s">"python"</span>, <span class="pl-s">"app.py"</span>]</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">CMD ["nginx", "-g", "daemon off;"]
+CMD ["python", "app.py"]
+</code></pre>
 <h3>5.1.4 <code class="notranslate">ENTRYPOINT</code></h3>
 <p><code class="notranslate">ENTRYPOINT</code> 指令配置容器启动时执行的命令。与 <code class="notranslate">CMD</code> 不同，<code class="notranslate">ENTRYPOINT</code> 不会被 <code class="notranslate">docker run</code> 命令中指定的参数覆盖，而是将这些参数作为 <code class="notranslate">ENTRYPOINT</code> 命令的参数。</p>
 <p><strong>语法</strong>：</p>
@@ -723,30 +813,35 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <li><code class="notranslate">ENTRYPOINT ["executable", "param1", "param2"]</code> (exec 格式，推荐)</li>
 <li><code class="notranslate">ENTRYPOINT command param1 param2</code> (shell 格式)</li>
 </ul>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">ENTRYPOINT</span> [<span class="pl-s">"/usr/bin/cowsay"</span>]
-<span class="pl-k">CMD</span> [<span class="pl-s">"hello world"</span>]</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">ENTRYPOINT ["/usr/bin/cowsay"]
+CMD ["hello world"]
+</code></pre>
 <p>运行 <code class="notranslate">docker run my-cowsay-image</code> 会输出 <code class="notranslate">hello world</code>。运行 <code class="notranslate">docker run my-cowsay-image moo</code> 会输出 <code class="notranslate">moo</code>。</p>
 <h3>5.1.5 <code class="notranslate">COPY</code></h3>
 <p><code class="notranslate">COPY</code> 指令将本地文件或目录复制到镜像中的指定路径。</p>
 <p><strong>语法</strong>：<code class="notranslate">COPY [--chown=&lt;user&gt;:&lt;group&gt;] &lt;src&gt;... &lt;dest&gt;</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">COPY</span> . /app
-<span class="pl-k">COPY</span> requirements.txt /tmp/</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">COPY . /app
+COPY requirements.txt /tmp/
+</code></pre>
 <h3>5.1.6 <code class="notranslate">ADD</code></h3>
 <p><code class="notranslate">ADD</code> 指令与 <code class="notranslate">COPY</code> 类似，但它支持URL和自动解压tar文件。通常推荐使用 <code class="notranslate">COPY</code>，因为它更透明。</p>
 <p><strong>语法</strong>：<code class="notranslate">ADD [--chown=&lt;user&gt;:&lt;group&gt;] &lt;src&gt;... &lt;dest&gt;</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">ADD</span> http://example.com/latest.tar.gz /tmp/
-<span class="pl-k">ADD</span> app.tar.gz /app</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">ADD http://example.com/latest.tar.gz /tmp/
+ADD app.tar.gz /app
+</code></pre>
 <h3>5.1.7 <code class="notranslate">WORKDIR</code></h3>
 <p><code class="notranslate">WORKDIR</code> 指令为Dockerfile中后续的 <code class="notranslate">RUN</code>, <code class="notranslate">CMD</code>, <code class="notranslate">ENTRYPOINT</code>, <code class="notranslate">COPY</code>, <code class="notranslate">ADD</code> 指令设置工作目录。</p>
 <p><strong>语法</strong>：<code class="notranslate">WORKDIR /path/to/workdir</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">WORKDIR</span> /app
-<span class="pl-k">COPY</span> . .
-<span class="pl-k">RUN</span> ls</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">WORKDIR /app
+COPY . .
+RUN ls
+</code></pre>
 <h3>5.1.8 <code class="notranslate">EXPOSE</code></h3>
 <p><code class="notranslate">EXPOSE</code> 指令声明容器在运行时监听的端口。它仅仅是声明，并不会实际发布端口，发布端口需要在使用 <code class="notranslate">docker run -p</code> 时指定。</p>
 <p><strong>语法</strong>：<code class="notranslate">EXPOSE &lt;port&gt; [&lt;port&gt;/&lt;protocol&gt;...]</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">EXPOSE</span> 80
-<span class="pl-k">EXPOSE</span> 80/tcp 443/tcp</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">EXPOSE 80
+EXPOSE 80/tcp 443/tcp
+</code></pre>
 <h3>5.1.9 <code class="notranslate">ENV</code></h3>
 <p><code class="notranslate">ENV</code> 指令设置环境变量，这些变量在构建时和容器运行时都可用。</p>
 <p><strong>语法</strong>：</p>
@@ -754,71 +849,79 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <li><code class="notranslate">ENV &lt;key&gt;=&lt;value&gt; ...</code></li>
 <li><code class="notranslate">ENV &lt;key&gt; &lt;value&gt;</code></li>
 </ul>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">ENV</span> MY_VAR=<span class="pl-s">"hello world"</span>
-<span class="pl-k">ENV</span> PATH=<span class="pl-s">"$PATH:/usr/local/bin"</span></pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">ENV MY_VAR="hello world"
+ENV PATH="$PATH:/usr/local/bin"
+</code></pre>
 <h3>5.1.10 <code class="notranslate">VOLUME</code></h3>
 <p><code class="notranslate">VOLUME</code> 指令创建一个挂载点，将宿主机上的目录或另一个容器中的目录挂载到容器中，用于持久化数据或共享数据。</p>
 <p><strong>语法</strong>：<code class="notranslate">VOLUME ["/data"]</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">VOLUME</span> /var/lib/mysql</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">VOLUME /var/lib/mysql
+</code></pre>
 <h3>5.1.11 <code class="notranslate">USER</code></h3>
 <p><code class="notranslate">USER</code> 指令设置运行 <code class="notranslate">RUN</code>, <code class="notranslate">CMD</code>, <code class="notranslate">ENTRYPOINT</code> 指令的用户或UID。默认情况下，容器以root用户运行。</p>
 <p><strong>语法</strong>：<code class="notranslate">USER &lt;user&gt;[:&lt;group&gt;]</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">USER</span> appuser</pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">USER appuser
+</code></pre>
 <h3>5.1.12 <code class="notranslate">ARG</code></h3>
 <p><code class="notranslate">ARG</code> 指令定义了用户在 <code class="notranslate">docker build</code> 命令中使用 <code class="notranslate">--build-arg &lt;varname&gt;=&lt;value&gt;</code> 标志传递的构建时变量。</p>
 <p><strong>语法</strong>：<code class="notranslate">ARG &lt;name&gt;[=&lt;default value&gt;]</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">ARG</span> VERSION=1.0
-<span class="pl-k">RUN</span> echo <span class="pl-s">"Building version: $VERSION"</span></pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">ARG VERSION=1.0
+RUN echo "Building version: $VERSION"
+</code></pre>
 <h3>5.1.13 <code class="notranslate">LABEL</code></h3>
 <p><code class="notranslate">LABEL</code> 指令为镜像添加元数据，例如维护者信息、版本号等。</p>
 <p><strong>语法</strong>：<code class="notranslate">LABEL &lt;key&gt;="&lt;value&gt;" [&lt;key&gt;="&lt;value&gt;"]...</code></p>
-<div class="highlight highlight-source-dockerfile"><pre class="notranslate"><span class="pl-k">LABEL</span> maintainer=<span class="pl-s">"Your Name &lt;your.email@example.com&gt;"</span>
-<span class="pl-k">LABEL</span> version=<span class="pl-s">"1.0"</span></pre></div>
+<pre lang="dockerfile" class="notranslate"><code class="notranslate">LABEL maintainer="Your Name &lt;your.email@example.com&gt;"
+LABEL version="1.0"
+</code></pre>
 <h2>5.2 构建自定义镜像</h2>
 <p>通过一个实际的例子来演示如何使用Dockerfile构建一个简单的Web应用镜像。</p>
 <p><strong>实验目标</strong>：构建一个基于Python Flask的Web应用镜像。</p>
 <ol>
 <li><strong>创建项目目录和文件</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir my-flask-app
-<span class="pl-c1">cd</span> my-flask-app
+<pre lang="bash" class="notranslate"><code class="notranslate">mkdir my-flask-app
+cd my-flask-app
 
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; Dockerfile</span>
-<span class="pl-s">FROM python:3.9-slim-buster</span>
-<span class="pl-s">WORKDIR /app</span>
-<span class="pl-s">COPY requirements.txt .</span>
-<span class="pl-s">RUN pip install --no-cache-dir -r requirements.txt</span>
-<span class="pl-s">COPY . .</span>
-<span class="pl-s">EXPOSE 5000</span>
-<span class="pl-s">CMD ["python3", "app.py"]</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span>
+cat &lt;&lt;EOF &gt; Dockerfile
+FROM python:3.9-slim-buster
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["python3", "app.py"]
+EOF
 
-<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Flask<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> requirements.txt
+echo "Flask" &gt; requirements.txt
 
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; app.py</span>
-<span class="pl-s">from flask import Flask</span>
-<span class="pl-s">app = Flask(__name__)</span>
-<span class="pl-s"></span>
-<span class="pl-s">@app.route("/")</span>
-<span class="pl-s">def hello():</span>
-<span class="pl-s">    return "Hello from Flask in Docker!"</span>
-<span class="pl-s"></span>
-<span class="pl-s">if __name__ == "__main__":</span>
-<span class="pl-s">    app.run(host="0.0.0.0", port=5000)</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+cat &lt;&lt;EOF &gt; app.py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello from Flask in Docker!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+EOF
+</code></pre>
 <ol start="2">
 <li>
 <p><strong>构建镜像</strong>：</p>
 <p>在<code class="notranslate">my-flask-app</code>目录下执行：</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker build -t my-flask-web-app:1.0 <span class="pl-c1">.</span></pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker build -t my-flask-web-app:1.0 .
+</code></pre>
 <pre class="notranslate"><code class="notranslate">这里的`.`表示Dockerfile所在的上下文路径。
 </code></pre>
 <ol start="3">
 <li><strong>运行容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 5000:5000 --name flask-app-container my-flask-web-app:1.0</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run -d -p 5000:5000 --name flask-app-container my-flask-web-app:1.0
+</code></pre>
 <ol start="4">
 <li>
 <p><strong>验证</strong>：</p>
@@ -831,50 +934,53 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>创建项目目录和文件</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir my-go-app
-<span class="pl-c1">cd</span> my-go-app
+<pre lang="bash" class="notranslate"><code class="notranslate">mkdir my-go-app
+cd my-go-app
 
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; Dockerfile</span>
-<span class="pl-s">FROM golang:1.20 AS builder</span>
-<span class="pl-s">WORKDIR /app</span>
-<span class="pl-s">COPY . .</span>
-<span class="pl-s">RUN go mod init my-go-app &amp;&amp; go mod tidy</span>
-<span class="pl-s">RUN CGO_ENABLED=0 GOOS=linux go build -o my-app .</span>
-<span class="pl-s"></span>
-<span class="pl-s">FROM alpine:latest</span>
-<span class="pl-s">WORKDIR /root/</span>
-<span class="pl-s">COPY --from=builder /app/my-app .</span>
-<span class="pl-s">CMD ["./my-app"]</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span>
+cat &lt;&lt;EOF &gt; Dockerfile
+FROM golang:1.20 AS builder
+WORKDIR /app
+COPY . .
+RUN go mod init my-go-app &amp;&amp; go mod tidy
+RUN CGO_ENABLED=0 GOOS=linux go build -o my-app .
 
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; main.go</span>
-<span class="pl-s">package main</span>
-<span class="pl-s"></span>
-<span class="pl-s">import (</span>
-<span class="pl-s">	"fmt"</span>
-<span class="pl-s">	"log"</span>
-<span class="pl-s">	"net/http"</span>
-<span class="pl-s">)</span>
-<span class="pl-s"></span>
-<span class="pl-s">func main() {</span>
-<span class="pl-s">	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {</span>
-<span class="pl-s">		fmt.Fprintf(w, "Hello from Go in Docker!")</span>
-<span class="pl-s">	})</span>
-<span class="pl-s">	fmt.Println("Server starting on port 8080...")</span>
-<span class="pl-s">	log.Fatal(http.ListenAndServe(":8080", nil))</span>
-<span class="pl-s">}</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/my-app .
+CMD ["./my-app"]
+EOF
+
+cat &lt;&lt;EOF &gt; main.go
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello from Go in Docker!")
+	})
+	fmt.Println("Server starting on port 8080...")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+EOF
+</code></pre>
 <ol start="2">
 <li>
 <p><strong>构建镜像</strong>：</p>
 <p>在<code class="notranslate">my-go-app</code>目录下执行：</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker build -t my-go-web-app:1.0 <span class="pl-c1">.</span></pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker build -t my-go-web-app:1.0 .
+</code></pre>
 <ol start="3">
 <li><strong>运行容器</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 8080:8080 --name go-app-container my-go-web-app:1.0</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run -d -p 8080:8080 --name go-app-container my-go-web-app:1.0
+</code></pre>
 <ol start="4">
 <li>
 <p><strong>验证</strong>：</p>
@@ -902,7 +1008,8 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <h2>4.1 镜像获取 (<code class="notranslate">docker pull</code>)</h2>
 <p><code class="notranslate">docker pull</code> 命令用于从远程镜像仓库（默认为Docker Hub）下载镜像到本地。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker pull [OPTIONS] NAME[:TAG<span class="pl-k">|</span>@DIGEST]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker pull [OPTIONS] NAME[:TAG|@DIGEST]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">--all-tags</code>：下载仓库中的所有标签镜像。</li>
@@ -911,15 +1018,18 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>拉取最新版Ubuntu镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker pull ubuntu:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker pull ubuntu:latest
+</code></pre>
 <ol start="2">
 <li><strong>拉取指定版本的Nginx镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker pull nginx:1.21</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker pull nginx:1.21
+</code></pre>
 <h2>4.2 镜像查看 (<code class="notranslate">docker images</code>)</h2>
 <p><code class="notranslate">docker images</code> 或 <code class="notranslate">docker image ls</code> 命令用于列出本地主机上的所有镜像。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker images [OPTIONS] [REPOSITORY]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker images [OPTIONS] [REPOSITORY]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-a</code> 或 <code class="notranslate">--all</code>：显示所有镜像（包括中间层镜像）。</li>
@@ -930,19 +1040,23 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>列出所有本地镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker images</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker images
+</code></pre>
 <ol start="2">
 <li><strong>只显示镜像ID</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker images -q</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker images -q
+</code></pre>
 <ol start="3">
 <li><strong>查看特定仓库的镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker images ubuntu</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker images ubuntu
+</code></pre>
 <h2>4.3 镜像删除 (<code class="notranslate">docker rmi</code>)</h2>
 <p><code class="notranslate">docker rmi</code> 命令用于删除一个或多个本地镜像。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rmi [OPTIONS] IMAGE [IMAGE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rmi [OPTIONS] IMAGE [IMAGE...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-f</code> 或 <code class="notranslate">--force</code>：强制删除镜像，即使它被容器使用。</li>
@@ -952,19 +1066,23 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>删除<code class="notranslate">nginx:1.21</code>镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rmi nginx:1.21</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rmi nginx:1.21
+</code></pre>
 <ol start="2">
 <li><strong>强制删除一个被容器使用的镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker rmi -f ubuntu:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker rmi -f ubuntu:latest
+</code></pre>
 <ol start="3">
 <li><strong>删除所有悬空镜像（没有被任何标签引用的镜像）</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker image prune</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker image prune
+</code></pre>
 <h2>4.4 镜像构建 (<code class="notranslate">docker build</code>)</h2>
 <p><code class="notranslate">docker build</code> 命令用于根据Dockerfile文件和上下文构建新的Docker镜像。Dockerfile是一个文本文件，包含了一系列构建镜像的指令。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker build [OPTIONS] PATH <span class="pl-k">|</span> URL <span class="pl-k">|</span> -</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker build [OPTIONS] PATH | URL | -
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-t</code> 或 <code class="notranslate">--tag</code>：为构建的镜像指定名称和标签，格式为 <code class="notranslate">name:tag</code>。</li>
@@ -978,49 +1096,53 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <p>首先，创建一个名为<code class="notranslate">my-app</code>的目录，并在其中创建<code class="notranslate">Dockerfile</code>文件和<code class="notranslate">app.py</code>文件。</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p my-app
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; my-app/Dockerfile</span>
-<span class="pl-s">FROM python:3.9-slim-buster</span>
-<span class="pl-s">WORKDIR /app</span>
-<span class="pl-s">COPY . .</span>
-<span class="pl-s">RUN pip install Flask</span>
-<span class="pl-s">EXPOSE 5000</span>
-<span class="pl-s">CMD ["python", "app.py"]</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span>
+<pre lang="bash" class="notranslate"><code class="notranslate">mkdir -p my-app
+cat &lt;&lt;EOF &gt; my-app/Dockerfile
+FROM python:3.9-slim-buster
+WORKDIR /app
+COPY . .
+RUN pip install Flask
+EXPOSE 5000
+CMD ["python", "app.py"]
+EOF
 
-<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>Flask<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> requirements.txt
+echo "Flask" &gt; requirements.txt
 
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; my-app/app.py</span>
-<span class="pl-s">from flask import Flask</span>
-<span class="pl-s">app = Flask(__name__)</span>
-<span class="pl-s"></span>
-<span class="pl-s">@app.route("/")</span>
-<span class="pl-s">def hello():</span>
-<span class="pl-s">    return "Hello from Docker!"</span>
-<span class="pl-s"></span>
-<span class="pl-s">if __name__ == "__main__":</span>
-<span class="pl-s">    app.run(host="0.0.0.0", port=5000)</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+cat &lt;&lt;EOF &gt; my-app/app.py
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello from Docker!"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+EOF
+</code></pre>
 <ol start="2">
 <li>
 <p><strong>构建镜像</strong>：</p>
 <p>在<code class="notranslate">my-app</code>目录下执行：</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker build -t my-python-app:1.0 my-app</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker build -t my-python-app:1.0 my-app
+</code></pre>
 <pre class="notranslate"><code class="notranslate">这里的`my-app`表示Dockerfile所在的上下文路径。
 </code></pre>
 <ol start="3">
 <li><strong>运行构建的镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run -d -p 5000:5000 --name my-web-app my-python-app:1.0</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker run -d -p 5000:5000 --name my-web-app my-python-app:1.0
+</code></pre>
 <pre class="notranslate"><code class="notranslate">访问 `http://localhost:5000` 即可看到 "Hello from Docker!"。
 </code></pre>
 <h2>4.5 镜像标签与推送 (<code class="notranslate">docker tag</code>, <code class="notranslate">docker push</code>)</h2>
 <p><code class="notranslate">docker tag</code> 命令用于为镜像添加一个额外的标签，通常用于将本地镜像标记为准备推送到远程仓库的格式。<code class="notranslate">docker push</code> 命令用于将本地镜像推送到远程镜像仓库。</p>
 <h3>4.5.1 标记镜像 (<code class="notranslate">docker tag</code>)</h3>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li>
@@ -1028,32 +1150,38 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <p>假设您的Docker Hub用户名为<code class="notranslate">your_dockerhub_username</code>。</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker tag my-python-app:1.0 your_dockerhub_username/my-python-app:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker tag my-python-app:1.0 your_dockerhub_username/my-python-app:latest
+</code></pre>
 <h3>4.5.2 登录Docker Hub (<code class="notranslate">docker login</code>)</h3>
 <p>在推送镜像之前，您需要登录到Docker Hub或其他远程仓库。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker login [OPTIONS] [SERVER]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker login [OPTIONS] [SERVER]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>登录Docker Hub</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker login</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker login
+</code></pre>
 <pre class="notranslate"><code class="notranslate">系统会提示您输入Docker Hub用户名和密码。
 </code></pre>
 <h3>4.5.3 推送镜像 (<code class="notranslate">docker push</code>)</h3>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker push [OPTIONS] NAME[:TAG]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker push [OPTIONS] NAME[:TAG]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>推送<code class="notranslate">my-python-app</code>镜像到Docker Hub</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker push your_dockerhub_username/my-python-app:latest</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker push your_dockerhub_username/my-python-app:latest
+</code></pre>
 <h2>4.6 镜像导入导出 (<code class="notranslate">docker save</code>, <code class="notranslate">docker load</code>)</h2>
 <p><code class="notranslate">docker save</code> 和 <code class="notranslate">docker load</code> 命令用于将镜像打包成文件进行传输，或从文件加载镜像。</p>
 <h3>4.6.1 导出镜像 (<code class="notranslate">docker save</code>)</h3>
 <p><code class="notranslate">docker save</code> 命令将一个或多个镜像保存到一个tar归档文件中。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker save [OPTIONS] IMAGE [IMAGE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker save [OPTIONS] IMAGE [IMAGE...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-o</code> 或 <code class="notranslate">--output</code>：指定输出文件路径。</li>
@@ -1062,11 +1190,13 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>将<code class="notranslate">my-python-app:1.0</code>镜像保存到<code class="notranslate">my-python-app.tar</code>文件</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker save -o my-python-app.tar my-python-app:1.0</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker save -o my-python-app.tar my-python-app:1.0
+</code></pre>
 <h3>4.6.2 导入镜像 (<code class="notranslate">docker load</code>)</h3>
 <p><code class="notranslate">docker load</code> 命令从一个tar归档文件或标准输入中加载镜像。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker load [OPTIONS]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker load [OPTIONS]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-i</code> 或 <code class="notranslate">--input</code>：指定输入文件路径。</li>
@@ -1075,7 +1205,8 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>从<code class="notranslate">my-python-app.tar</code>文件加载镜像</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker load -i my-python-app.tar</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker load -i my-python-app.tar
+</code></pre>
 <p>通过本章节的学习和实践，您应该已经掌握了Docker镜像的完整生命周期管理，包括从远程仓库获取、本地查看与删除、通过Dockerfile构建自定义镜像、以及镜像的标记、推送、导入和导出。这些技能是高效利用Docker进行应用部署和分发的基础。</p>
 <h1>6. Docker Compose</h1>
 <p>Docker Compose是一个用于定义和运行多容器Docker应用程序的工具。通过一个YAML文件来配置应用程序的服务，然后使用一个命令即可从配置中创建并启动所有服务。这使得管理复杂的、多服务的应用程序变得非常简单。本章节将介绍Docker Compose的安装、<code class="notranslate">docker-compose.yml</code>文件的编写以及常用命令。</p>
@@ -1089,22 +1220,26 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 </ul>
 <h3>6.1.2 Docker Compose安装</h3>
 <p>在CentOS 8上，Docker Compose通常作为Docker Engine的一部分，通过<code class="notranslate">docker-compose-plugin</code>包进行安装。如果您在安装Docker Engine时已经包含了此插件，则无需额外安装。您可以通过运行<code class="notranslate">docker compose version</code>命令来验证是否已安装。</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose version</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose version
+</code></pre>
 <p>如果显示版本信息，则表示已安装。如果未安装，或者您需要安装独立版本的Docker Compose（旧版本），可以按照以下步骤进行：</p>
 <ol>
 <li><strong>下载Docker Compose二进制文件</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo curl -L <span class="pl-s"><span class="pl-pds">"</span>https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-<span class="pl-s"><span class="pl-pds">$(</span>uname -s<span class="pl-pds">)</span></span>-<span class="pl-s"><span class="pl-pds">$(</span>uname -m<span class="pl-pds">)</span></span><span class="pl-pds">"</span></span> -o /usr/local/bin/docker-compose</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+</code></pre>
 <pre class="notranslate"><code class="notranslate">**注意**：请根据实际情况替换`v2.23.3`为最新稳定版本。
 </code></pre>
 <ol start="2">
 <li><strong>添加执行权限</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo chmod +x /usr/local/bin/docker-compose</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">sudo chmod +x /usr/local/bin/docker-compose
+</code></pre>
 <ol start="3">
 <li><strong>验证安装</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker-compose --version</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker-compose --version
+</code></pre>
 <pre class="notranslate"><code class="notranslate">**注意**：新版本的Docker Compose作为Docker CLI的插件，命令是`docker compose` (无连字符)。旧版本独立安装的命令是`docker-compose` (有连字符)。本手册将主要使用`docker compose`命令。
 </code></pre>
 <h2>6.2 <code class="notranslate">docker-compose.yml</code> 文件编写</h2>
@@ -1131,37 +1266,38 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 </ul>
 <p><strong>示例 <code class="notranslate">docker-compose.yml</code> 文件</strong>：</p>
 <p>我们将创建一个包含一个Web服务（Nginx）和一个数据库服务（MySQL）的简单应用。</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">'</span>3.8<span class="pl-pds">'</span></span>
+<pre lang="yaml" class="notranslate"><code class="notranslate">version: '3.8'
 
-<span class="pl-ent">services</span>:
-  <span class="pl-ent">web</span>:
-    <span class="pl-ent">image</span>: <span class="pl-s">nginx:latest</span>
-    <span class="pl-ent">ports</span>:
-      - <span class="pl-s"><span class="pl-pds">"</span>80:80<span class="pl-pds">"</span></span>
-    <span class="pl-ent">volumes</span>:
-      - <span class="pl-s">./nginx/conf.d:/etc/nginx/conf.d</span>
-      - <span class="pl-s">./nginx/html:/usr/share/nginx/html</span>
-    <span class="pl-ent">depends_on</span>:
-      - <span class="pl-s">db</span>
-    <span class="pl-ent">networks</span>:
-      - <span class="pl-s">app-network</span>
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/html:/usr/share/nginx/html
+    depends_on:
+      - db
+    networks:
+      - app-network
 
-  <span class="pl-ent">db</span>:
-    <span class="pl-ent">image</span>: <span class="pl-s">mysql:8.0</span>
-    <span class="pl-ent">environment</span>:
-      <span class="pl-ent">MYSQL_ROOT_PASSWORD</span>: <span class="pl-s">root_password</span>
-      <span class="pl-ent">MYSQL_DATABASE</span>: <span class="pl-s">my_database</span>
-    <span class="pl-ent">volumes</span>:
-      - <span class="pl-s">db_data:/var/lib/mysql</span>
-    <span class="pl-ent">networks</span>:
-      - <span class="pl-s">app-network</span>
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: my_database
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
 
-<span class="pl-ent">networks</span>:
-  <span class="pl-ent">app-network</span>:
-    <span class="pl-ent">driver</span>: <span class="pl-s">bridge</span>
+networks:
+  app-network:
+    driver: bridge
 
-<span class="pl-ent">volumes</span>:
-  <span class="pl-ent">db_data</span>:</pre></div>
+volumes:
+  db_data:
+</code></pre>
 <p><strong>文件说明</strong>：</p>
 <ul>
 <li><strong><code class="notranslate">web</code> 服务</strong>：
@@ -1197,7 +1333,8 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <h3>6.3.1 启动应用 (<code class="notranslate">docker compose up</code>)</h3>
 <p><code class="notranslate">docker compose up</code> 命令会根据<code class="notranslate">docker-compose.yml</code>文件创建并启动所有服务。如果服务所需的镜像不存在，它会自动拉取；如果服务容器已存在，它会尝试重建或更新。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose up [OPTIONS] [SERVICE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose up [OPTIONS] [SERVICE...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-d</code> 或 <code class="notranslate">--detach</code>：在后台运行容器。</li>
@@ -1211,38 +1348,40 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <p>在<code class="notranslate">docker-compose.yml</code>文件同级目录下创建<code class="notranslate">nginx</code>目录，并在其中创建<code class="notranslate">conf.d</code>和<code class="notranslate">html</code>子目录。</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p nginx/conf.d
+<pre lang="bash" class="notranslate"><code class="notranslate">mkdir -p nginx/conf.d
 mkdir -p nginx/html
 
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; nginx/conf.d/default.conf</span>
-<span class="pl-s">server {</span>
-<span class="pl-s">    listen 80;</span>
-<span class="pl-s">    location / {</span>
-<span class="pl-s">        root /usr/share/nginx/html;</span>
-<span class="pl-s">        index index.html;</span>
-<span class="pl-s">    }</span>
-<span class="pl-s">}</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span>
+cat &lt;&lt;EOF &gt; nginx/conf.d/default.conf
+server {
+    listen 80;
+    location / {
+        root /usr/share/nginx/html;
+        index index.html;
+    }
+}
+EOF
 
-cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF</span> &gt; nginx/html/index.html</span>
-<span class="pl-s">&lt;!DOCTYPE html&gt;</span>
-<span class="pl-s">&lt;html&gt;</span>
-<span class="pl-s">&lt;head&gt;</span>
-<span class="pl-s">    &lt;title&gt;Docker Compose Nginx&lt;/title&gt;</span>
-<span class="pl-s">&lt;/head&gt;</span>
-<span class="pl-s">&lt;body&gt;</span>
-<span class="pl-s">    &lt;h1&gt;Hello from Nginx via Docker Compose!&lt;/h1&gt;</span>
-<span class="pl-s">    &lt;p&gt;This is a multi-container application example.&lt;/p&gt;</span>
-<span class="pl-s">&lt;/body&gt;</span>
-<span class="pl-s">&lt;/html&gt;</span>
-<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+cat &lt;&lt;EOF &gt; nginx/html/index.html
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Docker Compose Nginx&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Hello from Nginx via Docker Compose!&lt;/h1&gt;
+    &lt;p&gt;This is a multi-container application example.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+EOF
+</code></pre>
 <ol start="2">
 <li>
 <p><strong>启动应用程序</strong>：</p>
 <p>在包含<code class="notranslate">docker-compose.yml</code>文件的目录下执行：</p>
 </li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose up -d</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose up -d
+</code></pre>
 <pre class="notranslate"><code class="notranslate">这将启动 `web` 和 `db` 两个服务。
 </code></pre>
 <ol start="3">
@@ -1254,7 +1393,8 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <h3>6.3.2 停止并移除应用 (<code class="notranslate">docker compose down</code>)</h3>
 <p><code class="notranslate">docker compose down</code> 命令会停止并移除<code class="notranslate">docker-compose.yml</code>文件中定义的所有服务、网络和数据卷（除非数据卷被明确声明为外部的）。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose down [OPTIONS]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose down [OPTIONS]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">--volumes</code> 或 <code class="notranslate">-v</code>：同时移除匿名数据卷和在<code class="notranslate">volumes</code>部分定义的数据卷。</li>
@@ -1264,24 +1404,29 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>停止并移除应用程序</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose down</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose down
+</code></pre>
 <ol start="2">
 <li><strong>停止并移除应用程序，包括数据卷</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose down -v</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose down -v
+</code></pre>
 <h3>6.3.3 查看服务状态 (<code class="notranslate">docker compose ps</code>)</h3>
 <p><code class="notranslate">docker compose ps</code> 命令用于列出Compose项目中所有服务的运行状态。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose ps [OPTIONS] [SERVICE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose ps [OPTIONS] [SERVICE...]
+</code></pre>
 <p><strong>实验示例</strong>：</p>
 <ol>
 <li><strong>查看所有服务的状态</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose ps</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose ps
+</code></pre>
 <h3>6.3.4 查看服务日志 (<code class="notranslate">docker compose logs</code>)</h3>
 <p><code class="notranslate">docker compose logs</code> 命令用于查看Compose项目中所有服务或指定服务的日志输出。</p>
 <p><strong>基本语法</strong>：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose logs [OPTIONS] [SERVICE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose logs [OPTIONS] [SERVICE...]
+</code></pre>
 <p><strong>常用选项</strong>：</p>
 <ul>
 <li><code class="notranslate">-f</code> 或 <code class="notranslate">--follow</code>：持续输出日志。</li>
@@ -1291,41 +1436,50 @@ cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span><span class="pl-k">EOF<
 <ol>
 <li><strong>查看所有服务的实时日志</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose logs -f</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose logs -f
+</code></pre>
 <ol start="2">
 <li><strong>查看<code class="notranslate">web</code>服务的日志</strong>：</li>
 </ol>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose logs web</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose logs web
+</code></pre>
 <h2>6.4 Compose常用命令</h2>
 <p>除了上述命令，Docker Compose还提供了一些其他有用的命令：</p>
 <ul>
 <li><strong><code class="notranslate">docker compose build</code></strong>：构建（或重新构建）服务镜像。</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose build [SERVICE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose build [SERVICE...]
+</code></pre>
 <ul>
 <li><strong><code class="notranslate">docker compose start</code></strong>：启动已停止的服务容器。</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose start [SERVICE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose start [SERVICE...]
+</code></pre>
 <ul>
 <li><strong><code class="notranslate">docker compose stop</code></strong>：停止运行中的服务容器，但不删除它们。</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose stop [SERVICE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose stop [SERVICE...]
+</code></pre>
 <ul>
 <li><strong><code class="notranslate">docker compose restart</code></strong>：重启服务容器。</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose restart [SERVICE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose restart [SERVICE...]
+</code></pre>
 <ul>
 <li><strong><code class="notranslate">docker compose exec</code></strong>：在运行中的服务容器中执行命令。</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose <span class="pl-c1">exec</span> web bash</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose exec web bash
+</code></pre>
 <ul>
 <li><strong><code class="notranslate">docker compose config</code></strong>：验证并查看Compose文件的配置。</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose config</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose config
+</code></pre>
 <ul>
 <li><strong><code class="notranslate">docker compose pull</code></strong>：拉取服务所需的镜像。</li>
 </ul>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose pull [SERVICE...]</pre></div>
+<pre lang="bash" class="notranslate"><code class="notranslate">docker compose pull [SERVICE...]
+</code></pre>
 <p>通过本章节的学习和实践，您应该已经掌握了Docker Compose的基本概念、<code class="notranslate">docker-compose.yml</code>文件的编写以及如何使用<code class="notranslate">docker compose</code>命令来管理多容器应用程序。Docker Compose极大地简化了复杂应用的部署和管理，是Docker生态系统中不可或缺的工具。</p>
 <h1>7. 总结与展望</h1>
 <h2>7.1 实验回顾</h2>
