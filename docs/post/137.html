@@ -127,6 +127,47 @@ sudo fdisk /dev/nvme0n1
 </ul>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkfs.ext4 /dev/nvme0n1p1
 </pre></div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>特性</th>
+<th>XFS (CentOS 7/8 默认)</th>
+<th>EXT4 (传统 Linux 默认)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>最大文件限制</td>
+<td>极其庞大 (8 EB)</td>
+<td>16 TB</td>
+</tr>
+<tr>
+<td>最大卷限制</td>
+<td>极其庞大 (16 EB)</td>
+<td>1 EB</td>
+</tr>
+<tr>
+<td>设计架构</td>
+<td>64位，专为并行 I/O 设计</td>
+<td>48位，从 EXT3 演进而来</td>
+</tr>
+<tr>
+<td>碎片处理</td>
+<td>优秀的在线延迟分配</td>
+<td>容易产生碎片，需定期整理</td>
+</tr>
+<tr>
+<td>分区缩减</td>
+<td>不支持（只能扩容）</td>
+<td>支持（可以无损缩小）</td>
+</tr>
+<tr>
+<td>恢复工具</td>
+<td>xfs_repair 速度极快</td>
+<td>fsck 扫描大容量磁盘很慢</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <hr>
 <h3>4. 挂载分区</h3>
 <p>我们需要创建一个目录作为挂载点，并将磁盘挂载上去。</p>
