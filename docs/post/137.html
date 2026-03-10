@@ -10,11 +10,13 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="### 1. 识别新磁盘
+<meta name="description" content="## NVME磁盘
+### 1. 识别新磁盘
 
 首先，我们需要确认系统已经识别到了新的 NVMe 硬件。">
 <meta property="og:title" content="Linux下添加并挂载磁盘">
-<meta property="og:description" content="### 1. 识别新磁盘
+<meta property="og:description" content="## NVME磁盘
+### 1. 识别新磁盘
 
 首先，我们需要确认系统已经识别到了新的 NVMe 硬件。">
 <meta property="og:type" content="article">
@@ -87,7 +89,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h3>1. 识别新磁盘</h3>
+<div class="markdown-body" id="postBody"><h2>NVME磁盘</h2>
+<h3>1. 识别新磁盘</h3>
 <p>首先，我们需要确认系统已经识别到了新的 NVMe 硬件。</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">lsblk</pre></div>
 <p>或者使用更详细的命令：</p>
@@ -161,6 +164,103 @@ df -hT <span class="pl-k">|</span> grep nvme
 sudo mount -a
 </pre></div>
 <p><em>如果没有报错，说明配置成功。</em></p>
+<hr>
+<h2>HDD及SSD磁盘</h2>
+<h3>1. 识别新磁盘</h3>
+<p>使用 <code class="notranslate">lsblk</code> 命令查看系统识别到的磁盘列表。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lsblk
+</pre></div>
+<ul>
+<li><strong>识别点</strong>：你会看到类似 <code class="notranslate">sdb</code> 或 <code class="notranslate">sdc</code> 的设备，且 <code class="notranslate">TYPE</code> 为 <code class="notranslate">disk</code>。通常 <code class="notranslate">sda</code> 是你的系统盘，请务必确认操作对象，避免误删数据。</li>
+</ul>
+<hr>
+<h3>2. 分区 (fdisk 或 gdisk)</h3>
+<p>如果磁盘容量 <strong>小于 2TB</strong>，使用 <code class="notranslate">fdisk</code>；如果 <strong>大于 2TB</strong>，必须使用 <code class="notranslate">gdisk</code>（支持 GPT 分区表）。</p>
+<p><strong>以 fdisk 为例：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo fdisk /dev/sdb  <span class="pl-c"><span class="pl-c">#</span> 假设新磁盘是 sdb</span>
+</pre></div>
+<p>在交互界面依次输入：</p>
+<ul>
+<li><code class="notranslate">n</code> (new)：新建分区。</li>
+<li><code class="notranslate">p</code> (primary)：主分区。</li>
+<li><code class="notranslate">1</code>：分区编号。</li>
+<li><code class="notranslate">回车</code>：起始扇区默认。</li>
+<li><code class="notranslate">回车</code>：结束扇区默认（占用全部空间）。</li>
+<li><code class="notranslate">w</code> (write)：写入分区表并退出。</li>
+</ul>
+<hr>
+<h3>3. 创建文件系统 (格式化)</h3>
+<p>CentOS 8 推荐使用 <strong>XFS</strong>，它在大文件处理和性能上表现优异。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 格式化为 XFS</span>
+sudo mkfs.xfs /dev/sdb1
+
+<span class="pl-c"><span class="pl-c">#</span> 或者格式化为 EXT4</span>
+<span class="pl-c"><span class="pl-c">#</span> sudo mkfs.ext4 /dev/sdb1</span>
+</pre></div>
+<hr>
+<h3>4. 挂载磁盘</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 创建挂载点</span>
+sudo mkdir -p /data
+
+<span class="pl-c"><span class="pl-c">#</span> 临时挂载</span>
+sudo mount /dev/sdb1 /data
+</pre></div>
+<hr>
+<h3>5. 设置永久挂载 (防止重启失效)</h3>
+<p>普通磁盘同样建议使用 <strong>UUID</strong> 挂载，因为如果主板调换了 SATA 线接口，<code class="notranslate">sdb</code> 可能会变成 <code class="notranslate">sdc</code>，但 UUID 永远不变。</p>
+<ol>
+<li><strong>查询 UUID：</strong></li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">blkid /dev/sdb1
+</pre></div>
+<ol start="2">
+<li><strong>修改 /etc/fstab：</strong></li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/fstab
+</pre></div>
+<p>在文件末尾添加一行：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">UUID=你的UUID值  /data  xfs  defaults  0 0
+
+</code></pre>
+<ol start="3">
+<li><strong>测试挂载：</strong></li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mount -a
+</pre></div>
+<p>（无报错则表示下次重启会自动挂载）。</p>
+<hr>
+<h3>普通磁盘 vs NVMe 磁盘的主要区别</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>特性</th>
+<th>普通磁盘 (SATA/SAS)</th>
+<th>NVMe 磁盘</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>设备名</strong></td>
+<td><code class="notranslate">/dev/sdX</code> (如 <code class="notranslate">sdb</code>)</td>
+<td><code class="notranslate">/dev/nvmeXnY</code> (如 <code class="notranslate">nvme0n1</code>)</td>
+</tr>
+<tr>
+<td><strong>分区名</strong></td>
+<td><code class="notranslate">/dev/sdb1</code></td>
+<td><code class="notranslate">/dev/nvme0n1p1</code> (多了一个 <strong>p</strong>)</td>
+</tr>
+<tr>
+<td><strong>接口物理速度</strong></td>
+<td>最高约 600MB/s (SATA3)</td>
+<td>3500MB/s - 7000MB/s+ (PCIe)</td>
+</tr>
+<tr>
+<td><strong>热插拔</strong></td>
+<td>常用在服务器热插拔支架</td>
+<td>较少在运行中直接拔插</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <hr></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
