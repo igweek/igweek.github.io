@@ -1,5 +1,27 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 10 Mar 2026 14:36:16 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>网络存储技术</title><link>https://bbs.017121.xyz/post/140.html</link><description>## 技术层面
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 10 Mar 2026 15:10:55 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>freenas安装及部署</title><link>https://bbs.017121.xyz/post/141.html</link><description>FreeNAS的推荐配置和最小配置:
+
+|     |             推荐配置              |             最小配置             |
+|-----|-------------------------------|------------------------------|
+| CPU |            x86_64             |            x86_64            |
+| 内存  |              8G               |              1G              |
+| 磁盘  | 最小2块磁盘，1块系统盘(20G),1块数据盘(不限大小) | 最小2块磁盘，1块系统盘(8G),1块数据盘(不限大小) |
+
+这里我使用的配置如下，大家可以酌情增减：  
+
+&lt;img width='299' height='373' alt='Image' src='https://github.com/user-attachments/assets/da35fd56-554c-48a5-8614-dc33e11a25a2' /&gt;
+
+这里就可以直接开始安装了：
+
+这个就是FreeNAS 的安装界面了，直接回车或者等待，自动进入到安装界面
+
+&lt;img width='720' height='400' alt='Image' src='https://github.com/user-attachments/assets/c5eb78b1-f591-45ec-86b5-1d6005c8c7a7' /&gt;
+
+选择第一个 安装/更新 ：
+
+&lt;img width='720' height='400' alt='Image' src='https://github.com/user-attachments/assets/6bbb285a-2f26-4978-a255-82d5ce76a96f' /&gt;
+
+这里会提示内存小于8G，我们这里直接忽略即可。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/141.html</guid><pubDate>Tue, 10 Mar 2026 15:10:23 +0000</pubDate></item><item><title>网络存储技术</title><link>https://bbs.017121.xyz/post/140.html</link><description>## 技术层面
 
 ### 1. NAS（网络附加存储）：公司的“公共文件柜”
 
