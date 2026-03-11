@@ -1,5 +1,39 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 11 Mar 2026 10:17:02 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>VMware WorkStation安装FNOS</title><link>https://bbs.017121.xyz/post/142.html</link><description>##  VMware WorkStation安装FNOS（nas）指南
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 11 Mar 2026 13:37:18 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Dify+Ollama+Qwen3.5 9B模型 部署</title><link>https://bbs.017121.xyz/post/143.html</link><description>&gt; 环境：win11 系统 ，NV4060显存8GB，12700KF 32G内存
+
+# Windows 11 本地部署文档
+适用环境：
+
+- CPU：i7-12700KF
+- 内存：32GB
+- 显卡：RTX 4060
+- 系统：Windows 11
+
+部署目标：
+
+- 在 Windows 11 本机安装 Ollama
+- 本机运行 千问 3.5 9B 模型
+- 安装 Dify
+- 让 Dify 调用本机 Ollama 的千问模型
+
+***
+
+## 一、整体架构
+
+推荐你这样部署：
+
+- Windows 11 主机：安装 Ollama
+- Ollama：运行 Qwen 3.5 9B
+- Docker Desktop：运行 Dify
+- Dify 通过 `host.docker.internal:11434` 调用 Windows 主机上的 Ollama
+
+简单理解：
+
+- 模型推理在 Windows 本机上跑
+- Dify 在 Docker 里跑
+- 两者通过本机网络通信
+
+这是你当前机器上最省事、最稳妥的方式。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/143.html</guid><pubDate>Wed, 11 Mar 2026 13:36:45 +0000</pubDate></item><item><title>VMware WorkStation安装FNOS</title><link>https://bbs.017121.xyz/post/142.html</link><description>##  VMware WorkStation安装FNOS（nas）指南
 
 实验背景：
 

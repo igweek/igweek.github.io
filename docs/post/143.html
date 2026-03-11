@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script>document.addEventListener('DOMContentLoaded',function(){var e=document.querySelector('.blogTitle');var t=document.querySelector('.avatar');if(e){e.style.cursor='pointer';e.onclick=function(){location.href='/';}}if(t){t.style.cursor='pointer';t.onclick=function(){location.href='/';}}});</script><script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script><script src='/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="/img/123.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="> 环境：win11 系统 ，NV4060显存8GB，12700KF 32G内存
+
+# Windows 11 本地部署文档
+适用环境：
+
+- CPU：i7-12700KF
+- 内存：32GB
+- 显卡：RTX 4060
+- 系统：Windows 11
+
+部署目标：
+
+- 在 Windows 11 本机安装 Ollama
+- 本机运行 千问 3.5 9B 模型
+- 安装 Dify
+- 让 Dify 调用本机 Ollama 的千问模型
+
+***
+
+## 一、整体架构
+
+推荐你这样部署：
+
+- Windows 11 主机：安装 Ollama
+- Ollama：运行 Qwen 3.5 9B
+- Docker Desktop：运行 Dify
+- Dify 通过 `host.docker.internal:11434` 调用 Windows 主机上的 Ollama
+
+简单理解：
+
+- 模型推理在 Windows 本机上跑
+- Dify 在 Docker 里跑
+- 两者通过本机网络通信
+
+这是你当前机器上最省事、最稳妥的方式。">
+<meta property="og:title" content="Dify+Ollama+Qwen3.5 9B模型 部署">
+<meta property="og:description" content="> 环境：win11 系统 ，NV4060显存8GB，12700KF 32G内存
+
+# Windows 11 本地部署文档
+适用环境：
+
+- CPU：i7-12700KF
+- 内存：32GB
+- 显卡：RTX 4060
+- 系统：Windows 11
+
+部署目标：
+
+- 在 Windows 11 本机安装 Ollama
+- 本机运行 千问 3.5 9B 模型
+- 安装 Dify
+- 让 Dify 调用本机 Ollama 的千问模型
+
+***
+
+## 一、整体架构
+
+推荐你这样部署：
+
+- Windows 11 主机：安装 Ollama
+- Ollama：运行 Qwen 3.5 9B
+- Docker Desktop：运行 Dify
+- Dify 通过 `host.docker.internal:11434` 调用 Windows 主机上的 Ollama
+
+简单理解：
+
+- 模型推理在 Windows 本机上跑
+- Dify 在 Docker 里跑
+- 两者通过本机网络通信
+
+这是你当前机器上最省事、最稳妥的方式。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.017121.xyz/post/143.html">
+<meta property="og:image" content="/img/123.png">
+<title>Dify+Ollama+Qwen3.5 9B模型 部署</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">Dify+Ollama+Qwen3.5 9B模型 部署</h1>
+<div class="title-right">
+    <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/143" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><blockquote>
+<p>环境：win11 系统 ，NV4060显存8GB，12700KF 32G内存</p>
+</blockquote>
+<h1>Windows 11 本地部署文档</h1>
+<p>适用环境：</p>
+<ul>
+<li>CPU：i7-12700KF</li>
+<li>内存：32GB</li>
+<li>显卡：RTX 4060</li>
+<li>系统：Windows 11</li>
+</ul>
+<p>部署目标：</p>
+<ul>
+<li>在 Windows 11 本机安装 Ollama</li>
+<li>本机运行 千问 3.5 9B 模型</li>
+<li>安装 Dify</li>
+<li>让 Dify 调用本机 Ollama 的千问模型</li>
+</ul>
+<hr>
+<h2>一、整体架构</h2>
+<p>推荐你这样部署：</p>
+<ul>
+<li>Windows 11 主机：安装 Ollama</li>
+<li>Ollama：运行 Qwen 3.5 9B</li>
+<li>Docker Desktop：运行 Dify</li>
+<li>Dify 通过 <code class="notranslate">host.docker.internal:11434</code> 调用 Windows 主机上的 Ollama</li>
+</ul>
+<p>简单理解：</p>
+<ul>
+<li>模型推理在 Windows 本机上跑</li>
+<li>Dify 在 Docker 里跑</li>
+<li>两者通过本机网络通信</li>
+</ul>
+<p>这是你当前机器上最省事、最稳妥的方式。</p>
+<hr>
+<h2>二、部署前准备</h2>
+<p>先准备好下面这些内容：</p>
+<h3>1）更新显卡驱动</h3>
+<p>先把 NVIDIA 驱动更新到最新稳定版。</p>
+<h3>2）确认系统功能</h3>
+<p>建议确认以下内容正常：</p>
+<ul>
+<li>Windows 11 已更新</li>
+<li>可以正常联网</li>
+<li>BIOS 没有限制虚拟化</li>
+<li>系统盘和数据盘有足够空间</li>
+</ul>
+<p>建议预留空间：</p>
+<ul>
+<li>Ollama 模型：至少 10GB 以上</li>
+<li>Dify 容器、镜像、数据库：至少 20GB 以上</li>
+<li>总建议空闲空间：30GB 以上</li>
+</ul>
+<h3>3）建议规划目录</h3>
+<p>建议提前规划一个数据目录，例如：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">D:\AI\
+├─ ollama-models
+├─ dify
+└─ backups
+</code></pre>
+<p>后面模型和容器数据都尽量不要堆在 C 盘。</p>
+<hr>
+<h2>三、安装 Ollama</h2>
+<h3>1）下载安装</h3>
+<p>在 Windows 上安装 Ollama。</p>
+<p>安装完成后，打开 PowerShell，执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">ollama <span class="pl-k">--</span>version</pre></div>
+<p>如果能看到版本号，就说明安装成功。</p>
+<h3>2）运行千问 3.5 9B</h3>
+<p>执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">ollama run qwen3.<span class="pl-c1">5</span>:9b</pre></div>
+<p>第一次运行会自动下载模型，时间取决于你的网络速度。</p>
+<p>下载完成后，你会进入交互界面，可以直接输入：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">你好，介绍一下你自己
+</code></pre>
+<p>如果模型能正常回复，就说明 Ollama 和模型都没问题。</p>
+<hr>
+<h2>四、验证 Ollama 服务</h2>
+<p>Ollama 默认会在本机开放 API 服务。</p>
+<h3>1）查看本地模型</h3>
+<p>在 PowerShell 执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">ollama list</pre></div>
+<h3>2）检查 API 是否正常</h3>
+<p>执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">curl http:<span class="pl-k">//</span>localhost:<span class="pl-c1">11434</span><span class="pl-k">/</span>api<span class="pl-k">/</span>tags</pre></div>
+<p>如果返回模型列表，说明 API 正常。</p>
+<h3>3）测试生成接口</h3>
+<p>执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">curl http:<span class="pl-k">//</span>localhost:<span class="pl-c1">11434</span><span class="pl-k">/</span>api<span class="pl-k">/</span>generate <span class="pl-k">-</span>Method POST <span class="pl-k">-</span>ContentType <span class="pl-s"><span class="pl-pds">"</span>application/json<span class="pl-pds">"</span></span> <span class="pl-k">-</span>Body <span class="pl-s"><span class="pl-pds">'</span>{</span>
+<span class="pl-s">  "model": "qwen3.5:9b",</span>
+<span class="pl-s">  "prompt": "请用一句话介绍上海"</span>
+<span class="pl-s">}<span class="pl-pds">'</span></span></pre></div>
+<p>如果能返回结果，说明后续 Dify 可以接入。</p>
+<hr>
+<h2>五、修改 Ollama 模型存储目录（建议）</h2>
+<p>如果你不想把模型放在 C 盘，建议提前改目录。</p>
+<h3>1）创建目录</h3>
+<p>例如：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">mkdir D:\AI\ollama<span class="pl-k">-</span>models</pre></div>
+<h3>2）设置环境变量</h3>
+<p>打开“系统属性” → “高级系统设置” → “环境变量”</p>
+<p>新增系统变量：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">变量名：OLLAMA_MODELS
+变量值：D:\AI\ollama-models
+</code></pre>
+<p>设置完成后，重启 Ollama，最好重启电脑。</p>
+<h3>3）重新验证</h3>
+<p>重启后再次执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">ollama list</pre></div>
+<p>后面新下载的模型就会优先放到新目录。</p>
+<hr>
+<h2>六、安装 WSL2</h2>
+<p>虽然你是在 Windows 上装 Docker，但因为 Dify 是 Linux 容器应用，所以推荐启用 WSL2。</p>
+<h3>1）管理员打开 PowerShell</h3>
+<p>执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">wsl <span class="pl-k">--</span>install</pre></div>
+<p>执行完成后重启电脑。</p>
+<h3>2）确认安装成功</h3>
+<p>重启后执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">wsl <span class="pl-k">-</span>l <span class="pl-k">-</span>v</pre></div>
+<p>如果能看到已安装的 Linux 发行版，并且版本是 2，就说明没问题。</p>
+<p>如果还没有 Ubuntu，也可以手动安装 Ubuntu。</p>
+<hr>
+<h2>七、安装 Docker Desktop</h2>
+<h3>1）安装 Docker Desktop</h3>
+<p>下载并安装 Docker Desktop。</p>
+<p>安装时建议保持默认设置，尤其是：</p>
+<ul>
+<li>启用 WSL2 backend</li>
+<li>使用 Linux containers</li>
+</ul>
+<h3>2）首次打开后的设置</h3>
+<p>打开 Docker Desktop 后，进入设置：</p>
+<h4>General</h4>
+<p>确认以下选项开启：</p>
+<ul>
+<li>Use WSL 2 based engine</li>
+</ul>
+<h4>Resources</h4>
+<p>建议给 Docker 分配：</p>
+<ul>
+<li>内存：8GB 到 12GB</li>
+<li>CPU：4 核以上</li>
+<li>磁盘空间：至少 60GB</li>
+</ul>
+<p>如果你后续还要跑知识库、向量库、文件解析，建议资源给得更宽松一些。</p>
+<h3>3）验证 Docker</h3>
+<p>打开 PowerShell 执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">docker <span class="pl-k">--</span>version
+docker compose version</pre></div>
+<p>确认都能输出版本信息。</p>
+<hr>
+<h2>八、部署 Dify</h2>
+<h3>1）进入 WSL 终端</h3>
+<p>打开 Ubuntu 终端，执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p <span class="pl-k">~</span>/apps
+<span class="pl-c1">cd</span> <span class="pl-k">~</span>/apps
+git clone https://github.com/langgenius/dify.git
+<span class="pl-c1">cd</span> dify/docker</pre></div>
+<h3>2）复制配置文件</h3>
+<p>执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cp .env.example .env</pre></div>
+<h3>3）启动 Dify</h3>
+<p>执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose up -d</pre></div>
+<p>第一次启动会拉很多镜像，时间可能比较长。</p>
+<h3>4）查看容器状态</h3>
+<p>执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose ps</pre></div>
+<p>如果看到多个服务都是运行状态，就说明基本成功。</p>
+<h3>5）查看日志</h3>
+<p>如果有异常，执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose logs -f</pre></div>
+<hr>
+<h2>九、访问 Dify</h2>
+<p>部署成功后，浏览器打开：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">http://localhost
+</code></pre>
+<p>正常情况下会出现 Dify 初始化界面。</p>
+<p>第一次打开时，你需要：</p>
+<ul>
+<li>创建管理员账号</li>
+<li>设置初始工作区</li>
+<li>登录后台</li>
+</ul>
+<hr>
+<h2>十、让 Dify 连接本机 Ollama</h2>
+<p>这是最关键的一步。</p>
+<p>因为 Dify 跑在 Docker 里，而 Ollama 跑在 Windows 主机上，所以在 Dify 里<strong>不能填 <code class="notranslate">localhost:11434</code></strong>。<br>
+因为在容器里，<code class="notranslate">localhost</code> 指向容器自己，不是你的 Windows 主机。</p>
+<p>你要填写这个地址：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">http://host.docker.internal:11434
+</code></pre>
+<h3>Dify 中的配置思路</h3>
+<p>进入 Dify 后台后：</p>
+<ol>
+<li>找到模型供应商设置</li>
+<li>选择 Ollama</li>
+<li>填写连接信息</li>
+</ol>
+<p>建议填写如下：</p>
+<ul>
+<li>Base URL：<code class="notranslate">http://host.docker.internal:11434</code></li>
+<li>Model Name：<code class="notranslate">qwen3.5:9b</code></li>
+</ul>
+<p>保存后测试连接。</p>
+<p>如果测试通过，说明 Dify 已经能调用你本机的 Ollama。</p>
+<hr>
+<h2>十一、推荐的部署顺序</h2>
+<p>按这个顺序做，最稳：</p>
+<h3>第一步：先装 Ollama</h3>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">ollama <span class="pl-k">--</span>version
+ollama run qwen3.<span class="pl-c1">5</span>:9b
+ollama list</pre></div>
+<h3>第二步：验证 API</h3>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">curl http:<span class="pl-k">//</span>localhost:<span class="pl-c1">11434</span><span class="pl-k">/</span>api<span class="pl-k">/</span>tags</pre></div>
+<h3>第三步：安装 WSL2</h3>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">wsl <span class="pl-k">--</span>install</pre></div>
+<h3>第四步：安装 Docker Desktop</h3>
+<p>安装后检查：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">docker <span class="pl-k">--</span>version
+docker compose version</pre></div>
+<h3>第五步：部署 Dify</h3>
+<p>在 Ubuntu 终端执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">mkdir -p <span class="pl-k">~</span>/apps
+<span class="pl-c1">cd</span> <span class="pl-k">~</span>/apps
+git clone https://github.com/langgenius/dify.git
+<span class="pl-c1">cd</span> dify/docker
+cp .env.example .env
+docker compose up -d</pre></div>
+<h3>第六步：浏览器打开 Dify</h3>
+<pre lang="text" class="notranslate"><code class="notranslate">http://localhost
+</code></pre>
+<h3>第七步：在 Dify 后台接入 Ollama</h3>
+<p>填写：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">http://host.docker.internal:11434
+</code></pre>
+<p>模型名填写：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">qwen3.5:9b
+</code></pre>
+<hr>
+<h2>十二、常见问题排查</h2>
+<h3>1）Ollama 能跑，但 Dify 连不上</h3>
+<p>先检查下面几点：</p>
+<ul>
+<li>Ollama 是否已经在运行</li>
+<li><code class="notranslate">http://localhost:11434/api/tags</code> 是否有返回</li>
+<li>Dify 里是不是误填成了 <code class="notranslate">localhost:11434</code></li>
+<li>正确地址是否填成了 <code class="notranslate">http://host.docker.internal:11434</code></li>
+</ul>
+<h3>2）Dify 页面打不开</h3>
+<p>检查容器是否启动：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose ps</pre></div>
+<p>查看日志：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose logs -f</pre></div>
+<p>也要检查 Docker Desktop 是否真的启动了。</p>
+<h3>3）Docker 运行很卡</h3>
+<p>提高 Docker Desktop 分配资源：</p>
+<ul>
+<li>内存加到 10GB 或 12GB</li>
+<li>CPU 分配 4 核或更多</li>
+<li>保证磁盘空间充足</li>
+</ul>
+<h3>4）Qwen 3.5 9B 响应慢</h3>
+<p>这是正常现象的一部分。4060 可以跑 9B，但它不是高显存卡。<br>
+你这套配置是“可用”，而且已经不错，但如果上下文太长、请求太复杂，速度会下降。</p>
+<h3>5）模型下载很慢</h3>
+<p>可以先确认网络环境稳定，再重新执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">ollama run qwen3.<span class="pl-c1">5</span>:9b</pre></div>
+<hr>
+<h2>十三、建议的日常使用方式</h2>
+<p>建议你平时这样使用：</p>
+<ul>
+<li>Ollama 一直在 Windows 后台运行</li>
+<li>Dify 一直在 Docker Desktop 里运行</li>
+<li>日常通过 Dify 建应用、工作流、知识库</li>
+<li>模型统一调用本机 Ollama</li>
+</ul>
+<p>这样后续要换模型也很方便，比如你想换别的模型，只要先在 Ollama 里拉下来，然后在 Dify 里改模型名即可。</p>
+<hr>
+<h2>十四、可直接保存的简版部署文档</h2>
+<p>你可以把下面这段直接保存成操作说明：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">Windows 11 本地部署方案
+
+环境：
+- i7 12700KF
+- 32GB RAM
+- RTX 4060
+- Windows 11
+
+目标：
+- 本机安装 Ollama
+- 运行 qwen3.5:9b
+- 安装 Dify
+- Dify 对接本机 Ollama
+
+步骤：
+
+1. 安装 Ollama
+2. PowerShell 执行：
+   ollama --version
+   ollama run qwen3.5:9b
+   ollama list
+
+3. 验证 Ollama API：
+   curl http://localhost:11434/api/tags
+
+4. 安装 WSL2：
+   wsl --install
+
+5. 安装 Docker Desktop
+   开启 WSL2 backend
+
+6. 在 Ubuntu 中部署 Dify：
+   mkdir -p ~/apps
+   cd ~/apps
+   git clone https://github.com/langgenius/dify.git
+   cd dify/docker
+   cp .env.example .env
+   docker compose up -d
+
+7. 浏览器访问：
+   http://localhost
+
+8. 在 Dify 中配置 Ollama：
+   Base URL = http://host.docker.internal:11434
+   Model = qwen3.5:9b
+</code></pre></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.017121.xyz">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='/plugins/articletoc.js'></script><script src='/plugins/lightbox.js'></script>
+
+</html>
