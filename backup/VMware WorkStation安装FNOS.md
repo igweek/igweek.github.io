@@ -43,11 +43,9 @@
 
 内存按需处理，不要太小，建议2g以上。
 
-![](https://zblog.hqyman.cn/zb_users/upload/2026/02/03/20260203160052_95631.png)
 
 网络部分选择nat，也可以桥接
 
-![](https://zblog.hqyman.cn/zb_users/upload/2026/02/03/20260203160052_18005.png)
 
 I/O选择推荐的就行
 
