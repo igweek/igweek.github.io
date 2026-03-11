@@ -19,7 +19,6 @@
 
 打开VMware Workstation，点击“创建新的虚拟机”。
 
-![](https://zblog.hqyman.cn/zb_users/upload/2026/02/03/20260203160051_71226.png)
 
 兼容性可以自行选择
 
