@@ -113,14 +113,6 @@ I/O选择推荐的就行
 
 ![](https://zblog.hqyman.cn/zb_users/upload/2026/02/03/20260203160054_60279.png)
 
-打开浏览器访问下面地址 ,例如下图的  http://192.168.6.36:5666
-
-![QQ_1770105254008.png](https://zblog.hqyman.cn/zb_users/upload/2026/02/202602031770105275764510.png)
-
+打开浏览器访问下面地址 ,http://192.168.6.36:5666
 刚开始应该是开启NAS之旅，忘记截图，直接跳过无伤大雅，然后自己按照要求注册，进行登录即可
-
-![](https://zblog.hqyman.cn/zb_users/upload/2026/02/03/20260203160054_84608.png)
-
-![](https://zblog.hqyman.cn/zb_users/upload/2026/02/03/20260203160054_54619.png)
-
 ## 至此安装完毕。
