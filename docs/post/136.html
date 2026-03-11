@@ -10,11 +10,11 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="### 实验背景
+<meta name="description" content="## 实验背景
 
 你是一家电商公司的系统管理员。">
 <meta property="og:title" content="LVM进阶">
-<meta property="og:description" content="### 实验背景
+<meta property="og:description" content="## 实验背景
 
 你是一家电商公司的系统管理员。">
 <meta property="og:type" content="article">
@@ -87,7 +87,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h3>实验背景</h3>
+<div class="markdown-body" id="postBody"><h2>实验背景</h2>
 <p>你是一家电商公司的系统管理员。由于双 11 活动，原有的数据库存储空间告急，且由于旧硬盘性能不足，需要将数据在线迁移到新资源池中，并实现自动挂载。</p>
 <hr>
 <h3>【任务一】资源整合与多级扩容（基础进阶）</h3>
@@ -143,6 +143,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><strong>关键点：</strong> 建议使用逻辑卷的设备路径（如 <code class="notranslate">/dev/mapper/vg_production-lv_database</code>）或 UUID 进行配置。</li>
 </ul>
 <hr>
+<h2>解答</h2>
 <h2>【任务一】资源整合与多级扩容</h2>
 <p>本任务展示了 LVM 如何打破物理硬盘的边界，将多块小硬盘合并成一个大的虚拟存储池。</p>
 <h3>1. 初始化物理卷 (PV)</h3>
