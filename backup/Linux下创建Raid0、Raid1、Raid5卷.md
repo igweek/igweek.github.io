@@ -21,81 +21,79 @@ sudo dnf install mdadm -y
 
 ---
 
-### 1. 创建 RAID 0 (条带化)
 
-RAID 0 追求速度，至少需要 **2 块** 磁盘。它没有冗余，一块硬盘损坏则数据全部丢失。
+## 1. 实验一：创建 RAID 0 (条带化)
 
-* **创建命令：**
-```bash
-mdadm --create /dev/md0 --level=0 --raid-devices=2 /dev/sdb /dev/sdc
+**特点：** 追求速度，至少 2 块盘。无冗余，损坏一块则全盘数据丢失。
 
-```
+### 创建步骤：
 
+1. **创建阵列：**
+`sudo mdadm --create /dev/md0 --level=0 --raid-devices=2 /dev/sdb /dev/sdc`
+2. **格式化并挂载：**
+`mkfs.ext4 /dev/md0 && mkdir -p /mnt/raid0 && mount /dev/md0 /mnt/raid0`
 
+###  拆除与清理（为下个实验腾空间）：
 
----
-
-### 2. 创建 RAID 1 (镜像)
-
-RAID 1 追求安全性，至少需要 **2 块** 磁盘。它将数据完全备份到另一块盘上。
-
-* **创建命令：**
-```bash
-mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb /dev/sdc
-
-```
-
-
+1. **卸载：** `sudo umount /mnt/raid0`
+2. **停止阵列：** `sudo mdadm --stop /dev/md0`
+3. **擦除元数据：** `sudo mdadm --zero-superblock /dev/sdb /dev/sdc`
 
 ---
 
-### 3. 创建 RAID 5 (分布式奇偶校验)
+## 2. 实验二：创建 RAID 1 (镜像)
 
-RAID 5 平衡了性能、安全和容量，至少需要 **3 块** 磁盘。允许损坏一块磁盘而不丢失数据。
+**特点：** 追求安全，至少 2 块盘。数据互为备份，容量减半。
 
-* **创建命令：**
-```bash
-mdadm --create /dev/md5 --level=5 --raid-devices=3 /dev/sdb /dev/sdc /dev/sdd
+### 创建步骤：
 
-```
+1. **创建阵列：**
+`sudo mdadm --create /dev/md1 --level=1 --raid-devices=2 /dev/sdb /dev/sdc`
+2. **格式化并挂载：**
+`mkfs.xfs /dev/md1 && mkdir -p /mnt/raid1 && mount /dev/md1 /mnt/raid1`
 
+###  拆除与清理：
 
+1. **卸载：** `sudo umount /mnt/raid1`
+2. **停止阵列：** `sudo mdadm --stop /dev/md1`
+3. **擦除元数据：** `sudo mdadm --zero-superblock /dev/sdb /dev/sdc`
 
 ---
 
-### 4. 创建后的后续操作（通用）
+## 3. 实验三：创建 RAID 5 (分布式奇偶校验)
 
-无论你创建了哪种 RAID，都需要执行以下步骤才能使用：
+**特点：** 平衡性能、安全与容量，至少 3 块盘。允许损坏一块盘。
 
-1. **查看同步状态：**
-创建完成后，系统会进行初始化同步。可以通过以下命令查看进度：
-```bash
-cat /proc/mdstat
+### 创建步骤：
 
-```
+1. **创建阵列：**
+`sudo mdadm --create /dev/md5 --level=5 --raid-devices=3 /dev/sdb /dev/sdc /dev/sdd`
+2. **查看同步进度：**
+`cat /proc/mdstat`（RAID 5 初始化较慢，建议观察进度）
+3. **格式化并挂载：**
+`mkfs.ext4 /dev/md5 && mkdir -p /mnt/raid5 && mount /dev/md5 /mnt/raid5`
 
+###  拆除与清理：
 
-2. **创建文件系统：**
-```bash
-mkfs.ext4 /dev/md0  # 或者使用 xfs
+1. **卸载：** `sudo umount /mnt/raid5`
+2. **停止阵列：** `sudo mdadm --stop /dev/md5`
+3. **擦除元数据：** `sudo mdadm --zero-superblock /dev/sdb /dev/sdc /dev/sdd`
 
-```
+---
 
+## 4. 终极步骤：保存配置
+如果你决定长期保留某个 RAID 阵列，而不是为了做实验，请执行以下操作以防重启后失效：
 
-3. **挂载并使用：**
-```bash
-mkdir /mnt/raid
-mount /dev/md0 /mnt/raid
+1. **扫描并保存：**
+`sudo mdadm --detail --scan | sudo tee -a /etc/mdadm.conf`
+2. **更新 Initramfs (部分系统需要)：**
+`sudo dracut -H -f` (CentOS/RHEL/Fedora) 或 `sudo update-initramfs -u` (Ubuntu)
 
-```
+---
 
+### 实验避坑指南：
 
-4. **保存配置（重要）：**
-如果不保存配置，重启后 RAID 阵列可能会失效或名称发生变化。
-```bash
-mdadm --detail --scan | sudo tee -a /etc/mdadm.conf
+* **磁盘忙碌：** 如果 `mdadm --stop` 报错，说明你还在 `/mnt/raid` 目录下，或者有进程正在读写。请先 `cd ~` 退出挂载点。
+* **阵列名称：** 系统重启后，`/dev/md0` 可能会自动变成 `/dev/md127`，这是正常现象。如果想固定名称，必须写入 `mdadm.conf`。
+* **确认清理干净：** 每次开始新实验前，运行 `lsblk` 确认磁盘后面没有 `raid` 字样。
 
-```
-
-
-> **温馨提示：** 在操作前请务必确认磁盘上没有重要数据，因为 `mdadm --create` 会覆盖磁盘原有的分区表。
