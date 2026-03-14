@@ -10,9 +10,9 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="> 配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，我想用安装ollama 并调用qwen3.5:9b ，还要安装dify。">
+<meta name="description" content="> 配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，ollama和dify均在docker中运行，并且能够显卡直通，以达到最佳的性能，同时迁移也更方便。">
 <meta property="og:title" content="Docker All in one Ollama+Dify">
-<meta property="og:description" content="> 配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，我想用安装ollama 并调用qwen3.5:9b ，还要安装dify。">
+<meta property="og:description" content="> 配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，ollama和dify均在docker中运行，并且能够显卡直通，以达到最佳的性能，同时迁移也更方便。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/145.html">
 <meta property="og:image" content="/img/123.png">
@@ -84,7 +84,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><blockquote>
-<p>配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，我想用安装ollama 并调用qwen3.5:9b ，还要安装dify。我想在docker desktop中安装。想达到的效果是 ollama和dify均在docker中运行，并且能够显卡直通，以达到最佳的性能，同时迁移也更方便。</p>
+<p>配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，ollama和dify均在docker中运行，并且能够显卡直通，以达到最佳的性能，同时迁移也更方便。</p>
 </blockquote>
 <ul>
 <li><strong>Docker Desktop</strong> 负责运行所有服务</li>
@@ -234,7 +234,7 @@ http://host.docker.internal:11434
 </code></pre>
 <p>即可。</p>
 <hr>
-<h1>八、性能（你的机器）</h1>
+<h1>八、性能</h1>
 <p>4060 + Qwen9B：</p>
 <markdown-accessiblity-table><table role="table">
 <thead>

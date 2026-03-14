@@ -1,4 +1,4 @@
-> 配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，我想用安装ollama 并调用qwen3.5:9b ，还要安装dify。我想在docker desktop中安装。想达到的效果是 ollama和dify均在docker中运行，并且能够显卡直通，以达到最佳的性能，同时迁移也更方便。
+> 配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，ollama和dify均在docker中运行，并且能够显卡直通，以达到最佳的性能，同时迁移也更方便。
 
 * **Docker Desktop** 负责运行所有服务
 * **Ollama** 负责推理模型
@@ -255,7 +255,7 @@ qwen:9b
 
 ---
 
-# 八、性能（你的机器）
+# 八、性能
 
 4060 + Qwen9B：
 
