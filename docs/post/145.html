@@ -93,187 +93,123 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><strong>Dify</strong> 负责 AI 应用平台</li>
 <li><strong>NVIDIA CUDA</strong> 提供 GPU 加速</li>
 </ul>
-<p>Docker → WSL2 → GPU passthrough → Ollama → Dify 调用 Ollama API</p>
-<h1>一、最终架构（推荐）</h1>
-<pre class="notranslate"><code class="notranslate">Windows 10
-   │
-WSL2
-   │
-Docker Desktop
-   │
- ┌───────────────┐
- │   dify        │
- │  (web+api)    │
- └──────┬────────┘
-        │ http
- ┌──────▼────────┐
- │   ollama      │
- │   qwen3.5:9b  │
- │   GPU推理     │
- └───────────────┘
-        │
-     RTX4060
-</code></pre>
-<p>优点：</p>
+<h3>第一步：准备 GPU 环境与 Docker 底层迁移 (关键！)</h3>
+<p><strong>1. 安装 NVIDIA 驱动</strong><br>
+前往 NVIDIA 官网安装最新 CUDA 驱动。打开 PowerShell 输入 <code class="notranslate">nvidia-smi</code>，确认能看到你的 RTX 4060。</p>
+<p><strong>2. 安装 WSL2 与 Docker Desktop</strong></p>
 <ul>
-<li>GPU加速</li>
-<li>容器化</li>
-<li>可以整体迁移</li>
-<li>不污染系统</li>
+<li>以管理员身份打开 PowerShell，执行 <code class="notranslate">wsl --install</code>，按提示重启。</li>
+<li>安装 Docker Desktop，确保在设置中开启 <strong>Use WSL 2 instead of Hyper-V</strong>。</li>
+<li>启动 Docker Desktop 完成初始化后，<strong>彻底退出 Docker</strong>（右下角系统托盘右键 -&gt; Quit）。</li>
 </ul>
-<hr>
-<h1>二、第一步：准备 GPU 直通</h1>
-<p>Docker 要使用 GPU，必须先配置 <strong>WSL2 GPU support</strong>。</p>
-<h3>1 安装 NVIDIA 驱动</h3>
-<p>安装最新 <strong>CUDA 驱动</strong>（非常关键）</p>
-<p><a href="https://www.nvidia.com/download" rel="nofollow">https://www.nvidia.com/download</a></p>
-<p>安装后测试：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">nvidia-smi</pre></div>
-<p>能看到 4060。</p>
-<hr>
-<h3>2 安装 WSL2</h3>
-<p>管理员 PowerShell：</p>
-<div class="highlight highlight-source-powershell"><pre class="notranslate">wsl <span class="pl-k">--</span>install</pre></div>
-<p>安装完成后重启。</p>
-<p>再安装 Ubuntu：</p>
-<div class="highlight highlight-source-powershell"><pre class="notranslate">wsl <span class="pl-k">--</span>install <span class="pl-k">-</span>d Ubuntu</pre></div>
-<hr>
-<h3>3 Docker 开启 WSL2</h3>
-<p>安装 <strong>Docker Desktop</strong></p>
-<p>设置：</p>
-<pre class="notranslate"><code class="notranslate">Settings
- → General
- → Use WSL2 backend
-</code></pre>
-<p>然后：</p>
-<pre class="notranslate"><code class="notranslate">Settings
- → Resources
- → WSL Integration
- → Ubuntu 打开
-</code></pre>
-<hr>
-<h1>三、测试 Docker GPU</h1>
-<p>运行：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker run --rm --gpus all nvidia/cuda:12.3.0-base-ubuntu22.04 nvidia-smi</pre></div>
-<p>如果看到 4060：</p>
-<p>说明 <strong>GPU passthrough 成功</strong>。</p>
-<hr>
-<h1>四、Docker 部署 Ollama（GPU版）</h1>
-<p>创建目录：</p>
-<pre class="notranslate"><code class="notranslate">ai-platform
- ├ docker-compose.yml
- └ ollama
-      └ models
-</code></pre>
-<p>docker-compose.yml：</p>
-<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">version</span>: <span class="pl-s"><span class="pl-pds">"</span>3<span class="pl-pds">"</span></span>
+<p><strong>3. 将 WSL 虚拟磁盘迁移到 D 盘 (释放 C 盘)</strong><br>
+这是防止 C 盘爆满的核心操作。以管理员身份打开 PowerShell，依次执行：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 关闭所有 WSL 实例</span>
+wsl <span class="pl-k">--</span>shutdown
 
-<span class="pl-ent">services</span>:
+<span class="pl-c"><span class="pl-c">#</span> 导出 Docker 默认数据盘到 D 盘（请提前在 D 盘创建 D:\Docker\wsl 目录）</span>
+wsl <span class="pl-k">--</span>export docker<span class="pl-k">-</span>desktop<span class="pl-k">-</span>data D:\Docker\wsl\docker<span class="pl-k">-</span>desktop<span class="pl-k">-</span>data.tar
+wsl <span class="pl-k">--</span>export docker<span class="pl-k">-</span>desktop D:\Docker\wsl\docker<span class="pl-k">-</span>desktop.tar
 
+<span class="pl-c"><span class="pl-c">#</span> 注销 C 盘的原有数据</span>
+wsl <span class="pl-k">--</span>unregister docker<span class="pl-k">-</span>desktop<span class="pl-k">-</span>data
+wsl <span class="pl-k">--</span>unregister docker<span class="pl-k">-</span>desktop
+
+<span class="pl-c"><span class="pl-c">#</span> 重新将数据导入为 D 盘的虚拟磁盘</span>
+wsl <span class="pl-k">--</span>import docker<span class="pl-k">-</span>desktop<span class="pl-k">-</span>data D:\Docker\wsl\<span class="pl-k">data</span> D:\Docker\wsl\docker<span class="pl-k">-</span>desktop<span class="pl-k">-</span>data.tar <span class="pl-k">--</span>version <span class="pl-c1">2</span>
+wsl <span class="pl-k">--</span>import docker<span class="pl-k">-</span>desktop D:\Docker\wsl\distro D:\Docker\wsl\docker<span class="pl-k">-</span>desktop.tar <span class="pl-k">--</span>version <span class="pl-c1">2</span>
+</pre></div>
+<p><em>导入完成后，你可以安全地删除那两个 <code class="notranslate">.tar</code> 压缩包，然后重新启动 Docker Desktop。</em></p>
+<hr>
+<h3>第二步：在 D 盘构建统一工作区与部署 Ollama</h3>
+<p>我们在 D 盘建立一个统一的文件夹，方便日后一键打包迁移。</p>
+<p><strong>1. 创建 D 盘工作区</strong><br>
+在 D 盘创建以下目录结构：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">D:\ai-platform
+ ├─ ollama-data     (用于存放模型)
+ └─ docker-compose.yml
+
+</code></pre>
+<p><strong>2. 编写优化版的 docker-compose.yml</strong><br>
+在 <code class="notranslate">D:\ai-platform</code> 下创建 <code class="notranslate">docker-compose.yml</code>，使用最新的 GPU 调用语法：</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate"><span class="pl-ent">services</span>:
   <span class="pl-ent">ollama</span>:
-    <span class="pl-ent">image</span>: <span class="pl-s">ollama/ollama</span>
+    <span class="pl-ent">image</span>: <span class="pl-s">ollama/ollama:latest</span>
     <span class="pl-ent">container_name</span>: <span class="pl-s">ollama</span>
     <span class="pl-ent">restart</span>: <span class="pl-s">always</span>
     <span class="pl-ent">ports</span>:
       - <span class="pl-s"><span class="pl-pds">"</span>11434:11434<span class="pl-pds">"</span></span>
-
     <span class="pl-ent">volumes</span>:
-      - <span class="pl-s">./ollama:/root/.ollama</span>
-
+      <span class="pl-c"><span class="pl-c">#</span> 直接将模型映射到 D 盘当前目录的 ollama-data 文件夹下</span>
+      - <span class="pl-s">./ollama-data:/root/.ollama</span>
     <span class="pl-ent">deploy</span>:
       <span class="pl-ent">resources</span>:
         <span class="pl-ent">reservations</span>:
           <span class="pl-ent">devices</span>:
-            - <span class="pl-ent">capabilities</span>: <span class="pl-s">[gpu]</span>
-
-    <span class="pl-ent">runtime</span>: <span class="pl-s">nvidia</span></pre></div>
-<p>启动：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose up -d</pre></div>
+            - <span class="pl-ent">driver</span>: <span class="pl-s">nvidia</span>
+              <span class="pl-ent">count</span>: <span class="pl-c1">1</span>
+              <span class="pl-ent">capabilities</span>: <span class="pl-s">[gpu]</span>
+</pre></div>
+<p><strong>3. 启动并下载模型</strong><br>
+在 PowerShell 中进入该目录并启动：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">cd D:\ai<span class="pl-k">-</span>platform
+docker compose up <span class="pl-k">-</span>d
+</pre></div>
+<p>进入容器下载 Qwen2.5 7B 模型（你的 D 盘 <code class="notranslate">ollama-data</code> 文件夹会开始变大）：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">docker exec <span class="pl-k">-</span>it ollama ollama run qwen2.<span class="pl-c1">5</span>:7b
+</pre></div>
 <hr>
-<h1>五、下载 Qwen3.5 9B</h1>
-<p>进入容器：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker <span class="pl-c1">exec</span> -it ollama bash</pre></div>
-<p>下载模型：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">ollama run qwen2.5:7b</pre></div>
-<p>或者：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">ollama run qwen:9b</pre></div>
-<p>（如果有 qwen3.5 版本直接拉）</p>
-<p>模型会保存到：</p>
-<pre class="notranslate"><code class="notranslate">ai-platform/ollama/models
-</code></pre>
-<p>这样以后 <strong>迁移只需要复制 models 目录</strong>。</p>
+<h3>第三步：在 D 盘部署 Dify</h3>
+<p>因为我们已经把 Docker 底层的 WSL 数据放到了 D 盘，所以 Dify 内部产生的数据库文件（PostgreSQL、Redis 等）也会默认安全地存储在 D 盘。</p>
+<p><strong>1. 下载 Dify 源码到 D 盘</strong><br>
+保持在 <code class="notranslate">D:\ai-platform</code> 目录下：</p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">cd D:\ai<span class="pl-k">-</span>platform
+git clone https:<span class="pl-k">//</span><span class="pl-c1">github.com</span><span class="pl-k">/</span>langgenius<span class="pl-k">/</span>dify.git
+</pre></div>
+<p><strong>2. 启动 Dify</strong></p>
+<div class="highlight highlight-source-powershell"><pre class="notranslate">cd dify<span class="pl-k">/</span>docker
+copy .env.example .env
+docker compose up <span class="pl-k">-</span>d
+</pre></div>
+<p><em>首次启动会拉取大量镜像，由于底层已迁移，你的 C 盘容量不会有任何波动。</em></p>
 <hr>
-<h1>六、Docker 部署 Dify</h1>
-<p>创建目录：</p>
-<pre class="notranslate"><code class="notranslate">ai-platform
- ├ dify
- └ docker-compose.yml
-</code></pre>
-<p>直接下载官方 compose：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">git clone https://github.com/langgenius/dify.git</pre></div>
-<p>进入：</p>
-<pre class="notranslate"><code class="notranslate">dify/docker
-</code></pre>
-<p>启动：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">docker compose up -d</pre></div>
-<p>访问：</p>
-<pre class="notranslate"><code class="notranslate">http://localhost
-</code></pre>
+<h3>第四步：Dify 连接 Ollama (保持原样，非常完美)</h3>
+<ol>
+<li>浏览器访问 <code class="notranslate">http://localhost</code> 初始化 Dify 管理员账号。</li>
+<li>进入 <strong>设置 → 模型供应商 (Model Provider)</strong>。</li>
+<li>选择 <strong>Ollama</strong>，填写如下参数：</li>
+</ol>
+<ul>
+<li><strong>模型名称</strong>: <code class="notranslate">qwen2.5:7b</code> <em>(必须与刚才下载的名字严格一致)</em></li>
+<li><strong>基础 URL</strong>: <code class="notranslate">http://host.docker.internal:11434</code></li>
+<li><strong>模型类型</strong>: <code class="notranslate">LLM</code></li>
+</ul>
 <hr>
-<h1>七、Dify 连接 Ollama</h1>
-<p>进入 <strong>Dify → Model Provider</strong></p>
-<p>选择：</p>
-<pre class="notranslate"><code class="notranslate">Ollama
-</code></pre>
-<p>填写：</p>
-<pre class="notranslate"><code class="notranslate">API URL
-http://host.docker.internal:11434
-</code></pre>
-<p>模型名：</p>
-<pre class="notranslate"><code class="notranslate">qwen:9b
-</code></pre>
-<p>即可。</p>
-<hr>
-<h1>八、性能</h1>
-<p>4060 + Qwen9B：</p>
+<h3>第五步：性能与优化总结</h3>
+<p>对于 <strong>i7-12700KF + 32G + 4060 8GB</strong>，跑 7B-9B 级别的模型是甜点区间。</p>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>模式</th>
-<th>速度</th>
+<th>预估速度 (Qwen2.5 7B)</th>
+<th>显存占用预估</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>GPU推理</td>
-<td>25~40 tokens/s</td>
+<td><strong>纯 GPU 推理 (当前架构)</strong></td>
+<td>35~50 tokens/s</td>
+<td>约 5GB - 6GB</td>
 </tr>
 <tr>
-<td>CPU推理</td>
-<td>5 tokens/s</td>
+<td>纯 CPU 推理</td>
+<td>5~8 tokens/s</td>
+<td>-</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-<p>差距 <strong>5-8倍</strong>。</p>
-<p>所以 GPU 非常关键。</p>
-<hr>
-<h1>九、强烈建议的优化</h1>
-<p>修改环境变量：</p>
-<pre class="notranslate"><code class="notranslate">OLLAMA_NUM_PARALLEL=1
-OLLAMA_GPU_LAYERS=40
-</code></pre>
-<p>4060 8GB 基本可以：</p>
-<pre class="notranslate"><code class="notranslate">30-40 GPU layers
-</code></pre>
-<hr>
-<h1>十、你这个架构的优势</h1>
-<ul>
-<li>所有组件 <strong>Docker化</strong></li>
-<li>模型 <strong>独立存储</strong></li>
-<li><strong>GPU加速</strong></li>
-<li><strong>可迁移</strong></li>
-<li><strong>可扩展</strong></li>
-</ul></div>
+<p><strong>优化建议：</strong><br>
+Ollama 默认会自动检测并尽最大可能将模型层（Layers）加载到 VRAM 中。因为你的显存（8GB）完全装得下量化后的 7B 模型，**你无需手动强制设置 <code class="notranslate">OLLAMA_GPU_LAYERS**</code>，让 Ollama 的自动调度器接管，反而能获得最稳定的性能，避免显存溢出（OOM）导致的崩溃。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

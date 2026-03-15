@@ -6,293 +6,146 @@
 * **Dify** 负责 AI 应用平台
 * **NVIDIA CUDA** 提供 GPU 加速
 
-Docker → WSL2 → GPU passthrough → Ollama → Dify 调用 Ollama API
 
-# 一、最终架构（推荐）
+### 第一步：准备 GPU 环境与 Docker 底层迁移 (关键！)
 
-```
-Windows 10
-   │
-WSL2
-   │
-Docker Desktop
-   │
- ┌───────────────┐
- │   dify        │
- │  (web+api)    │
- └──────┬────────┘
-        │ http
- ┌──────▼────────┐
- │   ollama      │
- │   qwen3.5:9b  │
- │   GPU推理     │
- └───────────────┘
-        │
-     RTX4060
-```
+**1. 安装 NVIDIA 驱动**
+前往 NVIDIA 官网安装最新 CUDA 驱动。打开 PowerShell 输入 `nvidia-smi`，确认能看到你的 RTX 4060。
 
-优点：
+**2. 安装 WSL2 与 Docker Desktop**
 
-* GPU加速
-* 容器化
-* 可以整体迁移
-* 不污染系统
+* 以管理员身份打开 PowerShell，执行 `wsl --install`，按提示重启。
+* 安装 Docker Desktop，确保在设置中开启 **Use WSL 2 instead of Hyper-V**。
+* 启动 Docker Desktop 完成初始化后，**彻底退出 Docker**（右下角系统托盘右键 -> Quit）。
 
----
-
-# 二、第一步：准备 GPU 直通
-
-Docker 要使用 GPU，必须先配置 **WSL2 GPU support**。
-
-### 1 安装 NVIDIA 驱动
-
-安装最新 **CUDA 驱动**（非常关键）
-
-[https://www.nvidia.com/download](https://www.nvidia.com/download)
-
-安装后测试：
-
-```bash
-nvidia-smi
-```
-
-能看到 4060。
-
----
-
-### 2 安装 WSL2
-
-管理员 PowerShell：
+**3. 将 WSL 虚拟磁盘迁移到 D 盘 (释放 C 盘)**
+这是防止 C 盘爆满的核心操作。以管理员身份打开 PowerShell，依次执行：
 
 ```powershell
-wsl --install
+# 关闭所有 WSL 实例
+wsl --shutdown
+
+# 导出 Docker 默认数据盘到 D 盘（请提前在 D 盘创建 D:\Docker\wsl 目录）
+wsl --export docker-desktop-data D:\Docker\wsl\docker-desktop-data.tar
+wsl --export docker-desktop D:\Docker\wsl\docker-desktop.tar
+
+# 注销 C 盘的原有数据
+wsl --unregister docker-desktop-data
+wsl --unregister docker-desktop
+
+# 重新将数据导入为 D 盘的虚拟磁盘
+wsl --import docker-desktop-data D:\Docker\wsl\data D:\Docker\wsl\docker-desktop-data.tar --version 2
+wsl --import docker-desktop D:\Docker\wsl\distro D:\Docker\wsl\docker-desktop.tar --version 2
+
 ```
 
-安装完成后重启。
-
-再安装 Ubuntu：
-
-```powershell
-wsl --install -d Ubuntu
-```
+*导入完成后，你可以安全地删除那两个 `.tar` 压缩包，然后重新启动 Docker Desktop。*
 
 ---
 
-### 3 Docker 开启 WSL2
+### 第二步：在 D 盘构建统一工作区与部署 Ollama
 
-安装 **Docker Desktop**
+我们在 D 盘建立一个统一的文件夹，方便日后一键打包迁移。
 
-设置：
+**1. 创建 D 盘工作区**
+在 D 盘创建以下目录结构：
 
-```
-Settings
- → General
- → Use WSL2 backend
-```
-
-然后：
+```text
+D:\ai-platform
+ ├─ ollama-data     (用于存放模型)
+ └─ docker-compose.yml
 
 ```
-Settings
- → Resources
- → WSL Integration
- → Ubuntu 打开
-```
 
----
-
-# 三、测试 Docker GPU
-
-运行：
-
-```bash
-docker run --rm --gpus all nvidia/cuda:12.3.0-base-ubuntu22.04 nvidia-smi
-```
-
-如果看到 4060：
-
-说明 **GPU passthrough 成功**。
-
----
-
-# 四、Docker 部署 Ollama（GPU版）
-
-创建目录：
-
-```
-ai-platform
- ├ docker-compose.yml
- └ ollama
-      └ models
-```
-
-docker-compose.yml：
+**2. 编写优化版的 docker-compose.yml**
+在 `D:\ai-platform` 下创建 `docker-compose.yml`，使用最新的 GPU 调用语法：
 
 ```yaml
-version: "3"
-
 services:
-
   ollama:
-    image: ollama/ollama
+    image: ollama/ollama:latest
     container_name: ollama
     restart: always
     ports:
       - "11434:11434"
-
     volumes:
-      - ./ollama:/root/.ollama
-
+      # 直接将模型映射到 D 盘当前目录的 ollama-data 文件夹下
+      - ./ollama-data:/root/.ollama
     deploy:
       resources:
         reservations:
           devices:
-            - capabilities: [gpu]
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
-    runtime: nvidia
 ```
 
-启动：
+**3. 启动并下载模型**
+在 PowerShell 中进入该目录并启动：
 
-```bash
+```powershell
+cd D:\ai-platform
 docker compose up -d
+
+```
+
+进入容器下载 Qwen2.5 7B 模型（你的 D 盘 `ollama-data` 文件夹会开始变大）：
+
+```powershell
+docker exec -it ollama ollama run qwen2.5:7b
+
 ```
 
 ---
 
-# 五、下载 Qwen3.5 9B
+### 第三步：在 D 盘部署 Dify
 
-进入容器：
+因为我们已经把 Docker 底层的 WSL 数据放到了 D 盘，所以 Dify 内部产生的数据库文件（PostgreSQL、Redis 等）也会默认安全地存储在 D 盘。
 
-```bash
-docker exec -it ollama bash
-```
+**1. 下载 Dify 源码到 D 盘**
+保持在 `D:\ai-platform` 目录下：
 
-下载模型：
-
-```bash
-ollama run qwen2.5:7b
-```
-
-或者：
-
-```bash
-ollama run qwen:9b
-```
-
-（如果有 qwen3.5 版本直接拉）
-
-模型会保存到：
-
-```
-ai-platform/ollama/models
-```
-
-这样以后 **迁移只需要复制 models 目录**。
-
----
-
-# 六、Docker 部署 Dify
-
-创建目录：
-
-```
-ai-platform
- ├ dify
- └ docker-compose.yml
-```
-
-直接下载官方 compose：
-
-```bash
+```powershell
+cd D:\ai-platform
 git clone https://github.com/langgenius/dify.git
-```
-
-进入：
 
 ```
-dify/docker
-```
 
-启动：
+**2. 启动 Dify**
 
-```bash
+```powershell
+cd dify/docker
+copy .env.example .env
 docker compose up -d
-```
-
-访问：
 
 ```
-http://localhost
-```
+
+*首次启动会拉取大量镜像，由于底层已迁移，你的 C 盘容量不会有任何波动。*
 
 ---
 
-# 七、Dify 连接 Ollama
+### 第四步：Dify 连接 Ollama (保持原样，非常完美)
 
-进入 **Dify → Model Provider**
+1. 浏览器访问 `http://localhost` 初始化 Dify 管理员账号。
+2. 进入 **设置 → 模型供应商 (Model Provider)**。
+3. 选择 **Ollama**，填写如下参数：
+* **模型名称**: `qwen2.5:7b` *(必须与刚才下载的名字严格一致)*
+* **基础 URL**: `http://host.docker.internal:11434`
+* **模型类型**: `LLM`
 
-选择：
 
-```
-Ollama
-```
-
-填写：
-
-```
-API URL
-http://host.docker.internal:11434
-```
-
-模型名：
-
-```
-qwen:9b
-```
-
-即可。
 
 ---
 
-# 八、性能
+### 第五步：性能与优化总结
 
-4060 + Qwen9B：
+对于 **i7-12700KF + 32G + 4060 8GB**，跑 7B-9B 级别的模型是甜点区间。
 
-| 模式    | 速度             |
-| ----- | -------------- |
-| GPU推理 | 25~40 tokens/s |
-| CPU推理 | 5 tokens/s     |
+| 模式 | 预估速度 (Qwen2.5 7B) | 显存占用预估 |
+| --- | --- | --- |
+| **纯 GPU 推理 (当前架构)** | 35~50 tokens/s | 约 5GB - 6GB |
+| 纯 CPU 推理 | 5~8 tokens/s | - |
 
-差距 **5-8倍**。
-
-所以 GPU 非常关键。
-
----
-
-# 九、强烈建议的优化
-
-修改环境变量：
-
-```
-OLLAMA_NUM_PARALLEL=1
-OLLAMA_GPU_LAYERS=40
-```
-
-4060 8GB 基本可以：
-
-```
-30-40 GPU layers
-```
-
----
-
-# 十、你这个架构的优势
-
-
-* 所有组件 **Docker化**
-* 模型 **独立存储**
-* **GPU加速**
-* **可迁移**
-* **可扩展**
-
+**优化建议：**
+Ollama 默认会自动检测并尽最大可能将模型层（Layers）加载到 VRAM 中。因为你的显存（8GB）完全装得下量化后的 7B 模型，**你无需手动强制设置 `OLLAMA_GPU_LAYERS**`，让 Ollama 的自动调度器接管，反而能获得最稳定的性能，避免显存溢出（OOM）导致的崩溃。
