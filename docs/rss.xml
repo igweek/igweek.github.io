@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Sun, 15 Mar 2026 06:13:27 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Dify RAG知识库</title><link>https://bbs.017121.xyz/post/147.html</link><description>## 原理
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Sun, 15 Mar 2026 08:26:37 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>阿里云服务架构</title><link>https://bbs.017121.xyz/post/148.html</link><description>![default_canvas.png](https://pic.myla.eu.org/file/OxY3fh9H.webp)
+
+。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/148.html</guid><pubDate>Sun, 15 Mar 2026 08:26:03 +0000</pubDate></item><item><title>Dify RAG知识库</title><link>https://bbs.017121.xyz/post/147.html</link><description>## 原理
 ![Pasted image 20260315091012.png](https://pic.myla.eu.org/file/7qJc4xUO.png)
 ## RAG 分段设置
 ### 1、通用分段
