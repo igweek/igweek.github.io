@@ -1,5 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Sun, 15 Mar 2026 01:44:13 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Dify中RAG如何提高召回率</title><link>https://bbs.017121.xyz/post/146.html</link><description># 一、用「语义结构化文档」替代原始文档（最重要）
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Sun, 15 Mar 2026 06:13:27 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Dify RAG知识库</title><link>https://bbs.017121.xyz/post/147.html</link><description>## 原理
+![Pasted image 20260315091012.png](https://pic.myla.eu.org/file/7qJc4xUO.png)
+## RAG 分段设置
+### 1、通用分段
+![Pasted image 20260315095306.png](https://pic.myla.eu.org/file/BhtQ3mtE.png)
+### 2、父子分段
+![Pasted image 20260315105146.png](https://pic.myla.eu.org/file/unAz48xP.png)
+
+## RAG检索设置
+### 向量检索
+- 把用户问题转成向量，再和知识库分段向量比相似度，找“**语义最接近**”的内容。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/147.html</guid><pubDate>Sun, 15 Mar 2026 06:12:56 +0000</pubDate></item><item><title>Dify中RAG如何提高召回率</title><link>https://bbs.017121.xyz/post/146.html</link><description># 一、用「语义结构化文档」替代原始文档（最重要）
 
 很多人直接上传：
 
