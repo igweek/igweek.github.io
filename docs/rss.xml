@@ -1,5 +1,32 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Sat, 14 Mar 2026 08:52:06 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Docker All in one Ollama+Dify</title><link>https://bbs.017121.xyz/post/145.html</link><description>&gt; 配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，ollama和dify均在docker中运行，并且能够显卡直通，以达到最佳的性能，同时迁移也更方便。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/145.html</guid><pubDate>Sat, 14 Mar 2026 00:39:07 +0000</pubDate></item><item><title>Windows C盘满了 谁在作祟</title><link>https://bbs.017121.xyz/post/144.html</link><description>在 **Windows 11** 中，临时文件确实可能会占用很多空间（有时候几十 GB）。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/144.html</guid><pubDate>Thu, 12 Mar 2026 07:19:47 +0000</pubDate></item><item><title>Dify+Ollama+Qwen3.5 9B模型 部署</title><link>https://bbs.017121.xyz/post/143.html</link><description>&gt; 环境：win11 系统 ，NV4060显存8GB，12700KF 32G内存
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Sun, 15 Mar 2026 01:44:13 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Dify中RAG如何提高召回率</title><link>https://bbs.017121.xyz/post/146.html</link><description># 一、用「语义结构化文档」替代原始文档（最重要）
+
+很多人直接上传：
+
+* PDF
+* Word
+* 网页爬虫内容
+
+但这些文本通常是：
+
+* 标题不清
+* 语义块混乱
+* 表格拆碎
+
+RAG检索时会出现：
+
+```
+问题 → 找不到对应语义块
+```
+
+### 正确做法
+
+先把文档结构化：
+
+```
+# Docker Compose是什么
+
+Docker Compose 是一个用于定义和运行多容器 Docker 应用的工具。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/146.html</guid><pubDate>Sun, 15 Mar 2026 01:43:40 +0000</pubDate></item><item><title>Docker All in one Ollama+Dify</title><link>https://bbs.017121.xyz/post/145.html</link><description>&gt; 配置：i7 12700kf 内存 32GB 显卡 4060 8GB ，ollama和dify均在docker中运行，并且能够显卡直通，以达到最佳的性能，同时迁移也更方便。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/145.html</guid><pubDate>Sat, 14 Mar 2026 00:39:07 +0000</pubDate></item><item><title>Windows C盘满了 谁在作祟</title><link>https://bbs.017121.xyz/post/144.html</link><description>在 **Windows 11** 中，临时文件确实可能会占用很多空间（有时候几十 GB）。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/144.html</guid><pubDate>Thu, 12 Mar 2026 07:19:47 +0000</pubDate></item><item><title>Dify+Ollama+Qwen3.5 9B模型 部署</title><link>https://bbs.017121.xyz/post/143.html</link><description>&gt; 环境：win11 系统 ，NV4060显存8GB，12700KF 32G内存
 
 # Windows 11 本地部署文档
 适用环境：
