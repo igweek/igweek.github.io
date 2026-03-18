@@ -33,7 +33,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/149.html">
 <meta property="og:image" content="/img/123.png">
 <title>阿里云vpc网络</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -109,7 +109,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <p>实验中的云服务器统一使用 <strong>ECS</strong> 表示。</p>
 <hr>
-<h1>阿里云 VPC 十个经典实验（含详细步骤）</h1>
+<h1>阿里云 VPC 十个经典实验</h1>
 <hr>
 <h1>实验1：创建 VPC 网络</h1>
 <p><strong>实验目标</strong></p>
@@ -178,72 +178,42 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </code></pre>
 <hr>
 <h1>实验2：ECS 内网通信实验</h1>
-<p><strong>实验目标</strong></p>
-<p>验证同一子网中的 ECS 可以通过内网通信。</p>
-<p><strong>实验步骤</strong></p>
-<p>1 进入 ECS 控制台</p>
-<p>2 点击</p>
-<pre class="notranslate"><code class="notranslate">创建实例
-</code></pre>
-<p>创建 <strong>ECS1</strong></p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>参数</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>网络</td>
-<td>lab-vpc</td>
-</tr>
-<tr>
-<td>交换机</td>
-<td>subnet-a</td>
-</tr>
-<tr>
-<td>私网IP</td>
-<td>自动</td>
-</tr>
-<tr>
-<td>公网IP</td>
-<td>不分配</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<p>3 再创建 <strong>ECS2</strong></p>
-<p>配置相同：</p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>参数</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>网络</td>
-<td>lab-vpc</td>
-</tr>
-<tr>
-<td>交换机</td>
-<td>subnet-a</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<p>4 登录 ECS1</p>
-<pre class="notranslate"><code class="notranslate">ssh root@ECS1-IP
-</code></pre>
-<p>5 查看 ECS2 内网 IP</p>
-<p>6 测试通信</p>
-<pre class="notranslate"><code class="notranslate">ping ECS2内网IP
-</code></pre>
-<p><strong>实验结果</strong></p>
-<p>可以 ping 通。</p>
-<p>说明：</p>
-<pre class="notranslate"><code class="notranslate">同一VSwitch内的ECS默认互通
-</code></pre>
+<h2>实验目标</h2>
+<p>验证同一子网中的 ECS 实例可以通过内网 IP 正常通信</p>
+<hr>
+<h2>实验步骤</h2>
+<h3>1 进入控制台</h3>
+<p>登录 Alibaba Cloud ECS 控制台</p>
+<hr>
+<h3>2 创建 ECS1</h3>
+<p>参数如下：</p>
+<p>网络：lab-vpc<br>
+交换机：subnet-a<br>
+私网 IP：自动分配<br>
+公网 IP：不分配</p>
+<hr>
+<h3>3 创建 ECS2</h3>
+<p>参数与 ECS1 相同：</p>
+<p>网络：lab-vpc<br>
+交换机：subnet-a<br>
+公网 IP：不分配</p>
+<hr>
+<h3>4 登录 ECS1</h3>
+<p>使用远程连接工具登录 ECS1：</p>
+<p>在控制台中打开 ECS1，使用 Alibaba Cloud Workbench 进行连接</p>
+<hr>
+<h3>5 获取 ECS2 内网 IP</h3>
+<p>在控制台查看 ECS2 的私网 IP 地址</p>
+<hr>
+<h3>6 测试内网通信</h3>
+<p>在 ECS1 中执行：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">ping ECS2内网IP</pre></div>
+<hr>
+<h2>实验结果</h2>
+<p>可以 ping 通 ECS2</p>
+<hr>
+<h2>实验结论</h2>
+<p>同一 VPC 且同一交换机内的 ECS 实例，默认通过内网互通，即使没有公网 IP，也可以通过内网 IP 实现通信</p>
 <hr>
 <h1>实验3：没有公网 IP 是否能访问互联网</h1>
 <p><strong>实验目标</strong></p>
@@ -328,6 +298,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>说明：</p>
 <pre class="notranslate"><code class="notranslate">EIP = 公网入口
 </code></pre>
+<p>再测试</p>
+<pre class="notranslate"><code class="notranslate">ping www.baidu.com
+</code></pre>
+<p>是否能够ping通</p>
 <hr>
 <h1>实验5：安全组防火墙实验</h1>
 <p><strong>实验目标</strong></p>
@@ -394,6 +368,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>说明：</p>
 <pre class="notranslate"><code class="notranslate">VPC内不同子网默认互通
 </code></pre>
+<blockquote>
+<p>阿里云 VPC 内置路由功能，无需用户手动配置路由器即可实现子网间通信<br>
+同一 VPC 内自动通，不同 VPC 才需要你手动打通</p>
+</blockquote>
 <hr>
 <h1>实验7：NAT 网关上网实验</h1>
 <p><strong>实验目标</strong></p>
