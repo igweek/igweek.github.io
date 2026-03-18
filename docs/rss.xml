@@ -1,5 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Sun, 15 Mar 2026 08:57:44 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>阿里云vpc网络</title><link>https://bbs.017121.xyz/post/149.html</link><description>涉及服务主要包括：
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 18 Mar 2026 01:49:08 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于 FreeNAS 的 iSCSI 存储连接实验（Windows Initiator）</title><link>https://bbs.017121.xyz/post/150.html</link><description># 概念
+
+**iSCSI Initiator**
+发起端，是客户端角色。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/150.html</guid><pubDate>Wed, 18 Mar 2026 01:48:34 +0000</pubDate></item><item><title>阿里云vpc网络</title><link>https://bbs.017121.xyz/post/149.html</link><description>涉及服务主要包括：
 
 * Alibaba Cloud Virtual Private Cloud（VPC）
 * Alibaba Cloud Elastic IP Address（EIP）
