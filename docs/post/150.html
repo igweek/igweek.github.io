@@ -14,7 +14,7 @@
 
 **iSCSI Initiator**
 发起端，是客户端角色。">
-<meta property="og:title" content="基于 FreeNAS 的 iSCSI 存储连接实验（Windows Initiator）">
+<meta property="og:title" content="基于 FreeNAS 的 iSCSI 存储连接实验">
 <meta property="og:description" content="# 概念
 
 **iSCSI Initiator**
@@ -22,8 +22,8 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/150.html">
 <meta property="og:image" content="/img/123.png">
-<title>基于 FreeNAS 的 iSCSI 存储连接实验（Windows Initiator）</title>
-
+<title>基于 FreeNAS 的 iSCSI 存储连接实验</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -65,7 +65,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">基于 FreeNAS 的 iSCSI 存储连接实验（Windows Initiator）</h1>
+<h1 class="postTitle">基于 FreeNAS 的 iSCSI 存储连接实验</h1>
 <div class="title-right">
     <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -299,7 +299,63 @@ iSCSI实验成功</p>
 <li>iSCSI 负责通过网络传输数据</li>
 <li>Windows 将远程磁盘识别为本地硬盘</li>
 </ul>
-<hr></div>
+<hr>
+<p>基于 FreeNAS 的 iSCSI 存储连接实验（ubuntu22.04）</p>
+<hr>
+<h1>一、安装 iSCSI 工具</h1>
+<p>Ubuntu 22.04 默认没有安装 iSCSI 客户端，需要安装：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt update
+sudo apt install open-iscsi -y</pre></div>
+<hr>
+<h1>二、启动 iSCSI 服务</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> --now iscsid
+sudo systemctl <span class="pl-c1">enable</span> --now open-iscsi</pre></div>
+<p>检查服务状态：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">systemctl status iscsid</pre></div>
+<hr>
+<h1>三、发现 FreeNAS 上的 Target</h1>
+<p>假设 FreeNAS IP 是 <code class="notranslate">192.168.1.100</code>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iscsiadm -m discovery -t sendtargets -p 192.168.1.100</pre></div>
+<p>输出类似：</p>
+<pre class="notranslate"><code class="notranslate">192.168.1.100:3260,1 iqn.2026-iscsi.lab:target1
+</code></pre>
+<hr>
+<h1>四、登录 Target（连接远程硬盘）</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iscsiadm -m node -T iqn.2026-iscsi.lab:target1 -p 192.168.1.100 --login</pre></div>
+<hr>
+<h1>五、设置开机自动连接</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iscsiadm -m node -T iqn.2026-iscsi.lab:target1 -p 192.168.1.100 --op update -n node.startup -v automatic</pre></div>
+<hr>
+<h1>六、查看新磁盘</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lsblk</pre></div>
+<p>你会看到一个新设备，例如 <code class="notranslate">/dev/sdb</code>。</p>
+<hr>
+<h1>七、格式化磁盘</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkfs.xfs /dev/sdb</pre></div>
+<p>（也可以用 <code class="notranslate">ext4</code>，推荐 <code class="notranslate">xfs</code>）</p>
+<hr>
+<h1>八、挂载磁盘</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo mkdir -p /mnt/iscsi
+sudo mount /dev/sdb /mnt/iscsi</pre></div>
+<p>测试写入：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>iSCSI success<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /mnt/iscsi/test.txt</pre></div>
+<hr>
+<h1>九、开机自动挂载（可选）</h1>
+<ol>
+<li>查看 UUID：</li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">blkid /dev/sdb</pre></div>
+<p>输出示例：</p>
+<pre class="notranslate"><code class="notranslate">/dev/sdb: UUID="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" TYPE="xfs"
+</code></pre>
+<ol start="2">
+<li>编辑 fstab：</li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/fstab</pre></div>
+<p>添加一行：</p>
+<pre class="notranslate"><code class="notranslate">UUID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  /mnt/iscsi  xfs  _netdev  0  0
+</code></pre>
+<p>保存退出即可。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
