@@ -109,7 +109,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/91.html">
 <meta property="og:image" content="/img/123.png">
 <title>KVM虚拟机virsh管理命令</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -272,8 +272,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </li>
 <li>
 <p>已启动 libvirt 服务：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">systemctl enable --now libvirtd
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">systemctl <span class="pl-c1">enable</span> --now libvirtd</pre></div>
 </li>
 </ul>
 <hr>
@@ -282,15 +281,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <hr>
 <h2>三、实验步骤</h2>
 <h3>1. 创建一台虚拟机（准备实验对象）</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">virt-install --name=centos8 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=10,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virt-install --name=centos8 --vcpus=1 --memory=1024 --disk path=/var/lib/libvirt/images/centos1.raw,size=10,format=raw --cdrom=/opt/CentOS-7-x86_64-Minimal-2207-02.iso --network network=default,model=virtio --os-variant=centos7.0 --graphics vnc,port=5900,listen=0.0.0.0 --noautoconsole</pre></div>
 <blockquote>
 <p>安装完成后有一台名为 <strong>centos8</strong> 的虚拟机。</p>
 </blockquote>
 <hr>
 <h3>2. 查看虚拟机列表</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">virsh list --all
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh list --all</pre></div>
 <p>结果示例：</p>
 <pre class="notranslate"><code class="notranslate"> Id   Name       State
 --------------------------------
@@ -298,58 +295,50 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </code></pre>
 <hr>
 <h3>3. 启动与关机</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 启动虚拟机
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 启动虚拟机</span>
 virsh start centos8
 
-# 正常关机
+<span class="pl-c"><span class="pl-c">#</span> 正常关机</span>
 virsh shutdown centos8
 
-# 强制关机（拔电源）
-virsh destroy centos8
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 强制关机（拔电源）</span>
+virsh destroy centos8</pre></div>
 <hr>
 <h3>4. 重启虚拟机</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">virsh reboot centos8
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh reboot centos8</pre></div>
 <hr>
 <h3>5. 导出与导入配置</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 导出 XML 配置
-virsh dumpxml centos8 &gt; centos8.xml
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 导出 XML 配置</span>
+virsh dumpxml centos8 <span class="pl-k">&gt;</span> centos8.xml
 
-# 删除虚拟机定义（不删除磁盘）
+<span class="pl-c"><span class="pl-c">#</span> 删除虚拟机定义（不删除磁盘）</span>
 virsh undefine centos8
 
-# 重新导入虚拟机配置
-virsh define centos8.xml
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 重新导入虚拟机配置</span>
+virsh define centos8.xml</pre></div>
 <hr>
 <h3>6. 修改配置</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">virsh edit centos8
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh edit centos8</pre></div>
 <blockquote>
 <p>会打开 vim，可以修改内存大小、CPU 数量、磁盘、网络等配置。</p>
 </blockquote>
 <hr>
 <h3>7. 挂起与恢复</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 挂起虚拟机
-virsh suspend centos8
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 挂起虚拟机</span>
+virsh <span class="pl-c1">suspend</span> centos8
 
-# 恢复运行
-virsh resume centos8
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 恢复运行</span>
+virsh resume centos8</pre></div>
 <hr>
 <h3>8. 设置开机自启</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate">virsh autostart centos8
-virsh autostart --disable centos8
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh autostart centos8
+virsh autostart --disable centos8</pre></div>
 <hr>
 <h3>9. 控制台登录</h3>
 <p>修改centos7的内核</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">grubby --update-kernel=ALL --args="console=ttyS0,115200n8"
-reboot
-</code></pre>
-<pre lang="bash" class="notranslate"><code class="notranslate">virsh console centos8
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">grubby --update-kernel=ALL --args=<span class="pl-s"><span class="pl-pds">"</span>console=ttyS0,115200n8<span class="pl-pds">"</span></span>
+reboot</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">virsh console centos8</pre></div>
 <blockquote>
 <p>如果虚拟机启用了 <code class="notranslate">ttyS0</code> 串口控制台，可以直接进入登录界面；退出方式：<code class="notranslate">Ctrl + ]</code></p>
 </blockquote>
