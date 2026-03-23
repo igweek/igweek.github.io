@@ -10,15 +10,17 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="## **实验场景**
+<meta name="description" content="# **实验内容：阿里云负载均衡 SLB 流量分发实验（ECS 无公网 IP）**
 
-**目标：**
-在阿里云上搭建两个 Web 服务器（ECS），通过阿里云负载均衡（SLB）将流量分发，实现高可用和负载均衡。">
+## **实验目标**
+
+1. 部署两台 ECS 实例（私网 IP）并运行 Web 服务。">
 <meta property="og:title" content="阿里云SLB负载均衡">
-<meta property="og:description" content="## **实验场景**
+<meta property="og:description" content="# **实验内容：阿里云负载均衡 SLB 流量分发实验（ECS 无公网 IP）**
 
-**目标：**
-在阿里云上搭建两个 Web 服务器（ECS），通过阿里云负载均衡（SLB）将流量分发，实现高可用和负载均衡。">
+## **实验目标**
+
+1. 部署两台 ECS 实例（私网 IP）并运行 Web 服务。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/152.html">
 <meta property="og:image" content="/img/123.png">
@@ -89,59 +91,79 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h2><strong>实验场景</strong></h2>
-<p><strong>目标：</strong><br>
-在阿里云上搭建两个 Web 服务器（ECS），通过阿里云负载均衡（SLB）将流量分发，实现高可用和负载均衡。用户访问负载均衡的域名时，可以轮询访问不同的后端 ECS 实例。</p>
-<p><strong>实验架构示意图：</strong></p>
+<div class="markdown-body" id="postBody"><h1><strong>实验内容：阿里云负载均衡 SLB 流量分发实验（ECS 无公网 IP）</strong></h1>
+<h2><strong>实验目标</strong></h2>
+<ol>
+<li>部署两台 ECS 实例（私网 IP）并运行 Web 服务。</li>
+<li>创建公网型负载均衡 SLB，通过 SLB 的公网 IP 访问 Web 服务。</li>
+<li>配置健康检查和轮询调度，测试负载均衡分发效果。</li>
+<li>实验过程中 ECS 无需公网 IP，通过 SLB 访问服务即可。</li>
+</ol>
+<hr>
+<h2><strong>实验拓扑</strong></h2>
 <pre class="notranslate"><code class="notranslate">          ┌──────────────┐
           │  用户访问   │
           └──────┬──────┘
                  │
-        ┌───────────────┐
-        │ 阿里云负载均衡 │
-        └───────────────┘
-             │      │
-      ┌──────┘      └──────┐
-      │                     │
-┌───────────┐         ┌───────────┐
-│  ECS实例1 │         │  ECS实例2 │
-│ (Web服务) │         │ (Web服务) │
-└───────────┘         └───────────┘
+        ┌─────────────────┐
+        │ 公网型 SLB       │  &lt;- 公网 IP，用户通过互联网访问
+        └───────┬─────────┘
+                │
+         ┌──────┴──────┐
+         │             │
+ ┌───────────┐   ┌───────────┐
+ │  ECS1     │   │  ECS2     │
+ │ (私网IP)  │   │ (私网IP)  │
+ │ Web服务   │   │ Web服务   │
+ └───────────┘   └───────────┘
 </code></pre>
-<p><strong>技术点：</strong></p>
-<ul>
-<li>ECS 实例部署 Web 服务</li>
-<li>SLB 配置监听和后端服务器组</li>
-<li>健康检查机制</li>
-<li>测试访问分流效果</li>
-</ul>
 <hr>
 <h2><strong>实验步骤</strong></h2>
-<h3><strong>第一步：准备 ECS 实例</strong></h3>
+<h3><strong>第一步：创建 VPC 和子网</strong></h3>
 <ol>
 <li>
-<p>登录阿里云控制台 → <strong>ECS实例</strong> → <strong>创建实例</strong></p>
+<p>登录阿里云 → VPC → 创建 VPC</p>
+<ul>
+<li>CIDR：例如 <code class="notranslate">172.16.0.0/16</code></li>
+</ul>
+</li>
+<li>
+<p>在 VPC 下创建子网</p>
+<ul>
+<li>CIDR：例如 <code class="notranslate">172.16.1.0/24</code></li>
+<li>用于部署 ECS 和 SLB 内网访问</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3><strong>第二步：创建 ECS 实例（私网）</strong></h3>
+<ol>
+<li>
+<p>登录阿里云 → ECS → 创建实例</p>
 </li>
 <li>
 <p>配置：</p>
 <ul>
-<li>地域：与后续负载均衡保持一致</li>
-<li>实例规格：小型实例即可（如：ecs.t5-lc2m1.nano）</li>
-<li>镜像：选择 <strong>Linux Ubuntu 22.04 或 CentOS 7</strong></li>
-<li>网络：VPC + 子网</li>
-<li>安全组：允许 22/80/443 端口（SSH 和 HTTP）</li>
+<li>地域：与 SLB 相同</li>
+<li>网络：选择上一步创建的 VPC 和子网</li>
+<li>不分配公网 IP（确保 ECS 没有公网 IP）</li>
+<li>安全组：允许 80 端口（HTTP）和 22 端口（SSH）</li>
 </ul>
 </li>
 <li>
-<p>启动两台 ECS，分别命名为 <code class="notranslate">WebServer1</code> 和 <code class="notranslate">WebServer2</code></p>
+<p>创建两台 ECS 实例，命名：</p>
+<ul>
+<li><code class="notranslate">WebServer1</code></li>
+<li><code class="notranslate">WebServer2</code></li>
+</ul>
 </li>
 </ol>
 <hr>
-<h3><strong>第二步：安装 Web 服务</strong></h3>
+<h3><strong>第三步：安装 Web 服务</strong></h3>
 <ol>
 <li>
 <p>SSH 登录 ECS：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">ssh root@<span class="pl-k">&lt;</span>ECS1公网IP<span class="pl-k">&gt;</span></pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">ssh root@<span class="pl-k">&lt;</span>ECS私网IP<span class="pl-k">&gt;</span>   <span class="pl-c"><span class="pl-c">#</span> 如果在公网不可访问，可通过跳板机或 VPC 内部访问</span></pre></div>
 </li>
 <li>
 <p>安装 Nginx：</p>
@@ -163,47 +185,47 @@ systemctl <span class="pl-c1">enable</span> nginx</pre></div>
 </ul>
 </li>
 <li>
-<p>修改默认首页，区分两台服务器：</p>
+<p>修改默认网页区分两台 ECS：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>This is WebServer1<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /usr/share/nginx/html/index.html</pre></div>
-<p>ECS2 也同理，写 <code class="notranslate">This is WebServer2</code>。</p>
+<p>ECS2 同理写 <code class="notranslate">This is WebServer2</code></p>
 </li>
 <li>
-<p>测试访问：</p>
+<p>测试本地访问：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">curl http://localhost</pre></div>
-<p>确认网页显示对应文本。</p>
 </li>
 </ol>
 <hr>
-<h3><strong>第三步：创建负载均衡实例（SLB）</strong></h3>
+<h3><strong>第四步：创建公网型负载均衡（SLB）</strong></h3>
 <ol>
 <li>
-<p>登录阿里云 → <strong>负载均衡SLB</strong> → <strong>创建负载均衡</strong></p>
+<p>登录阿里云 → 负载均衡 SLB → 创建负载均衡</p>
 </li>
 <li>
 <p>配置：</p>
 <ul>
-<li>类型：公网型（如果需要外网访问）</li>
-<li>地域：与 ECS 保持一致</li>
-<li>规格：小型（实验即可）</li>
-<li>带宽：按需（实验可以 1 Mbps）</li>
+<li>类型：公网型</li>
+<li>计费方式：按量/包年随意</li>
+<li>规格：实验可选小型</li>
+<li>VPC：选择 ECS 所在 VPC</li>
+<li>公网 IP：创建自动分配</li>
 </ul>
 </li>
 <li>
-<p>创建后，获取 SLB 公网 IP（或绑定域名）</p>
+<p>创建完成后，记下 SLB 公网 IP</p>
 </li>
 </ol>
 <hr>
-<h3><strong>第四步：配置后端服务器</strong></h3>
+<h3><strong>第五步：添加后端服务器</strong></h3>
 <ol>
 <li>
-<p>在 SLB 控制台 → 选择 <strong>负载均衡实例</strong> → <strong>后端服务器</strong></p>
+<p>在 SLB 控制台 → 负载均衡实例 → 后端服务器</p>
 </li>
 <li>
 <p>添加 ECS：</p>
 <ul>
-<li>WebServer1 和 WebServer2</li>
+<li>选择 ECS1 和 ECS2（使用私网 IP）</li>
 <li>端口：80</li>
-<li>权重：100（默认即可）</li>
+<li>权重：100（默认）</li>
 </ul>
 </li>
 <li>
@@ -218,14 +240,14 @@ systemctl <span class="pl-c1">enable</span> nginx</pre></div>
 </ul>
 </li>
 <li>
-<p>保存</p>
+<p>保存配置</p>
 </li>
 </ol>
 <hr>
-<h3><strong>第五步：配置监听</strong></h3>
+<h3><strong>第六步：配置监听器</strong></h3>
 <ol>
 <li>
-<p>在 SLB → <strong>监听</strong></p>
+<p>SLB → 监听器 → 新增监听</p>
 <ul>
 <li>协议：HTTP</li>
 <li>端口：80</li>
@@ -237,49 +259,27 @@ systemctl <span class="pl-c1">enable</span> nginx</pre></div>
 </li>
 </ol>
 <hr>
-<h3><strong>第六步：测试负载均衡</strong></h3>
+<h3><strong>第七步：测试负载均衡</strong></h3>
 <ol>
 <li>
-<p>访问 SLB 公网 IP：</p>
+<p>在外网访问 SLB 公网 IP：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">curl http://<span class="pl-k">&lt;</span>SLB公网IP<span class="pl-k">&gt;</span></pre></div>
 </li>
 <li>
-<p>刷新多次或在浏览器访问，应该轮流显示：</p>
+<p>刷新多次或在浏览器访问，轮流显示：</p>
 <ul>
 <li><code class="notranslate">This is WebServer1</code></li>
 <li><code class="notranslate">This is WebServer2</code></li>
 </ul>
 </li>
 <li>
-<p>可停止一台 ECS，再访问，SLB 会自动剔除不健康的服务器。</p>
-</li>
-</ol>
-<hr>
-<h3><strong>第七步：扩展实验（可选）</strong></h3>
+<p>停止 ECS1 的 Nginx 服务，访问 SLB：</p>
 <ul>
-<li>
-<p>修改权重测试流量分配比例（如 WebServer1 权重 70，WebServer2 权重 30）</p>
-</li>
-<li>
-<p>HTTPS 配置：</p>
-<ul>
-<li>在 SLB 上配置证书</li>
-<li>测试 HTTPS 流量分发</li>
+<li>SLB 自动剔除不健康的 ECS1</li>
+<li>访问结果只显示 <code class="notranslate">This is WebServer2</code></li>
 </ul>
 </li>
-<li>
-<p>后端多端口服务（如 HTTP+HTTPS 或 WebSocket）</p>
-</li>
-</ul>
-<hr>
-<h3><strong>实验总结</strong></h3>
-<ol>
-<li>SLB 实现了 ECS 的负载均衡与高可用。</li>
-<li>健康检查保证故障服务器不接收流量。</li>
-<li>通过调度算法可以实现流量分配策略。</li>
-<li>对网站高并发和容错能力有直接帮助。</li>
-</ol>
-<hr></div>
+</ol></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
