@@ -1,5 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 23 Mar 2026 11:57:30 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于 GlusterFS 的“永不丢失”企业共享云盘存储系统</title><link>https://bbs.017121.xyz/post/154.html</link><description>### 实验名称：基于 GlusterFS 的“永不丢失”企业共享云盘存储系统
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 23 Mar 2026 12:17:17 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>TB 级图片素材库的横向扩展实战</title><link>https://bbs.017121.xyz/post/155.html</link><description>### 1. 实验名称：电商大促——TB 级图片素材库的横向扩展实战
+
+### 2. 实验情景
+你是“某宝”电商平台的运维专家。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/155.html</guid><pubDate>Mon, 23 Mar 2026 12:16:50 +0000</pubDate></item><item><title>基于 GlusterFS 的“永不丢失”企业共享云盘存储系统</title><link>https://bbs.017121.xyz/post/154.html</link><description>### 实验名称：基于 GlusterFS 的“永不丢失”企业共享云盘存储系统
 ---
 
 ### 1. 实验情景（带入角色）
