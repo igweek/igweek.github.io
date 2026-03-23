@@ -10,13 +10,9 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="从高可用到分布式存储：一文读懂集群存储技术
-
-在当今数据爆炸式增长的时代，传统单机系统已经越来越难以支撑业务的发展。">
+<meta name="description" content="在当今数据爆炸式增长的时代，传统单机系统已经越来越难以支撑业务的发展。">
 <meta property="og:title" content="集群存储技术">
-<meta property="og:description" content="从高可用到分布式存储：一文读懂集群存储技术
-
-在当今数据爆炸式增长的时代，传统单机系统已经越来越难以支撑业务的发展。">
+<meta property="og:description" content="在当今数据爆炸式增长的时代，传统单机系统已经越来越难以支撑业务的发展。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/153.html">
 <meta property="og:image" content="/img/123.png">
@@ -45,17 +41,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-.copy-feedback {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 50px;
-    color: var(--color-fg-on-emphasis);
-    background-color: var(--color-fg-muted);
-    border-radius: 3px;
-    padding: 5px 8px;
-    font-size: 12px;
-}
+
 </style>
 <style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style>
 
@@ -87,188 +73,213 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>从高可用到分布式存储：一文读懂集群存储技术</p>
-<p>在当今数据爆炸式增长的时代，传统单机系统已经越来越难以支撑业务的发展。一方面，系统需要7×24小时稳定运行；另一方面，数据规模正从 TB 迈向 PB 甚至 EB 级别。</p>
-<p>那么问题来了：<br>
-•	系统如何避免宕机？<br>
-•	数据如何高效存储与访问？<br>
-•	如何在成本可控的前提下持续扩展？</p>
-<p>本文将从高可用 → 集群技术 → 集群存储这一演进路径，带你系统理解集群存储技术的核心思想。</p>
-<p>⸻</p>
-<p>一、为什么需要高可用性？</p>
+<div class="markdown-body" id="postBody"><p>在当今数据爆炸式增长的时代，传统单机系统已经越来越难以支撑业务的发展。一方面，系统需要<strong>7×24小时稳定运行</strong>；另一方面，数据规模正从 TB 迈向 PB 甚至 EB 级别。</p>
+<p>那么问题来了：</p>
+<ul>
+<li>系统如何避免宕机？</li>
+<li>数据如何高效存储与访问？</li>
+<li>如何在成本可控的前提下持续扩展？</li>
+</ul>
+<p>本文将从<strong>高可用 → 集群技术 → 集群存储</strong>这一演进路径，带你系统理解集群存储技术的核心思想。</p>
+<hr>
+<h2>一、为什么需要高可用性？</h2>
 <p>在任何系统中，“宕机”都是不可接受的，尤其是金融、电商、云计算等场景。</p>
-<ol>
-<li>什么是高可用？</li>
-</ol>
+<h3>1. 什么是高可用？</h3>
 <p>高可用（High Availability，HA）指系统在尽可能长的时间内持续提供服务的能力。</p>
 <p>通常用如下公式衡量：</p>
+<blockquote>
 <p>可用性 = MTTF / (MTTF + MTTR)</p>
-<pre class="notranslate"><code class="notranslate">•	MTTF（平均无故障时间）：系统稳定运行的时间
-•	MTTR（平均修复时间）：系统恢复所需时间
-</code></pre>
+</blockquote>
+<ul>
+<li><strong>MTTF（平均无故障时间）</strong>：系统稳定运行的时间</li>
+<li><strong>MTTR（平均修复时间）</strong>：系统恢复所需时间</li>
+</ul>
 <p>系统的目标很明确：<br>
-👉 尽量延长 MTTF，缩短 MTTR</p>
-<p>⸻</p>
-<ol start="2">
-<li>单点故障问题</li>
-</ol>
+尽量延长 MTTF，缩短 MTTR</p>
+<hr>
+<h3>2. 单点故障问题</h3>
 <p>很多系统崩溃的根本原因是：</p>
-<p>单点故障（Single Point of Failure）</p>
-<p>例如：<br>
-•	一台服务器宕机 → 整个系统不可用<br>
-•	一个数据库挂掉 → 所有业务停止</p>
-<p>⸻</p>
-<ol start="3">
-<li>解决方案：热备机制</li>
-</ol>
-<p>为了避免单点故障，最常见的方法是冗余设计。</p>
-<p>（1）双机热备（主备模式）<br>
-•	主服务器负责运行<br>
-•	备用服务器待命<br>
-•	主机故障 → 备用自动接管</p>
-<p>（2）双机互备（双活模式）<br>
-•	两台服务器同时工作<br>
-•	互相监控<br>
-•	任意一台故障 → 另一台接管全部任务</p>
-<p>⸻</p>
+<blockquote>
+<p><strong>单点故障（Single Point of Failure）</strong></p>
+</blockquote>
+<p>例如：</p>
+<ul>
+<li>一台服务器宕机 → 整个系统不可用</li>
+<li>一个数据库挂掉 → 所有业务停止</li>
+</ul>
+<hr>
+<h3>3. 解决方案：热备机制</h3>
+<p>为了避免单点故障，最常见的方法是<strong>冗余设计</strong>。</p>
+<h4>（1）双机热备（主备模式）</h4>
+<ul>
+<li>主服务器负责运行</li>
+<li>备用服务器待命</li>
+<li>主机故障 → 备用自动接管</li>
+</ul>
+<h4>（2）双机互备（双活模式）</h4>
+<ul>
+<li>两台服务器同时工作</li>
+<li>互相监控</li>
+<li>任意一台故障 → 另一台接管全部任务</li>
+</ul>
+<hr>
 <p>但问题是：<br>
-👉 两台机器还是不够灵活，也不够强大</p>
+<strong>两台机器还是不够灵活，也不够强大</strong></p>
 <p>这就引出了下一步 —— 集群。</p>
-<p>⸻</p>
-<p>二、从单机到集群：系统能力的跃迁</p>
-<ol>
-<li>什么是集群？</li>
-</ol>
+<hr>
+<h2>二、从单机到集群：系统能力的跃迁</h2>
+<h3>1. 什么是集群？</h3>
 <p>集群（Cluster）是由多台计算机组成的系统，对外表现为一个整体。</p>
 <p>对用户来说：</p>
+<blockquote>
 <p>看起来像一台服务器<br>
 实际上：<br>
 背后是多台机器协同工作</p>
-<p>⸻</p>
-<ol start="2">
-<li>集群的核心能力<br>
-•	故障自动接管（Failover）<br>
-•	负载均衡（Load Balancing）<br>
-•	横向扩展（Scalability）</li>
-</ol>
-<p>⸻</p>
-<ol start="3">
-<li>常见的三种集群类型</li>
-</ol>
-<p>（1）高性能集群（HPC）<br>
-用于科学计算，如天气预报、仿真模拟</p>
-<p>（2）高可用集群（HAC）<br>
-重点解决系统不宕机的问题</p>
-<p>（3）负载均衡集群（LBC）<br>
-将请求分发到多个节点，提高吞吐能力</p>
-<p>⸻</p>
-<ol start="4">
-<li>一个关键转变：Scale Up → Scale Out</li>
-</ol>
+</blockquote>
+<hr>
+<h3>2. 集群的核心能力</h3>
+<ul>
+<li><strong>故障自动接管（Failover）</strong></li>
+<li><strong>负载均衡（Load Balancing）</strong></li>
+<li><strong>横向扩展（Scalability）</strong></li>
+</ul>
+<hr>
+<h3>3. 常见的三种集群类型</h3>
+<h4>（1）高性能集群（HPC）</h4>
+<p>用于科学计算，如天气预报、仿真模拟</p>
+<h4>（2）高可用集群（HAC）</h4>
+<p>重点解决系统不宕机的问题</p>
+<h4>（3）负载均衡集群（LBC）</h4>
+<p>将请求分发到多个节点，提高吞吐能力</p>
+<hr>
+<h3>4. 一个关键转变：Scale Up → Scale Out</h3>
 <p>传统系统扩展方式：</p>
-<p>Scale Up（纵向扩展）<br>
-•	升级硬件（CPU、内存、磁盘）<br>
-•	问题：成本高、存在性能瓶颈</p>
-<p>⸻</p>
+<h4>Scale Up（纵向扩展）</h4>
+<ul>
+<li>升级硬件（CPU、内存、磁盘）</li>
+<li>问题：成本高、存在性能瓶颈</li>
+</ul>
+<hr>
 <p>现代系统主流方式：</p>
-<p>Scale Out（横向扩展）<br>
-•	增加服务器节点<br>
-•	优点：<br>
-•	成本低<br>
-•	扩展灵活<br>
-•	性能随节点线性增长</p>
-<p>⸻</p>
-<p>集群技术的本质：用“数量”换“能力”</p>
-<p>⸻</p>
-<p>三、数据爆炸下的解决方案：集群存储</p>
+<h4>Scale Out（横向扩展）</h4>
+<ul>
+<li>增加服务器节点</li>
+<li>优点：
+<ul>
+<li>成本低</li>
+<li>扩展灵活</li>
+<li>性能随节点线性增长</li>
+</ul>
+</li>
+</ul>
+<hr>
+<p><strong>集群技术的本质：用“数量”换“能力”</strong></p>
+<hr>
+<h2>三、数据爆炸下的解决方案：集群存储</h2>
 <p>随着数据规模的增长，仅仅有计算集群还不够，还必须解决存储问题。</p>
-<p>⸻</p>
-<ol>
-<li>什么是集群存储？</li>
-</ol>
+<hr>
+<h3>1. 什么是集群存储？</h3>
 <p>集群存储是指：</p>
+<blockquote>
 <p>将多台存储设备整合为一个统一的存储系统，对外提供统一访问接口</p>
-<p>简单理解：<br>
-•	用户看到的是一个“磁盘”<br>
-•	实际上数据分布在多台服务器上</p>
-<p>⸻</p>
-<ol start="2">
-<li>集群存储的核心特点</li>
-</ol>
-<p>（1）高扩展性<br>
-可以随时增加存储节点</p>
-<p>（2）统一管理<br>
-由管理节点统一调度资源</p>
-<p>（3）统一命名空间<br>
-所有数据在同一文件系统中</p>
-<p>（4）负载均衡<br>
-读写请求自动分散到不同节点</p>
-<p>⸻</p>
-<ol start="3">
-<li>存储架构的演进</li>
-</ol>
-<p>传统存储方式：<br>
-•	DAS：直接连接存储<br>
-•	SAN：块级存储网络<br>
-•	NAS：文件级存储</p>
-<p>⸻</p>
+</blockquote>
+<p>简单理解：</p>
+<ul>
+<li>用户看到的是一个“磁盘”</li>
+<li>实际上数据分布在多台服务器上</li>
+</ul>
+<hr>
+<h3>2. 集群存储的核心特点</h3>
+<h4>（1）高扩展性</h4>
+<p>可以随时增加存储节点</p>
+<h4>（2）统一管理</h4>
+<p>由管理节点统一调度资源</p>
+<h4>（3）统一命名空间</h4>
+<p>所有数据在同一文件系统中</p>
+<h4>（4）负载均衡</h4>
+<p>读写请求自动分散到不同节点</p>
+<hr>
+<h3>3. 存储架构的演进</h3>
+<p>传统存储方式：</p>
+<ul>
+<li><strong>DAS</strong>：直接连接存储</li>
+<li><strong>SAN</strong>：块级存储网络</li>
+<li><strong>NAS</strong>：文件级存储</li>
+</ul>
+<hr>
 <p>而集群存储：</p>
+<blockquote>
 <p>本质是对 NAS 的升级 → 集群 NAS</p>
-<p>⸻</p>
-<p>四、集群存储的三种典型架构</p>
-<ol>
-<li>SAN 共享存储架构<br>
-•	所有节点共享后端存储<br>
-•	通过光纤网络连接</li>
-</ol>
-<p>⸻</p>
-<ol start="2">
-<li>集群文件系统架构<br>
-•	每个节点有自己的磁盘<br>
-•	通过软件统一管理</li>
-</ol>
-<p>⸻</p>
-<ol start="3">
-<li>pNFS 架构（并行 NAS）<br>
-•	客户端直接访问存储设备<br>
-•	减少中间转发，提高性能</li>
-</ol>
-<p>⸻</p>
-<p>五、开源实现方案：GlusterFS</p>
+</blockquote>
+<hr>
+<h2>四、集群存储的三种典型架构</h2>
+<h3>1. SAN 共享存储架构</h3>
+<ul>
+<li>所有节点共享后端存储</li>
+<li>通过光纤网络连接</li>
+</ul>
+<hr>
+<h3>2. 集群文件系统架构</h3>
+<ul>
+<li>每个节点有自己的磁盘</li>
+<li>通过软件统一管理</li>
+</ul>
+<hr>
+<h3>3. pNFS 架构（并行 NAS）</h3>
+<ul>
+<li>客户端直接访问存储设备</li>
+<li>减少中间转发，提高性能</li>
+</ul>
+<hr>
+<h2>五、开源实现方案：GlusterFS</h2>
 <p>在实际应用中，商业存储成本较高，因此开源方案非常重要。</p>
-<p>⸻</p>
+<hr>
+<h3>1. 什么是 GlusterFS？</h3>
+<p>GlusterFS 是一个开源的分布式文件系统，具有以下特点：</p>
+<ul>
+<li>支持横向扩展（Scale Out）</li>
+<li>支持 PB 级存储</li>
+<li>使用普通服务器即可部署</li>
+<li>提供统一命名空间</li>
+</ul>
+<hr>
+<h3>2. 核心优势</h3>
+<ul>
+<li>成本低（无需专用存储设备）</li>
+<li>易扩展（增加节点即可）</li>
+<li>高可用（节点故障不影响整体）</li>
+</ul>
+<hr>
+<p>可以理解为：</p>
+<blockquote>
+<p><strong>GlusterFS = 低成本分布式存储解决方案</strong></p>
+</blockquote>
+<hr>
+<h2>六、总结：一条清晰的技术演进路线</h2>
+<p>我们可以把整篇内容总结为一条发展路径：</p>
 <ol>
-<li>什么是 GlusterFS？</li>
-</ol>
-<p>GlusterFS 是一个开源的分布式文件系统，具有以下特点：<br>
-•	支持横向扩展（Scale Out）<br>
-•	支持 PB 级存储<br>
-•	使用普通服务器即可部署<br>
-•	提供统一命名空间</p>
-<p>⸻</p>
-<ol start="2">
-<li>核心优势<br>
-•	成本低（无需专用存储设备）<br>
-•	易扩展（增加节点即可）<br>
-•	高可用（节点故障不影响整体）</li>
-</ol>
-<p>⸻</p>
-<p>👉 可以理解为：</p>
-<p>GlusterFS = 低成本分布式存储解决方案</p>
-<p>⸻</p>
-<p>六、总结：一条清晰的技术演进路线</p>
-<p>我们可以把整篇内容总结为一条发展路径：<br>
-1.	高可用性<br>
-→ 解决“系统会不会挂”<br>
-2.	集群技术<br>
-→ 解决“单机不够用”<br>
-3.	集群存储<br>
-→ 解决“数据太多存不下”<br>
-4.	Scale Out<br>
+<li>
+<p><strong>高可用性</strong><br>
+→ 解决“系统会不会挂”</p>
+</li>
+<li>
+<p><strong>集群技术</strong><br>
+→ 解决“单机不够用”</p>
+</li>
+<li>
+<p><strong>集群存储</strong><br>
+→ 解决“数据太多存不下”</p>
+</li>
+<li>
+<p><strong>Scale Out</strong><br>
 → 实现“无限扩展能力”</p>
-<p>⸻</p>
-<p>最后一句话总结</p>
-<p>集群存储技术的本质，是通过横向扩展（Scale Out），将多台普通设备整合为一个高可用、高性能、可无限扩展的统一存储系统。</p></div>
+</li>
+</ol>
+<hr>
+<h2>最后一句话总结</h2>
+<blockquote>
+<p>集群存储技术的本质，是通过横向扩展（Scale Out），将多台普通设备整合为一个高可用、高性能、可无限扩展的统一存储系统。</p>
+</blockquote></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -293,7 +304,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -367,70 +378,7 @@ function iFrameLoading(){
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const createClipboardHTML = (codeContent, additionalClasses = '') => `
-        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
-        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
-            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
-                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
-                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
-            </clipboard-copy>
-            <div class="copy-feedback">Copied!</div>
-        </div>
-    `;
 
-    const handleCodeElements = (selector = '') => {
-        document.querySelectorAll(selector).forEach(codeElement => {
-            const codeContent = codeElement.innerHTML;
-            const newStructure = document.createElement('div');
-            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
-            newStructure.innerHTML = createClipboardHTML(codeContent);
-
-            const parentElement = codeElement.parentElement;
-            if (selector.includes('highlight')) {
-                parentElement.insertBefore(newStructure, codeElement.nextSibling);
-                parentElement.removeChild(codeElement);
-            } else {
-                parentElement.parentElement.replaceChild(newStructure, parentElement);
-            }
-        });
-    };
-
-    handleCodeElements('pre.notranslate > code.notranslate');
-    handleCodeElements('div.highlight > pre.notranslate');
-
-    let currentFeedback = null;
-    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
-        copyButton.addEventListener('click', () => {
-            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = codeContent;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextArea);
-
-            const copyIcon = copyButton.querySelector('.octicon-copy');
-            const checkIcon = copyButton.querySelector('.octicon-check');
-            const copyFeedback = copyButton.nextElementSibling;
-
-            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
-            currentFeedback = copyFeedback;
-
-            copyIcon.classList.add('d-none');
-            checkIcon.classList.remove('d-none');
-            copyFeedback.style.display = 'block';
-            copyButton.style.borderColor = 'var(--color-success-fg)';
-
-            setTimeout(() => {
-                copyIcon.classList.remove('d-none');
-                checkIcon.classList.add('d-none');
-                copyFeedback.style.display = 'none';
-                copyButton.style.borderColor = '';
-            }, 2000);
-        });
-    });
-});
 
 </script>
 <script src='/plugins/articletoc.js'></script><script src='/plugins/lightbox.js'></script>
