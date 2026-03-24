@@ -90,7 +90,7 @@ sudo gluster volume start share-drive
 
 ```bash
 # 1. 安装客户端工具
-sudo apt install glusterfs-fuse -y
+sudo apt install glusterfs-client -y
 
 # 2. 创建挂载点
 sudo mkdir /mnt/cloud-drive
