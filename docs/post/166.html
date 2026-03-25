@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script>document.addEventListener('DOMContentLoaded',function(){var e=document.querySelector('.blogTitle');var t=document.querySelector('.avatar');if(e){e.style.cursor='pointer';e.onclick=function(){location.href='/';}}if(t){t.style.cursor='pointer';t.onclick=function(){location.href='/';}}});</script><script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script><script src='/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="/img/123.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="
+
+# 一、实验总则
+
+## 1.1 实验背景
+
+随着电商业务的快速发展，用户量、订单量持续增长，对数据库的高可用性、可扩展性、安全性和性能提出了极高要求。">
+<meta property="og:title" content="基于阿里云RDS搭建高可用可扩展电商数据库">
+<meta property="og:description" content="
+
+# 一、实验总则
+
+## 1.1 实验背景
+
+随着电商业务的快速发展，用户量、订单量持续增长，对数据库的高可用性、可扩展性、安全性和性能提出了极高要求。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.017121.xyz/post/166.html">
+<meta property="og:image" content="/img/123.png">
+<title>基于阿里云RDS搭建高可用可扩展电商数据库</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+<style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">基于阿里云RDS搭建高可用可扩展电商数据库</h1>
+<div class="title-right">
+    <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/166" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>一、实验总则</h1>
+<h2>1.1 实验背景</h2>
+<p>随着电商业务的快速发展，用户量、订单量持续增长，对数据库的高可用性、可扩展性、安全性和性能提出了极高要求。某中型电商平台计划上线核心业务数据库，需依托阿里云RDS构建一套能够支撑高并发读请求、抵御硬件故障、保障数据安全、可灵活扩容的数据库架构，满足用户注册、商品查询、订单提交等核心业务场景的稳定运行，同时降低运维成本，无需专职DBA投入过多精力。</p>
+<p>本实验整合前序RDS实例创建、备份恢复、高可用切换、读写分离、安全权限管理五大核心实验技能，模拟企业真实电商数据库部署全流程，完成从架构设计、部署实施、功能验证到性能优化的完整闭环，提升综合运维与实战能力。</p>
+<h2>1.2 实验目标</h2>
+<ol>
+<li>
+<p>架构设计：掌握电商数据库高可用、可扩展架构的设计思路，理解RDS高可用版、只读实例、备份策略的协同作用。</p>
+</li>
+<li>
+<p>部署实施：独立完成RDS主实例（高可用）、只读实例部署，配置备份恢复、读写分离、安全加固全流程。</p>
+</li>
+<li>
+<p>功能验证：验证高可用故障切换、读写分离分流、数据备份恢复、权限管控的有效性，确保架构符合业务需求。</p>
+</li>
+<li>
+<p>性能优化：识别并解决电商场景下的数据库性能瓶颈（如慢SQL），提升数据库并发处理能力。</p>
+</li>
+<li>
+<p>综合应用：整合所有RDS核心技能，形成企业级电商数据库部署、运维的完整方案，具备独立落地能力。</p>
+</li>
+</ol>
+<h2>1.3 实验前置条件</h2>
+<ul>
+<li>
+<p>阿里云账号1个（推荐学生账号/免费试用额度，提前开通RDS、ECS、KMS等相关服务权限）。</p>
+</li>
+<li>
+<p>已熟练完成前5个RDS专项实验，掌握实例创建、备份恢复、主备切换、读写分离、安全权限配置的基础操作。</p>
+</li>
+<li>
+<p>准备1台同地域、同VPC的ECS服务器（2核4GB及以上），提前安装MySQL客户端、Navicat/DBeaver、sysbench压测工具（可选）。</p>
+</li>
+<li>
+<p>电商测试数据（含用户表、商品表、订单表，可自行构造或下载测试数据集）。</p>
+</li>
+</ul>
+<h2>1.4 实验环境说明</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>组件名称</th>
+<th>配置规格</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RDS主实例（高可用版）</td>
+<td>MySQL 8.0，2核4GB，ESSD PL0 50GB，跨可用区部署</td>
+<td>承载电商核心业务读写请求，保障高可用</td>
+</tr>
+<tr>
+<td>RDS只读实例</td>
+<td>MySQL 8.0，2核4GB，ESSD PL0 50GB，同地域不同可用区</td>
+<td>分流读请求，扩展读性能，缓解主库压力</td>
+</tr>
+<tr>
+<td>ECS服务器</td>
+<td>2核4GB，CentOS 8，同VPC内网连接RDS</td>
+<td>客户端连接、数据导入、压测、性能监控</td>
+</tr>
+<tr>
+<td>数据库工具</td>
+<td>Navicat/DBeaver、MySQL命令行、sysbench</td>
+<td>数据库操作、性能测试、故障模拟</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h1>二、实验需求（电商业务核心要求）</h1>
+<p>本次搭建的电商数据库需满足以下核心需求，贴合企业生产标准：</p>
+<ol>
+<li>
+<p>高可用性：采用跨可用区高可用架构，主库故障时能自动/手动切换，切换后业务无感，数据无丢失，恢复时间≤30秒。</p>
+</li>
+<li>
+<p>可扩展性：支持读性能横向扩容，通过只读实例分流读请求，应对电商促销期高并发查询场景。</p>
+</li>
+<li>
+<p>数据可靠性：配置自动备份+手动备份，支持时间点恢复（PITR），备份保留≥7天，可应对误删、数据损坏等场景。</p>
+</li>
+<li>
+<p>安全合规：严格管控访问权限，仅允许内网ECS访问，开启SSL传输加密、存储加密，启用SQL审计，杜绝数据泄露、非法访问。</p>
+</li>
+<li>
+<p>性能达标：无慢SQL，读请求响应时间≤100ms，写请求响应时间≤50ms，支持并发查询≥1000QPS。</p>
+</li>
+</ol>
+<h1>三、实验实施步骤（分阶段落地）</h1>
+<h2>阶段1：架构设计与RDS实例部署（1小时）</h2>
+<h3>步骤1.1 架构规划（核心环节）</h3>
+<p>结合电商业务需求，设计RDS数据库架构，明确各组件作用：</p>
+<ul>
+<li>
+<p>核心架构：主实例（跨可用区备库）+ 1台只读实例，实现高可用+读扩展。</p>
+</li>
+<li>
+<p>网络规划：所有组件部署在同一VPC，关闭主实例、只读实例外网地址，仅通过内网连接，保障安全。</p>
+</li>
+<li>
+<p>备份规划：自动备份（每日凌晨2:00，保留7天）+ 手动备份（每周日补充备份），开启binlog日志，支持时间点恢复。</p>
+</li>
+<li>
+<p>权限规划：创建3类账号（DBA管理员、业务读写账号、数据分析只读账号），实现最小权限隔离。</p>
+</li>
+</ul>
+<h3>步骤1.2 创建RDS高可用主实例</h3>
+<ol>
+<li>
+<p>登录阿里云RDS控制台，点击“创建实例”，按以下配置创建主实例：</p>
+<ul>
+<li>
+<p>计费方式：按量付费（实验结束可释放，控制成本）。</p>
+</li>
+<li>
+<p>地域/可用区：选择华东2（上海），可用区部署选择“多可用区”（如主：可用区F，备：可用区G）。</p>
+</li>
+<li>
+<p>数据库类型/版本：MySQL 8.0，系列选择“高可用版”。</p>
+</li>
+<li>
+<p>实例规格：2核4GB，存储类型：ESSD PL0，存储空间：50GB。</p>
+</li>
+<li>
+<p>管理员账号：dba_admin，密码：符合复杂度要求（大小写+数字+特殊字符），牢记密码。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>点击“立即购买”，等待实例状态变为“运行中”（约3-5分钟）。</p>
+</li>
+<li>
+<p>进入实例详情页，关闭外网地址，仅保留内网地址，记录内网连接地址和端口（3306）。</p>
+</li>
+</ol>
+<p>注意事项：实例创建时需选择跨可用区部署，否则无法实现高可用主备切换；避免使用root账号作为管理员账号，遵循企业安全规范；存储空间预留一定冗余，应对业务数据增长。</p>
+<h3>步骤1.3 创建只读实例</h3>
+<ol>
+<li>
+<p>进入主实例详情页，左侧菜单栏点击“只读实例”，点击“创建只读实例”。</p>
+</li>
+<li>
+<p>配置只读实例参数，与主实例匹配：</p>
+<ul>
+<li>
+<p>计费方式：按量付费，地域/可用区：与主实例同地域，不同可用区（如可用区H）。</p>
+</li>
+<li>
+<p>实例规格：2核4GB，存储类型：ESSD PL0，存储空间：50GB（与主实例一致）。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>确认配置，点击“立即购买”，等待只读实例状态变为“运行中”（约5-10分钟）。</p>
+</li>
+<li>
+<p>查看只读实例“复制状态”，确保为“正常”，复制延迟≤1ms，验证数据同步正常。</p>
+</li>
+</ol>
+<p>注意事项：只读实例需与主实例同地域，确保数据同步速度；单个主实例最多挂载5个只读实例，本次实验创建1个即可满足需求；只读实例无需单独配置白名单，复用主实例白名单。</p>
+<h2>阶段2：安全配置与权限管理（30分钟）</h2>
+<h3>步骤2.1 配置IP白名单（网络安全）</h3>
+<ol>
+<li>
+<p>进入主实例详情页，左侧菜单“数据安全”→“白名单”，删除default组内默认IP（127.0.0.1）。</p>
+</li>
+<li>
+<p>新建白名单分组“ecs_biz_group”，添加ECS服务器的私网IP，仅允许ECS访问RDS。</p>
+</li>
+<li>
+<p>新建白名单分组“dba_group”，添加本地运维办公IP（仅用于实验调试，生产环境需严格管控）。</p>
+</li>
+<li>
+<p>确认白名单配置生效，禁止添加0.0.0.0/0全网开放IP。</p>
+</li>
+</ol>
+<h3>步骤2.2 创建精细化账号权限</h3>
+<ol>
+<li>
+<p>进入主实例“账号管理”页面，点击“创建账号”，按角色创建3类账号：</p>
+<ul>
+<li>
+<p>DBA管理员账号（dba_admin）：授予“只读实例管理”权限，无全局超管权限，用于运维管理。</p>
+</li>
+<li>
+<p>业务读写账号（biz_rw）：仅授予电商核心数据库（后续创建）的SELECT、INSERT、UPDATE、DELETE权限，用于后端业务服务连接。</p>
+</li>
+<li>
+<p>数据分析账号（data_ro）：仅授予电商核心数据库的SELECT权限，用于运营统计分析。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>设置每个账号的复杂密码，记录账号信息，便于后续连接使用。</p>
+</li>
+</ol>
+<p>注意事项：账号权限遵循“最小够用”原则，业务账号不授予DROP、ALTER等高危权限；禁止共用账号，每个角色使用专属账号，便于审计追溯；密码需定期轮换，避免弱密码风险。</p>
+<h3>步骤2.3 开启数据加密（全链路安全）</h3>
+<ol>
+<li>
+<p>进入主实例“数据安全”→“SSL加密”，点击“开启SSL”，选择证书有效期，确认生效。</p>
+</li>
+<li>
+<p>下载SSL证书，保存至ECS服务器，用于后续SSL加密连接。</p>
+</li>
+<li>
+<p>进入“存储加密”页面，确认开启存储加密（若创建实例时未开启，可通过KMS配置密钥开启）。</p>
+</li>
+</ol>
+<p>注意事项：开启SSL后，未配置证书的客户端无法连接RDS，需同步配置客户端SSL连接；存储加密仅对新写入数据生效，历史数据无需额外处理；证书到期前需提前更新，避免加密失效。</p>
+<h3>步骤2.4 开启SQL审计（操作追溯）</h3>
+<ol>
+<li>
+<p>进入主实例“日志管理”→“SQL审计”，点击“开启SQL审计”。</p>
+</li>
+<li>
+<p>配置审计日志存储周期为180天，选择“全量审计”模式，确认开启。</p>
+</li>
+</ol>
+<p>注意事项：SQL审计需占用一定存储空间，实验期间可正常开启，生产环境需按合规要求保留足够周期；审计日志与实例数据隔离，防止被篡改，便于安全事件追溯。</p>
+<h2>阶段3：备份策略配置与数据导入（30分钟）</h2>
+<h3>步骤3.1 配置自动备份与手动备份</h3>
+<ol>
+<li>
+<p>进入主实例“备份恢复”→“备份设置”，按以下配置：</p>
+<ul>
+<li>
+<p>备份方式：物理备份（恢复速度快，适合生产）。</p>
+</li>
+<li>
+<p>备份周期：每日备份（勾选周一至周日），备份时间：凌晨2:00-3:00（业务低峰期）。</p>
+</li>
+<li>
+<p>日志备份保留：开启（必须开启，否则无法实现时间点恢复），保留天数：7天。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>点击“确定”，备份策略生效；点击“创建备份”，手动创建1次全量备份，备注“电商数据库初始备份”，等待备份完成。</p>
+</li>
+</ol>
+<p>注意事项：备份时间需避开业务高峰期，避免占用主库资源导致业务卡顿；日志备份（binlog）禁止关闭，否则时间点恢复功能失效；手动备份可用于重大操作前的应急备份，降低风险。</p>
+<h3>步骤3.2 创建电商核心数据库与导入测试数据</h3>
+<ol>
+<li>
+<p>通过ECS服务器，使用DBA管理员账号（dba_admin），通过SSL方式连接RDS主实例。</p>
+</li>
+<li>
+<p>执行SQL语句，创建电商核心数据库及表（用户表、商品表、订单表）：<br>
+`-- 创建电商核心数据库<br>
+CREATE DATABASE ecommerce_db DEFAULT CHARSET utf8mb4 COMMENT '电商核心数据库';</p>
+</li>
+</ol>
+<p>-- 切换数据库<br>
+USE ecommerce_db;</p>
+<p>-- 创建用户表<br>
+CREATE TABLE user_info (<br>
+id INT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',<br>
+username VARCHAR(50) NOT NULL COMMENT '用户名',<br>
+phone VARCHAR(20) UNIQUE COMMENT '手机号',<br>
+password VARCHAR(100) NOT NULL COMMENT '加密密码',<br>
+create_time DATETIME DEFAULT NOW() COMMENT '注册时间',<br>
+update_time DATETIME DEFAULT NOW() ON UPDATE NOW() COMMENT '更新时间'<br>
+) ENGINE=InnoDB COMMENT '电商用户表';</p>
+<p>-- 创建商品表<br>
+CREATE TABLE product_info (<br>
+id INT PRIMARY KEY AUTO_INCREMENT COMMENT '商品ID',<br>
+product_name VARCHAR(100) NOT NULL COMMENT '商品名称',<br>
+price DECIMAL(10,2) NOT NULL COMMENT '商品价格',<br>
+stock INT NOT NULL DEFAULT 0 COMMENT '商品库存',<br>
+create_time DATETIME DEFAULT NOW() COMMENT '创建时间'<br>
+) ENGINE=InnoDB COMMENT '电商商品表';</p>
+<p>-- 创建订单表<br>
+CREATE TABLE order_info (<br>
+id INT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',<br>
+user_id INT NOT NULL COMMENT '用户ID',<br>
+product_id INT NOT NULL COMMENT '商品ID',<br>
+order_amount DECIMAL(10,2) NOT NULL COMMENT '订单金额',<br>
+order_status TINYINT NOT NULL DEFAULT 0 COMMENT '订单状态：0-待支付，1-已支付，2-已取消',<br>
+create_time DATETIME DEFAULT NOW() COMMENT '创建时间',<br>
+FOREIGN KEY (user_id) REFERENCES user_info(id),<br>
+FOREIGN KEY (product_id) REFERENCES product_info(id)<br>
+) ENGINE=InnoDB COMMENT '电商订单表';`</p>
+<ol start="3">
+<li>导入测试数据（可手动插入或使用SQL脚本导入），确保每个表有1000+条数据，模拟真实业务数据量：<br>
+`-- 插入测试用户数据（示例）<br>
+INSERT INTO user_info (username, phone, password)<br>
+VALUES ('zhangsan', '13800138000', SHA2('Zhangsan123!', 256)),<br>
+('lisi', '13900139000', SHA2('Lisi123!', 256));</li>
+</ol>
+<p>-- 插入测试商品数据（示例，可批量插入）<br>
+INSERT INTO product_info (product_name, price, stock)<br>
+VALUES ('手机', 3999.00, 1000),<br>
+('电脑', 5999.00, 500);</p>
+<p>-- 插入测试订单数据（示例）<br>
+INSERT INTO order_info (user_id, product_id, order_amount, order_status)<br>
+VALUES (1, 1, 3999.00, 1),<br>
+(2, 2, 5999.00, 0);`</p>
+<ol start="4">
+<li>查询数据，确认数据库、表创建成功，数据导入正常；等待只读实例同步数据，验证主备数据一致性。</li>
+</ol>
+<h2>阶段4：读写分离配置与性能优化（40分钟）</h2>
+<h3>步骤4.1 开启读写分离，分流读请求</h3>
+<ol>
+<li>
+<p>进入主实例“读写分离”页面，点击“开启读写分离”。</p>
+</li>
+<li>
+<p>配置读写分离参数：</p>
+<ul>
+<li>
+<p>网络类型：专有网络（与ECS、主实例同VPC）。</p>
+</li>
+<li>
+<p>读权重分配：主实例权重设为0（避免读流量占用主库），只读实例权重设为100（所有读请求分流至只读实例）。</p>
+</li>
+<li>
+<p>延迟阈值：1秒（只读实例延迟超过1秒，读请求自动切回主库，保障数据实时性）。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>点击“确定”，等待读写分离地址生效（约1分钟），记录读写分离内网地址和端口。</p>
+</li>
+</ol>
+<p>注意事项：读写分离地址为统一入口，业务只需修改连接地址为该地址，无需调整SQL语句；主实例权重设为0，确保读请求全部分流，最大化缓解主库压力；延迟阈值可根据业务实时性要求调整，电商订单查询场景建议设为1-2秒。</p>
+<h3>步骤4.2 性能优化（慢SQL排查与优化）</h3>
+<ol>
+<li>
+<p>开启慢SQL日志：进入主实例“日志管理”→“慢查询日志”，点击“开启”，设置慢SQL阈值为1秒（执行时间超过1秒的SQL视为慢SQL）。</p>
+</li>
+<li>
+<p>构造慢SQL场景：使用客户端执行无索引查询（如查询手机号为138开头的用户，未给phone字段建索引）：<br>
+<code class="notranslate">-- 无索引慢查询 SELECT * FROM user_info WHERE phone LIKE '138%';</code></p>
+</li>
+<li>
+<p>查看慢查询日志，定位慢SQL，使用RDS“性能洞察”功能，查看执行计划，识别全表扫描问题。</p>
+</li>
+<li>
+<p>优化慢SQL：为phone字段创建索引，重新执行查询，对比优化前后响应时间：<br>
+`-- 创建索引<br>
+CREATE INDEX idx_user_phone ON user_info(phone);</p>
+</li>
+</ol>
+<p>-- 再次执行查询，验证优化效果<br>
+SELECT * FROM user_info WHERE phone LIKE '138%';`</p>
+<ol start="5">
+<li>（可选）使用sysbench压测工具，模拟1000并发读请求，对比开启读写分离前后主库CPU、QPS变化，验证读性能扩展效果。</li>
+</ol>
+<p>注意事项：慢SQL优化的核心是避免全表扫描，合理创建索引；索引并非越多越好，需根据业务查询场景创建，避免冗余索引；压测时避免大批量写入，防止只读实例复制延迟升高。</p>
+<h2>阶段5：高可用验证与故障模拟（30分钟）</h2>
+<h3>步骤5.1 手动主备切换验证</h3>
+<ol>
+<li>
+<p>进入主实例“服务可用性”页面，查看主备实例状态，确认均为“运行中”，复制状态“正常”。</p>
+</li>
+<li>
+<p>保持ECS客户端连接（使用读写分离地址），执行查询、写入操作，确认业务正常。</p>
+</li>
+<li>
+<p>点击“主备切换”，勾选“我已了解上述影响”，确认触发手动切换。</p>
+</li>
+<li>
+<p>观察实例状态变化，等待切换完成（约10-30秒），切换后查看主备角色互换情况。</p>
+</li>
+<li>
+<p>在客户端继续执行读写操作，验证业务无中断、数据无丢失，连接地址未变化（无感切换）。</p>
+</li>
+</ol>
+<h3>步骤5.2 数据恢复验证</h3>
+<ol>
+<li>
+<p>模拟数据误删：使用业务读写账号，删除order_info表中的部分订单数据：<br>
+<code class="notranslate">-- 模拟误删订单数据 DELETE FROM order_info WHERE order_status = 0;</code></p>
+</li>
+<li>
+<p>执行时间点恢复：进入主实例“备份恢复”→“恢复实例”，选择“按时间点恢复”，选择误删前1分钟的时间点，恢复到新实例。</p>
+</li>
+<li>
+<p>等待新实例创建完成，连接新实例，查询order_info表，确认误删数据已完整恢复。</p>
+</li>
+<li>
+<p>恢复完成后，释放临时恢复实例，避免闲置计费。</p>
+</li>
+</ol>
+<p>注意事项：故障模拟仅在测试实例操作，严禁在生产环境随意执行删除、重启等高危操作；主备切换过程中会有秒级闪断，生产环境需在业务代码中配置数据库重连机制；恢复数据时建议恢复到新实例，避免覆盖原实例数据。</p>
+<h1>四、实验验证与验收标准</h1>
+<h2>4.1 验证项目与验收标准</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>验证项目</th>
+<th>验收标准</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>架构部署</td>
+<td>主实例（跨可用区高可用）+ 只读实例部署完成，状态均为运行中；无外网地址，仅内网访问。</td>
+</tr>
+<tr>
+<td>安全配置</td>
+<td>白名单配置合规，账号权限隔离生效；SSL传输加密、存储加密开启；SQL审计正常记录操作。</td>
+</tr>
+<tr>
+<td>备份恢复</td>
+<td>自动备份策略配置正确，手动备份成功；时间点恢复可完整找回误删数据，数据无丢失。</td>
+</tr>
+<tr>
+<td>读写分离</td>
+<td>读写分离地址生效，写请求走主库，读请求分流至只读实例；分流后主库负载明显降低。</td>
+</tr>
+<tr>
+<td>高可用切换</td>
+<td>手动主备切换成功，角色互换正常；切换后业务无感，数据一致，连接地址不变。</td>
+</tr>
+<tr>
+<td>性能优化</td>
+<td>慢SQL排查并优化完成，优化后响应时间≤100ms；并发读请求QPS≥1000，性能达标。</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>4.2 交付物要求（实验报告核心内容）</h2>
+<ol>
+<li>
+<p>架构设计图：绘制电商数据库架构图，标注主实例、只读实例、ECS、VPC等组件，说明各组件作用。</p>
+</li>
+<li>
+<p>操作步骤文档：详细记录各阶段操作步骤，附关键配置截图（如实例创建、白名单配置、读写分离开启）。</p>
+</li>
+<li>
+<p>验证报告：记录各验证项目的操作过程、结果，附监控截图（主备切换、读写分离负载、慢SQL优化前后对比）。</p>
+</li>
+<li>
+<p>问题与解决方案：记录实验过程中遇到的问题（如连接失败、数据同步异常）及解决方法。</p>
+</li>
+<li>
+<p>总结与优化建议：总结实验收获，结合电商业务场景，提出数据库架构的进一步优化建议（如增加只读实例、跨地域灾备）。</p>
+</li>
+</ol>
+<h1>五、实验收尾与注意事项</h1>
+<h2>5.1 实验收尾操作</h2>
+<ol>
+<li>
+<p>清理测试数据：删除实验过程中插入的测试数据，保持实例环境整洁。</p>
+</li>
+<li>
+<p>释放闲置资源：释放临时恢复实例、只读实例（若后续无需使用），避免产生不必要的计费。</p>
+</li>
+<li>
+<p>保留核心配置：主实例可保留，用于后续学习或综合实训；关闭SQL审计、备份策略（若无需保留），降低成本。</p>
+</li>
+</ol>
+<h2>5.2 实验注意事项（汇总）</h2>
+<ul>
+<li>
+<p>成本控制：所有实例均采用按量付费，实验完成后及时释放闲置资源，避免长期计费；避免过度配置实例规格，够用即可。</p>
+</li>
+<li>
+<p>安全规范：严格遵循企业安全要求，不使用超管账号、不开放外网地址、不配置宽松白名单，养成良好的运维习惯。</p>
+</li>
+<li>
+<p>操作规范：重要操作（如主备切换、数据删除、实例释放）前，先做好备份，避免误操作导致数据丢失或业务中断。</p>
+</li>
+<li>
+<p>问题排查：遇到连接失败、数据同步异常、切换失败等问题，优先查看RDS控制台日志、监控指标，结合前序实验知识点排查解决。</p>
+</li>
+<li>
+<p>实战贴合：实验过程中尽量模拟企业生产环境配置，不简化核心步骤（如加密、审计、权限隔离），提升实战适配能力。</p>
+</li>
+</ul>
+<h1>六、实验总结</h1>
+<p>本次综合大实验，整合了阿里云RDS的高可用、可扩展、安全、性能四大核心能力，完整复现了企业级电商数据库的部署、运维、优化全流程。通过实验，不仅巩固了RDS实例创建、备份恢复、主备切换、读写分离、安全权限管理的基础操作，更理解了各组件的协同作用，掌握了电商场景下数据库架构的设计思路和优化方法。</p>
+<p>电商业务的核心需求是高可用、高并发、数据安全，本次搭建的RDS架构通过跨可用区高可用部署保障业务连续性，通过只读实例实现读性能扩展，通过备份恢复和加密审计保障数据安全，通过慢SQL优化提升性能，完全满足企业生产标准。</p></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.017121.xyz">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+<script src='/plugins/articletoc.js'></script><script src='/plugins/lightbox.js'></script>
+
+</html>

@@ -1,5 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 25 Mar 2026 03:48:18 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>阿里云RDS安全与权限管理</title><link>https://bbs.017121.xyz/post/165.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 25 Mar 2026 03:52:47 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于阿里云RDS搭建高可用可扩展电商数据库</title><link>https://bbs.017121.xyz/post/166.html</link><description>
+
+# 一、实验总则
+
+## 1.1 实验背景
+
+随着电商业务的快速发展，用户量、订单量持续增长，对数据库的高可用性、可扩展性、安全性和性能提出了极高要求。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/166.html</guid><pubDate>Wed, 25 Mar 2026 03:52:20 +0000</pubDate></item><item><title>阿里云RDS安全与权限管理</title><link>https://bbs.017121.xyz/post/165.html</link><description>
 # 前言：数据安全是企业底线，RDS筑牢数据库防线
 
 在企业业务中，数据库承载着用户信息、交易数据、核心配置等机密资产，一旦出现权限越权、网络攻击、数据泄露、违规操作，轻则造成业务中断，重则引发合规风险和经济损失。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/165.html</guid><pubDate>Wed, 25 Mar 2026 03:47:53 +0000</pubDate></item><item><title>阿里云RDS读写分离</title><link>https://bbs.017121.xyz/post/164.html</link><description>
