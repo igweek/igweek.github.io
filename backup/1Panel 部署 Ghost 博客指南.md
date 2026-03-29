@@ -161,6 +161,18 @@ environment:
 
 ---
 
+### Suport mail address
+
+- 点击左下角的 Settings (齿轮图标)。
+
+- 找到 Membership (会员) 相关的设置版块（部分版本中直接叫 Portal）。
+
+- 点击 Customize Portal (自定义 Portal) 按钮。这时屏幕会弹出一个全屏的页面，右边是你网站注册弹窗的预览。
+
+- 在这个全屏页面的左侧菜单栏中，找到并点击 Account page (账户页面) 选项卡。
+
+- 往下滑动，你就能看到隐藏在那里的 Support email address 了！
+
 ### 结语
 
 通过 1Panel + Docker + Ghost + Mailgun 的组合，我们构建了一个既有高性能（Docker），又有高易用性（1Panel），且邮件送达率极高（Mailgun）的专业博客平台。
