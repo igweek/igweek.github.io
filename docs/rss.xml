@@ -1,5 +1,31 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 08 Apr 2026 12:11:22 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>RDS for Redis 实验</title><link>https://bbs.017121.xyz/post/170.html</link><description>实验基于：
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 08 Apr 2026 12:15:17 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>RDS for Redis 实验</title><link>https://bbs.017121.xyz/post/170.html</link><description>### 场景名称
+
+高并发电商平台缓存加速系统（Redis实践）
+
+### 企业背景
+
+某电商公司（类似 Alibaba / JD.com）在大促（双11）期间遇到以下问题：
+
+商品详情页访问量暴涨（QPS 上万）
+数据库（MySQL）压力过大，响应变慢
+热门商品频繁被查询（典型读多写少）
+用户体验下降（页面加载慢）
+
+企业决定引入 Redis（阿里云RDS for Redis） 作为缓存层
+
+### 实验目标
+
+理解 Redis 在企业中的作用（缓存 / 限流 / 会话）
+掌握 RDS for Redis 的创建与连接
+实现：
+缓存加速（核心）
+数据库减压
+对比：
+有缓存 vs 无缓存 的性能差异
+
+
+实验基于：
 
 * ECS（应用服务器）
 * RDS MySQL（数据库）
@@ -10,7 +36,7 @@
 
 ---
 
-# 一、实验总体目标（先让学生知道在干嘛）
+# 一、实验总体目标
 
 实现一个电商接口：
 
@@ -25,7 +51,7 @@
 
 ---
 
-# 二、实验拓扑（建议你让学生画出来）
+# 二、实验拓扑
 
 ```
 浏览器
@@ -55,7 +81,7 @@ MySQL（查真实数据）
 * 网络类型：**VPC（必须）**
 * 版本：Redis 5.0 或 6.0
 * 架构：主从版
-* 实例规格：最小即可（教学用）
+* 实例规格：最小即可
 
 ---
 

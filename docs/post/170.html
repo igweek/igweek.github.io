@@ -10,7 +10,33 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="实验基于：
+<meta name="description" content="### 场景名称
+
+高并发电商平台缓存加速系统（Redis实践）
+
+### 企业背景
+
+某电商公司（类似 Alibaba / JD.com）在大促（双11）期间遇到以下问题：
+
+商品详情页访问量暴涨（QPS 上万）
+数据库（MySQL）压力过大，响应变慢
+热门商品频繁被查询（典型读多写少）
+用户体验下降（页面加载慢）
+
+企业决定引入 Redis（阿里云RDS for Redis） 作为缓存层
+
+### 实验目标
+
+理解 Redis 在企业中的作用（缓存 / 限流 / 会话）
+掌握 RDS for Redis 的创建与连接
+实现：
+缓存加速（核心）
+数据库减压
+对比：
+有缓存 vs 无缓存 的性能差异
+
+
+实验基于：
 
 * ECS（应用服务器）
 * RDS MySQL（数据库）
@@ -21,7 +47,7 @@
 
 ---
 
-# 一、实验总体目标（先让学生知道在干嘛）
+# 一、实验总体目标
 
 实现一个电商接口：
 
@@ -36,7 +62,7 @@
 
 ---
 
-# 二、实验拓扑（建议你让学生画出来）
+# 二、实验拓扑
 
 ```
 浏览器
@@ -66,7 +92,7 @@ MySQL（查真实数据）
 * 网络类型：**VPC（必须）**
 * 版本：Redis 5.0 或 6.0
 * 架构：主从版
-* 实例规格：最小即可（教学用）
+* 实例规格：最小即可
 
 ---
 
@@ -386,7 +412,33 @@ r.delete('product:1')
 
 。">
 <meta property="og:title" content="RDS for Redis 实验">
-<meta property="og:description" content="实验基于：
+<meta property="og:description" content="### 场景名称
+
+高并发电商平台缓存加速系统（Redis实践）
+
+### 企业背景
+
+某电商公司（类似 Alibaba / JD.com）在大促（双11）期间遇到以下问题：
+
+商品详情页访问量暴涨（QPS 上万）
+数据库（MySQL）压力过大，响应变慢
+热门商品频繁被查询（典型读多写少）
+用户体验下降（页面加载慢）
+
+企业决定引入 Redis（阿里云RDS for Redis） 作为缓存层
+
+### 实验目标
+
+理解 Redis 在企业中的作用（缓存 / 限流 / 会话）
+掌握 RDS for Redis 的创建与连接
+实现：
+缓存加速（核心）
+数据库减压
+对比：
+有缓存 vs 无缓存 的性能差异
+
+
+实验基于：
 
 * ECS（应用服务器）
 * RDS MySQL（数据库）
@@ -397,7 +449,7 @@ r.delete('product:1')
 
 ---
 
-# 一、实验总体目标（先让学生知道在干嘛）
+# 一、实验总体目标
 
 实现一个电商接口：
 
@@ -412,7 +464,7 @@ r.delete('product:1')
 
 ---
 
-# 二、实验拓扑（建议你让学生画出来）
+# 二、实验拓扑
 
 ```
 浏览器
@@ -442,7 +494,7 @@ MySQL（查真实数据）
 * 网络类型：**VPC（必须）**
 * 版本：Redis 5.0 或 6.0
 * 架构：主从版
-* 实例规格：最小即可（教学用）
+* 实例规格：最小即可
 
 ---
 
@@ -831,7 +883,24 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><p>实验基于：</p>
+<div class="markdown-body" id="postBody"><h3>场景名称</h3>
+<p>高并发电商平台缓存加速系统（Redis实践）</p>
+<h3>企业背景</h3>
+<p>某电商公司（类似 Alibaba / JD.com）在大促（双11）期间遇到以下问题：</p>
+<p>商品详情页访问量暴涨（QPS 上万）<br>
+数据库（MySQL）压力过大，响应变慢<br>
+热门商品频繁被查询（典型读多写少）<br>
+用户体验下降（页面加载慢）</p>
+<p>企业决定引入 Redis（阿里云RDS for Redis） 作为缓存层</p>
+<h3>实验目标</h3>
+<p>理解 Redis 在企业中的作用（缓存 / 限流 / 会话）<br>
+掌握 RDS for Redis 的创建与连接<br>
+实现：<br>
+缓存加速（核心）<br>
+数据库减压<br>
+对比：<br>
+有缓存 vs 无缓存 的性能差异</p>
+<p>实验基于：</p>
 <ul>
 <li>ECS（应用服务器）</li>
 <li>RDS MySQL（数据库）</li>
@@ -840,7 +909,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <p>核心技术：Redis</p>
 <hr>
-<h1>一、实验总体目标（先让学生知道在干嘛）</h1>
+<h1>一、实验总体目标</h1>
 <p>实现一个电商接口：</p>
 <p>👉 查询商品信息时</p>
 <ul>
@@ -851,7 +920,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>最终效果：<br>
 <strong>访问速度明显提升 + 数据库压力下降</strong></p>
 <hr>
-<h1>二、实验拓扑（建议你让学生画出来）</h1>
+<h1>二、实验拓扑</h1>
 <pre class="notranslate"><code class="notranslate">浏览器
    ↓
 ECS（Flask应用）
@@ -874,7 +943,7 @@ MySQL（查真实数据）
 <li>网络类型：<strong>VPC（必须）</strong></li>
 <li>版本：Redis 5.0 或 6.0</li>
 <li>架构：主从版</li>
-<li>实例规格：最小即可（教学用）</li>
+<li>实例规格：最小即可</li>
 </ul>
 <hr>
 <h3>2. 设置白名单</h3>
