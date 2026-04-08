@@ -330,7 +330,7 @@ ab -n 100 -c 10 http://你的IP:5000/product/1
 
 ---
 
-# 八、缓存一致性实验（重点理解）
+# 八、缓存一致性实验
 
 ## 修改数据库
 
@@ -364,7 +364,7 @@ r.delete('product:1')
 
 ---
 
-# 九、常见报错（你上课可以重点讲）
+# 九、常见报错
 
 ### 1. Redis连接失败
 
@@ -706,7 +706,7 @@ ab -n 100 -c 10 http://你的IP:5000/product/1
 
 ---
 
-# 八、缓存一致性实验（重点理解）
+# 八、缓存一致性实验
 
 ## 修改数据库
 
@@ -740,7 +740,7 @@ r.delete('product:1')
 
 ---
 
-# 九、常见报错（你上课可以重点讲）
+# 九、常见报错
 
 ### 1. Redis连接失败
 
@@ -1060,7 +1060,7 @@ vim app.py</pre></div>
 </tbody>
 </table></markdown-accessiblity-table>
 <hr>
-<h1>八、缓存一致性实验（重点理解）</h1>
+<h1>八、缓存一致性实验</h1>
 <h2>修改数据库</h2>
 <div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">UPDATE</span> product <span class="pl-k">SET</span> price <span class="pl-k">=</span> <span class="pl-c1">2999</span> <span class="pl-k">WHERE</span> id <span class="pl-k">=</span> <span class="pl-c1">1</span>;</pre></div>
 <hr>
@@ -1075,7 +1075,7 @@ vim app.py</pre></div>
 <h3>方法2：等待过期（TTL）</h3>
 <p>60秒后自动更新</p>
 <hr>
-<h1>九、常见报错（你上课可以重点讲）</h1>
+<h1>九、常见报错</h1>
 <h3>1. Redis连接失败</h3>
 <p>👉 原因：没加白名单</p>
 <hr>
