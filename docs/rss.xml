@@ -1,5 +1,40 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 16 Apr 2026 00:25:18 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>企业官网上线部署（基于阿里云 LNMP + WordPress）</title><link>https://bbs.017121.xyz/post/172.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 16 Apr 2026 02:21:01 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>Docker 容器化部署企业官网 WordPress</title><link>https://bbs.017121.xyz/post/173.html</link><description>## 一、项目背景（企业真实场景）&#13;
+**项目名称**：XX科技有限公司 官方网站搭建&#13;
+**环境**：阿里云ECS（Ubuntu 22.04 LTS）&#13;
+**业务需求**：&#13;
+- 搭建企业官网，支持后台管理、文章发布、产品展示&#13;
+- 使用容器化部署（Docker），便于迁移、扩容、维护&#13;
+- 数据持久化，保证服务器重启/容器重建数据不丢失&#13;
+- 生产级稳定性、安全、可运维&#13;
+- 架构简单可靠，运维成本低&#13;
+&#13;
+**架构方案**：&#13;
+&gt; ECS（Ubuntu22.04）+ Docker + Docker Compose  &#13;
+&gt; → MySQL 8.0（数据库）  &#13;
+&gt; → WordPress（Web服务）  &#13;
+&gt; → 自定义网桥、数据持久化、自启动、安全密码&#13;
+&#13;
+---&#13;
+&#13;
+# 二、服务器信息（企业真实格式）&#13;
+- 系统：Ubuntu 22.04 LTS&#13;
+- 位置：阿里云上海可用区&#13;
+- 配置：2核 4GB（企业生产最低标准）&#13;
+- 公网IP：假设 `120.xx.xx.xx`&#13;
+- 管理员：运维部&#13;
+- 部署方式：**容器化标准化部署**&#13;
+&#13;
+---&#13;
+&#13;
+# 三、实施步骤（企业标准操作流程 SOP）&#13;
+&#13;
+## 步骤1：登录服务器，系统初始化（企业必做）&#13;
+```bash&#13;
+sudo apt update&#13;
+sudo apt upgrade -y&#13;
+```&#13;
+**作用**：更新系统源、安全补丁，保证生产环境稳定。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/173.html</guid><pubDate>Thu, 16 Apr 2026 02:20:26 +0000</pubDate></item><item><title>企业官网上线部署（基于阿里云 LNMP + WordPress）</title><link>https://bbs.017121.xyz/post/172.html</link><description>
 
 ## 实验项目
 
