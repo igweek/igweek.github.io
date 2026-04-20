@@ -136,152 +136,221 @@ RDS（MySQL数据库）
 <li>ECS横向扩展</li>
 <li>RDS提供稳定数据库服务</li>
 </ul>
-<hr>
-<h2><strong>四、实验步骤（详细+解释）</strong></h2>
-<hr>
-<h2><strong>步骤1：创建VPC网络</strong></h2>
-<h3>操作</h3>
-<ol>
-<li>登录阿里云控制台</li>
-<li>进入「专有网络 VPC」</li>
-<li>创建VPC：</li>
-</ol>
+<p>核心原则：</p>
 <ul>
-<li>网段：192.168.0.0/16</li>
-<li>创建交换机：192.168.1.0/24</li>
+<li>Web无状态（可随时扩展）</li>
+<li>数据集中（RDS）</li>
+<li>流量统一入口（SLB）</li>
 </ul>
 <hr>
-<h3>解释</h3>
-<p>VPC相当于企业自己的“云上局域网”：</p>
+<h1>三、实验环境准备（关键前置）</h1>
+<p>必须统一要求（避免翻车）：</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>项目</th>
+<th>配置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>地域</td>
+<td>同一地域（如华东1）</td>
+</tr>
+<tr>
+<td>VPC</td>
+<td>同一个</td>
+</tr>
+<tr>
+<td>ECS系统</td>
+<td>Ubuntu 20.04</td>
+</tr>
+<tr>
+<td>安全组</td>
+<td>开放 22 / 80</td>
+</tr>
+<tr>
+<td>RDS</td>
+<td>MySQL</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<hr>
+<h1>四、实验步骤（超详细版）</h1>
+<hr>
+<h2>步骤1：创建VPC网络</h2>
+<p>操作：</p>
+<ol>
+<li>
+<p>创建VPC<br>
+网段：192.168.0.0/16</p>
+</li>
+<li>
+<p>创建交换机<br>
+网段：192.168.1.0/24</p>
+</li>
+</ol>
+<p>解释（必须讲）：</p>
 <ul>
-<li>ECS、RDS必须在同一VPC才能内网通信</li>
-<li>提高安全性（避免公网暴露数据库）</li>
+<li>ECS 和 RDS 必须在同一VPC</li>
+<li>数据库走内网，不走公网</li>
 </ul>
 <hr>
-<h2><strong>步骤2：创建ECS云服务器（2台）</strong></h2>
-<h3>操作</h3>
-<ol>
-<li>进入「ECS控制台」</li>
-<li>创建实例：</li>
-</ol>
+<h2>步骤2：创建ECS（2台）</h2>
+<p>配置：</p>
 <ul>
 <li>数量：2台</li>
 <li>系统：Ubuntu 20.04</li>
 <li>公网IP：开启</li>
-<li>安全组：开放80端口</li>
+<li>安全组：放行 80端口</li>
 </ul>
 <hr>
-<h3>解释</h3>
-<p>为什么要2台？</p>
-<ul>
-<li>企业不会只用一台服务器</li>
-<li>为后续“负载均衡”和“高可用”做准备</li>
-</ul>
+<h2>步骤3：统一环境</h2>
+<p>登录两台ECS，<strong>必须每台都执行</strong>：</p>
+<h3>1. 更新系统</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt update</pre></div>
+<h3>3. 安装 Nginx + PHP</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install nginx -y
+sudo apt install php-fpm php-mysql -y</pre></div>
 <hr>
-<h2><strong>步骤3：部署Web环境（LNMP）</strong></h2>
-<p>在两台ECS分别执行：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">apt update
-apt install nginx -y
-apt install mysql-client -y
-apt install php php-fpm php-mysql -y</pre></div>
-<p>下载WordPress：</p>
+<h3>4. 启动服务</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl <span class="pl-c1">enable</span> nginx
+sudo systemctl start nginx</pre></div>
+<p>验证：</p>
+<p>访问 ECS公网IP<br>
+必须看到：</p>
+<p>👉 Welcome to nginx 页面</p>
+<hr>
+<h2>步骤4：部署 WordPress（两台都要做）</h2>
 <div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /var/www/html
-wget https://wordpress.org/latest.tar.gz
-tar -xvf latest.tar.gz
-mv wordpress/<span class="pl-k">*</span> <span class="pl-c1">.</span></pre></div>
+
+sudo rm -rf <span class="pl-k">*</span>
+
+sudo wget https://wordpress.org/latest.tar.gz
+
+sudo tar -xvf latest.tar.gz
+
+sudo mv wordpress/<span class="pl-k">*</span> <span class="pl-c1">.</span>
+
+sudo chown -R www-data:www-data /var/www/html</pre></div>
 <hr>
-<h3>解释</h3>
-<ul>
-<li>Nginx：Web服务器</li>
-<li>PHP：解析动态页面</li>
-<li>WordPress：模拟企业电商系统</li>
-</ul>
+<h2>步骤5：配置 Nginx 支持 PHP（核心步骤）</h2>
+<p>编辑：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vim /etc/nginx/sites-available/default</pre></div>
+<p>替换为：</p>
+<div class="highlight highlight-source-nginx"><pre class="notranslate"><span class="pl-c1">server</span> <span class="pl-c1">{</span>
+    <span class="pl-c1">listen</span> <span class="pl-c1">80</span><span class="pl-c1">;</span>
+    <span class="pl-c1">root</span> /var/www/html<span class="pl-c1">;</span>
+    <span class="pl-c1">index</span> <span class="pl-c1">index</span>.php <span class="pl-c1">index</span>.html<span class="pl-c1">;</span>
+
+    <span class="pl-c1">location</span> / <span class="pl-c1">{</span>
+        <span class="pl-c1">try_files</span> <span class="pl-v">$uri</span> <span class="pl-v">$uri</span>/ /<span class="pl-c1">index</span>.php?<span class="pl-v">$args</span><span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span> <span class="pl-sr">\.php$ </span><span class="pl-c1">{</span>
+        <span class="pl-c1">include</span> snippets/fastcgi-php.conf<span class="pl-c1">;</span>
+        <span class="pl-c1">fastcgi_pass</span> unix:/run/php/php7.4-fpm.sock<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+
+    <span class="pl-c1">location</span> <span class="pl-sr">~</span> /<span class="pl-sr">\.ht </span><span class="pl-c1">{</span>
+        <span class="pl-c1">deny</span> all<span class="pl-c1">;</span>
+    <span class="pl-c1">}</span>
+<span class="pl-c1">}</span></pre></div>
 <hr>
-<h2><strong>步骤4：创建RDS数据库</strong></h2>
-<h3>操作</h3>
+<p>重启：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart nginx
+sudo systemctl restart php7.4-fpm</pre></div>
+<hr>
+<h2>步骤6：验证单机（必须做）</h2>
+<p>访问：</p>
+<pre lang="id=&quot;test1&quot;" class="notranslate"><code class="notranslate">http://ECS公网IP
+</code></pre>
+<p>必须看到：</p>
+<p>WordPress 安装界面</p>
+<p>如果这一步不成功，<strong>禁止进入下一步</strong></p>
+<hr>
+<h2>步骤7：创建RDS数据库</h2>
+<p>操作：</p>
 <ol>
-<li>进入「RDS控制台」</li>
-<li>创建实例：</li>
-</ol>
-<ul>
-<li>类型：MySQL</li>
-<li>网络：选择刚才的VPC</li>
+<li>创建 MySQL 实例</li>
+<li>网络选择 VPC</li>
 <li>开启内网访问</li>
-</ul>
-<ol start="3">
-<li>创建数据库：</li>
 </ol>
+<p>创建数据库：</p>
 <ul>
 <li>数据库名：wordpress</li>
-<li>用户名/密码：自定义</li>
+<li>用户名：wpuser</li>
+<li>密码：自定义</li>
 </ul>
 <hr>
-<h3>解释</h3>
-<p>企业为什么不用本地MySQL？</p>
-<ul>
-<li>
-<p>RDS具备：</p>
-<ul>
-<li>自动备份</li>
-<li>高可用</li>
-<li>故障切换</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2><strong>步骤5：连接RDS与WordPress</strong></h2>
-<p>修改WordPress配置文件：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">cp wp-config-sample.php wp-config.php
+<h2>步骤8：配置 WordPress 连接数据库（两台都要做）</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">cd</span> /var/www/html
+
+cp wp-config-sample.php wp-config.php
+
 vim wp-config.php</pre></div>
 <p>修改：</p>
 <div class="highlight highlight-text-html-php"><pre class="notranslate"><span class="pl-en">define</span>(<span class="pl-s">'<span class="pl-s">DB_NAME</span>'</span>, <span class="pl-s">'<span class="pl-s">wordpress</span>'</span>);
-<span class="pl-en">define</span>(<span class="pl-s">'<span class="pl-s">DB_USER</span>'</span>, <span class="pl-s">'<span class="pl-s">用户名</span>'</span>);
+<span class="pl-en">define</span>(<span class="pl-s">'<span class="pl-s">DB_USER</span>'</span>, <span class="pl-s">'<span class="pl-s">wpuser</span>'</span>);
 <span class="pl-en">define</span>(<span class="pl-s">'<span class="pl-s">DB_PASSWORD</span>'</span>, <span class="pl-s">'<span class="pl-s">密码</span>'</span>);
 <span class="pl-en">define</span>(<span class="pl-s">'<span class="pl-s">DB_HOST</span>'</span>, <span class="pl-s">'<span class="pl-s">RDS内网地址</span>'</span>);</pre></div>
 <hr>
-<h3>解释</h3>
-<p>这里体现企业架构关键点：</p>
-<ul>
-<li>Web和数据库分离</li>
-<li>使用内网通信（更安全、更快）</li>
-</ul>
-<hr>
-<h2><strong>步骤6：创建负载均衡 SLB</strong></h2>
-<h3>操作</h3>
+<h2>步骤9：创建 SLB</h2>
+<p>操作：</p>
 <ol>
-<li>进入「负载均衡」</li>
-<li>创建实例</li>
-<li>添加后端服务器（2台ECS）</li>
+<li>创建负载均衡实例</li>
+<li>添加两台 ECS</li>
 <li>配置监听：</li>
 </ol>
-<ul>
-<li>协议：HTTP</li>
-<li>端口：80</li>
-</ul>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>项目</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>协议</td>
+<td>HTTP</td>
+</tr>
+<tr>
+<td>端口</td>
+<td>80</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <hr>
-<h3>解释</h3>
-<p>SLB作用：</p>
-<ul>
-<li>将请求分发到多台服务器</li>
-<li>避免单点故障</li>
-</ul>
-<hr>
-<h2><strong>步骤7：测试访问</strong></h2>
+<h2>步骤10：最终访问（关键验证）</h2>
 <p>访问：</p>
-<pre class="notranslate"><code class="notranslate">SLB公网IP
+<pre lang="id=&quot;slbtest&quot;" class="notranslate"><code class="notranslate">http://SLB公网IP
 </code></pre>
-<p>完成WordPress安装页面</p>
+<p>结果：</p>
+<p>WordPress 安装界面</p>
 <hr>
-<h3>测试内容</h3>
-<ol>
-<li>多次刷新页面</li>
-<li>停止一台ECS</li>
-<li>再次访问</li>
-</ol>
+<h1>五、最终验证（必须做实验评分）</h1>
 <hr>
-<h3>解释</h3>
-<p>如果访问仍正常：</p>
-<p>说明实现了<strong>高可用</strong></p>
+<h2>测试1：负载均衡</h2>
+<p>多刷新几次页面</p>
+<p>页面稳定</p>
+<hr>
+<h2>测试2：高可用（核心）</h2>
+<p>停止一台 ECS：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo poweroff</pre></div>
+<p>再次访问 SLB：</p>
+<p>网站仍然正常</p>
+<hr>
+<h2>测试3：一致性验证（进阶）</h2>
+<p>在 ECS1 修改：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>server1<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /var/www/html/test.html</pre></div>
+<p>在 ECS2 修改：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>server2<span class="pl-pds">"</span></span> <span class="pl-k">&gt;</span> /var/www/html/test.html</pre></div>
+<p>访问：</p>
+<pre lang="id=&quot;test2&quot;" class="notranslate"><code class="notranslate">http://SLB_IP/test.html
+</code></pre>
+<p>现象：</p>
+<p>内容随机变化</p>
+<p>SLB是“分发”，不是“同步”</p>
 <hr></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
