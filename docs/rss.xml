@@ -1,5 +1,14 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 22 Apr 2026 14:10:59 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>阿里云 ACR 镜像仓库</title><link>https://bbs.017121.xyz/post/175.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 22 Apr 2026 14:21:27 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于阿里云容器镜像服务 ACR的订单系统镜像管理与部署实验</title><link>https://bbs.017121.xyz/post/176.html</link><description>
+# **一、企业案例背景（具体业务）**
+
+某连锁餐饮企业上线“订单服务（order-service）”，负责处理：
+
+- 用户下单  
+- 订单查询  
+- 状态更新  
+
+该服务需要部署在多台 ECS 上，对外提供统一接口。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/176.html</guid><pubDate>Wed, 22 Apr 2026 14:20:49 +0000</pubDate></item><item><title>阿里云 ACR 镜像仓库</title><link>https://bbs.017121.xyz/post/175.html</link><description>
 
 在云原生体系中，镜像仓库是连接“应用构建”与“应用运行”的核心组件。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/175.html</guid><pubDate>Wed, 22 Apr 2026 14:10:12 +0000</pubDate></item><item><title>高可用网站部署（基于阿里云）</title><link>https://bbs.017121.xyz/post/174.html</link><description>## **一、企业背景（真实场景设定）**
 
