@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script>document.addEventListener('DOMContentLoaded',function(){var e=document.querySelector('.blogTitle');var t=document.querySelector('.avatar');if(e){e.style.cursor='pointer';e.onclick=function(){location.href='/';}}if(t){t.style.cursor='pointer';t.onclick=function(){location.href='/';}}});</script><script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script><script src='/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="/img/123.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="## 总览
+
+1.  准备三台虚拟机Ubuntu系统
+2.  为Ubuntu系统初始化一些配置
+3.  安装容器运行时（cri-docker或者containerd，两种方式都介绍）
+4.  安装并部署k8s集群
+5.  验证集群
+6.  如果安装错了，回退它！`kubeadm reset`
+
+## 一、准备三台虚拟机
+
+k8s集群至少准备3台机器，一台master，两台worker。">
+<meta property="og:title" content="K8S安装与部署（ubuntu22.04）">
+<meta property="og:description" content="## 总览
+
+1.  准备三台虚拟机Ubuntu系统
+2.  为Ubuntu系统初始化一些配置
+3.  安装容器运行时（cri-docker或者containerd，两种方式都介绍）
+4.  安装并部署k8s集群
+5.  验证集群
+6.  如果安装错了，回退它！`kubeadm reset`
+
+## 一、准备三台虚拟机
+
+k8s集群至少准备3台机器，一台master，两台worker。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.017121.xyz/post/102.html">
+<meta property="og:image" content="/img/123.png">
+<title>K8S安装与部署（ubuntu22.04）</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">K8S安装与部署（ubuntu22.04）</h1>
+<div class="title-right">
+    <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/102" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>总览</h2>
+<ol>
+<li>准备三台虚拟机Ubuntu系统</li>
+<li>为Ubuntu系统初始化一些配置</li>
+<li>安装容器运行时（cri-docker或者containerd，两种方式都介绍）</li>
+<li>安装并部署k8s集群</li>
+<li>验证集群</li>
+<li>如果安装错了，回退它！<code class="notranslate">kubeadm reset</code></li>
+</ol>
+<h2>一、准备三台虚拟机</h2>
+<p>k8s集群至少准备3台机器，一台master，两台worker。</p>
+<p>安装教程我放在了文章末尾，可以到末尾[附录1]章节查看</p>
+<h2>二、为Ubuntu系统初始化一些配置</h2>
+<p>安装k8s之前，必须对系统做一些配置，否则k8s无法启动。</p>
+<h3>2.1 IP规划</h3>
+<p>我的网段是 <code class="notranslate">192.168.31.0/24</code>，所以我的虚拟机地址都在这个网段。可以根据你自己的网段设置IP。至少准备三台虚拟机，我的三台虚拟机IP分配如下，一台master节点，两台worker节点。配置有点多，如果有些配置你不懂，没关系，代码我都准备好了，只要没有特殊说明，就可以直接copy代码执行。^_^</p>
+<blockquote>
+<p>我采用的是桥接网络模式，相当于局域网的一台机器，可以与局域网互相连通</p>
+<p><strong>第2章节的所有命令，如果没有特殊说明，表示在三台机器上都要执行</strong></p>
+</blockquote>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>名称</th>
+<th>ip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>k8smaster</td>
+<td>192.168.31.224</td>
+</tr>
+<tr>
+<td>k8snode1</td>
+<td>192.168.31.225</td>
+</tr>
+<tr>
+<td>k8snode2</td>
+<td>192.168.31.226</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h3>2.2 准备Root用户</h3>
+<p>因为ubuntu默认没有开启root用户，而使用root操作会方便很多。 设置root密码</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo passwd root</pre></div>
+<p>切换root</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">su - root</pre></div>
+<h3>2.3 设置主机名</h3>
+<blockquote>
+<p>分别为三台机器设置主机名</p>
+</blockquote>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo hostnamectl set-hostname <span class="pl-s"><span class="pl-pds">"</span>k8smaster<span class="pl-pds">"</span></span>
+sudo hostnamectl set-hostname <span class="pl-s"><span class="pl-pds">"</span>k8snode1<span class="pl-pds">"</span></span>
+sudo hostnamectl set-hostname <span class="pl-s"><span class="pl-pds">"</span>k8snode2<span class="pl-pds">"</span></span></pre></div>
+<h3>2.4 域名写入host文件</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-k">&gt;&gt;</span> /etc/hosts <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">EOF</span></span>
+<span class="pl-s">192.168.31.224 k8smaster</span>
+<span class="pl-s">192.168.31.225 k8snode1</span>
+<span class="pl-s">192.168.31.226 k8snode2</span>
+<span class="pl-s"># 如果你想多玩几台机器，也可以自行添加</span>
+<span class="pl-s">192.168.31.227 k8snode3</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<p>可以在master上使用<code class="notranslate">ping</code>命令验证</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">ping -c 2 k8snode1</pre></div>
+<h3>2.5 时间同步</h3>
+<p>分布式要解决的一个问题就是时钟同步，这里我们借助阿里云服务，实现集群节点与阿里云时钟同步 设置时区为上海</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">timedatectl set-timezone Asia/Shanghai</pre></div>
+<h4>安装ntpdate并与阿里云同步</h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt install -y ntpsec-ntpdate
+ntpdate ntp.aliyun.com</pre></div>
+<h4>配置自动同步</h4>
+<p>使用<code class="notranslate">crontab</code>设置定时任务，每天晚上0点执行 终端输入</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">crontab -e</pre></div>
+<p>选择一个合适的编辑器，然后在配置末尾加上如下代码，表示每晚0点执行同步命令</p>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-c1">0</span> <span class="pl-c1">0</span> <span class="pl-c1">*</span> <span class="pl-c1">*</span> <span class="pl-c1">*</span> <span class="pl-s1">ntpdate</span> <span class="pl-s1">ntp</span>.<span class="pl-c1">aliyun</span>.<span class="pl-c1">com</span></pre></div>
+<h3>2.6 配置内核转发和网桥过滤</h3>
+<p>生成配置</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">EOF</span> | tee /etc/sysctl.d/k8s.conf</span>
+<span class="pl-s">net.bridge.bridge-nf-call-ip6tables = 1</span>
+<span class="pl-s">net.bridge.bridge-nf-call-iptables = 1</span>
+<span class="pl-s">net.ipv4.ip_forward = 1</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<p>如上配置需要加在如下两个模块</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">modprobe overlay
+modprobe br_netfilter</pre></div>
+<p>写到配置文件，永久生效</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">EOF</span> | tee /etc/modules-load.d/k8s.conf</span>
+<span class="pl-s">overlay</span>
+<span class="pl-s">br_netfilter</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<p>应用配置</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sysctl --system</pre></div>
+<h3>2.7 安装ipvs</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt install -y ipset ipvsadm</pre></div>
+<p>配置ipvsadm的模块，这些都是算法模块，目的是为了让开机自动加载</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">EOF</span> | tee /etc/modules-load.d/ipvs.conf</span>
+<span class="pl-s">ip_vs</span>
+<span class="pl-s">ip_vs_rr</span>
+<span class="pl-s">ip_VS_wrr</span>
+<span class="pl-s">ip_vs_sh</span>
+<span class="pl-s">nf_conntrack</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<p>编写脚本自动加载</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cat <span class="pl-s"><span class="pl-k">&lt;&lt;</span> <span class="pl-k">EOF</span> | tee ipvs.sh</span>
+<span class="pl-s">#!/bin/sh</span>
+<span class="pl-s">modprobe -- ip_vs</span>
+<span class="pl-s">modprobe -- ip_vs_rr</span>
+<span class="pl-s">modprobe -- ip_vs_wrr</span>
+<span class="pl-s">modprobe -- ip_vs_sh</span>
+<span class="pl-s">modprobe -- nf_conntrack</span>
+<span class="pl-s"><span class="pl-k">EOF</span></span></pre></div>
+<p>执行脚本</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sh ipvs.sh</pre></div>
+<p>验证脚本是否生效</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">lsmod <span class="pl-k">|</span> grep ip_vs</pre></div>
+<h3>2.8 关闭swap分区</h3>
+<p><strong>步骤1：首先，查看当前启用的交换分区，可以使用 swapon 命令：</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo swapon --show</pre></div>
+<p>输出会类似于：</p>
+<pre class="notranslate"><code class="notranslate">NAME      TYPE  SIZE   USED  PRIO
+/dev/sda2 partition 4G    0B    -2
+</code></pre>
+<p><strong>步骤2：禁用交换分区</strong> 下面命令只是临时禁用</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo swapoff -a</pre></div>
+<p><strong>步骤 3：禁止交换分区在系统启动时自动挂载</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo vim /etc/fstab</pre></div>
+<p>注释掉如下行</p>
+<pre class="notranslate"><code class="notranslate">/dev/sda2 none swap sw 0 0
+</code></pre>
+<blockquote>
+<p>至此，Ubuntu服务器配置就初始化成功了，下面可以开始准备集群环境了！</p>
+</blockquote>
+<h2>三、安装容器运行时</h2>
+<blockquote>
+<p><strong>第三章节的所有命令，如果没有特殊说明，表示在三台机器上都要执行</strong></p>
+</blockquote>
+<p>k8s1.24（包含1.24）版本后移除了内置的docker引擎，推荐使用<code class="notranslate">containerd</code>容器运行时。官网大势所趋，没什么好说的。但是！！！国内的网络实在是无法拉取镜像，导致集群根本搭建不起来。尝试了以下各种方法都没解决</p>
+<ul>
+<li>宿主机使用魔法上网，虚拟机使用NAT网络，共享宿主机的魔法网络。（失败！）</li>
+<li>为containerd配置国内镜像源，特指阿里云（失败）</li>
+</ul>
+<blockquote>
+<p>无奈之下，还是使用<code class="notranslate">cri-docker</code>作为容器运行时吧！但是安装containerd的内容我也会放到[附录2]，有哪位大神可以分享containerd拉取镜像不失败的办法可以评论区留下链接！</p>
+</blockquote>
+<h3>3.1 安装Docker</h3>
+<p>可参考<a href="https://link.juejin.cn/?target=https%3A%2F%2Fdocs.docker.com%2Fengine%2Finstall%2Fubuntu%2F" title="https://docs.docker.com/engine/install/ubuntu/" rel="nofollow">官网</a>安装，也可以按照如下步骤安装，</p>
+<ol>
+<li>安装apt仓库</li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> Add Docker's official GPG key:</span>
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+<span class="pl-c"><span class="pl-c">#</span> Add the repository to Apt sources:</span>
+<span class="pl-c1">echo</span> \
+  <span class="pl-s"><span class="pl-pds">"</span>deb [arch=<span class="pl-s"><span class="pl-pds">$(</span>dpkg --print-architecture<span class="pl-pds">)</span></span> signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu <span class="pl-cce">\</span></span>
+<span class="pl-s">  <span class="pl-s"><span class="pl-pds">$(</span>. /etc/os-release <span class="pl-k">&amp;&amp;</span> <span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${UBUNTU_CODENAME<span class="pl-k">:-</span><span class="pl-smi">$VERSION_CODENAME</span>}</span><span class="pl-pds">"</span></span><span class="pl-pds">)</span></span> stable<span class="pl-pds">"</span></span> <span class="pl-k">|</span> \
+  sudo tee /etc/apt/sources.list.d/docker.list <span class="pl-k">&gt;</span> /dev/null
+sudo apt-get update</pre></div>
+<ol start="2">
+<li>安装最新版docker</li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</pre></div>
+<ol start="3">
+<li>使用 <code class="notranslate">docker --version</code> 检查</li>
+</ol>
+<h3>3.2 配置Docker镜像加速</h3>
+<p>众所周知，国内docker下载镜像很困难，需要我们手动设置国内的镜像源。</p>
+<p>修改 <code class="notranslate">/etc/docker/daemon.json</code>，如果该文件不存在就创建该文件并把以下内容写入文件。</p>
+<div class="highlight highlight-source-json"><pre class="notranslate">{
+  <span class="pl-ent">"registry-mirrors"</span>: [
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.1ms.run<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://doublezonline.cloud<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://dislabaiot.xyz<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.fxxk.dedyn.io<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://dockerpull.org<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.unsee.tech<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://hub.rat.dev<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.1panel.live<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.nastool.de<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.zhai.cm<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.5z5f.com<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://a.ussh.net<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://docker.udayun.com<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>https://hub.geekery.cn<span class="pl-pds">"</span></span>
+  ],
+  <span class="pl-ent">"insecure-registries"</span>: [<span class="pl-s"><span class="pl-pds">"</span>kubernetes-register.sswang.com<span class="pl-pds">"</span></span>],
+  <span class="pl-ent">"exec-opts"</span>: [<span class="pl-s"><span class="pl-pds">"</span>native.cgroupdriver=systemd<span class="pl-pds">"</span></span>]
+}</pre></div>
+<p>然后重启</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">systemctl daemon-reload
+systemctl restart docker</pre></div>
+<p>设置开机重启</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">systemctl <span class="pl-c1">enable</span> docker</pre></div>
+<h3>3.3 安装cri-docker</h3>
+<p>为什么需要安装cri-docker？他相当于一个桥梁，k8s通过调用cri-docker来间接调用docker服务安装最新版本，这里为 <code class="notranslate">0.3.16</code></p>
+<p>使用wget（或其他方式）下载到服务器上</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.16/cri-dockerd-0.3.16.amd64.tgz</pre></div>
+<h3>3.3.1 配置cri-docker</h3>
+<p>解压</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">tar xf cri-dockerd-0.3.16.amd64.tgz</pre></div>
+<p>解压完成后，其实只有一个文件：<code class="notranslate">cri-dockerd</code></p>
+<p>我们只需要把它移动到 <code class="notranslate">/usr/bin</code> 下即可 移动文件到 <code class="notranslate">/usr/bin</code> 目录</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cp cri-dockerd/cri-dockerd /usr/local/bin/
+cp cri-dockerd/cri-dockerd /usr/bin/</pre></div>
+<p>查看版本号（只为验证）</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">cri-dockerd --version</pre></div>
+<p>设置开机启动脚本，创建文件 <code class="notranslate">/etc/systemd/system/cri-dockerd.service</code> ，写入如下内容（完全复制即可）</p>
+<blockquote>
+<p>k8s1.32版本对应的pause是3.10</p>
+</blockquote>
+<div class="highlight highlight-source-toml"><pre class="notranslate"><span class="pl-ii">cat &gt; /etc/systemd/system/cri-dockerd.service&lt;&lt;-EOF</span>
+[<span class="pl-en">Unit</span>]
+<span class="pl-smi">Description</span>=C<span class="pl-ii">RI Interface for Docker Application Container Engine</span>
+<span class="pl-smi">Documentation</span>=h<span class="pl-ii">ttps://docs.mirantis.com</span>
+<span class="pl-smi">After</span>=n<span class="pl-ii">etwork-online.target firewalld.service docker.service</span>
+<span class="pl-smi">Wants</span>=n<span class="pl-ii">etwork-online.target</span>
+<span class="pl-smi">Requires</span>=c<span class="pl-ii">ri-dockerd.socket     </span><span class="pl-c"><span class="pl-c">#</span> 修正为 cri-dockerd.socket（与文件名一致）</span>
+
+[<span class="pl-en">Service</span>]
+<span class="pl-smi">Type</span>=n<span class="pl-ii">otify</span>
+<span class="pl-smi">ExecStart</span>=/<span class="pl-ii">usr/local/bin/cri-dockerd </span><span class="pl-smi">--pod-infra-container-image</span>=r<span class="pl-ii">egistry.cn-hangzhou.aliyuncs.com/google_containers/pause:3.10 \</span>
+ <span class="pl-smi">--network-plugin</span>=c<span class="pl-ii">ni </span><span class="pl-smi">--cni-conf-dir</span>=/<span class="pl-ii">etc/cni/net.d </span><span class="pl-smi">--cni-bin-dir</span>=/<span class="pl-ii">opt/cni/bin </span><span class="pl-smi">--container-runtime-endpoint</span>=u<span class="pl-ii">nix:///var/run/cri-dockerd.sock </span><span class="pl-smi">--cri-dockerd-root-directory</span>=/<span class="pl-ii">var/lib/dockershim </span><span class="pl-smi">--docker-endpoint</span>=u<span class="pl-ii">nix:///var/run/docker.sock </span><span class="pl-smi">--cri-dockerd-root-directory</span>=/<span class="pl-ii">var/lib/docker</span>
+<span class="pl-smi">ExecReload</span>=/<span class="pl-ii">bin/kill -s HUP $MAINPID</span>
+<span class="pl-smi">TimeoutSec</span>=<span class="pl-c1">0</span>
+<span class="pl-smi">RestartSec</span>=<span class="pl-c1">2</span>
+<span class="pl-smi">Restart</span>=a<span class="pl-ii">lways</span>
+<span class="pl-smi">StartLimitBurst</span>=<span class="pl-c1">3</span>
+<span class="pl-smi">StartLimitInterval</span>=<span class="pl-c1">60</span><span class="pl-ii">s</span>
+<span class="pl-smi">LimitNOFILE</span>=<span class="pl-c1">inf</span><span class="pl-ii">inity</span>
+<span class="pl-smi">LimitNPROC</span>=<span class="pl-c1">inf</span><span class="pl-ii">inity</span>
+<span class="pl-smi">LimitCORE</span>=<span class="pl-c1">inf</span><span class="pl-ii">inity</span>
+<span class="pl-smi">TasksMax</span>=<span class="pl-c1">inf</span><span class="pl-ii">inity</span>
+<span class="pl-smi">Delegate</span>=y<span class="pl-ii">es</span>
+<span class="pl-smi">KillMode</span>=p<span class="pl-ii">rocess</span>
+[<span class="pl-en">Install</span>]
+<span class="pl-smi">WantedBy</span>=m<span class="pl-ii">ulti-user.target</span>
+<span class="pl-ii">EOF</span></pre></div>
+<p>创建 <code class="notranslate">/etc/systemd/system/cri-docker.socket</code> 文件，并写入如下内容</p>
+<div class="highlight highlight-source-toml"><pre class="notranslate"><span class="pl-ii">cat &gt; /etc/systemd/system/cri-dockerd.socket &lt;&lt;-EOF</span>
+[<span class="pl-en">Unit</span>]
+<span class="pl-smi">Description</span>=C<span class="pl-ii">RI Docker Socket for the API</span>
+<span class="pl-smi">PartOf</span>=c<span class="pl-ii">ri-dockerd.service    </span><span class="pl-c"><span class="pl-c">#</span> 保持与服务文件名一致</span>
+
+[<span class="pl-en">Socket</span>]
+<span class="pl-smi">ListenStream</span>=/<span class="pl-ii">var/run/cri-dockerd.sock</span>
+<span class="pl-smi">SocketMode</span>=<span class="pl-c1">0</span><span class="pl-ii">660</span>
+<span class="pl-smi">SocketUser</span>=r<span class="pl-ii">oot</span>
+<span class="pl-smi">SocketGroup</span>=d<span class="pl-ii">ocker</span>
+
+[<span class="pl-en">Install</span>]
+<span class="pl-smi">WantedBy</span>=s<span class="pl-ii">ockets.target</span>
+<span class="pl-ii">EOF</span></pre></div>
+<p>执行开机启动</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">systemctl daemon-reload
+systemctl <span class="pl-c1">enable</span> cri-dockerd.service
+systemctl restart cri-dockerd.service</pre></div>
+<p>验证启动信息</p>
+<div class="highlight highlight-source-ruby"><pre class="notranslate"><span class="pl-en">root</span><span class="pl-c1">@k8snode2</span><span class="pl-pds">:~</span><span class="pl-c"># ls  /var/run | grep docker</span>
+<span class="pl-en">cri</span>-<span class="pl-en">dockerd</span><span class="pl-kos">.</span><span class="pl-en">sock</span>
+<span class="pl-en">docker</span>
+<span class="pl-en">docker</span><span class="pl-kos">.</span><span class="pl-en">pid</span>
+<span class="pl-en">docker</span><span class="pl-kos">.</span><span class="pl-en">sock</span></pre></div>
+<h2>四、安装&amp;部署k8s集群</h2>
+<blockquote>
+<p><strong>第4章节的所有命令，有的需要在三台机器上都执行，有的只需要在worker上执行，有的只需要在master上执行。我会标注</strong></p>
+</blockquote>
+<p>激动(≧▽≦)/，终于开始安装k8s本体了！这里以安装1.32版本为例</p>
+<h3>4.1 基本工具</h3>
+<ol>
+<li>更新 <code class="notranslate">apt</code> 包索引并安装使用 Kubernetes <code class="notranslate">apt</code> 仓库所需要的包：</li>
+</ol>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 三台机器都执行</span>
+sudo apt-get update
+<span class="pl-c"><span class="pl-c">#</span> apt-transport-https 可能是一个虚拟包（dummy package）；如果是的话，你可以跳过安装这个包</span>
+sudo apt-get install -y apt-transport-https ca-certificates curl gpg</pre></div>
+<h3>4.2 公共签名密钥（1.32）</h3>
+<p>如果 <code class="notranslate">/etc/apt/keyrings</code> 目录不存在，则应在 curl 命令之前创建它，请阅读下面的注释。 <code class="notranslate">sudo mkdir -p -m 755 /etc/apt/keyrings</code></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 三台机器都执行</span>
+<span class="pl-c"><span class="pl-c">#</span> 如果 `/etc/apt/keyrings` 目录不存在，则应在 curl 命令之前创建它，请阅读下面的注释。</span>
+<span class="pl-c"><span class="pl-c">#</span> sudo mkdir -p -m 755 /etc/apt/keyrings</span>
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key <span class="pl-k">|</span> sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg</pre></div>
+<p>验证</p>
+<div class="highlight highlight-source-ruby"><pre class="notranslate"><span class="pl-en">root</span><span class="pl-c1">@k8smaster</span><span class="pl-pds">:~</span><span class="pl-c"># ls /etc/apt/keyrings/</span>
+<span class="pl-en">kubernetes</span>-<span class="pl-en">apt</span>-<span class="pl-en">keyring</span><span class="pl-kos">.</span><span class="pl-en">gpg</span></pre></div>
+<h3>4.3 准备源仓库</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 三台机器都执行</span>
+<span class="pl-c"><span class="pl-c">#</span> 此操作会覆盖 /etc/apt/sources.list.d/kubernetes.list 中现存的所有配置。</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">'</span>deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /<span class="pl-pds">'</span></span> <span class="pl-k">|</span> sudo tee /etc/apt/sources.list.d/kubernetes.list</pre></div>
+<p>验证</p>
+<div class="highlight highlight-source-ruby"><pre class="notranslate"><span class="pl-en">root</span><span class="pl-c1">@k8smaster</span><span class="pl-pds">:~</span><span class="pl-c"># ls /etc/apt/sources.list.d/</span>
+<span class="pl-en">kubernetes</span><span class="pl-kos">.</span><span class="pl-en">list</span>  <span class="pl-en">ubuntu</span><span class="pl-kos">.</span><span class="pl-en">sources</span><span class="pl-kos">.</span><span class="pl-en">curtin</span><span class="pl-kos">.</span><span class="pl-en">orig</span>
+<span class="pl-en">ubuntu</span><span class="pl-kos">.</span><span class="pl-en">sources</span></pre></div>
+<h4>查看软件依赖（非必看章节，可直接跳到4.4开始安装）</h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt update
+apt-cache policy kubeadm</pre></div>
+<p>输出结果</p>
+<div class="highlight highlight-source-ruby"><pre class="notranslate"><span class="pl-en">root</span><span class="pl-c1">@k8smaster</span><span class="pl-pds">:~</span><span class="pl-c"># apt-cache policy kubeadm</span>
+<span class="pl-en">kubeadm</span>:
+  <span class="pl-en">Installed</span>: <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">2</span>-<span class="pl-c1">1.1</span>
+  <span class="pl-en">Candidate</span>: <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">2</span>-<span class="pl-c1">1.1</span>
+  <span class="pl-en">Version</span> <span class="pl-pds">table</span>:
+ *** <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">2</span>-<span class="pl-c1">1.1</span> <span class="pl-c1">500</span>
+        <span class="pl-c1">500</span> <span class="pl-en">https</span><span class="pl-pds">:/</span>/<span class="pl-en">pkgs</span><span class="pl-kos">.</span><span class="pl-en">k8s</span><span class="pl-kos">.</span><span class="pl-en">io</span>/<span class="pl-pds">core</span>:<span class="pl-sr">/stable:/v</span><span class="pl-c1">1.32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span>
+        <span class="pl-c1">100</span> /<span class="pl-en">var</span>/<span class="pl-en">lib</span>/<span class="pl-en">dpkg</span>/<span class="pl-en">status</span>
+     <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-en"></span><span class="pl-c1">1</span>-<span class="pl-c1">1.1</span> <span class="pl-c1">500</span>
+        <span class="pl-c1">500</span> <span class="pl-en">https</span><span class="pl-pds">:/</span>/<span class="pl-en">pkgs</span><span class="pl-kos">.</span><span class="pl-en">k8s</span><span class="pl-kos">.</span><span class="pl-en">io</span>/<span class="pl-en">core</span>:/<span class="pl-en">stable</span>:/<span class="pl-en">v1</span><span class="pl-kos">.</span><span class="pl-c1">32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span>
+     <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-en"></span><span class="pl-c1">0</span>-<span class="pl-c1">1.1</span> <span class="pl-c1">500</span>
+        <span class="pl-c1">500</span> <span class="pl-en">https</span><span class="pl-pds">:/</span>/<span class="pl-en">pkgs</span><span class="pl-kos">.</span><span class="pl-en">k8s</span><span class="pl-kos">.</span><span class="pl-en">io</span>/<span class="pl-en">core</span>:/<span class="pl-en">stable</span>:/<span class="pl-en">v1</span><span class="pl-kos">.</span><span class="pl-c1">32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span></pre></div>
+<h4>查看软件依赖树（非必看章节，可直接跳到4.4开始安装）</h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt-cache showpkg kubeadm</pre></div>
+<h4>查看软件版本（非必看章节，可直接跳到4.4开始安装）</h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt-cache madison kubeadm</pre></div>
+<p>输出结果</p>
+<div class="highlight highlight-source-ruby"><pre class="notranslate"><span class="pl-en">root</span><span class="pl-c1">@k8smaster</span><span class="pl-pds">:~</span><span class="pl-c"># apt-cache policy kubeadm</span>
+<span class="pl-en">kubeadm</span>:
+  <span class="pl-en">Installed</span>: <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">2</span>-<span class="pl-c1">1.1</span>
+  <span class="pl-en">Candidate</span>: <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">2</span>-<span class="pl-c1">1.1</span>
+  <span class="pl-en">Version</span> <span class="pl-pds">table</span>:
+ *** <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">2</span>-<span class="pl-c1">1.1</span> <span class="pl-c1">500</span>
+        <span class="pl-c1">500</span> <span class="pl-en">https</span><span class="pl-pds">:/</span>/<span class="pl-en">pkgs</span><span class="pl-kos">.</span><span class="pl-en">k8s</span><span class="pl-kos">.</span><span class="pl-en">io</span>/<span class="pl-pds">core</span>:<span class="pl-sr">/stable:/v</span><span class="pl-c1">1.32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span>
+        <span class="pl-c1">100</span> /<span class="pl-en">var</span>/<span class="pl-en">lib</span>/<span class="pl-en">dpkg</span>/<span class="pl-en">status</span>
+     <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-en"></span><span class="pl-c1">1</span>-<span class="pl-c1">1.1</span> <span class="pl-c1">500</span>
+        <span class="pl-c1">500</span> <span class="pl-en">https</span><span class="pl-pds">:/</span>/<span class="pl-en">pkgs</span><span class="pl-kos">.</span><span class="pl-en">k8s</span><span class="pl-kos">.</span><span class="pl-en">io</span>/<span class="pl-en">core</span>:/<span class="pl-en">stable</span>:/<span class="pl-en">v1</span><span class="pl-kos">.</span><span class="pl-c1">32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span>
+     <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-en"></span><span class="pl-c1">0</span>-<span class="pl-c1">1.1</span> <span class="pl-c1">500</span>
+        <span class="pl-c1">500</span> <span class="pl-en">https</span><span class="pl-pds">:/</span>/<span class="pl-en">pkgs</span><span class="pl-kos">.</span><span class="pl-en">k8s</span><span class="pl-kos">.</span><span class="pl-en">io</span>/<span class="pl-en">core</span>:/<span class="pl-en">stable</span>:/<span class="pl-en">v1</span><span class="pl-kos">.</span><span class="pl-c1">32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span>
+<span class="pl-en">root</span><span class="pl-c1">@k8smaster</span><span class="pl-pds">:~</span><span class="pl-c"># apt-cache madison kubeadm</span>
+   <span class="pl-en">kubeadm</span> | <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">2</span>-<span class="pl-c1">1.1</span> | <span class="pl-en">https</span>:/<span class="pl-sr">/pkgs.k8s.io/core</span>:/<span class="pl-en">stable</span>:/<span class="pl-en">v1</span><span class="pl-kos">.</span><span class="pl-c1">32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span>
+   <span class="pl-en">kubeadm</span> | <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">1</span>-<span class="pl-c1">1.1</span> | <span class="pl-en">https</span>:/<span class="pl-sr">/pkgs.k8s.io/core</span>:/<span class="pl-en">stable</span>:/<span class="pl-en">v1</span><span class="pl-kos">.</span><span class="pl-c1">32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span>
+   <span class="pl-en">kubeadm</span> | <span class="pl-c1">1.32</span><span class="pl-kos">.</span><span class="pl-c1">0</span>-<span class="pl-c1">1.1</span> | <span class="pl-en">https</span>:/<span class="pl-sr">/pkgs.k8s.io/core</span>:/<span class="pl-en">stable</span>:/<span class="pl-en">v1</span><span class="pl-kos">.</span><span class="pl-c1">32</span>/<span class="pl-en">deb</span>  <span class="pl-v">Packages</span></pre></div>
+<h3>4.4 安装</h3>
+<p><code class="notranslate">kubeadm kubectl kubelet</code>是安装k8s的工具。</p>
+<p>安装默认版本</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 三台机器都执行</span>
+sudo apt-get install -y kubelet kubeadm kubectl</pre></div>
+<blockquote>
+<p>参考：安装指定版本 比如，当前版本是1.32.2，但是我想安装<code class="notranslate">1.31.0-1.1</code>版本，可以使用如下命令 sudo apt-get install -y kubelet=1.31.0-1.1 kubeadm=1.31.0-1.1 kubectl=1.31.0-1.1</p>
+</blockquote>
+<h4>锁定版本</h4>
+<p>为了防止自动更新</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 三台机器都执行</span>
+apt-mark hold kubelet kubeadm kubectl</pre></div>
+<p>如果想升级版本，可以解锁</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">apt-mark unhold kubelet kubeadm kubectl</pre></div>
+<h3>4.5 配置kubelet</h3>
+<p>进入文件kubelet，1.30版本之后都是在 <code class="notranslate">/etc/default/kubelet</code>，之前字啊 <code class="notranslate">/etc/sysconfig/kubelet</code></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 三台机器都执行</span>
+vim /etc/default/kubelet</pre></div>
+<p>添加为如下配置，配置cgroup管理</p>
+<div class="highlight highlight-text-md"><pre class="notranslate"><span class="pl-mh"># <span class="pl-en">三台机器都执行</span></span>
+
+KUBELET_EXTRA_ARGS="--cgroup-driver=systemd"</pre></div>
+<p>设置开机自启动</p>
+<p><strong>注意：</strong> 这里只是设置开机启动，但是并没有启动 <code class="notranslate">kubelet</code>。请不要在此刻启动kubelet。那什么时候启动呢？等kubeadm init 的时候会自动带起来 <code class="notranslate">kubelet</code></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 三台机器都执行</span>
+systemctl <span class="pl-c1">enable</span> kubelet</pre></div>
+<h3>4.6 初始化集群</h3>
+<p><strong>初始化集群的操作，请在master上操作，加入集群的命令请在worker节点操作。命令会详细说明</strong></p>
+<h4>4.6.1 规划集群网段</h4>
+<p>规划pod/service网段，这两个网段和宿主机网段不能重复！原则只有一个：三个网段不重复，没有交叉即可！</p>
+<ul>
+<li>宿主机网段：前面已经规划过。即：192.168.31.0/24</li>
+<li>service网段：10.96.0.0/12</li>
+<li>pod网段：10.244.0.0/16</li>
+</ul>
+<h4>4.6.2 执行kubeadm init命令</h4>
+<p>执行kubeadm来初始化集群，注意不要完全抄如下命令，请自行更改参数值。下面有参数释义。</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> master节点执行</span>
+kubeadm init  \
+--kubernetes-version=1.32.2  \
+--control-plane-endpoint=k8smaster  \
+--apiserver-advertise-address=192.168.31.224  \
+--pod-network-cidr=10.244.0.0/16  \
+--service-cidr=10.96.0.0/12  \
+--image-repository=registry.aliyuncs.com/google_containers   \
+--cri-socket=unix:///var/run/cri-dockerd.sock  \
+--upload-certs   \
+--v=9</pre></div>
+<p>参数释义：</p>
+<ul>
+<li>kubernetes-version：指定k8s的版本，我这里是1.32.2，你的也许是1.31.1-1.1等</li>
+<li>control-plane-endpoint：可以理解为集群master的命名，随意写即可</li>
+<li>apiserver-advertise-address：集群中master的地址！注意不要抄，写你自己虚拟机的ip地址</li>
+<li>pod-network-cidr：pod网段地址，4.6.1已经规划过了，只要不与集群网段和service网段重复即可</li>
+<li>service-cidr：service网段地址，4.6.1已经规划过了，只要不与集群网段和pod网段重复即可</li>
+<li>image-repository：指定使用国内镜像</li>
+<li>cri-socket：指定使用的容器运行时，如果你使用的containerd容器，那就不用写这个参数</li>
+<li>v：日志级别，9表示输出的信息会很详细</li>
+</ul>
+<p>根据自己的ip设置好参数后，在master！注意是master节点，上执行<code class="notranslate">kubeadm init</code>命令。可能会需要一两分钟下载镜像，执行完毕后输出如下：</p>
+<blockquote>
+<p>执行的时候如果出错可能是因为命令里有空格，实在不行你可以手敲。命令是对的。问题已修正，修正日期：2025/03/01</p>
+</blockquote>
+<p>输出中有两段非常重要的命令（请注意，不要copy我的命令1、命令2.请使用你自己控制台输出的命令）</p>
+<p>命令1：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> master节点执行</span>
+mkdir -p <span class="pl-smi">$HOME</span>/.kube
+sudo cp -i /etc/kubernetes/admin.conf <span class="pl-smi">$HOME</span>/.kube/config
+sudo chown <span class="pl-s"><span class="pl-pds">$(</span>id -u<span class="pl-pds">)</span></span>:<span class="pl-s"><span class="pl-pds">$(</span>id -g<span class="pl-pds">)</span></span> <span class="pl-smi">$HOME</span>/.kube/config</pre></div>
+<p>命令2：命令2的意思是使当前节点加入k8s集群。<strong>其中cri-socket是指定容器运行时，如果你是containerd，可以不用写该参数。</strong></p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 其余worker节点执行</span>
+kubeadm join k8smaster:6443 --token xz5yda.n039y3u3vhr7r79e \
+	--discovery-token-ca-cert-hash sha256:a352ce9721a4ff2cec99275309c2373cbd9815ba36193b957871c0b09862d6c6 \
+   --cri-socket=unix:///var/run/cri-dockerd.sock</pre></div>
+<p>请把命令1在master节点执行。命令2分别在其他的worker节点执行</p>
+<p>然后执行 <code class="notranslate">kubectl get nodes</code>命令就可以看到三台机器都在同一个集群了。</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">root@k8smaster:~<span class="pl-c"><span class="pl-c">#</span> kubectl get nodes</span>
+NAME        STATUS      ROLES           AGE   VERSION
+k8smaster   NotReady    control<span class="pl-k">-</span>plane   15h   <span class="pl-c1">v1</span>.<span class="pl-c1">32</span>.<span class="pl-c1">2</span>
+k8snode1    NotReady    <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>          15h   <span class="pl-c1">v1</span>.<span class="pl-c1">32</span>.<span class="pl-c1">2</span>
+k8snode2    NotReady    <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>          15h   <span class="pl-c1">v1</span>.<span class="pl-c1">32</span>.<span class="pl-c1">2</span></pre></div>
+<p>但是节点都还是<code class="notranslate">NoteReady</code>状态，接下来我们来配置Pod网络，让集群变成<code class="notranslate">Ready</code>状态。需要使用calico组件完成</p>
+<h3>4.7 安装calico</h3>
+<p><strong>4.7 章节的命令，请在master上操作</strong></p>
+<h4>4.7.1 安装</h4>
+<p>直接copy官网的第一步命令，在master节点上安装</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.2/manifests/tigera-operator.yaml</pre></div>
+<h4>4.7.2 下载配置文件</h4>
+<p>不能直接按照官网的第二步操作 官网第二步为：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> master执行</span>
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.29.2/manifests/custom-resources.yaml</pre></div>
+<p>应当先下载里面的配置文件，我们去修改配置文件</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> master执行</span>
+wget  https://raw.githubusercontent.com/projectcalico/calico/v3.29.2/manifests/custom-resources.yaml</pre></div>
+<h4>4.7.3 编辑配置文件修改pod网段</h4>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> master执行</span>
+vim custom-resources.yaml</pre></div>
+<p>修改其中的网段为之前规划好的pod网段<code class="notranslate">10.244.0.0/16</code>（4.6.1规划的，可以回去看一看）</p>
+<h4>4.7.4 运行calico</h4>
+<p>使用create而不是apply</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> master节点执行</span>
+kubectl create -f custom-resources.yaml</pre></div>
+<p>如果安装过程中由于网络或其他问题，安装失败，想删除资源，可以使用。一般只要是镜像源配置对了就不会失败</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> master节点执行</span>
+kubectl delete -f custom-resources.yaml</pre></div>
+<p>检查calico是否运行成功</p>
+<p>执行如下命令，可以看到命名空间 <code class="notranslate">calico-system</code> 下正在运行的容器</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl get pod -n calico-system</pre></div>
+<p>使用<code class="notranslate">watch</code>命令可以持续监视pod状态</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">watch kubectl get pod <span class="pl-k">-</span>n calico<span class="pl-k">-</span>system</pre></div>
+<p>所有STATUS=Running表示运行成功</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">NAME                                       READY   STATUS    RESTARTS   AGE
+calico<span class="pl-k">-</span>kube<span class="pl-k">-</span>controllers<span class="pl-k">-</span>676b574787<span class="pl-k">-</span>jjgj2   <span class="pl-c1">1</span><span class="pl-k">/</span><span class="pl-c1">1</span>     Running   <span class="pl-c1">0</span>          15h
+calico<span class="pl-k">-</span>node<span class="pl-k">-</span>j7ggr                          <span class="pl-c1">1</span><span class="pl-k">/</span><span class="pl-c1">1</span>     Running   <span class="pl-c1">0</span>          15h
+calico<span class="pl-k">-</span>node<span class="pl-k">-</span>pzwk7                          <span class="pl-c1">1</span><span class="pl-k">/</span><span class="pl-c1">1</span>     Running   <span class="pl-c1">0</span>          15h
+calico<span class="pl-k">-</span>node<span class="pl-k">-</span>qxgt6                          <span class="pl-c1">1</span><span class="pl-k">/</span><span class="pl-c1">1</span>     Running   <span class="pl-c1">0</span>          15h
+calico<span class="pl-k">-</span>typha<span class="pl-k">-</span>6fb6b7cc5c<span class="pl-k">-</span>vkrcd              <span class="pl-c1">1</span><span class="pl-k">/</span><span class="pl-c1">1</span>     Running   <span class="pl-c1">0</span>          15h
+calico<span class="pl-k">-</span>typha<span class="pl-k">-</span>6fb6b7cc5c<span class="pl-k">-</span>vtnrl              <span class="pl-c1">1</span><span class="pl-k">/</span><span class="pl-c1">1</span>     Running   <span class="pl-c1">0</span>          15h
+csi<span class="pl-k">-</span>node<span class="pl-k">-</span>driver<span class="pl-k">-</span>78dq8                      <span class="pl-c1">2</span><span class="pl-k">/</span><span class="pl-c1">2</span>     Running   <span class="pl-c1">0</span>          15h
+csi<span class="pl-k">-</span>node<span class="pl-k">-</span>driver<span class="pl-k">-</span>w49l8                      <span class="pl-c1">2</span><span class="pl-k">/</span><span class="pl-c1">2</span>     Running   <span class="pl-c1">0</span>          15h
+csi<span class="pl-k">-</span>node<span class="pl-k">-</span>driver<span class="pl-k">-</span>zx9d2                      <span class="pl-c1">2</span><span class="pl-k">/</span><span class="pl-c1">2</span>     Running   <span class="pl-c1">0</span>          15h</pre></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4fe025edce83712ae165b515eab1d9489e20ad16fc589bb6043d39e431e48c66/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313736303531323734323233315f74656d70736e69702e706e67"><img src="https://camo.githubusercontent.com/4fe025edce83712ae165b515eab1d9489e20ad16fc589bb6043d39e431e48c66/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f313736303531323734323233315f74656d70736e69702e706e67" alt="tempsnip.png" data-canonical-src="https://pic.myla.eu.org/file/1760512742231_tempsnip.png" style="max-width: 100%;"></a><br>
+此刻再次查看node状态，就会是Ready了</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">$ kubectl get nodes
+NAME        STATUS   ROLES           AGE   VERSION
+k8smaster   Ready    control<span class="pl-k">-</span>plane   15h   <span class="pl-c1">v1</span>.<span class="pl-c1">32</span>.<span class="pl-c1">2</span>
+k8snode1    Ready    <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>          15h   <span class="pl-c1">v1</span>.<span class="pl-c1">32</span>.<span class="pl-c1">2</span>
+k8snode2    Ready    <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>          15h   <span class="pl-c1">v1</span>.<span class="pl-c1">32</span>.<span class="pl-c1">2</span></pre></div>
+<p>至此，k8s集群就安装好了！！🎉🎉🎉🎉接下来可以安装一个nginx检验集群了</p>
+<h4>4.7.5 calico问题排查(安装成功请忽略本节）</h4>
+<p>pod运行状态如下： 执行如下命令，可以看到命名空间 <code class="notranslate">calico-system</code> 下正在运行的容器</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl get pod -n calico-system</pre></div>
+<p>使用<code class="notranslate">watch</code>命令可以持续监视pod状态</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">watch kubectl get pod <span class="pl-k">-</span>n calico<span class="pl-k">-</span>system</pre></div>
+<p>pod运行状态如下：</p>
+<div class="highlight highlight-source-css-scss"><pre class="notranslate">root@k8smaster:~# kubectl get pod -n calico-system
+NAME                                       READY   STATUS              RESTARTS   AGE
+<span class="pl-ent">calico-kube-controllers-7cdcb4d576-4c6g5</span>   0/1     Pending             0          32s
+<span class="pl-ent">calico-node-68kl9</span>                          0/1     Init:0/2            0          32s
+<span class="pl-ent">calico-node-mpzvq</span>                          0/1     Init:0/2            0          32s
+<span class="pl-ent">calico-node-xnwgb</span>                          0/1     Init:0/2            0          32s
+<span class="pl-ent">calico-typha-65c7654fbf-vps5z</span>              0/1     ContainerCreating   0          31s
+<span class="pl-ent">calico-typha-65c7654fbf-wnc2s</span>              0/1     ContainerCreating   0          32s
+<span class="pl-ent">csi-node-driver-7jqk8</span>                      0/2     ContainerCreating   0          32s
+<span class="pl-ent">csi-node-driver-rsvfk</span>                      0/2     ContainerCreating   0          32s
+<span class="pl-ent">csi-node-driver-xsx7s</span>                      0/2     ContainerCreating   0          32s</pre></div>
+<p>如果出现问题，可以通过如下命令查看报错信息，其中 <code class="notranslate">calico-node-pdf78</code> 为上面查看的pod名称</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl describe pod calico-node-pdf78  -n calico-system</pre></div>
+<p>监控输出如下</p>
+<pre class="notranslate"><code class="notranslate">Tolerations:                 :NoSchedule op=Exists
+                             :NoExecute op=Exists
+                             CriticalAddonsOnly op=Exists
+                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
+                             node.kubernetes.io/not-ready:NoExecute op=Exists
+                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
+                             node.kubernetes.io/unreachable:NoExecute op=Exists
+                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
+Events:
+  Type     Reason       Age    From               Message
+  ----     ------       ----   ----               -------
+  Normal   Scheduled    4m39s  default-scheduler  Successfully assigned calico-system/calico-node-68kl9 to k8snode1
+  Warning  FailedMount  4m38s  kubelet            MountVolume.SetUp failed for volume "node-certs" : failed to sync secret cache: timed out waiting for the condition
+  Normal   Pulling      4m37s  kubelet            Pulling image "docker.io/calico/pod2daemon-flexvol:v3.29.2"
+</code></pre>
+<h2>五、检验k8s集群</h2>
+<h3>5.1 编写资源文件</h3>
+<p>安装一个nginx服务检验集群的可用性。首先在编写一个<code class="notranslate">～/nginx.yaml</code>资源文件</p>
+<div class="highlight highlight-source-yaml"><pre class="notranslate">---
+<span class="pl-ent">apiVersion</span>: <span class="pl-s">apps/v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Deployment</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">nginxweb</span>
+  <span class="pl-ent">annotations</span>:
+    <span class="pl-ent">abc</span>: <span class="pl-s">test</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">selector</span>:
+    <span class="pl-ent">matchLabels</span>:
+      <span class="pl-ent">app</span>: <span class="pl-s">nginxweb1</span>
+  <span class="pl-ent">replicas</span>: <span class="pl-c1">2</span>
+  <span class="pl-ent">template</span>:
+    <span class="pl-ent">metadata</span>:
+      <span class="pl-ent">labels</span>:
+        <span class="pl-ent">app</span>: <span class="pl-s">nginxweb1</span>
+    <span class="pl-ent">spec</span>:
+      <span class="pl-ent">containers</span>:
+        - <span class="pl-ent">name</span>: <span class="pl-s">nginxwebc</span>
+          <span class="pl-ent">image</span>: <span class="pl-s">nginx:latest</span>
+          <span class="pl-ent">imagePullPolicy</span>: <span class="pl-s">IfNotPresent</span>
+          <span class="pl-ent">ports</span>:
+            - <span class="pl-ent">containerPort</span>: <span class="pl-c1">80</span>
+---
+<span class="pl-ent">apiVersion</span>: <span class="pl-c1">v1</span>
+<span class="pl-ent">kind</span>: <span class="pl-s">Service</span>
+<span class="pl-ent">metadata</span>:
+  <span class="pl-ent">name</span>: <span class="pl-s">nginxweb-service</span>
+<span class="pl-ent">spec</span>:
+  <span class="pl-ent">externalTrafficPolicy</span>: <span class="pl-s">Cluster</span>
+  <span class="pl-ent">selector</span>:
+    <span class="pl-ent">app</span>: <span class="pl-s">nginxweb1</span>
+  <span class="pl-ent">ports</span>:
+    - <span class="pl-ent">protocol</span>: <span class="pl-s">TCP</span>
+      <span class="pl-ent">port</span>: <span class="pl-c1">80</span>
+      <span class="pl-ent">targetPort</span>: <span class="pl-c1">80</span>
+      <span class="pl-ent">nodePort</span>: <span class="pl-c1">30180</span>
+  <span class="pl-ent">type</span>: <span class="pl-s">NodePort</span></pre></div>
+<h3>5.2 运行资源</h3>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubectl create -f nginx.yaml</pre></div>
+<h3>5.3 查看资源状态</h3>
+<p>查看service状态</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">root@k8smaster:~<span class="pl-c"><span class="pl-c">#</span> kubectl get service</span>
+NAME               TYPE        CLUSTER<span class="pl-k">-</span>IP      EXTERNAL<span class="pl-k">-</span>IP   PORT(S)        AGE
+kubernetes         ClusterIP   <span class="pl-c1">10</span>.<span class="pl-c1">96</span>.<span class="pl-c1">0</span>.<span class="pl-c1">1</span>       <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>        <span class="pl-c1">443</span><span class="pl-k">/</span>TCP        15h
+nginxweb<span class="pl-k">-</span>service   NodePort    <span class="pl-c1">10</span>.<span class="pl-c1">111</span>.<span class="pl-c1">233</span>.<span class="pl-c1">14</span>   <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>        <span class="pl-c1">80</span>:<span class="pl-c1">30180</span><span class="pl-k">/</span>TCP   15h</pre></div>
+<p>查看pod状态</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">root@k8smaster:~<span class="pl-c"><span class="pl-c">#</span> kubectl get pod -o wide</span>
+NAME                       READY   STATUS    RESTARTS   AGE   IP               NODE       NOMINATED NODE   READINESS GATES
+nginxweb<span class="pl-k">-</span>b6795994c<span class="pl-k">-</span>8267f   <span class="pl-c1">1</span><span class="pl-k">/</span><span class="pl-c1">1</span>     Running   <span class="pl-c1">0</span>          16h   <span class="pl-c1">10</span>.<span class="pl-c1">244</span>.<span class="pl-c1">185</span>.<span class="pl-c1">199</span>   k8snode2   <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>           <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>
+nginxweb<span class="pl-k">-</span>b6795994c<span class="pl-k">-</span>9nz5s   <span class="pl-c1">1</span><span class="pl-k">/</span><span class="pl-c1">1</span>     Running   <span class="pl-c1">0</span>          16h   <span class="pl-c1">10</span>.<span class="pl-c1">244</span>.<span class="pl-c1">249</span>.<span class="pl-c1">2</span>     k8snode1   <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span>           <span class="pl-k">&lt;</span>none<span class="pl-k">&gt;</span></pre></div>
+<h3>5.4 访问nginx页面</h3>
+<h4>5.4.1 集群内部网络访问，在任意一台集群机器上执行</h4>
+<pre class="notranslate"><code class="notranslate">curl 10.244.249.2
+</code></pre>
+<p>其中ip地址为nginx的pod的ip地址，这个地址是集群分配的地址，请使用你服务器上的pod地址访问，你可以选择任意一个pod地址。</p>
+<h4>5.4.2 集群外部访问</h4>
+<p>通过5.3章节可以看到service的端口映射是30180，你自己机器上可能映射的是其他端口</p>
+<p>知道端口后，可以在局域网内的任意一台机器上访问如下链接<code class="notranslate">&lt;ip&gt;:30180</code></p>
+<p>其中ip是虚拟机的任意IP，比如我选择master节点<code class="notranslate">192.168.31.224</code></p>
+<p>访问地址如下</p>
+<pre class="notranslate"><code class="notranslate">192.168.31.224:30180
+</code></pre>
+<p>能看到访问nginx成功！</p>
+<blockquote>
+<p>至此k8s集群安装完毕！验证完毕！祝你有一个愉快的k8s学习之旅！^_^</p>
+</blockquote>
+<h2>六、回退k8s集群/重置k8s集群</h2>
+<p>k8s安装步骤确实繁琐，可能我们某一步错了，或者遇到各种问题，都得重头再来太麻烦。这时我们可以使用kubeadm提供的reset命令来回退集群。</p>
+<ol>
+<li>
+<p>**<em>所有节点</em>**执行reset命令</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">kubeadm reset</pre></div>
+</li>
+<li>
+<p><strong>master</strong>节点执行如下命令</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">rm -rf /root/.kube
+rm -rf /etc/cni/net.d
+rm -rf /etc/kubernetes/<span class="pl-k">*</span></pre></div>
+</li>
+<li>
+<p><strong>worker</strong>节点执行如下命令</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">rm -rf /root/.kube
+rm -rf /etc/cni/net.d
+rm -rf /etc/kubernetes/<span class="pl-k">*</span></pre></div>
+</li>
+<li>
+<p>重启docker或containerd服务（你安装的什么运行时就重启什么运行时）</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">systemctl restart docker</pre></div>
+</li>
+<li>
+<p>按照4.5～4.7章节重新执行<code class="notranslate">kubeadm init</code>即可</p>
+</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.017121.xyz">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='/plugins/articletoc.js'></script><script src='/plugins/lightbox.js'></script>
+
+</html>
