@@ -1,5 +1,82 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Tue, 28 Apr 2026 17:49:14 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于阿里云容器镜像服务 ACR的订单系统镜像管理与部署实验</title><link>https://bbs.017121.xyz/post/176.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 07 May 2026 01:02:38 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>基于阿里云 ECS + Gname 域名 + Cloudflare CDN 的企业博客部署实战</title><link>https://bbs.017121.xyz/post/177.html</link><description>## 一、项目背景
+
+某教育科技公司计划上线一个技术博客平台，用于：
+
+* 发布云计算与运维相关文章
+* 对外展示企业技术能力
+* 提供 SEO 流量入口
+* 承载未来 AI 教学资源内容
+
+企业要求：
+
+| 项目    | 要求             |
+| ----- | -------------- |
+| 服务器   | 部署在中国大陆云服务器    |
+| 域名    | 使用低成本国际域名      |
+| CDN   | 全球加速与防护        |
+| HTTPS | 必须启用           |
+| 安全性   | 隐藏源站 IP、防御恶意访问 |
+| 运维难度  | 尽量简单           |
+
+最终技术方案：
+
+| 模块     | 方案             |
+| ------ | -------------- |
+| 云服务器   | 阿里云 ECS        |
+| 操作系统   | Ubuntu 22.04   |
+| Web 服务 | Nginx          |
+| 博客程序   | WordPress      |
+| 数据库    | MySQL          |
+| PHP 环境 | PHP 8.2        |
+| 域名注册   | Gname          |
+| DNS 托管 | Cloudflare     |
+| CDN 加速 | Cloudflare CDN |
+| HTTPS  | Cloudflare SSL |
+
+---
+
+# 二、整体架构
+
+```text
+用户浏览器
+      ↓
+Cloudflare CDN
+      ↓
+Cloudflare DNS
+      ↓
+阿里云 ECS
+      ↓
+Nginx
+      ↓
+WordPress
+      ↓
+MySQL
+```
+
+---
+
+# 三、项目目标
+
+完成以下内容：
+
+* 购买 ECS
+* 配置 Ubuntu
+* 安装 LNMP
+* 部署 WordPress
+* 在 Gname 注册域名
+* 域名托管到 Cloudflare
+* 开启 CDN 加速
+* 配置 HTTPS
+* 实现企业博客上线
+
+---
+
+# 四、准备工作
+
+## 1. 准备服务器
+
+在 阿里云 ECS创建服务器。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/177.html</guid><pubDate>Thu, 07 May 2026 01:02:01 +0000</pubDate></item><item><title>基于阿里云容器镜像服务 ACR的订单系统镜像管理与部署实验</title><link>https://bbs.017121.xyz/post/176.html</link><description>
 # **一、企业案例背景（具体业务）**
 
 某连锁餐饮企业上线“订单服务（order-service）”，负责处理：
