@@ -19,18 +19,18 @@ sudo systemctl status fail2ban
 ---
 
 ## **2. 创建本地配置文件**
-修改 `/etc/fail2ban/jail.conf`，
+修改 `/etc/fail2ban/jail.local`，
 
 然后编辑：
 ```bash
-sudo nano /etc/fail2ban/jail.conf
+sudo nano /etc/fail2ban/jail.local
 ```
 
 ---
 
 ## **3. 配置 SSH 监控**
-找到 `[sshd]` 部分，修改或确认如下配置：
-```
+
+```shell
 [DEFAULT]
 bantime = 1d
 findtime = 5m
@@ -44,11 +44,7 @@ port = 22
 logpath = %(sshd_log)s
 ```
 
-说明：
-- `enabled = true` → 启用 SSH 防护  
-- `maxretry = 3` → 允许失败尝试次数  
-- `bantime = 1d` → 封禁时间（1day）  
-- `findtime = 5m` → 在多少秒内失败超过 maxretry 才封禁  
+
 
 ---
 

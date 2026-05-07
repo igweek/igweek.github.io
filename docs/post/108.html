@@ -94,13 +94,12 @@ sudo apt install fail2ban -y</pre></div>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl status fail2ban</pre></div>
 <hr>
 <h2><strong>2. 创建本地配置文件</strong></h2>
-<p>修改 <code class="notranslate">/etc/fail2ban/jail.conf</code>，</p>
+<p>修改 <code class="notranslate">/etc/fail2ban/jail.local</code>，</p>
 <p>然后编辑：</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/fail2ban/jail.conf</pre></div>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nano /etc/fail2ban/jail.local</pre></div>
 <hr>
 <h2><strong>3. 配置 SSH 监控</strong></h2>
-<p>找到 <code class="notranslate">[sshd]</code> 部分，修改或确认如下配置：</p>
-<pre class="notranslate"><code class="notranslate">[DEFAULT]
+<div class="highlight highlight-source-shell"><pre class="notranslate">[DEFAULT]
 bantime = 1d
 findtime = 5m
 maxretry = 3
@@ -108,17 +107,9 @@ backend = systemd
 ignoreip = 127.0.0.1/8
 
 [sshd]
-enabled = true
+enabled = <span class="pl-c1">true</span>
 port = 22
-logpath = %(sshd_log)s
-</code></pre>
-<p>说明：</p>
-<ul>
-<li><code class="notranslate">enabled = true</code> → 启用 SSH 防护</li>
-<li><code class="notranslate">maxretry = 3</code> → 允许失败尝试次数</li>
-<li><code class="notranslate">bantime = 1d</code> → 封禁时间（1day）</li>
-<li><code class="notranslate">findtime = 5m</code> → 在多少秒内失败超过 maxretry 才封禁</li>
-</ul>
+logpath = %(sshd_log)s</pre></div>
 <hr>
 <h2><strong>4. 重启 Fail2Ban</strong></h2>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart fail2ban</pre></div>
