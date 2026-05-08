@@ -68,8 +68,8 @@ from PIL import Image, ImageDraw, ImageFont
 import io
 import os
 
-# OSS 配置（通过环境变量设置）
-OSS_ENDPOINT = os.environ.get('OSS_ENDPOINT')
+# ===================== OSS 配置（通过环境变量设置） =====================
+OSS_ENDPOINT = os.environ.get('OSS_ENDPOINT')  # 例: oss-cn-hangzhou.aliyuncs.com
 OSS_ACCESS_KEY_ID = os.environ.get('OSS_ACCESS_KEY_ID')
 OSS_ACCESS_KEY_SECRET = os.environ.get('OSS_ACCESS_KEY_SECRET')
 OSS_BUCKET_NAME = os.environ.get('OSS_BUCKET_NAME', 'image-bucket')
@@ -77,16 +77,18 @@ OSS_BUCKET_NAME = os.environ.get('OSS_BUCKET_NAME', 'image-bucket')
 ORIGINAL_FOLDER = 'original/'
 PROCESSED_FOLDER = 'processed/'
 
+# 初始化 OSS 客户端
 auth = oss2.Auth(OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET)
 bucket = oss2.Bucket(auth, OSS_ENDPOINT, OSS_BUCKET_NAME)
 
 def handler(event, context):
     if 'events' not in event:
-        return {"statusCode":400, "body":"非 OSS 触发事件"}
+        return {"statusCode": 400, "body": "非 OSS 触发事件"}
 
-    # 遍历上传的图片
     for record in event['events']:
         key = record['oss']['object']['key']
+        print(f"处理的 Key: {key}")  # 日志调试
+
         try:
             # 下载图片
             obj = bucket.get_object(key)
@@ -95,28 +97,31 @@ def handler(event, context):
 
             # ======= 生成缩略图 =======
             img.thumbnail((200, 200))
+            if img.mode != 'RGB':
+                img = img.convert('RGB')  # 保证 JPEG 保存兼容
 
             # ======= 添加水印 =======
             draw = ImageDraw.Draw(img)
             text = "Serverless"
             font = ImageFont.load_default()
-            draw.text((10, 10), text, fill=(255,0,0), font=font)
+            draw.text((10, 10), text, fill=(255, 0, 0), font=font)
 
-            # 保存到内存
+            # ======= 保存到内存并写回 OSS =======
             out_buffer = io.BytesIO()
-            img_format = img.format if img.format else 'JPEG'
-            img.save(out_buffer, format=img_format)
+            img.save(out_buffer, format='JPEG')  # 强制 JPEG
             out_buffer.seek(0)
 
-            # 写回 OSS processed 文件夹
+            # 输出文件名
             filename = key.split('/')[-1]
             processed_key = f"{PROCESSED_FOLDER}thumb_{filename}"
             bucket.put_object(processed_key, out_buffer)
+            print(f"生成文件成功: {processed_key}")
+
         except Exception as e:
             print(f"处理 {key} 失败: {e}")
             continue
 
-    return {"statusCode":200, "body":"处理完成"}
+    return {"statusCode": 200, "body": "处理完成"}
 ```
 
 ---
