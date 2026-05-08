@@ -67,9 +67,10 @@ import oss2
 from PIL import Image, ImageDraw, ImageFont
 import io
 import os
+import traceback
 
 # ===================== OSS 配置（通过环境变量设置） =====================
-OSS_ENDPOINT = os.environ.get('OSS_ENDPOINT')  # 例: oss-cn-hangzhou.aliyuncs.com
+OSS_ENDPOINT = os.environ.get('OSS_ENDPOINT')
 OSS_ACCESS_KEY_ID = os.environ.get('OSS_ACCESS_KEY_ID')
 OSS_ACCESS_KEY_SECRET = os.environ.get('OSS_ACCESS_KEY_SECRET')
 OSS_BUCKET_NAME = os.environ.get('OSS_BUCKET_NAME', 'image-bucket')
@@ -77,41 +78,70 @@ OSS_BUCKET_NAME = os.environ.get('OSS_BUCKET_NAME', 'image-bucket')
 ORIGINAL_FOLDER = 'original/'
 PROCESSED_FOLDER = 'processed/'
 
+# ====== 核心判空 ======
+if not all([OSS_ENDPOINT, OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET, OSS_BUCKET_NAME]):
+    raise RuntimeError("OSS 配置未完整设置，请检查环境变量")
+
 # 初始化 OSS 客户端
 auth = oss2.Auth(OSS_ACCESS_KEY_ID, OSS_ACCESS_KEY_SECRET)
 bucket = oss2.Bucket(auth, OSS_ENDPOINT, OSS_BUCKET_NAME)
 
+# ====== 主函数 ======
 def handler(event, context):
     if 'events' not in event:
+        print("非 OSS 触发事件")
         return {"statusCode": 400, "body": "非 OSS 触发事件"}
 
     for record in event['events']:
         key = record['oss']['object']['key']
-        print(f"处理的 Key: {key}")  # 日志调试
+        print(f"触发处理的 Key: {key}")  # 调试日志
+
+        # ====== 只处理 original/ 文件夹 ======
+        if not key.startswith(ORIGINAL_FOLDER):
+            print(f"跳过非 original/ 目录的文件: {key}")
+            continue
 
         try:
-            # 下载图片
+            # 下载 OSS 对象
             obj = bucket.get_object(key)
             image_data = obj.read()
-            img = Image.open(io.BytesIO(image_data))
 
-            # ======= 生成缩略图 =======
-            img.thumbnail((200, 200))
-            if img.mode != 'RGB':
-                img = img.convert('RGB')  # 保证 JPEG 保存兼容
+            # ====== 尝试打开图片，非图片跳过 ======
+            try:
+                img = Image.open(io.BytesIO(image_data))
+            except Exception:
+                print(f"非图片文件，跳过: {key}")
+                continue
 
-            # ======= 添加水印 =======
+            print(f"原图大小: {img.size}, 模式: {img.mode}")
+
+            # ====== 生成缩略图 ======
+            img.thumbnail((200, 200), Image.ANTIALIAS)
+
+            # ====== 透明 PNG 转换处理 ======
+            if img.mode in ('RGBA', 'LA') or (img.mode == 'P' and 'transparency' in img.info):
+                background = Image.new("RGB", img.size, (255, 255, 255))  # 白底
+                background.paste(img, mask=img.split()[-1])  # 保留透明部分
+                img = background
+            elif img.mode != 'RGB':
+                img = img.convert('RGB')
+
+            # ====== 添加水印 ======
             draw = ImageDraw.Draw(img)
             text = "Serverless"
-            font = ImageFont.load_default()
-            draw.text((10, 10), text, fill=(255, 0, 0), font=font)
+            try:
+                font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
+            except Exception:
+                font = ImageFont.load_default()
+            text_width, text_height = draw.textsize(text, font=font)
+            draw.text((img.width - text_width - 10, img.height - text_height - 10),
+                      text, fill=(255, 0, 0), font=font)
 
-            # ======= 保存到内存并写回 OSS =======
+            # ====== 保存到内存并写回 OSS ======
             out_buffer = io.BytesIO()
-            img.save(out_buffer, format='JPEG')  # 强制 JPEG
+            img.save(out_buffer, format='JPEG')
             out_buffer.seek(0)
 
-            # 输出文件名
             filename = key.split('/')[-1]
             processed_key = f"{PROCESSED_FOLDER}thumb_{filename}"
             bucket.put_object(processed_key, out_buffer)
@@ -119,6 +149,7 @@ def handler(event, context):
 
         except Exception as e:
             print(f"处理 {key} 失败: {e}")
+            traceback.print_exc()  # 打印详细堆栈
             continue
 
     return {"statusCode": 200, "body": "处理完成"}
