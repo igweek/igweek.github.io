@@ -151,34 +151,47 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-k">from</span> <span class="pl-c1">PIL</span> <span class="pl-k">import</span> <span class="pl-v">Image</span>, <span class="pl-v">ImageDraw</span>, <span class="pl-v">ImageFont</span>
 <span class="pl-k">import</span> <span class="pl-s1">io</span>
 <span class="pl-k">import</span> <span class="pl-s1">os</span>
+<span class="pl-k">import</span> <span class="pl-s1">json</span>
 <span class="pl-k">import</span> <span class="pl-s1">traceback</span>
 
-<span class="pl-c"># ===================== OSS 配置（通过环境变量设置） =====================</span>
+<span class="pl-c"># ===================== OSS 配置 =====================</span>
 <span class="pl-c1">OSS_ENDPOINT</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">environ</span>.<span class="pl-c1">get</span>(<span class="pl-s">'OSS_ENDPOINT'</span>)
-<span class="pl-c1">OSS_ACCESS_KEY_ID</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">environ</span>.<span class="pl-c1">get</span>(<span class="pl-s">'OSS_ACCESS_KEY_ID'</span>)
-<span class="pl-c1">OSS_ACCESS_KEY_SECRET</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">environ</span>.<span class="pl-c1">get</span>(<span class="pl-s">'OSS_ACCESS_KEY_SECRET'</span>)
 <span class="pl-c1">OSS_BUCKET_NAME</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">environ</span>.<span class="pl-c1">get</span>(<span class="pl-s">'OSS_BUCKET_NAME'</span>, <span class="pl-s">'image-bucket'</span>)
-
 <span class="pl-c1">ORIGINAL_FOLDER</span> <span class="pl-c1">=</span> <span class="pl-s">'original/'</span>
 <span class="pl-c1">PROCESSED_FOLDER</span> <span class="pl-c1">=</span> <span class="pl-s">'processed/'</span>
 
-<span class="pl-c"># ====== 核心判空 ======</span>
-<span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-en">all</span>([<span class="pl-c1">OSS_ENDPOINT</span>, <span class="pl-c1">OSS_ACCESS_KEY_ID</span>, <span class="pl-c1">OSS_ACCESS_KEY_SECRET</span>, <span class="pl-c1">OSS_BUCKET_NAME</span>]):
-    <span class="pl-k">raise</span> <span class="pl-en">RuntimeError</span>(<span class="pl-s">"OSS 配置未完整设置，请检查环境变量"</span>)
+<span class="pl-c"># 注意：如果配置了函数计算的 RAM 角色，AK/SK 可以不从环境变量取，直接在 handler 中用 context 拿临时密钥更安全。</span>
+<span class="pl-c1">OSS_ACCESS_KEY_ID</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">environ</span>.<span class="pl-c1">get</span>(<span class="pl-s">'OSS_ACCESS_KEY_ID'</span>)
+<span class="pl-c1">OSS_ACCESS_KEY_SECRET</span> <span class="pl-c1">=</span> <span class="pl-s1">os</span>.<span class="pl-c1">environ</span>.<span class="pl-c1">get</span>(<span class="pl-s">'OSS_ACCESS_KEY_SECRET'</span>)
 
-<span class="pl-c"># 初始化 OSS 客户端</span>
-<span class="pl-s1">auth</span> <span class="pl-c1">=</span> <span class="pl-s1">oss2</span>.<span class="pl-c1">Auth</span>(<span class="pl-c1">OSS_ACCESS_KEY_ID</span>, <span class="pl-c1">OSS_ACCESS_KEY_SECRET</span>)
-<span class="pl-s1">bucket</span> <span class="pl-c1">=</span> <span class="pl-s1">oss2</span>.<span class="pl-c1">Bucket</span>(<span class="pl-s1">auth</span>, <span class="pl-c1">OSS_ENDPOINT</span>, <span class="pl-c1">OSS_BUCKET_NAME</span>)
-
-<span class="pl-c"># ====== 主函数 ======</span>
 <span class="pl-k">def</span> <span class="pl-en">handler</span>(<span class="pl-s1">event</span>, <span class="pl-s1">context</span>):
-    <span class="pl-k">if</span> <span class="pl-s">'events'</span> <span class="pl-c1"><span class="pl-c1">not</span> <span class="pl-c1">in</span></span> <span class="pl-s1">event</span>:
+    <span class="pl-c"># 1. 【修复】将 bytes 类型的 event 解析为 dict</span>
+    <span class="pl-k">try</span>:
+        <span class="pl-s1">evt_dict</span> <span class="pl-c1">=</span> <span class="pl-s1">json</span>.<span class="pl-c1">loads</span>(<span class="pl-s1">event</span>)
+    <span class="pl-k">except</span> <span class="pl-v">Exception</span>:
+        <span class="pl-en">print</span>(<span class="pl-s">"无法解析 Event 为 JSON"</span>)
+        <span class="pl-k">return</span> {<span class="pl-s">"statusCode"</span>: <span class="pl-c1">400</span>, <span class="pl-s">"body"</span>: <span class="pl-s">"Invalid Event Format"</span>}
+
+    <span class="pl-k">if</span> <span class="pl-s">'events'</span> <span class="pl-c1"><span class="pl-c1">not</span> <span class="pl-c1">in</span></span> <span class="pl-s1">evt_dict</span>:
         <span class="pl-en">print</span>(<span class="pl-s">"非 OSS 触发事件"</span>)
         <span class="pl-k">return</span> {<span class="pl-s">"statusCode"</span>: <span class="pl-c1">400</span>, <span class="pl-s">"body"</span>: <span class="pl-s">"非 OSS 触发事件"</span>}
 
-    <span class="pl-k">for</span> <span class="pl-s1">record</span> <span class="pl-c1">in</span> <span class="pl-s1">event</span>[<span class="pl-s">'events'</span>]:
+    <span class="pl-c"># 初始化 OSS 客户端（优先尝试使用环境变量的长期密钥，若无则尝试取 context 中的临时 STS 密钥）</span>
+    <span class="pl-s1">creds</span> <span class="pl-c1">=</span> <span class="pl-s1">context</span>.<span class="pl-c1">credentials</span>
+    <span class="pl-s1">ak</span> <span class="pl-c1">=</span> <span class="pl-c1">OSS_ACCESS_KEY_ID</span> <span class="pl-c1">or</span> <span class="pl-s1">creds</span>.<span class="pl-c1">access_key_id</span>
+    <span class="pl-s1">sk</span> <span class="pl-c1">=</span> <span class="pl-c1">OSS_ACCESS_KEY_SECRET</span> <span class="pl-c1">or</span> <span class="pl-s1">creds</span>.<span class="pl-c1">access_key_secret</span>
+    <span class="pl-s1">token</span> <span class="pl-c1">=</span> <span class="pl-s1">creds</span>.<span class="pl-c1">security_token</span> <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-c1">OSS_ACCESS_KEY_ID</span> <span class="pl-k">else</span> <span class="pl-c1">None</span>
+
+    <span class="pl-k">if</span> <span class="pl-s1">token</span>:
+        <span class="pl-s1">auth</span> <span class="pl-c1">=</span> <span class="pl-s1">oss2</span>.<span class="pl-c1">StsAuth</span>(<span class="pl-s1">ak</span>, <span class="pl-s1">sk</span>, <span class="pl-s1">token</span>)
+    <span class="pl-k">else</span>:
+        <span class="pl-s1">auth</span> <span class="pl-c1">=</span> <span class="pl-s1">oss2</span>.<span class="pl-c1">Auth</span>(<span class="pl-s1">ak</span>, <span class="pl-s1">sk</span>)
+        
+    <span class="pl-s1">bucket</span> <span class="pl-c1">=</span> <span class="pl-s1">oss2</span>.<span class="pl-c1">Bucket</span>(<span class="pl-s1">auth</span>, <span class="pl-c1">OSS_ENDPOINT</span>, <span class="pl-c1">OSS_BUCKET_NAME</span>)
+
+    <span class="pl-k">for</span> <span class="pl-s1">record</span> <span class="pl-c1">in</span> <span class="pl-s1">evt_dict</span>[<span class="pl-s">'events'</span>]:
         <span class="pl-s1">key</span> <span class="pl-c1">=</span> <span class="pl-s1">record</span>[<span class="pl-s">'oss'</span>][<span class="pl-s">'object'</span>][<span class="pl-s">'key'</span>]
-        <span class="pl-en">print</span>(<span class="pl-s">f"触发处理的 Key: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">key</span><span class="pl-kos">}</span></span>"</span>)  <span class="pl-c"># 调试日志</span>
+        <span class="pl-en">print</span>(<span class="pl-s">f"触发处理的 Key: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">key</span><span class="pl-kos">}</span></span>"</span>)
 
         <span class="pl-c"># ====== 只处理 original/ 文件夹 ======</span>
         <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">key</span>.<span class="pl-c1">startswith</span>(<span class="pl-c1">ORIGINAL_FOLDER</span>):
@@ -199,13 +212,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
             <span class="pl-en">print</span>(<span class="pl-s">f"原图大小: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">img</span>.<span class="pl-c1">size</span><span class="pl-kos">}</span></span>, 模式: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">img</span>.<span class="pl-c1">mode</span><span class="pl-kos">}</span></span>"</span>)
 
-            <span class="pl-c"># ====== 生成缩略图 ======</span>
-            <span class="pl-s1">img</span>.<span class="pl-c1">thumbnail</span>((<span class="pl-c1">200</span>, <span class="pl-c1">200</span>), <span class="pl-v">Image</span>.<span class="pl-c1">ANTIALIAS</span>)
+            <span class="pl-c"># 2. 【修复】兼容 Pillow 10+ 的缩略图抗锯齿参数</span>
+            <span class="pl-s1">resample_algo</span> <span class="pl-c1">=</span> <span class="pl-en">getattr</span>(<span class="pl-v">Image</span>, <span class="pl-s">'Resampling'</span>, <span class="pl-v">Image</span>).<span class="pl-c1">LANCZOS</span>
+            <span class="pl-s1">img</span>.<span class="pl-c1">thumbnail</span>((<span class="pl-c1">200</span>, <span class="pl-c1">200</span>), <span class="pl-s1">resample_algo</span>)
 
             <span class="pl-c"># ====== 透明 PNG 转换处理 ======</span>
             <span class="pl-k">if</span> <span class="pl-s1">img</span>.<span class="pl-c1">mode</span> <span class="pl-c1">in</span> (<span class="pl-s">'RGBA'</span>, <span class="pl-s">'LA'</span>) <span class="pl-c1">or</span> (<span class="pl-s1">img</span>.<span class="pl-c1">mode</span> <span class="pl-c1">==</span> <span class="pl-s">'P'</span> <span class="pl-c1">and</span> <span class="pl-s">'transparency'</span> <span class="pl-c1">in</span> <span class="pl-s1">img</span>.<span class="pl-c1">info</span>):
-                <span class="pl-s1">background</span> <span class="pl-c1">=</span> <span class="pl-v">Image</span>.<span class="pl-c1">new</span>(<span class="pl-s">"RGB"</span>, <span class="pl-s1">img</span>.<span class="pl-c1">size</span>, (<span class="pl-c1">255</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>))  <span class="pl-c"># 白底</span>
-                <span class="pl-s1">background</span>.<span class="pl-c1">paste</span>(<span class="pl-s1">img</span>, <span class="pl-s1">mask</span><span class="pl-c1">=</span><span class="pl-s1">img</span>.<span class="pl-c1">split</span>()[<span class="pl-c1">-</span><span class="pl-c1">1</span>])  <span class="pl-c"># 保留透明部分</span>
+                <span class="pl-s1">background</span> <span class="pl-c1">=</span> <span class="pl-v">Image</span>.<span class="pl-c1">new</span>(<span class="pl-s">"RGB"</span>, <span class="pl-s1">img</span>.<span class="pl-c1">size</span>, (<span class="pl-c1">255</span>, <span class="pl-c1">255</span>, <span class="pl-c1">255</span>))
+                <span class="pl-s1">background</span>.<span class="pl-c1">paste</span>(<span class="pl-s1">img</span>, <span class="pl-s1">mask</span><span class="pl-c1">=</span><span class="pl-s1">img</span>.<span class="pl-c1">split</span>()[<span class="pl-c1">-</span><span class="pl-c1">1</span>])
                 <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-s1">background</span>
             <span class="pl-k">elif</span> <span class="pl-s1">img</span>.<span class="pl-c1">mode</span> <span class="pl-c1">!=</span> <span class="pl-s">'RGB'</span>:
                 <span class="pl-s1">img</span> <span class="pl-c1">=</span> <span class="pl-s1">img</span>.<span class="pl-c1">convert</span>(<span class="pl-s">'RGB'</span>)
@@ -217,7 +231,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
                 <span class="pl-s1">font</span> <span class="pl-c1">=</span> <span class="pl-v">ImageFont</span>.<span class="pl-c1">truetype</span>(<span class="pl-s">"/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"</span>, <span class="pl-c1">20</span>)
             <span class="pl-k">except</span> <span class="pl-v">Exception</span>:
                 <span class="pl-s1">font</span> <span class="pl-c1">=</span> <span class="pl-v">ImageFont</span>.<span class="pl-c1">load_default</span>()
-            <span class="pl-s1">text_width</span>, <span class="pl-s1">text_height</span> <span class="pl-c1">=</span> <span class="pl-s1">draw</span>.<span class="pl-c1">textsize</span>(<span class="pl-s1">text</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font</span>)
+            
+            <span class="pl-c"># 3. 【修复】使用 textbbox 替代已废弃的 textsize</span>
+            <span class="pl-k">if</span> <span class="pl-en">hasattr</span>(<span class="pl-s1">draw</span>, <span class="pl-s">'textbbox'</span>):
+                <span class="pl-c"># textbbox 返回元组 (left, top, right, bottom)</span>
+                <span class="pl-s1">bbox</span> <span class="pl-c1">=</span> <span class="pl-s1">draw</span>.<span class="pl-c1">textbbox</span>((<span class="pl-c1">0</span>, <span class="pl-c1">0</span>), <span class="pl-s1">text</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font</span>)
+                <span class="pl-s1">text_width</span> <span class="pl-c1">=</span> <span class="pl-s1">bbox</span>[<span class="pl-c1">2</span>] <span class="pl-c1">-</span> <span class="pl-s1">bbox</span>[<span class="pl-c1">0</span>]
+                <span class="pl-s1">text_height</span> <span class="pl-c1">=</span> <span class="pl-s1">bbox</span>[<span class="pl-c1">3</span>] <span class="pl-c1">-</span> <span class="pl-s1">bbox</span>[<span class="pl-c1">1</span>]
+            <span class="pl-k">else</span>:
+                <span class="pl-c"># 兼容极老版本的 Pillow</span>
+                <span class="pl-s1">text_width</span>, <span class="pl-s1">text_height</span> <span class="pl-c1">=</span> <span class="pl-s1">draw</span>.<span class="pl-c1">textsize</span>(<span class="pl-s1">text</span>, <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font</span>)
+
             <span class="pl-s1">draw</span>.<span class="pl-c1">text</span>((<span class="pl-s1">img</span>.<span class="pl-c1">width</span> <span class="pl-c1">-</span> <span class="pl-s1">text_width</span> <span class="pl-c1">-</span> <span class="pl-c1">10</span>, <span class="pl-s1">img</span>.<span class="pl-c1">height</span> <span class="pl-c1">-</span> <span class="pl-s1">text_height</span> <span class="pl-c1">-</span> <span class="pl-c1">10</span>),
                       <span class="pl-s1">text</span>, <span class="pl-s1">fill</span><span class="pl-c1">=</span>(<span class="pl-c1">255</span>, <span class="pl-c1">0</span>, <span class="pl-c1">0</span>), <span class="pl-s1">font</span><span class="pl-c1">=</span><span class="pl-s1">font</span>)
 
@@ -226,17 +250,28 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
             <span class="pl-s1">img</span>.<span class="pl-c1">save</span>(<span class="pl-s1">out_buffer</span>, <span class="pl-s1">format</span><span class="pl-c1">=</span><span class="pl-s">'JPEG'</span>)
             <span class="pl-s1">out_buffer</span>.<span class="pl-c1">seek</span>(<span class="pl-c1">0</span>)
 
-            <span class="pl-s1">filename</span> <span class="pl-c1">=</span> <span class="pl-s1">key</span>.<span class="pl-c1">split</span>(<span class="pl-s">'/'</span>)[<span class="pl-c1">-</span><span class="pl-c1">1</span>]
-            <span class="pl-s1">processed_key</span> <span class="pl-c1">=</span> <span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-c1">PROCESSED_FOLDER</span><span class="pl-kos">}</span></span>thumb_<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">filename</span><span class="pl-kos">}</span></span>"</span>
+            <span class="pl-c"># 4. 【优化】保留相对路径结构，避免拍扁目录</span>
+            <span class="pl-c"># 例如: original/sub/a.jpg -&gt; processed/thumb_sub_a.jpg 或者 processed/sub/thumb_a.jpg</span>
+            <span class="pl-c"># 这里采用截取掉 original/ 前缀，并在文件名前加 thumb_ 的方式</span>
+            <span class="pl-s1">relative_path</span> <span class="pl-c1">=</span> <span class="pl-s1">key</span>[<span class="pl-en">len</span>(<span class="pl-c1">ORIGINAL_FOLDER</span>):] 
+            <span class="pl-s1">path_parts</span> <span class="pl-c1">=</span> <span class="pl-s1">relative_path</span>.<span class="pl-c1">split</span>(<span class="pl-s">'/'</span>)
+            <span class="pl-s1">path_parts</span>[<span class="pl-c1">-</span><span class="pl-c1">1</span>] <span class="pl-c1">=</span> <span class="pl-s">f"thumb_<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">path_parts</span>[<span class="pl-c1">-</span><span class="pl-c1">1</span>]<span class="pl-kos">}</span></span>"</span>
+            <span class="pl-s1">processed_key</span> <span class="pl-c1">=</span> <span class="pl-s">f"<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-c1">PROCESSED_FOLDER</span><span class="pl-kos">}</span></span><span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s">'/'</span>.<span class="pl-c1">join</span>(<span class="pl-s1">path_parts</span>)<span class="pl-kos">}</span></span>"</span>
+
             <span class="pl-s1">bucket</span>.<span class="pl-c1">put_object</span>(<span class="pl-s1">processed_key</span>, <span class="pl-s1">out_buffer</span>)
             <span class="pl-en">print</span>(<span class="pl-s">f"生成文件成功: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">processed_key</span><span class="pl-kos">}</span></span>"</span>)
 
         <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
             <span class="pl-en">print</span>(<span class="pl-s">f"处理 <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">key</span><span class="pl-kos">}</span></span> 失败: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">e</span><span class="pl-kos">}</span></span>"</span>)
-            <span class="pl-s1">traceback</span>.<span class="pl-c1">print_exc</span>()  <span class="pl-c"># 打印详细堆栈</span>
+            <span class="pl-s1">traceback</span>.<span class="pl-c1">print_exc</span>()
             <span class="pl-k">continue</span>
 
     <span class="pl-k">return</span> {<span class="pl-s">"statusCode"</span>: <span class="pl-c1">200</span>, <span class="pl-s">"body"</span>: <span class="pl-s">"处理完成"</span>}</pre></div>
+<blockquote>
+<p>必须配置的基础变量：<br>
+在函数计算（FC）控制台的函数配置 -&gt; 环境变量中，你必须添加以下两项：OSS_ENDPOINT、OSS_BUCKET_NAME<br>
+密钥变量：1、使用 RAM 角色免密配置，进入函数计算控制台 -&gt; 选择你的服务 -&gt; 服务配置，在“角色配置”中，绑定一个包含 AliyunOSSFullAccess（或更精细权限）的 RAM 角色。代码会自动通过 context.credentials 获取平台临时派发的 STS 凭证，安全且不用担心密钥泄露。2、如果你没有配置 RAM 角色，那就必须在环境变量中提供你阿里云账号（或 RAM 用户）的 AccessKey。你需要额外添加以下两个环境变量：OSS_ACCESS_KEY_ID、OSS_ACCESS_KEY_SECRET</p>
+</blockquote>
 <hr>
 <h3><strong>步骤 6：测试函数</strong></h3>
 <ol>
