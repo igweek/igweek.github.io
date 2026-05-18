@@ -103,89 +103,104 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>在阿里云函数计算控制台创建 <strong>Web 函数</strong>，并将 <code class="notranslate">index.py</code> 代码替换为以下内容：</p>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">json</span>
 <span class="pl-k">import</span> <span class="pl-s1">urllib</span>.<span class="pl-s1">request</span>
-<span class="pl-k">import</span> <span class="pl-s1">urllib</span>.<span class="pl-s1">parse</span>
 
-<span class="pl-k">def</span> <span class="pl-en">handler</span>(<span class="pl-s1">environ</span>, <span class="pl-s1">start_response</span>):
-    <span class="pl-s">"""</span>
-<span class="pl-s">    阿里云函数计算 Web 运行环境的标准 WSGI 处理函数</span>
-<span class="pl-s">    """</span>
-    <span class="pl-c"># 1. 彻底解决跨域问题 (CORS)</span>
-    <span class="pl-c"># 浏览器的常规 POST 请求会先发送一个 OPTIONS 预检请求，必须正确响应</span>
-    <span class="pl-k">if</span> <span class="pl-s1">environ</span>[<span class="pl-s">'REQUEST_METHOD'</span>] <span class="pl-c1">==</span> <span class="pl-s">'OPTIONS'</span>:
-        <span class="pl-s1">status</span> <span class="pl-c1">=</span> <span class="pl-s">'204 No Content'</span>
-        <span class="pl-s1">headers</span> <span class="pl-c1">=</span> [
-            (<span class="pl-s">'Access-Control-Allow-Origin'</span>, <span class="pl-s">'*'</span>),
-            (<span class="pl-s">'Access-Control-Allow-Methods'</span>, <span class="pl-s">'POST, OPTIONS'</span>),
-            (<span class="pl-s">'Access-Control-Allow-Headers'</span>, <span class="pl-s">'Content-Type, Authorization'</span>),
-            (<span class="pl-s">'Access-Control-Max-Age'</span>, <span class="pl-s">'86400'</span>)  <span class="pl-c"># 缓存预检结果，减少请求次数</span>
-        ]
-        <span class="pl-en">start_response</span>(<span class="pl-s1">status</span>, <span class="pl-s1">headers</span>)
-        <span class="pl-k">return</span> [<span class="pl-s">b''</span>]
+<span class="pl-k">def</span> <span class="pl-en">handler</span>(<span class="pl-s1">event</span>, <span class="pl-s1">context</span>):
+    <span class="pl-c"># 处理字节类型的 event</span>
+    <span class="pl-k">if</span> <span class="pl-en">isinstance</span>(<span class="pl-s1">event</span>, <span class="pl-s1">bytes</span>
+):
+        <span class="pl-s1">event</span> <span class="pl-c1">=</span> <span class="pl-s1">event</span>.<span class="pl-c1">decode</span>(<span class="pl-s">'utf-8'</span>)
+    <span class="pl-s1">event</span> <span class="pl-c1">=</span> <span class="pl-s1">json</span>.<span class="pl-c1">loads</span>(<span class="pl-s1">event</span>)
 
-    <span class="pl-c"># 2. 解析前端传输的 JSON 负载</span>
-    <span class="pl-s1">ip_address</span> <span class="pl-c1">=</span> <span class="pl-s">''</span>
-    <span class="pl-k">if</span> <span class="pl-s1">environ</span>[<span class="pl-s">'REQUEST_METHOD'</span>] <span class="pl-c1">==</span> <span class="pl-s">'POST'</span>:
-        <span class="pl-k">try</span>:
-            <span class="pl-s1">request_body_size</span> <span class="pl-c1">=</span> <span class="pl-en">int</span>(<span class="pl-s1">environ</span>.<span class="pl-c1">get</span>(<span class="pl-s">'CONTENT_LENGTH'</span>, <span class="pl-c1">0</span>))
-            <span class="pl-s1">request_body</span> <span class="pl-c1">=</span> <span class="pl-s1">environ</span>[<span class="pl-s">'wsgi.input'</span>].<span class="pl-c1">read</span>(<span class="pl-s1">request_body_size</span>)
-            <span class="pl-s1">body_json</span> <span class="pl-c1">=</span> <span class="pl-s1">json</span>.<span class="pl-c1">loads</span>(<span class="pl-s1">request_body</span>)
-            <span class="pl-s1">ip_address</span> <span class="pl-c1">=</span> <span class="pl-s1">body_json</span>.<span class="pl-c1">get</span>(<span class="pl-s">'ip'</span>, <span class="pl-s">''</span>).<span class="pl-c1">strip</span>()
-        <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
-            <span class="pl-c"># 解析失败则默认为空</span>
-            <span class="pl-k">pass</span>
+    <span class="pl-c"># 关键修复：正确获取请求方法</span>
+    <span class="pl-c"># 阿里云 HTTP 触发器的 event 结构，请求方法在 'requestContext' 里</span>
+    <span class="pl-s1">method</span> <span class="pl-c1">=</span> <span class="pl-s">''</span>
+    <span class="pl-k">if</span> <span class="pl-s">'requestContext'</span> <span class="pl-c1">in</span> <span class="pl-s1">event</span> <span class="pl-c1">and</span> <span class="pl-s">'http'</span> <span class="pl-c1">in</span> <span class="pl-s1">event</span>[<span class="pl-s">'requestContext'</span>]:
+        <span class="pl-s1">method</span> <span class="pl-c1">=</span> <span class="pl-s1">event</span>[<span class="pl-s">'requestContext'</span>][<span class="pl-s">'http'</span>][<span class="pl-s">'method'</span>]
+    <span class="pl-k">elif</span> <span class="pl-s">'httpMethod'</span> <span class="pl-c1">in</span> <span class="pl-s1">event</span>:
+        <span class="pl-s1">method</span> <span class="pl-c1">=</span> <span class="pl-s1">event</span>[<span class="pl-s">'httpMethod'</span>]
 
-    <span class="pl-c"># 验证输入有效性</span>
-    <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">ip_address</span>:
-        <span class="pl-s1">status</span> <span class="pl-c1">=</span> <span class="pl-s">'400 Bad Request'</span>
-        <span class="pl-s1">headers</span> <span class="pl-c1">=</span> [(<span class="pl-s">'Content-type'</span>, <span class="pl-s">'application/json'</span>), (<span class="pl-s">'Access-Control-Allow-Origin'</span>, <span class="pl-s">'*'</span>)]
-        <span class="pl-en">start_response</span>(<span class="pl-s1">status</span>, <span class="pl-s1">headers</span>)
-        <span class="pl-k">return</span> [<span class="pl-s1">json</span>.<span class="pl-c1">dumps</span>({<span class="pl-s">"error"</span>: <span class="pl-s">"请输入有效的 IP 地址"</span>}, <span class="pl-s1">ensure_ascii</span><span class="pl-c1">=</span><span class="pl-c1">False</span>).<span class="pl-c1">encode</span>(<span class="pl-s">'utf-8'</span>)]
+    <span class="pl-c"># 1. 处理 OPTIONS 预检请求</span>
+    <span class="pl-k">if</span> <span class="pl-s1">method</span> <span class="pl-c1">==</span> <span class="pl-s">'OPTIONS'</span>:
+        <span class="pl-k">return</span> {
+            <span class="pl-s">'statusCode'</span>: <span class="pl-c1">200</span>,
+            <span class="pl-s">'headers'</span>: {
+                <span class="pl-s">'Access-Control-Allow-Origin'</span>: <span class="pl-s">'*'</span>,
+                <span class="pl-s">'Access-Control-Allow-Methods'</span>: <span class="pl-s">'GET, POST, OPTIONS'</span>,
+                <span class="pl-s">'Access-Control-Allow-Headers'</span>: <span class="pl-s">'Content-Type, Authorization'</span>,
+                <span class="pl-s">'Access-Control-Max-Age'</span>: <span class="pl-s">'86400'</span>
+            },
+            <span class="pl-s">'body'</span>: <span class="pl-s">''</span>
+        }
 
-    <span class="pl-c"># 3. 接入真实的底层 IP 数据源 (使用免费高精度的 ip-api 接口，指定中文返回)</span>
-    <span class="pl-s1">api_url</span> <span class="pl-c1">=</span> <span class="pl-s">f"http://ip-api.com/json/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">ip_address</span><span class="pl-kos">}</span></span>?lang=zh-CN"</span>
-    
+    <span class="pl-c"># 2. 解析请求体</span>
+    <span class="pl-s1">ip</span> <span class="pl-c1">=</span> <span class="pl-s">''</span>
     <span class="pl-k">try</span>:
-        <span class="pl-c"># 构造请求，加入标准的浏览器 User-Agent，防止被数据源的风控系统拦截</span>
+        <span class="pl-s1">body</span> <span class="pl-c1">=</span> <span class="pl-s1">json</span>.<span class="pl-c1">loads</span>(<span class="pl-s1">event</span>.<span class="pl-c1">get</span>(<span class="pl-s">'body'</span>, <span class="pl-s">'{}'</span>))
+        <span class="pl-s1">ip</span> <span class="pl-c1">=</span> <span class="pl-s1">body</span>.<span class="pl-c1">get</span>(<span class="pl-s">'ip'</span>, <span class="pl-s">''</span>).<span class="pl-c1">strip</span>()
+    <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
+        <span class="pl-k">pass</span>
+
+    <span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">ip</span>:
+        <span class="pl-k">return</span> {
+            <span class="pl-s">'statusCode'</span>: <span class="pl-c1">400</span>,
+            <span class="pl-s">'headers'</span>: {
+                <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json; charset=utf-8'</span>,
+                <span class="pl-s">'Access-Control-Allow-Origin'</span>: <span class="pl-s">'*'</span>
+            },
+            <span class="pl-s">'body'</span>: <span class="pl-s1">json</span>.<span class="pl-c1">dumps</span>({<span class="pl-s">'success'</span>: <span class="pl-c1">False</span>, <span class="pl-s">'error'</span>: <span class="pl-s">'请输入有效的 IP 地址'</span>}, <span class="pl-s1">ensure_ascii</span><span class="pl-c1">=</span><span class="pl-c1">False</span>)
+        }
+
+    <span class="pl-c"># 3. 调用 IP 接口</span>
+    <span class="pl-k">try</span>:
+        <span class="pl-s1">url</span> <span class="pl-c1">=</span> <span class="pl-s">f"http://ip-api.com/json/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">ip</span><span class="pl-kos">}</span></span>?lang=zh-CN"</span>
         <span class="pl-s1">req</span> <span class="pl-c1">=</span> <span class="pl-s1">urllib</span>.<span class="pl-c1">request</span>.<span class="pl-c1">Request</span>(
-            <span class="pl-s1">api_url</span>, 
+            <span class="pl-s1">url</span>,
             <span class="pl-s1">headers</span><span class="pl-c1">=</span>{<span class="pl-s">'User-Agent'</span>: <span class="pl-s">'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'</span>}
         )
-        
-        <span class="pl-c"># 发起网络请求并设置 5 秒超时保护</span>
-        <span class="pl-k">with</span> <span class="pl-s1">urllib</span>.<span class="pl-c1">request</span>.<span class="pl-c1">urlopen</span>(<span class="pl-s1">req</span>, <span class="pl-s1">timeout</span><span class="pl-c1">=</span><span class="pl-c1">5</span>) <span class="pl-k">as</span> <span class="pl-s1">response</span>:
-            <span class="pl-s1">source_data</span> <span class="pl-c1">=</span> <span class="pl-s1">json</span>.<span class="pl-c1">loads</span>(<span class="pl-s1">response</span>.<span class="pl-c1">read</span>().<span class="pl-c1">decode</span>(<span class="pl-s">'utf-8'</span>))
-
-        <span class="pl-c"># 4. 数据清洗与业务逻辑转换</span>
-        <span class="pl-k">if</span> <span class="pl-s1">source_data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'status'</span>) <span class="pl-c1">==</span> <span class="pl-s">'success'</span>:
-            <span class="pl-s1">result</span> <span class="pl-c1">=</span> {
-                <span class="pl-s">"success"</span>: <span class="pl-c1">True</span>,
-                <span class="pl-s">"ip"</span>: <span class="pl-s1">source_data</span>.<span class="pl-c1">get</span>(<span class="pl-s">"query"</span>),
-                <span class="pl-s">"country"</span>: <span class="pl-s1">source_data</span>.<span class="pl-c1">get</span>(<span class="pl-s">"country"</span>, <span class="pl-s">"未知国家"</span>),
-                <span class="pl-s">"region"</span>: <span class="pl-s1">source_data</span>.<span class="pl-c1">get</span>(<span class="pl-s">"regionName"</span>, <span class="pl-s">"未知省份"</span>),
-                <span class="pl-s">"city"</span>: <span class="pl-s1">source_data</span>.<span class="pl-c1">get</span>(<span class="pl-s">"city"</span>, <span class="pl-s">"未知城市"</span>),
-                <span class="pl-s">"isp"</span>: <span class="pl-s1">source_data</span>.<span class="pl-c1">get</span>(<span class="pl-s">"isp"</span>, <span class="pl-s">"未知运营商"</span>)
-            }
-        <span class="pl-k">else</span>:
-            <span class="pl-c"># 针对数据源返回的特定错误（如私有IP、格式错误等）进行友好提示</span>
-            <span class="pl-s1">message</span> <span class="pl-c1">=</span> <span class="pl-s1">source_data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'message'</span>, <span class="pl-s">'解析失败'</span>)
-            <span class="pl-k">if</span> <span class="pl-s1">message</span> <span class="pl-c1">==</span> <span class="pl-s">'private range'</span>:
-                <span class="pl-s1">error_msg</span> <span class="pl-c1">=</span> <span class="pl-s">"该地址为局域网私if有IP，无法查询公网地理位置"</span>
-            <span class="pl-k">else</span>:
-                <span class="pl-s1">error_msg</span> <span class="pl-c1">=</span> <span class="pl-s">f"数据源无法解析该IP: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">message</span><span class="pl-kos">}</span></span>"</span>
-            <span class="pl-s1">result</span> <span class="pl-c1">=</span> {<span class="pl-s">"success"</span>: <span class="pl-c1">False</span>, <span class="pl-s">"error"</span>: <span class="pl-s1">error_msg</span>}
-
+        <span class="pl-k">with</span> <span class="pl-s1">urllib</span>.<span class="pl-c1">request</span>.<span class="pl-c1">urlopen</span>(<span class="pl-s1">req</span>, <span class="pl-s1">timeout</span><span class="pl-c1">=</span><span class="pl-c1">5</span>) <span class="pl-k">as</span> <span class="pl-s1">f</span>:
+            <span class="pl-s1">data</span> <span class="pl-c1">=</span> <span class="pl-s1">json</span>.<span class="pl-c1">load</span>(<span class="pl-s1">f</span>)
     <span class="pl-k">except</span> <span class="pl-v">Exception</span> <span class="pl-k">as</span> <span class="pl-s1">e</span>:
-        <span class="pl-c"># 捕捉网络超时或其它未知异常</span>
-        <span class="pl-s1">result</span> <span class="pl-c1">=</span> {<span class="pl-s">"success"</span>: <span class="pl-c1">False</span>, <span class="pl-s">"error"</span>: <span class="pl-s">f"后端代理请求数据源失败: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-en">str</span>(<span class="pl-s1">e</span>)<span class="pl-kos">}</span></span>"</span>}
+        <span class="pl-k">return</span> {
+            <span class="pl-s">'statusCode'</span>: <span class="pl-c1">500</span>,
+            <span class="pl-s">'headers'</span>: {
+                <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json; charset=utf-8'</span>,
+                <span class="pl-s">'Access-Control-Allow-Origin'</span>: <span class="pl-s">'*'</span>
+            },
+            <span class="pl-s">'body'</span>: <span class="pl-s1">json</span>.<span class="pl-c1">dumps</span>({<span class="pl-s">'success'</span>: <span class="pl-c1">False</span>, <span class="pl-s">'error'</span>: <span class="pl-s">f'查询失败：<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-en">str</span>(<span class="pl-s1">e</span>)<span class="pl-kos">}</span></span>'</span>}, <span class="pl-s1">ensure_ascii</span><span class="pl-c1">=</span><span class="pl-c1">False</span>)
+        }
 
-    <span class="pl-c"># 5. 构建响应返回前端</span>
-    <span class="pl-s1">status</span> <span class="pl-c1">=</span> <span class="pl-s">'200 OK'</span>
-    <span class="pl-s1">headers</span> <span class="pl-c1">=</span> [
-        (<span class="pl-s">'Content-type'</span>, <span class="pl-s">'application/json; charset=utf-8'</span>),
-        (<span class="pl-s">'Access-Control-Allow-Origin'</span>, <span class="pl-s">'*'</span>)  <span class="pl-c"># 允许任何前端域跨域调用</span>
-    ]
-    <span class="pl-en">start_response</span>(<span class="pl-s1">status</span>, <span class="pl-s1">headers</span>)
-    <span class="pl-k">return</span> [<span class="pl-s1">json</span>.<span class="pl-c1">dumps</span>(<span class="pl-s1">result</span>, <span class="pl-s1">ensure_ascii</span><span class="pl-c1">=</span><span class="pl-c1">False</span>).<span class="pl-c1">encode</span>(<span class="pl-s">'utf-8'</span>)]</pre></div>
+    <span class="pl-c"># 4. 处理结果</span>
+    <span class="pl-k">if</span> <span class="pl-s1">data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'status'</span>) <span class="pl-c1">!=</span> <span class="pl-s">'success'</span>:
+        <span class="pl-s1">msg</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'message'</span>, <span class="pl-s">'解析失败'</span>)
+        <span class="pl-k">if</span> <span class="pl-s1">msg</span> <span class="pl-c1">==</span> <span class="pl-s">'private range'</span>:
+            <span class="pl-s1">msg</span> <span class="pl-c1">=</span> <span class="pl-s">'该IP为局域网私有地址，无法查询公网位置'</span>
+        <span class="pl-k">return</span> {
+            <span class="pl-s">'statusCode'</span>: <span class="pl-c1">200</span>,
+            <span class="pl-s">'headers'</span>: {
+                <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json; charset=utf-8'</span>,
+                <span class="pl-s">'Access-Control-Allow-Origin'</span>: <span class="pl-s">'*'</span>
+            },
+            <span class="pl-s">'body'</span>: <span class="pl-s1">json</span>.<span class="pl-c1">dumps</span>({<span class="pl-s">'success'</span>: <span class="pl-c1">False</span>, <span class="pl-s">'error'</span>: <span class="pl-s1">msg</span>}, <span class="pl-s1">ensure_ascii</span><span class="pl-c1">=</span><span class="pl-c1">False</span>)
+        }
+
+    <span class="pl-c"># 成功返回</span>
+    <span class="pl-s1">result</span> <span class="pl-c1">=</span> {
+        <span class="pl-s">'success'</span>: <span class="pl-c1">True</span>,
+        <span class="pl-s">'ip'</span>: <span class="pl-s1">data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'query'</span>),
+        <span class="pl-s">'country'</span>: <span class="pl-s1">data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'country'</span>),
+        <span class="pl-s">'region'</span>: <span class="pl-s1">data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'regionName'</span>),
+        <span class="pl-s">'city'</span>: <span class="pl-s1">data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'city'</span>),
+        <span class="pl-s">'isp'</span>: <span class="pl-s1">data</span>.<span class="pl-c1">get</span>(<span class="pl-s">'isp'</span>)
+    }
+
+    <span class="pl-k">return</span> {
+        <span class="pl-s">'statusCode'</span>: <span class="pl-c1">200</span>,
+        <span class="pl-s">'headers'</span>: {
+            <span class="pl-s">'Content-Type'</span>: <span class="pl-s">'application/json; charset=utf-8'</span>,
+            <span class="pl-s">'Access-Control-Allow-Origin'</span>: <span class="pl-s">'*'</span>
+        },
+        <span class="pl-s">'body'</span>: <span class="pl-s1">json</span>.<span class="pl-c1">dumps</span>(<span class="pl-s1">result</span>, <span class="pl-s1">ensure_ascii</span><span class="pl-c1">=</span><span class="pl-c1">False</span>)
+    }</pre></div>
 <hr>
 <h2>三、 前端核心实现：极简极美的静态页面</h2>
 <p>前端采用纯原生 <strong>HTML5 + CSS3 + Vanilla JS</strong> 编写，没有任何框架负担。在视觉上，我们摒弃了容易造成视觉疲劳的毛玻璃效果，转而采用更加硬朗、干净的<strong>现代极简主义设计</strong>。配合 <code class="notranslate">32px</code> 的复古浅色工程网格背景，让实验呈现出工业设计的美感。</p>

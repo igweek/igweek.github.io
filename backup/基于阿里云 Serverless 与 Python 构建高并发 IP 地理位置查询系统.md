@@ -24,90 +24,104 @@
 ```python
 import json
 import urllib.request
-import urllib.parse
 
-def handler(environ, start_response):
-    """
-    阿里云函数计算 Web 运行环境的标准 WSGI 处理函数
-    """
-    # 1. 彻底解决跨域问题 (CORS)
-    # 浏览器的常规 POST 请求会先发送一个 OPTIONS 预检请求，必须正确响应
-    if environ['REQUEST_METHOD'] == 'OPTIONS':
-        status = '204 No Content'
-        headers = [
-            ('Access-Control-Allow-Origin', '*'),
-            ('Access-Control-Allow-Methods', 'POST, OPTIONS'),
-            ('Access-Control-Allow-Headers', 'Content-Type, Authorization'),
-            ('Access-Control-Max-Age', '86400')  # 缓存预检结果，减少请求次数
-        ]
-        start_response(status, headers)
-        return [b'']
+def handler(event, context):
+    # 处理字节类型的 event
+    if isinstance(event, bytes
+):
+        event = event.decode('utf-8')
+    event = json.loads(event)
 
-    # 2. 解析前端传输的 JSON 负载
-    ip_address = ''
-    if environ['REQUEST_METHOD'] == 'POST':
-        try:
-            request_body_size = int(environ.get('CONTENT_LENGTH', 0))
-            request_body = environ['wsgi.input'].read(request_body_size)
-            body_json = json.loads(request_body)
-            ip_address = body_json.get('ip', '').strip()
-        except Exception as e:
-            # 解析失败则默认为空
-            pass
+    # 关键修复：正确获取请求方法
+    # 阿里云 HTTP 触发器的 event 结构，请求方法在 'requestContext' 里
+    method = ''
+    if 'requestContext' in event and 'http' in event['requestContext']:
+        method = event['requestContext']['http']['method']
+    elif 'httpMethod' in event:
+        method = event['httpMethod']
 
-    # 验证输入有效性
-    if not ip_address:
-        status = '400 Bad Request'
-        headers = [('Content-type', 'application/json'), ('Access-Control-Allow-Origin', '*')]
-        start_response(status, headers)
-        return [json.dumps({"error": "请输入有效的 IP 地址"}, ensure_ascii=False).encode('utf-8')]
+    # 1. 处理 OPTIONS 预检请求
+    if method == 'OPTIONS':
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Max-Age': '86400'
+            },
+            'body': ''
+        }
 
-    # 3. 接入真实的底层 IP 数据源 (使用免费高精度的 ip-api 接口，指定中文返回)
-    api_url = f"http://ip-api.com/json/{ip_address}?lang=zh-CN"
-    
+    # 2. 解析请求体
+    ip = ''
     try:
-        # 构造请求，加入标准的浏览器 User-Agent，防止被数据源的风控系统拦截
+        body = json.loads(event.get('body', '{}'))
+        ip = body.get('ip', '').strip()
+    except Exception as e:
+        pass
+
+    if not ip:
+        return {
+            'statusCode': 400,
+            'headers': {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps({'success': False, 'error': '请输入有效的 IP 地址'}, ensure_ascii=False)
+        }
+
+    # 3. 调用 IP 接口
+    try:
+        url = f"http://ip-api.com/json/{ip}?lang=zh-CN"
         req = urllib.request.Request(
-            api_url, 
+            url,
             headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         )
-        
-        # 发起网络请求并设置 5 秒超时保护
-        with urllib.request.urlopen(req, timeout=5) as response:
-            source_data = json.loads(response.read().decode('utf-8'))
-
-        # 4. 数据清洗与业务逻辑转换
-        if source_data.get('status') == 'success':
-            result = {
-                "success": True,
-                "ip": source_data.get("query"),
-                "country": source_data.get("country", "未知国家"),
-                "region": source_data.get("regionName", "未知省份"),
-                "city": source_data.get("city", "未知城市"),
-                "isp": source_data.get("isp", "未知运营商")
-            }
-        else:
-            # 针对数据源返回的特定错误（如私有IP、格式错误等）进行友好提示
-            message = source_data.get('message', '解析失败')
-            if message == 'private range':
-                error_msg = "该地址为局域网私if有IP，无法查询公网地理位置"
-            else:
-                error_msg = f"数据源无法解析该IP: {message}"
-            result = {"success": False, "error": error_msg}
-
+        with urllib.request.urlopen(req, timeout=5) as f:
+            data = json.load(f)
     except Exception as e:
-        # 捕捉网络超时或其它未知异常
-        result = {"success": False, "error": f"后端代理请求数据源失败: {str(e)}"}
+        return {
+            'statusCode': 500,
+            'headers': {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps({'success': False, 'error': f'查询失败：{str(e)}'}, ensure_ascii=False)
+        }
 
-    # 5. 构建响应返回前端
-    status = '200 OK'
-    headers = [
-        ('Content-type', 'application/json; charset=utf-8'),
-        ('Access-Control-Allow-Origin', '*')  # 允许任何前端域跨域调用
-    ]
-    start_response(status, headers)
-    return [json.dumps(result, ensure_ascii=False).encode('utf-8')]
+    # 4. 处理结果
+    if data.get('status') != 'success':
+        msg = data.get('message', '解析失败')
+        if msg == 'private range':
+            msg = '该IP为局域网私有地址，无法查询公网位置'
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'application/json; charset=utf-8',
+                'Access-Control-Allow-Origin': '*'
+            },
+            'body': json.dumps({'success': False, 'error': msg}, ensure_ascii=False)
+        }
 
+    # 成功返回
+    result = {
+        'success': True,
+        'ip': data.get('query'),
+        'country': data.get('country'),
+        'region': data.get('regionName'),
+        'city': data.get('city'),
+        'isp': data.get('isp')
+    }
+
+    return {
+        'statusCode': 200,
+        'headers': {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Access-Control-Allow-Origin': '*'
+        },
+        'body': json.dumps(result, ensure_ascii=False)
+    }
 ```
 
 ---
