@@ -1,5 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Wed, 20 May 2026 06:17:07 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>零服务器搭建：基于 HTTP 触发器的动态个性化网页</title><link>https://bbs.017121.xyz/post/182.html</link><description>## 一、 实验目的
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 04 Jun 2026 00:49:23 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>阿里云企业级高可用Web架构综合实战</title><link>https://bbs.017121.xyz/post/183.html</link><description>## 一、实验基本信息
+
+**实验名称**：阿里云VPC\+ECS\+SLB\+RDS\+OSS\+弹性伸缩\+监控综合架构部署
+
+**实验满分**：100分
+
+**实验时长**：120分钟
+
+**实验题型**：实操部署
+
+**涉及产品**：VPC、交换机、安全组、ECS、应用型SLB、RDS MySQL、OSS、云监控、ESS弹性伸缩、ROS资源编排
+
+## 二、实验背景
+
+某中小企业门户网站业务流量波动较大，日常流量平稳，营销活动、节假日流量突发暴涨，要求业务7×24小时不中断，具备故障自愈、自动扩容、安全防护、可视化监控能力，同时控制云上资源成本。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/183.html</guid><pubDate>Thu, 04 Jun 2026 00:48:50 +0000</pubDate></item><item><title>零服务器搭建：基于 HTTP 触发器的动态个性化网页</title><link>https://bbs.017121.xyz/post/182.html</link><description>## 一、 实验目的
 
 1. **打破传统认知**：理解在不购买、不配置任何传统云服务器（ECS）的情况下，如何快速发布公网可访问的 Web 页面。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/182.html</guid><pubDate>Wed, 20 May 2026 06:16:40 +0000</pubDate></item><item><title>基于阿里云函数计算 (FC) 与容器镜像 (ACR) 的 Serverless API 部署实验</title><link>https://bbs.017121.xyz/post/181.html</link><description>
 ## 一、 实验目的

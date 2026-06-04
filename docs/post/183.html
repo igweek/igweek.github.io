@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script>document.addEventListener('DOMContentLoaded',function(){var e=document.querySelector('.blogTitle');var t=document.querySelector('.avatar');if(e){e.style.cursor='pointer';e.onclick=function(){location.href='/';}}if(t){t.style.cursor='pointer';t.onclick=function(){location.href='/';}}});</script><script async src='https://www.googletagmanager.com/gtag/js?id=G-5KH0XJYCQ7'></script><script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-5KH0XJYCQ7');</script><script defer src="https://umami.myla.eu.org/script.js" data-website-id="a7942b92-e528-4d9b-a65a-4c19d4a8b4f1"></script><script src='/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="/img/123.png"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="## 一、实验基本信息
+
+**实验名称**：阿里云VPC\+ECS\+SLB\+RDS\+OSS\+弹性伸缩\+监控综合架构部署
+
+**实验满分**：100分
+
+**实验时长**：120分钟
+
+**实验题型**：实操部署
+
+**涉及产品**：VPC、交换机、安全组、ECS、应用型SLB、RDS MySQL、OSS、云监控、ESS弹性伸缩、ROS资源编排
+
+## 二、实验背景
+
+某中小企业门户网站业务流量波动较大，日常流量平稳，营销活动、节假日流量突发暴涨，要求业务7×24小时不中断，具备故障自愈、自动扩容、安全防护、可视化监控能力，同时控制云上资源成本。">
+<meta property="og:title" content="阿里云企业级高可用Web架构综合实战">
+<meta property="og:description" content="## 一、实验基本信息
+
+**实验名称**：阿里云VPC\+ECS\+SLB\+RDS\+OSS\+弹性伸缩\+监控综合架构部署
+
+**实验满分**：100分
+
+**实验时长**：120分钟
+
+**实验题型**：实操部署
+
+**涉及产品**：VPC、交换机、安全组、ECS、应用型SLB、RDS MySQL、OSS、云监控、ESS弹性伸缩、ROS资源编排
+
+## 二、实验背景
+
+某中小企业门户网站业务流量波动较大，日常流量平稳，营销活动、节假日流量突发暴涨，要求业务7×24小时不中断，具备故障自愈、自动扩容、安全防护、可视化监控能力，同时控制云上资源成本。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://bbs.017121.xyz/post/183.html">
+<meta property="og:image" content="/img/123.png">
+<title>阿里云企业级高可用Web架构综合实战</title>
+
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+
+</style>
+<style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">阿里云企业级高可用Web架构综合实战</h1>
+<div class="title-right">
+    <a href="https://bbs.017121.xyz" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/igweek/igweek.github.io/issues/183" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h2>一、实验基本信息</h2>
+<p><strong>实验名称</strong>：阿里云VPC+ECS+SLB+RDS+OSS+弹性伸缩+监控综合架构部署</p>
+<p><strong>实验满分</strong>：100分</p>
+<p><strong>实验时长</strong>：120分钟</p>
+<p><strong>实验题型</strong>：实操部署</p>
+<p><strong>涉及产品</strong>：VPC、交换机、安全组、ECS、应用型SLB、RDS MySQL、OSS、云监控、ESS弹性伸缩、ROS资源编排</p>
+<h2>二、实验背景</h2>
+<p>某中小企业门户网站业务流量波动较大，日常流量平稳，营销活动、节假日流量突发暴涨，要求业务7×24小时不中断，具备故障自愈、自动扩容、安全防护、可视化监控能力，同时控制云上资源成本。请基于阿里云公有云服务，从零搭建一套高可用、高弹性、安全合规的三层Web架构，完成部署、配置、验证、运维全流程操作，并完成理论复盘问答。</p>
+<h2>三、实验目的</h2>
+<ol>
+<li>
+<p>掌握阿里云VPC私有网络搭建、网络隔离与访问控制核心实操。</p>
+</li>
+<li>
+<p>熟练部署Web、数据库、静态存储三层架构，掌握云上动静分离核心方案。</p>
+</li>
+<li>
+<p>掌握SLB负载均衡、多可用区高可用、ESS弹性伸缩的配置与验证方法。</p>
+</li>
+<li>
+<p>掌握云监控指标配置、告警规则创建，实现业务故障主动预警。</p>
+</li>
+<li>
+<p>掌握ROS资源编排一键自动化部署，理解云上代码化运维思想。</p>
+</li>
+<li>
+<p>具备云上架构排错、性能优化、成本优化、安全防护的综合能力。</p>
+</li>
+</ol>
+<h2>四、前置准备</h2>
+<ol>
+<li>
+<p>正常可用的阿里云账号，已完成实名认证，开通对应云产品权限。</p>
+</li>
+<li>
+<p>基础能力：Linux常用命令、Nginx简单配置、MySQL基础操作。</p>
+</li>
+<li>
+<p>本地网络正常，可远程连接ECS、访问阿里云控制台。</p>
+</li>
+</ol>
+<h2>五、详细实验题目与分步实操流程（80分）</h2>
+<h3>任务一：自定义VPC网络环境搭建（15分）</h3>
+<p><strong>实验题目要求</strong>：手动创建独立自定义VPC网络，划分双可用区子网，配置安全组与网络ACL，实现网络安全隔离与正常连通。</p>
+<p><strong>详细实操步骤</strong>：</p>
+<ol>
+<li>
+<p>登录阿里云控制台，搜索进入「专有网络VPC」控制台，点击「创建VPC」。</p>
+</li>
+<li>
+<p>自定义VPC名称，地域选择就近地域，主IPv4网段填写<code class="notranslate">192.168.0.0/16</code>，无需开启IPv6。</p>
+</li>
+<li>
+<p>创建<strong>交换机1（Web子网）</strong>：可用区A，网段<code class="notranslate">192.168.1.0/24</code>，用于部署Web层ECS。</p>
+</li>
+<li>
+<p>创建<strong>交换机2（数据库子网）</strong>：可用区B，网段<code class="notranslate">192.168.2.0/24</code>，用于部署RDS数据库。</p>
+</li>
+<li>
+<p>创建安全组1【Web安全组】：入方向放行22（SSH）、80（HTTP）、443（HTTPS）端口，授权对象为0.0.0.0/0，出方向全部放行。</p>
+</li>
+<li>
+<p>创建安全组2【数据库安全组】：入方向仅放行3306端口，授权对象选择「Web安全组」，拒绝所有公网访问，出方向默认放行。</p>
+</li>
+<li>
+<p>进入网络ACL控制台，绑定当前VPC，默认放行所有入、出规则，完成基础网络防护配置。</p>
+</li>
+<li>
+<p>截图留存：VPC拓扑图、双交换机配置、两套安全组规则页面。</p>
+</li>
+</ol>
+<h3>任务二：三层架构部署+动静分离配置（20分）</h3>
+<p><strong>实验题目要求</strong>：部署Web、数据库、对象存储三层架构，完成网站部署、数据库初始化、OSS静态资源托管，实现Nginx动静分离。</p>
+<p><strong>详细实操步骤</strong>：</p>
+<ol>
+<li>
+<p><strong>部署双可用区ECS节点</strong>：进入ECS控制台，分别在可用区A、可用区B各创建1台ECS，操作系统选择CentOS 7.9，绑定Web安全组，分配公网IP。</p>
+</li>
+<li>
+<p>远程连接两台ECS，执行命令<code class="notranslate">yum install nginx -y</code>安装Nginx，启动并设置开机自启<code class="notranslate">systemctl start nginx &amp;&amp; systemctl enable nginx</code>。</p>
+</li>
+<li>
+<p>修改默认index.html页面，编写简单自定义门户网站内容，保证两台ECS页面可正常访问。</p>
+</li>
+<li>
+<p><strong>部署RDS数据库</strong>：进入RDS控制台，创建MySQL 5.7实例，地域与VPC一致，部署在可用区B，绑定数据库安全组。</p>
+</li>
+<li>
+<p>创建数据库账号、新建业务数据库，开启内网访问，使用ECS内网IP测试数据库连通性，确保公网无法连接RDS。</p>
+</li>
+<li>
+<p><strong>配置OSS静态存储</strong>：进入OSS控制台，创建标准存储Bucket，读写权限设置为公共读。</p>
+</li>
+<li>
+<p>上传网站图片、css、js等静态资源，复制静态资源外网访问地址。</p>
+</li>
+<li>
+<p><strong>配置Nginx动静分离</strong>：编辑Nginx配置文件，配置规则：后缀为jpg、png、css、js等静态请求转发至OSS地址，动态请求由本地ECS处理。</p>
+</li>
+<li>
+<p>重启Nginx服务，访问网站验证：动态页面正常显示、静态资源从OSS加载，完成动静分离部署。</p>
+</li>
+<li>
+<p>截图留存：ECS Nginx运行状态、RDS内网连接成功页面、OSS资源访问页面、动静分离访问效果。</p>
+</li>
+</ol>
+<h3>任务三：SLB高可用+ESS弹性伸缩配置（20分）</h3>
+<p><strong>实验题目要求</strong>：配置应用型SLB实现流量分发与高可用，配置弹性伸缩规则，实现流量高峰自动扩容、低峰自动缩容，验证故障自愈与弹性效果。</p>
+<p><strong>详细实操步骤</strong>：</p>
+<ol>
+<li>
+<p>进入负载均衡SLB控制台，创建<strong>应用型公网SLB</strong>，地域与VPC一致。</p>
+</li>
+<li>
+<p>创建后端服务器组，将两台不同可用区的Web ECS加入服务器组，配置HTTP 80端口监听规则，转发至后端ECS 80端口。</p>
+</li>
+<li>
+<p>配置健康检查：协议HTTP，路径<code class="notranslate">/</code>，检查间隔5秒，异常阈值3次、正常阈值2次，开启节点自动剔除与恢复机制。</p>
+</li>
+<li>
+<p>访问SLB公网IP，刷新多次验证两台ECS轮流接收请求，实现负载分发。</p>
+</li>
+<li>
+<p>进入弹性伸缩ESS控制台，创建伸缩配置，选择与现有Web ECS相同的配置规格、镜像、安全组。</p>
+</li>
+<li>
+<p>创建伸缩组，绑定SLB服务器组与对应VPC子网，设置最大实例数4台、最小实例数2台。</p>
+</li>
+<li>
+<p>创建伸缩规则：<strong>扩容规则</strong>ECS CPU使用率≥70%持续5分钟自动新增实例；<strong>缩容规则</strong>CPU使用率≤30%持续5分钟自动减少实例。</p>
+</li>
+<li>
+<p>可通过压力测试工具模拟高并发，观察伸缩组自动新增ECS、流量自动分发，低峰期自动缩容。</p>
+</li>
+<li>
+<p>截图留存：SLB监听配置、健康检查规则、弹性伸缩规则、伸缩组实例变化记录。</p>
+</li>
+</ol>
+<h3>任务四：云监控指标采集与告警配置（15分）</h3>
+<p><strong>实验题目要求</strong>：为核心云资源配置监控指标，创建告警规则，实现资源过载、服务异常主动预警。</p>
+<p><strong>详细实操步骤</strong>：</p>
+<ol>
+<li>
+<p>进入云监控控制台，分别为ECS、RDS、SLB添加核心监控图表。</p>
+</li>
+<li>
+<p>ECS监控项：CPU使用率、内存使用率、磁盘使用率、网络出入流量。</p>
+</li>
+<li>
+<p>RDS监控项：数据库连接数、CPU使用率、磁盘空间使用率、慢查询数。</p>
+</li>
+<li>
+<p>SLB监控项：QPS、请求成功率、延迟、后端服务器异常数。</p>
+</li>
+<li>
+<p>创建告警联系人，绑定手机号/站内信通知方式。</p>
+</li>
+<li>
+<p>配置告警规则：CPU使用率≥85%告警、磁盘使用率≥90%告警、RDS连接数过高、SLB请求异常告警。</p>
+</li>
+<li>
+<p>等待10分钟，确认监控数据正常采集，导出监控大盘截图，保存告警规则配置页面。</p>
+</li>
+</ol>
+<h3>任务五：ROS资源编排自动化部署（10分）</h3>
+<p><strong>实验题目要求</strong>：使用ROS资源编排服务，通过模板实现VPC、交换机、安全组、ECS资源一键自动化部署，掌握云上自动化运维方式。</p>
+<p><strong>详细实操步骤</strong>：</p>
+<ol>
+<li>
+<p>进入资源编排ROS控制台，新建资源栈，选择「使用模板创建」。</p>
+</li>
+<li>
+<p>选择阿里云官方公共模板：VPC+ECS基础部署模板。</p>
+</li>
+<li>
+<p>自定义资源名称、网段、实例规格，确认参数无误后执行部署。</p>
+</li>
+<li>
+<p>等待资源栈部署完成，查看自动创建的VPC、交换机、安全组、ECS资源。</p>
+</li>
+<li>
+<p>查看资源栈执行日志、资源列表，最后执行资源栈删除，完成资源销毁。</p>
+</li>
+<li>
+<p>截图留存：ROS资源栈部署成功页面、自动创建的资源列表页面。</p>
+</li>
+</ol></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://bbs.017121.xyz">Gweek</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if(""!=""){
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","igweek/igweek.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+
+
+</script>
+<script src='/plugins/articletoc.js'></script><script src='/plugins/lightbox.js'></script>
+
+</html>
