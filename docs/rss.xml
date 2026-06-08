@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Thu, 04 Jun 2026 00:49:23 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>阿里云企业级高可用Web架构综合实战</title><link>https://bbs.017121.xyz/post/183.html</link><description>## 一、实验基本信息
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Gweek</title><link>https://bbs.017121.xyz</link><description>一切皆是过程</description><copyright>Gweek</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>/img/123.png</url><title>avatar</title><link>https://bbs.017121.xyz</link></image><lastBuildDate>Mon, 08 Jun 2026 00:54:29 +0000</lastBuildDate><managingEditor>Gweek</managingEditor><ttl>60</ttl><webMaster>Gweek</webMaster><item><title>使用FRP实现内网穿透</title><link>https://bbs.017121.xyz/post/184.html</link><description>## 一、什么是FRP
+
+FRP 是一款轻量、高性能的**内网穿透工具**，全称 Fast Reverse Proxy。</description><guid isPermaLink="true">https://bbs.017121.xyz/post/184.html</guid><pubDate>Mon, 08 Jun 2026 00:53:59 +0000</pubDate></item><item><title>阿里云企业级高可用Web架构综合实战</title><link>https://bbs.017121.xyz/post/183.html</link><description>## 一、实验基本信息
 
 **实验名称**：阿里云VPC\+ECS\+SLB\+RDS\+OSS\+弹性伸缩\+监控综合架构部署
 
