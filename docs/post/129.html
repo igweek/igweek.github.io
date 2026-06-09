@@ -171,10 +171,9 @@ chmod 600 <span class="pl-k">~</span>/.ssh/authorized_keys</pre></div>
 <p>编辑服务器 SSH 配置文件：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo vi /etc/ssh/sshd_config</pre></div>
 <p>确保以下配置存在或修改为：</p>
-<pre lang="conf" class="notranslate"><code class="notranslate">PubkeyAuthentication yes
+<div class="highlight highlight-source-ini"><pre class="notranslate">PubkeyAuthentication yes
 PasswordAuthentication no
-PermitRootLogin no
-</code></pre>
+PermitRootLogin no</pre></div>
 <p>保存后重启 SSH 服务：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo systemctl restart sshd</pre></div>
 <blockquote>
@@ -189,12 +188,11 @@ ssh-add <span class="pl-k">~</span>/.ssh/id_ed25519</pre></div>
 <hr>
 <h2>八、配置 SSH 客户端快捷登录（可选）</h2>
 <p>编辑本地 <code class="notranslate">~/.ssh/config</code> 文件：</p>
-<pre lang="conf" class="notranslate"><code class="notranslate">Host myserver
+<div class="highlight highlight-source-ini"><pre class="notranslate">Host myserver
   HostName server_ip
   User user
   IdentityFile ~/.ssh/id_ed25519
-  IdentitiesOnly yes
-</code></pre>
+  IdentitiesOnly yes</pre></div>
 <p>以后只需执行：</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">ssh myserver</pre></div>
 <hr>
