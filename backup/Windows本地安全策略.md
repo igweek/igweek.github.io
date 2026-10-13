@@ -1,3 +1,6 @@
+>[!note]
+禁用系统中的 Guest 用户。修改 Administrator 用户名为 sys01。查看当前系统文件夹共享情况。只有 Administrators 用户组可以关闭系统。只有 Administrators 用户组可以从远程系统强制关机。禁止系统在未登录的情况下关闭。不显示最后的用户名。不允许 SAM 账户的匿名枚举。禁止将未加密的密码发送到第三方 SMB 服务器。禁止软盘复制并访问所有的驱动器和所有文件夹。关机清除虚拟内存的页面文件。在超过登录时间后强制注销。
+
 `Gmeek-html<video src="/img/video/1.mp4" controls allowfullscreen="true" width="100%" height="460px"></video>`
 
 
