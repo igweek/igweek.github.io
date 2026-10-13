@@ -1,3 +1,6 @@
+`Gmeek-html<video src="/img/video/1.mp4" controls allowfullscreen="true" width="100%" height="460px"></video>`
+
+
 1. **禁用 Guest 用户**
 
    - 右键我的电脑或者右键开始菜单-进入“计算机管理”。
