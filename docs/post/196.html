@@ -11,76 +11,10 @@
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
 <meta name="description" content="## 第二题（URL→Base64→Hex）：
-```python
-import base64, urllib.parse
-
-cipher = '53%2057%2035%206d%2062%2033%204a%2074%2059%2058%2052%2070%2062%2032%2034%2067%2055%2032%2056%206a%2064%2058%204a%2070%2064%2048%206b%2067%2051%2057%2052%2074%2061%2057%2035%2070%2063%2033%2052%2079%2059%2058%2052%2076%2063%2067%203d%203d'
-
-url_res = urllib.parse.unquote(cipher)
-hex_res = bytes.fromhex(url_res).decode()
-plaintext = base64.b64decode(hex_res).decode()
-print(plaintext)
-```
-
-## 第五题（Base64→URL→HEX）：
-```python
-import base64, urllib.parse
-
-cipher = 'NDkgNmUgNjYgNmYgNzIgNmQgNjEgNzQgNjkgNmYgNmUgMjUgMzIgMzAgNTMgNjUgNjMgNzUgNzIgNjkgNzQgNzkgMjUgMzIgMzAgNDEgNjQgNmQgNjkgNmUgNjkgNzMgNzQgNzIgNjEgNzQgNmYgNzI='
-
-b64_res = base64.b64decode(cipher).decode()
-hex_res = bytes.fromhex(b64_res).decode()
-plaintext = urllib.parse.unquote(hex_res)
-print(plaintext)
-```
-
-## 第八题（URL→ROT13→Base64）：
-```python
-import base64, urllib.parse, codecs
-
-cipher = 'VmFzYmV6bmd2YmElMjBGcnBoZXZnbCUyME5xenZhdmZnZW5nYmU='
-
-b64_res = base64.b64decode(cipher).decode()
-rot_res = codecs.encode(b64_res, 'rot_13')
-plaintext = urllib.parse.unquote(rot_res)
-print(plaintext)
-```。">
+> 考核内容：密码学用于解决信息安全中的保密性，完整性，认证和不可否认性等问题。">
 <meta property="og:title" content="网络安全-解密">
 <meta property="og:description" content="## 第二题（URL→Base64→Hex）：
-```python
-import base64, urllib.parse
-
-cipher = '53%2057%2035%206d%2062%2033%204a%2074%2059%2058%2052%2070%2062%2032%2034%2067%2055%2032%2056%206a%2064%2058%204a%2070%2064%2048%206b%2067%2051%2057%2052%2074%2061%2057%2035%2070%2063%2033%2052%2079%2059%2058%2052%2076%2063%2067%203d%203d'
-
-url_res = urllib.parse.unquote(cipher)
-hex_res = bytes.fromhex(url_res).decode()
-plaintext = base64.b64decode(hex_res).decode()
-print(plaintext)
-```
-
-## 第五题（Base64→URL→HEX）：
-```python
-import base64, urllib.parse
-
-cipher = 'NDkgNmUgNjYgNmYgNzIgNmQgNjEgNzQgNjkgNmYgNmUgMjUgMzIgMzAgNTMgNjUgNjMgNzUgNzIgNjkgNzQgNzkgMjUgMzIgMzAgNDEgNjQgNmQgNjkgNmUgNjkgNzMgNzQgNzIgNjEgNzQgNmYgNzI='
-
-b64_res = base64.b64decode(cipher).decode()
-hex_res = bytes.fromhex(b64_res).decode()
-plaintext = urllib.parse.unquote(hex_res)
-print(plaintext)
-```
-
-## 第八题（URL→ROT13→Base64）：
-```python
-import base64, urllib.parse, codecs
-
-cipher = 'VmFzYmV6bmd2YmElMjBGcnBoZXZnbCUyME5xenZhdmZnZW5nYmU='
-
-b64_res = base64.b64decode(cipher).decode()
-rot_res = codecs.encode(b64_res, 'rot_13')
-plaintext = urllib.parse.unquote(rot_res)
-print(plaintext)
-```。">
+> 考核内容：密码学用于解决信息安全中的保密性，完整性，认证和不可否认性等问题。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/196.html">
 <meta property="og:image" content="/img/123.png">
@@ -152,6 +86,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h2>第二题（URL→Base64→Hex）：</h2>
+<blockquote>
+<p>考核内容：密码学用于解决信息安全中的保密性，完整性，认证和不可否认性等问题。<br>
+最初主要用于解决保密性。随着密码学技术的发展，逐渐应用到其它领域。常见的密码算法有很多，下面按照要求对<br>
+"53%2057%2035%206d%2062%2033%204a%2074%2059%2058%2052%2070%2062%2032%2034%2067%2055%2032%2056%206a%2064%2058%204a%2070%2064%2048%206b%2067%2051%2057%2052%2074%2061%2057%2035%2070%2063%2033%2052%2079%2059%2058%2052%2076%2063%2067%203d%203d”进行解密。（没有特别说明加密算法采用默认设置）</p>
+</blockquote>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">base64</span>, <span class="pl-s1">urllib</span>.<span class="pl-s1">parse</span>
 
 <span class="pl-s1">cipher</span> <span class="pl-c1">=</span> <span class="pl-s">"53%2057%2035%206d%2062%2033%204a%2074%2059%2058%2052%2070%2062%2032%2034%2067%2055%2032%2056%206a%2064%2058%204a%2070%2064%2048%206b%2067%2051%2057%2052%2074%2061%2057%2035%2070%2063%2033%2052%2079%2059%2058%2052%2076%2063%2067%203d%203d"</span>
@@ -161,6 +100,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s1">plaintext</span> <span class="pl-c1">=</span> <span class="pl-s1">base64</span>.<span class="pl-c1">b64decode</span>(<span class="pl-s1">hex_res</span>).<span class="pl-c1">decode</span>()
 <span class="pl-en">print</span>(<span class="pl-s1">plaintext</span>)</pre></div>
 <h2>第五题（Base64→URL→HEX）：</h2>
+<blockquote>
+<p>密码学用于解决信息安全中的保密性，完整性，认证和不可否认性等问题。最初主要用于解决保密性。随着密码学技术的发展，逐渐应用到其它领域。常见的密码算法有很多，下面按照要求对 NDkgNmUgNjYgNmYgNzIgNmQgNjEgNzQgNjkgNmYgNmUgMjUgMzIgMzAgNTMgNjUgNjMgNzUgNzIgNjkgNzQgNzkgMjUgMzIgMzAgNDEgNjQgNmQgNjkgNmUgNjkgNzMgNzQgNzIgNjEgNzQgNmYgNzI 解密</p>
+</blockquote>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">base64</span>, <span class="pl-s1">urllib</span>.<span class="pl-s1">parse</span>
 
 <span class="pl-s1">cipher</span> <span class="pl-c1">=</span> <span class="pl-s">"NDkgNmUgNjYgNmYgNzIgNmQgNjEgNzQgNjkgNmYgNmUgMjUgMzIgMzAgNTMgNjUgNjMgNzUgNzIgNjkgNzQgNzkgMjUgMzIgMzAgNDEgNjQgNmQgNjkgNmUgNjkgNzMgNzQgNzIgNjEgNzQgNmYgNzI="</span>
@@ -170,6 +112,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s1">plaintext</span> <span class="pl-c1">=</span> <span class="pl-s1">urllib</span>.<span class="pl-c1">parse</span>.<span class="pl-c1">unquote</span>(<span class="pl-s1">hex_res</span>)
 <span class="pl-en">print</span>(<span class="pl-s1">plaintext</span>)</pre></div>
 <h2>第八题（URL→ROT13→Base64）：</h2>
+<blockquote>
+<p>密码学用于解决信息安全中的保密性，完整性，认证和不可否认性等问题最初主要用于解决保密性。随着密码学技术的发展，逐渐应用到其它领域。常见的密码算法有很多，下面按照要求对“VmFzYmV6bmd2YmE1MjBGcnBoZXZnbCUyME5xenZhdmZnZW5nYmU=”进行解密。（没有特别说明加密算法采用默认设置)</p>
+</blockquote>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">base64</span>, <span class="pl-s1">urllib</span>.<span class="pl-s1">parse</span>, <span class="pl-s1">codecs</span>
 
 <span class="pl-s1">cipher</span> <span class="pl-c1">=</span> <span class="pl-s">"VmFzYmV6bmd2YmElMjBGcnBoZXZnbCUyME5xenZhdmZnZW5nYmU="</span>
