@@ -8,14 +8,11 @@
 `Gmeek-html<img src="/img/bdaqcl/1.png">`
 `Gmeek-html<img src="/img/bdaqcl/2.png">`
 `Gmeek-html<img src="/img/bdaqcl/3.png">`
-`Gmeek-html<img src="/img/bdaqcl/4.PNG">`
-`Gmeek-html<img src="/img/bdaqcl/5.PNG">`
-`Gmeek-html<img src="/img/bdaqcl/6.PNG">`
-`Gmeek-html<img src="/img/bdaqcl/7.PNG">`
-`Gmeek-html<img src="/img/bdaqcl/8.PNG">`
-`Gmeek-html<img src="/img/bdaqcl/9.PNG">`
-`Gmeek-html<img src="/img/bdaqcl/10.PNG">`
-`Gmeek-html<img src="/img/bdaqcl/11.PNG">`
+`Gmeek-html<img src="/img/bdaqcl/3.png">`
+`Gmeek-html<img src="/img/bdaqcl/3.png">`
+`Gmeek-html<img src="/img/bdaqcl/3.png">`
+`Gmeek-html<img src="/img/bdaqcl/3.png">`
+`Gmeek-html<img src="/img/bdaqcl/3.png">`
 
 1. **禁用 Guest 用户**
 
