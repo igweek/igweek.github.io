@@ -3,6 +3,7 @@
 
 `Gmeek-html<video src="/img/video/1.mp4" controls allowfullscreen="true" width="100%" height="460px"></video>`
 
+Gmeek-html<img src="/img/updmm/1.png">
 
 1. **禁用 Guest 用户**
 
