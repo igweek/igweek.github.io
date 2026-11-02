@@ -14,6 +14,8 @@
 `Gmeek-html<img src="/img/bdaqcl/7.PNG">`
 `Gmeek-html<img src="/img/bdaqcl/8.PNG">`
 `Gmeek-html<img src="/img/bdaqcl/9.PNG">`
+`Gmeek-html<img src="/img/bdaqcl/10.PNG">`
+`Gmeek-html<img src="/img/bdaqcl/11.PNG">`
 
 1. **禁用 Guest 用户**
 
