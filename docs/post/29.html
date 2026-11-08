@@ -19,7 +19,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/29.html">
 <meta property="og:image" content="/img/123.png">
 <title>Nmap特殊用法</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -173,37 +173,30 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p>首先，我们需要配置一个基本的防火墙规则，来阻止来自外部的未授权连接。假设目标主机的IP是 <code class="notranslate">192.168.1.10</code>。</p>
 <h5>步骤 1：查看当前的iptables规则</h5>
 <p>在终端输入以下命令查看现有的防火墙规则：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo iptables -L
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iptables -L</pre></div>
 <h5>步骤 2：清除现有的规则</h5>
 <p>清除所有现有规则，以便开始新的配置：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo iptables -F
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iptables -F</pre></div>
 <h5>步骤 3：设置默认策略</h5>
 <p>将默认策略设置为拒绝所有流量。<code class="notranslate">INPUT</code>链用于控制进入本机的流量，<code class="notranslate">OUTPUT</code>链用于控制离开本机的流量。</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo iptables -P INPUT DROP
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iptables -P INPUT DROP
 sudo iptables -P OUTPUT DROP
-sudo iptables -P FORWARD DROP
-</code></pre>
+sudo iptables -P FORWARD DROP</pre></div>
 <h5>步骤 4：允许本地流量</h5>
 <p>允许本地流量（localhost）流动，以避免对本机的自我连接进行限制：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo iptables -A INPUT -i lo -j ACCEPT
-sudo iptables -A OUTPUT -o lo -j ACCEPT
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iptables -A INPUT -i lo -j ACCEPT
+sudo iptables -A OUTPUT -o lo -j ACCEPT</pre></div>
 <h5>步骤 5：允许ICMP流量（ping）</h5>
 <p>允许通过ICMP协议的ping请求，这样可以测试主机是否存活：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
-sudo iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+sudo iptables -A OUTPUT -p icmp --icmp-type echo-reply -j ACCEPT</pre></div>
 <h5>步骤 6：允许SSH连接</h5>
 <p>如果你需要通过SSH连接到目标主机，允许SSH流量：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
-sudo iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT</pre></div>
 <h5>步骤 7：查看当前的iptables规则</h5>
 <p>再次检查防火墙规则，确保配置已生效：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo iptables -L
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo iptables -L</pre></div>
 <p>此时，<code class="notranslate">iptables</code> 防火墙将仅允许来自本地主机的流量以及ping请求和SSH连接。</p>
 <hr>
 <h3><strong>二、Nmap绕过iptables的技巧</strong></h3>
@@ -213,8 +206,7 @@ sudo iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 <h5>实验步骤：</h5>
 <ol>
 <li><strong>启用分片扫描</strong>：使用 <code class="notranslate">-f</code> 参数启用分片扫描，发送多个小数据包以绕过防火墙。
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo nmap -f 192.168.1.10
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nmap -f 192.168.1.10</pre></div>
 </li>
 <li><strong>观察结果</strong>：通过查看 <code class="notranslate">iptables</code> 的日志，防火墙是否能够检测到这些分片的数据包。如果防火墙没有识别到这些小包的完整内容，扫描可能会成功。</li>
 </ol>
@@ -224,8 +216,7 @@ sudo iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 <ol>
 <li>
 <p><strong>启用诱饵扫描</strong>：使用 <code class="notranslate">-D</code> 参数，在扫描时添加诱饵IP地址。<code class="notranslate">ME</code>表示使用自己的真实IP。</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo nmap -D 192.168.1.5,192.168.1.6,ME 192.168.1.10
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nmap -D 192.168.1.5,192.168.1.6,ME 192.168.1.10</pre></div>
 <p>这条命令会向目标主机 <code class="notranslate">192.168.1.10</code> 发送来自 <code class="notranslate">192.168.1.5</code> 和 <code class="notranslate">192.168.1.6</code> 的扫描请求，并混淆源IP地址。</p>
 </li>
 <li>
@@ -238,8 +229,7 @@ sudo iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 <ol>
 <li>
 <p><strong>启用源地址伪装</strong>：使用 <code class="notranslate">-S</code> 参数指定一个伪装的源IP地址，扫描目标主机。</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo nmap -S 192.168.1.100 192.168.1.10
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nmap -S 192.168.1.100 192.168.1.10</pre></div>
 <p>该命令将源IP伪装为 <code class="notranslate">192.168.1.100</code>，目标主机 <code class="notranslate">192.168.1.10</code> 会将响应发送到 <code class="notranslate">192.168.1.100</code>，而不是扫描者的真实IP。</p>
 </li>
 <li>
@@ -252,8 +242,7 @@ sudo iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 <ol>
 <li>
 <p><strong>组合分片、诱饵扫描和源地址伪装</strong>：</p>
-<pre lang="bash" class="notranslate"><code class="notranslate">sudo nmap -f -D 192.168.1.5,192.168.1.6,ME -S 192.168.1.100 192.168.1.10
-</code></pre>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nmap -f -D 192.168.1.5,192.168.1.6,ME -S 192.168.1.100 192.168.1.10</pre></div>
 <p>这条命令将同时使用分片、诱饵扫描和源地址伪装，增加防火墙和IDS的检测难度。</p>
 </li>
 <li>
