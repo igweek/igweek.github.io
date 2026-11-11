@@ -43,17 +43,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     body {padding: 8px;}
     .postTitle{font-size:24px;}
 }
-.copy-feedback {
-    display: none;
-    position: absolute;
-    top: 10px;
-    right: 50px;
-    color: var(--color-fg-on-emphasis);
-    background-color: var(--color-fg-muted);
-    border-radius: 3px;
-    padding: 5px 8px;
-    font-size: 12px;
-}
+
 </style>
 <style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style><style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style>
 
@@ -90,83 +80,58 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 1）哪位用户在该机器上新建了用户share？<br>
 2）哪个IP通过新用户share成功地远程登录过本系统？</p>
 </div>
-<h2>一、提取远程桌面登录日志</h2>
-<h3>1. 打开事件查看器</h3>
-<ol>
-<li>按 <code class="notranslate">Win + R</code>。</li>
-<li>输入 <code class="notranslate">eventvwr.msc</code>。</li>
-<li>点击“确定”。</li>
-</ol>
-<h3>2. 找到远程桌面日志</h3>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a93161405e3ed96c29b73c3cde53e2e042370fc7694186e169b1053ce22a9d92/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f634f364d4f3244717458694a62634339394b417a646f587046364c68717a6f742e706e67"><img src="https://camo.githubusercontent.com/a93161405e3ed96c29b73c3cde53e2e042370fc7694186e169b1053ce22a9d92/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f634f364d4f3244717458694a62634339394b417a646f587046364c68717a6f742e706e67" alt="" data-canonical-src="https://cdn.nodeimage.com/i/cO6MO2DqtXiJbcC99KAzdoXpF6Lhqzot.png" style="max-width: 100%;"></a></p>
-<h3>3. 筛选指定时间段日志</h3>
-<ol>
-<li>点击右侧“筛选当前日志”。</li>
-<li>“记录时间”选择“自定义范围”。</li>
-<li>设置开始时间：<code class="notranslate">2021-09-12 05:15:00</code>。</li>
-<li>设置结束时间：<code class="notranslate">2021-09-12 05:20:00</code>。</li>
-<li>“事件ID”输入 <code class="notranslate">1149</code>。</li>
-<li>点击“确定”。<br>
-<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f874d4b0e71a0c1132f16dd90c0dd52a13c0b60161ed418431d34d6232f903cb/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f4a4931327132707357716b6270375649455367364c54514f546c4e323147314f2e706e67"><img src="https://camo.githubusercontent.com/f874d4b0e71a0c1132f16dd90c0dd52a13c0b60161ed418431d34d6232f903cb/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f4a4931327132707357716b6270375649455367364c54514f546c4e323147314f2e706e67" alt="" data-canonical-src="https://cdn.nodeimage.com/i/JI12q2psWqkbp7VIESg6LTQOTlN21G1O.png" style="max-width: 100%;"></a></li>
-</ol>
-<h3>4. 统计认证成功日志数量</h3>
-<ol>
-<li>查看筛选后的事件列表。</li>
-<li>统计事件ID为 <code class="notranslate">1149</code> 的日志条数。</li>
-<li>记录筛选得到的事件总数。</li>
-</ol>
-<h3>5. 导出EVTX日志</h3>
-<ol>
-<li>点击右侧“将筛选的日志文件另存为”。</li>
-<li>选择保存位置为“桌面”。</li>
-<li>文件名称填写 <code class="notranslate">RDP.evtx</code>。</li>
-<li>保存类型选择“事件文件（*.evtx）”。</li>
-<li>点击“保存”。</li>
-</ol>
-<h2>二、查看谁创建了share用户</h2>
-<h3>1. 打开安全日志</h3>
-<p>在事件查看器中依次点击：</p>
-<pre class="notranslate"><code class="notranslate">Windows 日志 → 安全
-</code></pre>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a93161405e3ed96c29b73c3cde53e2e042370fc7694186e169b1053ce22a9d92/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f634f364d4f3244717458694a62634339394b417a646f587046364c68717a6f742e706e67"><img src="https://camo.githubusercontent.com/a93161405e3ed96c29b73c3cde53e2e042370fc7694186e169b1053ce22a9d92/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f634f364d4f3244717458694a62634339394b417a646f587046364c68717a6f742e706e67" alt="" data-canonical-src="https://cdn.nodeimage.com/i/cO6MO2DqtXiJbcC99KAzdoXpF6Lhqzot.png" style="max-width: 100%;"></a></p>
-<h3>2. 筛选创建用户事件</h3>
-<ol>
-<li>点击右侧“筛选当前日志”。</li>
-<li>“记录时间”选择“任何时间”。</li>
-<li>“事件ID”输入 <code class="notranslate">4720</code>。</li>
-<li>点击“确定”。</li>
-</ol>
-<h3>3. 查看用户创建记录</h3>
-<ol>
-<li>双击事件ID为 <code class="notranslate">4720</code> 的日志。</li>
-<li>找到“新账户”。</li>
-<li>确认账户名称为 <code class="notranslate">share</code>。</li>
-<li>找到“主体”。</li>
-<li>查看“主体”中的“账户名称”。</li>
-<li>记录该账户名称，即创建share用户的账户。</li>
-</ol>
-<h2>三、查看share用户远程登录的IP</h2>
-<h3>1. 打开安全日志</h3>
-<pre class="notranslate"><code class="notranslate">Windows 日志 → 安全
-</code></pre>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a93161405e3ed96c29b73c3cde53e2e042370fc7694186e169b1053ce22a9d92/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f634f364d4f3244717458694a62634339394b417a646f587046364c68717a6f742e706e67"><img src="https://camo.githubusercontent.com/a93161405e3ed96c29b73c3cde53e2e042370fc7694186e169b1053ce22a9d92/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f634f364d4f3244717458694a62634339394b417a646f587046364c68717a6f742e706e67" alt="" data-canonical-src="https://cdn.nodeimage.com/i/cO6MO2DqtXiJbcC99KAzdoXpF6Lhqzot.png" style="max-width: 100%;"></a></p>
-<h3>2. 筛选登录成功事件</h3>
-<ol>
-<li>点击右侧“筛选当前日志”。</li>
-<li>“记录时间”选择“任何时间”。</li>
-<li>“事件ID”输入 <code class="notranslate">4624</code>。</li>
-<li>点击“确定”。</li>
-</ol>
-<h3>3. 查找share用户登录记录</h3>
-<ol>
-<li>双击事件ID为 <code class="notranslate">4624</code> 的日志。</li>
-<li>找到“新登录”中的“账户名称”。</li>
-<li>确认账户名称为 <code class="notranslate">share</code>。</li>
-<li>查看“登录类型”，确认数值为 <code class="notranslate">10</code>（远程桌面登录）。</li>
-<li>找到“网络信息”。</li>
-<li>查看“源网络地址”。</li>
-<li>记录源IP地址。</li>
-</ol></div>
+<h2>一、题目要求</h2>
+<p>① 登录虚拟机（Win7_x64），提取 2021.09.12 05:15:00—2021.09.12 05:20:00 时间段的远程桌面登录日志，将过滤的日志存储为 evtx 格式日志，记录详细提取过程，并描述该时间段内的用户认证成功日志记录条目数。<br>
+② 分析系统安全日志文件</p>
+<h2>二、实验思路</h2>
+<p>整道题分两段：先做动作，再查日志。先在目标机上新建 share 用户、给它远程登录权限、开启远程桌面，然后从另一台机器用 share 远程登录一次，这样安全日志里就会留下记录；再打开事件查看器，<strong>用事件 ID 4720（创建用户帐户）和 4624（登录成功）把两条关键记录翻出来。</strong></p>
+<h2>三、详细解题步骤</h2>
+<h3>步骤 1：新建用户 share</h3>
+<p>在目标机上打开“计算机管理”→“本地用户和组”→“用户”，新建用户 share。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/1072ad784f33320dc9d46e9742469be1cb8bb01e50df17868d71a77c87752a71/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f50646637634c567434616d33306f5a453975585850415175646d6246677366322e77656270"><img src="https://camo.githubusercontent.com/1072ad784f33320dc9d46e9742469be1cb8bb01e50df17868d71a77c87752a71/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f50646637634c567434616d33306f5a453975585850415175646d6246677366322e77656270" alt="Pdf7cLVt4am30oZE9uXXPAQudmbFgsf2.webp" data-canonical-src="https://cdn.nodeimage.com/i/Pdf7cLVt4am30oZE9uXXPAQudmbFgsf2.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 2：把 share 加入 Remote Desktop Users 组</h3>
+<p>只有 Remote Desktop Users 组的成员（以及管理员）才有远程登录的权限。打开“本地用户和组”→“组”→“Remote Desktop Users”属性，成员列表里已经有 share，说明 share 获得了远程登录的权限。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2c821e8ed68f22f96962d2d6de6cf7fd73a3a4e84c264732dacadd78064bbf24/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f454a793945444e646c4854515a773274554e3677436c736569713659394957792e77656270"><img src="https://camo.githubusercontent.com/2c821e8ed68f22f96962d2d6de6cf7fd73a3a4e84c264732dacadd78064bbf24/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f454a793945444e646c4854515a773274554e3677436c736569713659394957792e77656270" alt="EJy9EDNdlHTQZw2tUN6wClseiq6Y9IWy.webp" data-canonical-src="https://cdn.nodeimage.com/i/EJy9EDNdlHTQZw2tUN6wClseiq6Y9IWy.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 3：开启远程桌面</h3>
+<p>控制面板→系统→远程设置，在“远程桌面”一栏选中“允许运行任意版本远程桌面的计算机连接（较不安全）”。Windows 7 默认是不开远程桌面的，这一步不开，后面连不上。另外“允许远程协助连接这台计算机”也是勾选的。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/9457abc7c3c0bbd37e2d8ac6d488d879d5a20b20946554ead9488470239e0726/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f7a47665752655639774f705257585a433766457852574c497142464c4c545a382e77656270"><img src="https://camo.githubusercontent.com/9457abc7c3c0bbd37e2d8ac6d488d879d5a20b20946554ead9488470239e0726/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f7a47665752655639774f705257585a433766457852574c497142464c4c545a382e77656270" alt="zGfWReV9wOpRWXZC7fExRWLIqBFLLTZ8.webp" data-canonical-src="https://cdn.nodeimage.com/i/zGfWReV9wOpRWXZC7fExRWLIqBFLLTZ8.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 4：确认目标机的 IP 地址</h3>
+<p>在目标机上打开命令提示符，执行 ipconfig，可以看到以太网适配器“本地连接”的 IPv4 地址是 192.168.200.134，这就是后面远程桌面连接要填的地址。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3b99058410d8ff81c56a96c90fe81083439b93792eada7c2f33aae2b89bbd37e/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f3559653852374a5a5a41436749476235354576584564644d3970596f42526e4d2e77656270"><img src="https://camo.githubusercontent.com/3b99058410d8ff81c56a96c90fe81083439b93792eada7c2f33aae2b89bbd37e/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f3559653852374a5a5a41436749476235354576584564644d3970596f42526e4d2e77656270" alt="5Ye8R7JZZACgIGb55EvXEddM9pYoBRnM.webp" data-canonical-src="https://cdn.nodeimage.com/i/5Ye8R7JZZACgIGb55EvXEddM9pYoBRnM.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 5：从另一台机器用 share 远程登录</h3>
+<p>在另一台机器上按 Win+R，输入 mstsc 打开远程桌面连接，计算机一栏填 192.168.200.134，点“连接”；在弹出的 Windows 安全性窗口输入凭据，用户名填 share，输入密码后点“确定”。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/09e9147b778f9a576670ca768497b666eec941efb9901b2a37ae37bde8b801b3/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f4e6875554d425332675735374756637065427171786451467a4459434c4c58442e77656270"><img src="https://camo.githubusercontent.com/09e9147b778f9a576670ca768497b666eec941efb9901b2a37ae37bde8b801b3/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f4e6875554d425332675735374756637065427171786451467a4459434c4c58442e77656270" alt="NhuUMBS2gW57GVcpeBqqxdQFzDYCLLXD.webp" data-canonical-src="https://cdn.nodeimage.com/i/NhuUMBS2gW57GVcpeBqqxdQFzDYCLLXD.webp" style="max-width: 100%;"></a></p>
+<p>连接建立后，窗口标题显示“192.168.200.134 - 远程桌面连接”，先出现“请等待 zhy-PC\zhy 响应”的提示，随后进入远程桌面。这一步做完，目标机的安全日志里就有了 share 的登录成功记录。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/78ff1e1d3643fb9fbf0d12a83f45e84b2a0cbab2b7a35dc164ed3b385512927a/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f5358396534455155594b667a326f6b6962657265374f656544324265717864442e77656270"><img src="https://camo.githubusercontent.com/78ff1e1d3643fb9fbf0d12a83f45e84b2a0cbab2b7a35dc164ed3b385512927a/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f5358396534455155594b667a326f6b6962657265374f656544324265717864442e77656270" alt="SX9e4EQUYKfz2okibere7OeeD2BeqxdD.webp" data-canonical-src="https://cdn.nodeimage.com/i/SX9e4EQUYKfz2okibere7OeeD2BeqxdD.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 6：打开事件查看器，查看安全日志</h3>
+<p>在目标机上按 Win+R，输入 eventvwr.msc 打开事件查看器，左侧展开“Windows 日志”，点“安全”。未筛选时安全日志共有 167 条事件，里面有 4624（登录成功）、4634（注销）、4672（特殊登录）、4648（使用显式凭据登录）等。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e9ff2f7cf22d99eb11b0cdb86e57dc549bc038810e9a26f36069ebd68ba44554/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f7476785941676f3367594c55447539777152534939484372347051563459484d2e77656270"><img src="https://camo.githubusercontent.com/e9ff2f7cf22d99eb11b0cdb86e57dc549bc038810e9a26f36069ebd68ba44554/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f7476785941676f3367594c55447539777152534939484372347051563459484d2e77656270" alt="tvxYAgo3gYLUDu9wqRSI9HCr4pQV4YHM.webp" data-canonical-src="https://cdn.nodeimage.com/i/tvxYAgo3gYLUDu9wqRSI9HCr4pQV4YHM.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 7：筛选出登录成功日志（事件 ID 4624）</h3>
+<p>在右侧“操作”栏点“筛选当前日志”，在“事件 ID”一栏填 4624。时间范围按题目要求选“自定义范围”，填入 2021.09.12 05:15:00 至 2021.09.12 05:20:00，点“确定”。筛选后列表顶部的“事件数”就是该时间段内的用户认证成功日志条数，把这个数字记下来，就是第 ① 问要描述的结果。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/e500371fdf8ebad86307303d83b2b3d83099fbc5e156c657a94c64daf96218ea/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f53336e6f5a53594d3478785074514832725a53416b6d4337706b7458506131442e77656270"><img src="https://camo.githubusercontent.com/e500371fdf8ebad86307303d83b2b3d83099fbc5e156c657a94c64daf96218ea/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f53336e6f5a53594d3478785074514832725a53416b6d4337706b7458506131442e77656270" alt="S3noZSYM4xxPtQH2rZSAkmC7pktXPa1D.webp" data-canonical-src="https://cdn.nodeimage.com/i/S3noZSYM4xxPtQH2rZSAkmC7pktXPa1D.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 8：把筛选结果另存为 evtx 文件</h3>
+<p>保持筛选状态，在右侧“操作”栏点“将筛选的日志另存为”，在保存对话框里把文件名填为 yuanchengdenglu，保存类型保持默认的“事件文件(*.evtx)”，位置选桌面，点“保存”。<br>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/2dd971b40c9346a31c358012a231f3e5982dd346b33d13eab64d6e53f50ba872/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f66536d49766d4f77534e793841625550306f55616d505a4341434544777873722e77656270"><img src="https://camo.githubusercontent.com/2dd971b40c9346a31c358012a231f3e5982dd346b33d13eab64d6e53f50ba872/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f66536d49766d4f77534e793841625550306f55616d505a4341434544777873722e77656270" alt="fSmIvmOwSNy8AbUP0oUamPZCACEDwxsr.webp" data-canonical-src="https://cdn.nodeimage.com/i/fSmIvmOwSNy8AbUP0oUamPZCACEDwxsr.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 9：查“谁新建了 share”——筛选事件 ID 4720</h3>
+<p>4720 是“已创建用户帐户”的事件。在安全日志里筛选事件 ID 4720，可以看到两条记录，其中一条的记录时间是 2026/10/28 9:46:09，点开详情：</p>
+<p>“主体”一栏：安全 ID zhy-PC\zhy，帐户名 zhy，帐户域 zhy-PC——这就是创建帐户的操作者；</p>
+<p>“新帐户”一栏：安全 ID zhy-PC\share，帐户名 share，帐户域 zhy-PC——这就是被创建的新帐户。</p>
+<p>所以第 ②（1）问的答案是：用户 zhy 在这台机器上新建了用户 share。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/57ea65dd90d3111534663fe6b3c72c02c3cef49c18af1c7666c09edcc2a9b71c/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f777631715a33704533466b6770575663507530585668595a50764978755654592e77656270"><img src="https://camo.githubusercontent.com/57ea65dd90d3111534663fe6b3c72c02c3cef49c18af1c7666c09edcc2a9b71c/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f777631715a33704533466b6770575663507530585668595a50764978755654592e77656270" alt="wv1qZ3pE3FkgpWVcPu0XVhYZPvIxuVTY.webp" data-canonical-src="https://cdn.nodeimage.com/i/wv1qZ3pE3FkgpWVcPu0XVhYZPvIxuVTY.webp" style="max-width: 100%;"></a></p>
+<h3>步骤 10：查“哪个 IP 用 share 远程登录成功”——看 4624 的详情</h3>
+<p>回到步骤 7 筛选出的 4624 记录里，找到帐户名为 share 的那条，点开详情：</p>
+<p>“新登录”一栏：安全 ID zhy-PC\share，帐户名 share，帐户域 zhy-PC，登录 ID 0x198623；</p>
+<p>“进程信息”一栏：进程名 C:\Windows\System32\winlogon.exe，说明这是一次交互式登录；</p>
+<p>“网络信息”一栏：工作站名 WIN-F7K106AQOKE，源网络地址 192.168.200.1，源端口 59070。</p>
+<p>这条 4624 就是远程登录成功的记录，源网络地址就是发起远程连接的那台机器的 IP。</p>
+<p>所以第 ②（2）问的答案是：IP 地址 192.168.200.1 通过新用户 share 成功地远程登录过本系统。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/943eff8950e63e53fc93d3a93e794aa57368b908c034da2d1f996a1de2a1e5b9/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f73337177357352436545423973354c5a7462384d4559455a476767336231326d2e77656270"><img src="https://camo.githubusercontent.com/943eff8950e63e53fc93d3a93e794aa57368b908c034da2d1f996a1de2a1e5b9/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f73337177357352436545423973354c5a7462384d4559455a476767336231326d2e77656270" alt="s3qw5sRCeEB9s5LZtb8MEYEZGgg3b12m.webp" data-canonical-src="https://cdn.nodeimage.com/i/s3qw5sRCeEB9s5LZtb8MEYEZGgg3b12m.webp" style="max-width: 100%;"></a></p>
+<h2>四、常用事件 ID 速查</h2>
+<p>4624：帐户登录成功（远程桌面登录成功一般看这一条，详情里“登录类型”为 10 表示远程交互式登录）；</p>
+<p>4634：帐户注销；</p>
+<p>4648：使用显式凭据登录；</p>
+<p>4672：特殊登录（管理员权限登录）；</p>
+<p>4720：已创建用户帐户。</p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -191,7 +156,7 @@ if(""!=""){
 </script></div>
 </body>
 <script>
-var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
 var utterancesLoad=0;
 
 let themeSettings={
@@ -265,70 +230,7 @@ function iFrameLoading(){
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const createClipboardHTML = (codeContent, additionalClasses = '') => `
-        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
-        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
-            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
-                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
-                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
-            </clipboard-copy>
-            <div class="copy-feedback">Copied!</div>
-        </div>
-    `;
 
-    const handleCodeElements = (selector = '') => {
-        document.querySelectorAll(selector).forEach(codeElement => {
-            const codeContent = codeElement.innerHTML;
-            const newStructure = document.createElement('div');
-            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
-            newStructure.innerHTML = createClipboardHTML(codeContent);
-
-            const parentElement = codeElement.parentElement;
-            if (selector.includes('highlight')) {
-                parentElement.insertBefore(newStructure, codeElement.nextSibling);
-                parentElement.removeChild(codeElement);
-            } else {
-                parentElement.parentElement.replaceChild(newStructure, parentElement);
-            }
-        });
-    };
-
-    handleCodeElements('pre.notranslate > code.notranslate');
-    handleCodeElements('div.highlight > pre.notranslate');
-
-    let currentFeedback = null;
-    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
-        copyButton.addEventListener('click', () => {
-            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = codeContent;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextArea);
-
-            const copyIcon = copyButton.querySelector('.octicon-copy');
-            const checkIcon = copyButton.querySelector('.octicon-check');
-            const copyFeedback = copyButton.nextElementSibling;
-
-            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
-            currentFeedback = copyFeedback;
-
-            copyIcon.classList.add('d-none');
-            checkIcon.classList.remove('d-none');
-            copyFeedback.style.display = 'block';
-            copyButton.style.borderColor = 'var(--color-success-fg)';
-
-            setTimeout(() => {
-                copyIcon.classList.remove('d-none');
-                checkIcon.classList.add('d-none');
-                copyFeedback.style.display = 'none';
-                copyButton.style.borderColor = '';
-            }, 2000);
-        });
-    });
-});
 
 </script>
 <script src='/plugins/articletoc.js'></script><script src='/plugins/lightbox.js'></script>
