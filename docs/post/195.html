@@ -10,30 +10,26 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content=">[!note]
-① 登录虚拟机（Win7_x64），登录本机数据库服务（数据库根路径：C:\phpStudy\MySQL，账号密码：root：root），请进行以下操作：1. 查询 MySQL 服务的日志路径；2. 分析 MySQL 日志，描述攻击者进行了何种类型的网络攻击？3. 攻击者窃取了哪个数据库的哪个数据表里面的敏感数据？
+<meta name="description" content="> ① 登录虚拟机（Win7_x64），登录本机数据库服务（数据库根路径：C:\phpStudy\MySQL，账号密码：root：root），请进行以下操作：1. 查询 MySQL 服务的日志路径；2. 分析 MySQL 日志，描述攻击者进行了何种类型的网络攻击？3. 攻击者窃取了哪个数据库的哪个数据表里面的敏感数据？
 ② 分析 Web 日志文件（c:\files\hack_access.log），日志文件可见该 Web 服务收到了何种类型的网络攻击？攻击者 IP 是？攻击者植入的后门文件名是？
 
-## 一、分析 MySQL 日志
 
-### 1. 登录 MySQL
+## 步骤 1：设置 DVWA 安全等级为 Low
 
-1. 打开 CMD。">
+先打开 DVWA 安全页面，安全等级选 Low，点提交。">
 <meta property="og:title" content="Windows安全事件处置">
-<meta property="og:description" content=">[!note]
-① 登录虚拟机（Win7_x64），登录本机数据库服务（数据库根路径：C:\phpStudy\MySQL，账号密码：root：root），请进行以下操作：1. 查询 MySQL 服务的日志路径；2. 分析 MySQL 日志，描述攻击者进行了何种类型的网络攻击？3. 攻击者窃取了哪个数据库的哪个数据表里面的敏感数据？
+<meta property="og:description" content="> ① 登录虚拟机（Win7_x64），登录本机数据库服务（数据库根路径：C:\phpStudy\MySQL，账号密码：root：root），请进行以下操作：1. 查询 MySQL 服务的日志路径；2. 分析 MySQL 日志，描述攻击者进行了何种类型的网络攻击？3. 攻击者窃取了哪个数据库的哪个数据表里面的敏感数据？
 ② 分析 Web 日志文件（c:\files\hack_access.log），日志文件可见该 Web 服务收到了何种类型的网络攻击？攻击者 IP 是？攻击者植入的后门文件名是？
 
-## 一、分析 MySQL 日志
 
-### 1. 登录 MySQL
+## 步骤 1：设置 DVWA 安全等级为 Low
 
-1. 打开 CMD。">
+先打开 DVWA 安全页面，安全等级选 Low，点提交。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://bbs.017121.xyz/post/195.html">
 <meta property="og:image" content="/img/123.png">
 <title>Windows安全事件处置</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -69,7 +65,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     font-size: 12px;
 }
 </style>
-<style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style><style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style>
+<style>/* 基础Body样式 */ body { min-width: 200px; max-width: 920px; margin: 20px auto; padding: 45px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji; color: #595959; font-size: 16px; line-height: 1.8em; background-color: rgba(255,255,255,0.9); word-wrap: break-word; } /* 暗黑模式适配 */ html[data-color-mode='dark'] body { background-color: #0d1117 !important; color: #c9d1d9 !important; } html[data-color-mode='dark'] { background-color: #0d1117 !important; } /* 元素样式优化 */ blockquote { margin-left: 0; background-color: #ebf4ff; border-color: #7f9cf5; padding-top: .5rem; padding-bottom: .5rem; color: #667eea; } strong { color: #5a67d8; } code, a { color: #5a67d8; } a { border-color: #667eea; border-bottom: 0; } code { background-color: #ebf4ff; } blockquote, details, dl, ol, p, pre, table, ul { margin-bottom: 1rem; } ol { list-style: decimal; } ul { list-style: disc; } ol, ul { padding-left: 2em; } h1, h2 { border-color: #5a67d8; border-style: solid; border-top-width: 0; border-right-width: 0; font-weight: 500; padding-top: .25rem; padding-bottom: .25rem; padding-left: .75rem; } h1 { border-bottom: 0 !important; border-left-width: 0; } h2 { border-bottom: 1px solid #eaecef !important; border-left-width: 6px; } h1, h2, h3, h4, h5, h6 { margin-bottom: 16px; line-height: 1.25; } blockquote { padding-top: .5rem; padding-bottom: .5rem; padding-left: 1rem; padding-right: .5rem; border-left: .25em solid; } blockquote>:last-child { margin-bottom: 0; } blockquote>:first-child { margin-top: 0; } strong { font-weight: 700; } strong::before { content: '「'; } strong::after { content: '」'; } code, a { font-weight: 500; } code, a { font-size: unset; } a { text-decoration: none; } .footnote-ref { border-width: 0; } code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; } pre>code { font-weight: 400; color: unset; line-height: 1.6; } picture img { border-radius: 6px; display: block; margin: 10px 0; object-fit: contain; box-shadow: 2px 4px 7px #999; } img { max-width: 100%; display: block; margin: 10px 0; object-fit: contain; border-radius: 6px; box-shadow: 2px 4px 7px #999; } picture { display: flex; flex-direction: column; align-items: flex-start; margin-top: 6px; margin-bottom: 6px; } pre, pre code[class*="language-"] { display: block; overflow-x: auto; padding: 0; } pre code[class*="language-"] { padding: 12px; padding-top: 6px; } .svg-markmap-box { min-height: 20rem; width: 100%; } .footnotes { padding-top: .5rem; padding-bottom: .5rem; } code[class*="language-"], pre[class*="language-"] { color: #f8f8f2; background: none; text-shadow: 0 1px rgba(0, 0, 0, .3); font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 1em; text-align: left; white-space: pre; word-spacing: normal; word-break: normal; word-wrap: normal; line-height: 1.5; -moz-tab-size: 4; -o-tab-size: 4; tab-size: 4; -webkit-hyphens: none; -moz-hyphens: none; -ms-hyphens: none; hyphens: none; } /* 代码块修复 */ pre[class*="language-"] { padding: 1em; margin: .5em 0; overflow-x: auto; overflow-y: hidden; border-radius: 6px; } :not(pre)>code[class*="language-"], pre[class*="language-"] { background: #272822; } :not(pre)>code[class*="language-"] { padding: .1em; border-radius: .3em; white-space: normal; } .token.comment, .token.prolog, .token.doctype, .token.cdata { color: #8292a2; } .token.punctuation { color: #f8f8f2; } .token.namespace { opacity: .7; } .token.property, .token.tag, .token.constant, .token.symbol, .token.deleted { color: #f92672; } .token.boolean, .token.number { color: #ae81ff; } .token.selector, .token.attr-name, .token.string, .token.char,.token.builtin, .token.inserted { color: #a6e22e; } .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable { color: #f8f8f2; } .token.atrule, .token.attr-value, .token.function, .token.class-name { color: #e6db74; } .token.keyword { color: #66d9ef; } .token.regex, .token.important { color: #fd971f; } .token.important, .token.bold { font-weight: 700; } .token.italic { font-style: italic; } .token.entity { cursor: help; } h3 { padding-left: .75rem; border-left: 4px solid #5a67d8; } /* 移动端适配：屏幕小于600px时减小内边距 */ @media (max-width: 600px) { body { padding: 8px !important; } } </style>
 
 
 
@@ -99,148 +95,56 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>① 登录虚拟机（Win7_x64），登录本机数据库服务（数据库根路径：C:\phpStudy\MySQL，账号密码：root：root），请进行以下操作：1. 查询 MySQL 服务的日志路径；2. 分析 MySQL 日志，描述攻击者进行了何种类型的网络攻击？3. 攻击者窃取了哪个数据库的哪个数据表里面的敏感数据？<br>
+<div class="markdown-body" id="postBody"><blockquote>
+<p>① 登录虚拟机（Win7_x64），登录本机数据库服务（数据库根路径：C:\phpStudy\MySQL，账号密码：root：root），请进行以下操作：1. 查询 MySQL 服务的日志路径；2. 分析 MySQL 日志，描述攻击者进行了何种类型的网络攻击？3. 攻击者窃取了哪个数据库的哪个数据表里面的敏感数据？<br>
 ② 分析 Web 日志文件（c:\files\hack_access.log），日志文件可见该 Web 服务收到了何种类型的网络攻击？攻击者 IP 是？攻击者植入的后门文件名是？</p>
-</div>
-<h2>一、分析 MySQL 日志</h2>
-<h3>1. 登录 MySQL</h3>
-<ol>
-<li>打开 CMD。</li>
-<li>输入：</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">cd /d C:\phpStudy\MySQL\bin
-mysql -uroot -proot
+</blockquote>
+<h2>步骤 1：设置 DVWA 安全等级为 Low</h2>
+<p>先打开 DVWA 安全页面，安全等级选 Low，点提交。下面所有操作都要在 Low 级别下做，Low 没有任何防护，SQL 注入和文件上传才能成功。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/5159ba4835f754e0f0f42c4a5a483e9b96766d94c41449401a036b7225a5b6b1/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f4c51316b316d7046526f5243574f56455144726649696e316b5952517859686f2e77656270"><img src="https://camo.githubusercontent.com/5159ba4835f754e0f0f42c4a5a483e9b96766d94c41449401a036b7225a5b6b1/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f4c51316b316d7046526f5243574f56455144726649696e316b5952517859686f2e77656270" alt="DVWA 安全等级 Low" data-canonical-src="https://cdn.nodeimage.com/i/LQ1k1mpFRoRCWOVEQDrfIin1kYRQxYho.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 2：登录 MySQL，打开 general_log，查询日志路径</h2>
+<p>cmd 里进 MySQL 的 bin 目录登录：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">D:\phpStudy\MySQL\bin&gt;mysql -uroot -proot
 </code></pre>
-<h3>2. 查询 MySQL 日志路径</h3>
-<p>登录后依次输入：</p>
-<pre class="notranslate"><code class="notranslate">SHOW VARIABLES LIKE 'log_error';
+<p>注意：<code class="notranslate">mysql -u root:root</code> 会报 ERROR 1045，正确写法是 <code class="notranslate">-uroot -proot</code>，账号密码之间没有空格。然后打开总日志，再查日志路径：</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate">mysql<span class="pl-k">&gt;</span> <span class="pl-k">SET</span> GLOBAL general_log <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>ON<span class="pl-pds">'</span></span>;
+mysql<span class="pl-k">&gt;</span> SHOW VARIABLES <span class="pl-k">LIKE</span> <span class="pl-s"><span class="pl-pds">'</span>%general_log%<span class="pl-pds">'</span></span>;</pre></div>
+<p>结果：<code class="notranslate">general_log</code> 是 ON，<code class="notranslate">general_log_file</code> 是 <code class="notranslate">D:\phpStudy\MySQL\data\303JF-4849.log</code>。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/f4b1f87ec316554ea2748bc57d4af785f3df1b8c8842060f77e24de1a7c854a4/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f616c69584b4d544152546e736a76616168665458626c6b69424b686b594859332e77656270"><img src="https://camo.githubusercontent.com/f4b1f87ec316554ea2748bc57d4af785f3df1b8c8842060f77e24de1a7c854a4/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f616c69584b4d544152546e736a76616168665458626c6b69424b686b594859332e77656270" alt="MySQL 登录并查询 general_log" data-canonical-src="https://cdn.nodeimage.com/i/aliXKMTARTnsjvaahfTXblkiBKhkYHY3.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 3：做 SQL 注入</h2>
+<p>打开 DVWA 的 SQL 注入页面，用户 ID 输入 <code class="notranslate">' or 1=1 -- '</code>，点提交，页面一次回显全部 5 个用户（admin、Gordon、Hack、Pablo、Bob），注入成功。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/bdf670519b0a48cc1ffe50d656e7da748be7b083345927cac9bb5ff6ea360dc3/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f56526978623854766c7a6452614d61473734736b423766326465784c7868614f2e77656270"><img src="https://camo.githubusercontent.com/bdf670519b0a48cc1ffe50d656e7da748be7b083345927cac9bb5ff6ea360dc3/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f56526978623854766c7a6452614d61473734736b423766326465784c7868614f2e77656270" alt="DVWA SQL 注入，输入 ' or 1=1 -- ' 回显全部用户" data-canonical-src="https://cdn.nodeimage.com/i/VRixb8TvlzdRaMaG74skB7f2dexLxhaO.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 4：分析 MySQL 日志，确定攻击类型</h2>
+<p>用记事本打开 <code class="notranslate">D:\phpStudy\MySQL\data\303JF-4849.log</code>，2026 年 11 月 9 日 15:08:31 有这样一条查询：</p>
+<div class="highlight highlight-source-sql"><pre class="notranslate"><span class="pl-k">SELECT</span> first_name, last_name <span class="pl-k">FROM</span> users <span class="pl-k">WHERE</span> user_id <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>' or 1=1 -- '<span class="pl-pds">"</span></span></pre></div>
+<p><code class="notranslate">' or 1=1 -- '</code> 闭合了原查询条件，<code class="notranslate">or 1=1</code> 恒成立，<code class="notranslate">-- '</code> 注释掉后面内容，WHERE 对所有行都成立。结论：攻击类型是 SQL 注入。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ec7f5626c0cb80bf79b242ae698036f0a4f80e887bb558dacbd884f5f06dacf1/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f7a4c75534a62533676304e4d5347634133555449676f396b376e544872786f592e77656270"><img src="https://camo.githubusercontent.com/ec7f5626c0cb80bf79b242ae698036f0a4f80e887bb558dacbd884f5f06dacf1/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f7a4c75534a62533676304e4d5347634133555449676f396b376e544872786f592e77656270" alt="303JF-4849.log 里的注入语句" data-canonical-src="https://cdn.nodeimage.com/i/zLuSJbS6v0NMSGcA3UTIgo9k7nTHrxoY.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 5：确定被窃取的数据库和数据表</h2>
+<p>注入语句执行之前先 <code class="notranslate">USE dvwa</code>，注入查询的是 <code class="notranslate">users</code> 表的 <code class="notranslate">first_name</code>、<code class="notranslate">last_name</code> 两个字段。结论：被窃取的是 dvwa 数据库 users 表，也就是全部用户的姓名。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/96163bd46f4e5c73377e5a6ce96f6b3e43228c6836ca971115db67edd5e6716f/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f6f694a6b794663333668644f5a334b594c33466b6f5448714e345857723368412e77656270"><img src="https://camo.githubusercontent.com/96163bd46f4e5c73377e5a6ce96f6b3e43228c6836ca971115db67edd5e6716f/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f6f694a6b794663333668644f5a334b594c33466b6f5448714e345857723368412e77656270" alt="SELECT first_name, last_name FROM users" data-canonical-src="https://cdn.nodeimage.com/i/oiJkyFc36hdOZ3KYL3FkoTHqN4XWr3hA.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 6：文件上传，植入后门</h2>
+<p>打开 DVWA 的文件上传页面，选 shell.php 点上传，页面提示 <code class="notranslate">.../.../hackable/uploads/shell.php 上传成功！</code>。结论：Web 服务受到的攻击是文件上传漏洞利用，攻击者植入的后门文件是 shell.php。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/3ae9f3a147d8c8e1a16f58e3a8bb8e5d71c582261fe8efee44ce9db628ddfb18/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f44756151784c35706f355970543258624b4147443437686850444f477274476e2e77656270"><img src="https://camo.githubusercontent.com/3ae9f3a147d8c8e1a16f58e3a8bb8e5d71c582261fe8efee44ce9db628ddfb18/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f44756151784c35706f355970543258624b4147443437686850444f477274476e2e77656270" alt="DVWA 文件上传，shell.php 上传成功" data-canonical-src="https://cdn.nodeimage.com/i/DuaQxL5po5YpT2XbKAGD47hhPDOGrtGn.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 7：找到 Apache 访问日志的位置</h2>
+<p>打开 <code class="notranslate">D:\phpStudy\Apache\conf\httpd.conf</code>，搜 CustomLog，看到：</p>
+<div class="highlight highlight-source-apacheconf"><pre class="notranslate"><span class="pl-k">CustomLog</span> "logs/access.log" combined</pre></div>
+<p>访问日志在 <code class="notranslate">D:\phpStudy\Apache\logs\access.log</code>。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d8593fc6bbb35224559553950d6f74fc923c27b3bc767c87afb666b886529cf3/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f38306836764e46706f685068497a67714174684a776a67425a594e523961796f2e77656270"><img src="https://camo.githubusercontent.com/d8593fc6bbb35224559553950d6f74fc923c27b3bc767c87afb666b886529cf3/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f38306836764e46706f685068497a67714174684a776a67425a594e523961796f2e77656270" alt="D:\phpStudy\Apache\conf\httpd.conf" data-canonical-src="https://cdn.nodeimage.com/i/80h6vNFpohPhIzgqAthJwjgBZYNR9ayo.webp" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/0158543178199de080909f6cbe188842ac0bc96fb01742cacc4b0a59a1653bd0/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f636a376c78446e4e757a64687964474337714459727269515a793576584764592e77656270"><img src="https://camo.githubusercontent.com/0158543178199de080909f6cbe188842ac0bc96fb01742cacc4b0a59a1653bd0/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f636a376c78446e4e757a64687964474337714459727269515a793576584764592e77656270" alt="httpd.conf 里的 CustomLog 配置" data-canonical-src="https://cdn.nodeimage.com/i/cj7lxDnNuzdhydGC7qDYrriQZy5vXGdY.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 8：重启 Apache</h2>
+<p>在 phpStudy 控制面板点「重启」，重启 Apache。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/9089b53225d27ae9bbe9592236001035997117c9fb857ea499855e21c8d6138c/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f5830587a36786d494f4464716d6473716d3677306a6479314e3058584f7639612e77656270"><img src="https://camo.githubusercontent.com/9089b53225d27ae9bbe9592236001035997117c9fb857ea499855e21c8d6138c/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f5830587a36786d494f4464716d6473716d3677306a6479314e3058584f7639612e77656270" alt="phpStudy 控制面板，点重启" data-canonical-src="https://cdn.nodeimage.com/i/X0Xz6xmIODdqmdsqm6w0jdy1N0XXOv9a.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 9：验证后门能执行</h2>
+<p>浏览器打开上传后的 shell.php，页面显示 <code class="notranslate">upload test ok</code>，说明上传的 PHP 文件被执行了。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/115c9a5bba2db80502796b9259dc22c668f1a3b1cf353404b72851edad887a49/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f354b5047694c396f3032636f32713667514b735069756c56613358544b3759342e77656270"><img src="https://camo.githubusercontent.com/115c9a5bba2db80502796b9259dc22c668f1a3b1cf353404b72851edad887a49/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f354b5047694c396f3032636f32713667514b735069756c56613358544b3759342e77656270" alt="浏览器打开 shell.php，显示 upload test ok" data-canonical-src="https://cdn.nodeimage.com/i/5KPGiL9o02co2q6gQKsPiulVa3XTK7Y4.webp" style="max-width: 100%;"></a></p>
+<h2>步骤 10：打开 access.log，确定攻击者 IP</h2>
+<p>打开 <code class="notranslate">D:\phpStudy\Apache\logs\access.log</code>，搜 shell.php：</p>
+<pre lang="text" class="notranslate"><code class="notranslate">172.17.78.199 - - [09/Nov/2026:15:55:12 +0800] "POST /dvwak/dvwa3/vulnerabilities/upload/ HTTP/1.1" 200 4216
+172.17.78.199 - - [09/Nov/2026:15:56:06 +0800] "GET /dvwak/dvwa3/hackable/uploads/shell.php HTTP/1.1" 200 14
 </code></pre>
-<p>查看错误日志路径。</p>
-<pre class="notranslate"><code class="notranslate">SHOW VARIABLES LIKE 'general_log_file';
-</code></pre>
-<p>查看通用查询日志路径。</p>
-<pre class="notranslate"><code class="notranslate">SHOW VARIABLES LIKE 'general_log';
-</code></pre>
-<p>查看通用查询日志是否开启（ON 表示开启）。</p>
-<h3>3. 分析攻击类型</h3>
-<ol>
-<li>找到实际存在的 MySQL 日志文件。</li>
-<li>用 Notepad++ 打开。</li>
-<li>按 <code class="notranslate">Ctrl + F</code> 搜索以下关键词：</li>
-</ol>
-<pre class="notranslate"><code class="notranslate">UNION
-SELECT
-information_schema
-INTO OUTFILE
-LOAD_FILE
-</code></pre>
-<p>根据日志判断：</p>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>关键词或特征</th>
-<th>可能的攻击行为</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code class="notranslate">UNION SELECT</code></td>
-<td>SQL 注入</td>
-</tr>
-<tr>
-<td><code class="notranslate">information_schema</code></td>
-<td>数据库结构探测</td>
-</tr>
-<tr>
-<td>大量异常 <code class="notranslate">SELECT</code></td>
-<td>数据查询或窃取行为</td>
-</tr>
-<tr>
-<td><code class="notranslate">INTO OUTFILE</code></td>
-<td>将查询结果写入服务器文件</td>
-</tr>
-<tr>
-<td><code class="notranslate">LOAD_FILE</code></td>
-<td>尝试读取服务器文件</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<p>注意：需结合完整 SQL 语句判断，不能仅凭关键词确定攻击成功。若通用日志未开启，还需要检查其他实际留存的日志。</p>
-<h3>4. 查找被窃取的数据库和数据表</h3>
-<p>在可疑 SQL 语句中，查找：</p>
-<pre class="notranslate"><code class="notranslate">SELECT * FROM 数据库名.数据表名;
-</code></pre>
-<p>或者：</p>
-<pre class="notranslate"><code class="notranslate">USE 数据库名;
-SELECT * FROM 数据表名;
-</code></pre>
-<p>记录涉及敏感数据的数据库名和表名，并结合日志判断是否存在实际数据获取行为。</p>
-<h2>二、分析 Web 日志</h2>
-<h3>5. 打开 Web 日志</h3>
-<ol>
-<li>打开文件夹 <code class="notranslate">C:\files</code>。</li>
-<li>找到 <code class="notranslate">hack_access.log</code>。</li>
-<li>使用 Notepad++ 打开。</li>
-</ol>
-<h3>6. 判断攻击类型</h3>
-<p>按 <code class="notranslate">Ctrl + F</code>，依次搜索：</p>
-<pre class="notranslate"><code class="notranslate">union
-select
-upload
-POST
-.php
-.asp
-.aspx
-</code></pre>
-<markdown-accessiblity-table><table role="table">
-<thead>
-<tr>
-<th>日志特征</th>
-<th>可能的攻击类型</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code class="notranslate">union select</code></td>
-<td>SQL 注入攻击</td>
-</tr>
-<tr>
-<td><code class="notranslate">../</code></td>
-<td>目录遍历攻击</td>
-</tr>
-<tr>
-<td><code class="notranslate">POST</code> 请求上传接口及可疑文件</td>
-<td>文件上传攻击</td>
-</tr>
-<tr>
-<td>请求异常 PHP、ASP 文件</td>
-<td>WebShell 后门访问</td>
-</tr>
-</tbody>
-</table></markdown-accessiblity-table>
-<h3>7. 查找攻击者 IP</h3>
-<ol>
-<li>找到可疑攻击请求。</li>
-<li>查看该日志记录开头的客户端 IP。</li>
-<li>对比其他可疑请求，确认攻击来源。</li>
-</ol>
-<p>常见日志格式示例：</p>
-<pre class="notranslate"><code class="notranslate">192.168.1.100 - - [时间] "POST /upload.php HTTP/1.1" 200
-</code></pre>
-<p>攻击者 IP（示例）：<code class="notranslate">192.168.1.100</code>。</p>
-<h3>8. 查找植入的后门文件</h3>
-<ol>
-<li>搜索 <code class="notranslate">POST</code>、<code class="notranslate">upload</code>、<code class="notranslate">.php</code>、<code class="notranslate">.asp</code>、<code class="notranslate">.aspx</code>。</li>
-<li>查找可疑文件上传记录。</li>
-<li>检查后续是否存在对可疑文件的访问。</li>
-<li>根据请求 URL、状态码及日志内容确认后门文件名称。</li>
-</ol>
-<p>例如：</p>
-<pre class="notranslate"><code class="notranslate">POST /upload.php
-GET /uploads/shell.php
-</code></pre>
-<p>可疑后门文件名（示例）：<code class="notranslate">shell.php</code>。</p>
-<p>注意：仅有访问日志不一定能确认上传成功，必要时检查网站目录中的实际文件。</p></div>
+<p>15:55:12，172.17.78.199 向上传页面 POST，上传了 shell.php；15:56:06，同一 IP 访问 shell.php，返回 200。结论：攻击者 IP 是 172.17.78.199。日志里 127.0.0.1 的那几行是本机自己访问，不是攻击者。</p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/b8b4e53007061845d26c1fea0abbe30607885a5c855b886b11f4d3e05cf7e6a2/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f636f613455463562773753656a51584662734a5535544735324f7770333045382e77656270"><img src="https://camo.githubusercontent.com/b8b4e53007061845d26c1fea0abbe30607885a5c855b886b11f4d3e05cf7e6a2/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f636f613455463562773753656a51584662734a5535544735324f7770333045382e77656270" alt="D:\phpStudy\Apache\logs\access.log" data-canonical-src="https://cdn.nodeimage.com/i/coa4UF5bw7SejQXFbsJU5TG52Owp30E8.webp" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/267b80a2af4ee30071b9a9698723f4f5f15b6e960eab0793811f3ee3c052bc33/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f75464b6543527a575451654e744231443141476e5a497261665952646d6578762e77656270"><img src="https://camo.githubusercontent.com/267b80a2af4ee30071b9a9698723f4f5f15b6e960eab0793811f3ee3c052bc33/68747470733a2f2f63646e2e6e6f6465696d6167652e636f6d2f692f75464b6543527a575451654e744231443141476e5a497261665952646d6578762e77656270" alt="access.log 里上传和访问 shell.php 的记录" data-canonical-src="https://cdn.nodeimage.com/i/uFKeCRzWTQeNtB1D1AGnZIrafYRdmexv.webp" style="max-width: 100%;"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
