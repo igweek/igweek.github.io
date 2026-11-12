@@ -94,12 +94,12 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h2>原理</h2>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/54079e2b4145c746f259483571494a223097df5210da62607aeaa38a10b38976/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f37714a633478554f2e706e67"><img src="https://camo.githubusercontent.com/54079e2b4145c746f259483571494a223097df5210da62607aeaa38a10b38976/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f37714a633478554f2e706e67" alt="Pasted image 20260315091012.png" data-canonical-src="https://pic.myla.eu.org/file/7qJc4xUO.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/d6fe01ff5fa35027ae27ad794049fa770b7d1df841994e8a370fcad218851193/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f37714a633478554f2e706e67"><img src="https://camo.githubusercontent.com/d6fe01ff5fa35027ae27ad794049fa770b7d1df841994e8a370fcad218851193/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f37714a633478554f2e706e67" alt="Pasted image 20260315091012.png" data-canonical-src="https://pic.myla.eu.org/file/7qJc4xUO.png" style="max-width: 100%;"></a></p>
 <h2>RAG 分段设置</h2>
 <h3>1、通用分段</h3>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/15cc24b76a6712ccc55bcb908bbbe6816229030ac67ea83e032a576775ae82c7/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f42687451336d74452e706e67"><img src="https://camo.githubusercontent.com/15cc24b76a6712ccc55bcb908bbbe6816229030ac67ea83e032a576775ae82c7/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f42687451336d74452e706e67" alt="Pasted image 20260315095306.png" data-canonical-src="https://pic.myla.eu.org/file/BhtQ3mtE.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/291bce60076c3a323e8d42ebaf2d5b6c30c774b6a3d27aa31452568b6887931b/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f42687451336d74452e706e67"><img src="https://camo.githubusercontent.com/291bce60076c3a323e8d42ebaf2d5b6c30c774b6a3d27aa31452568b6887931b/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f42687451336d74452e706e67" alt="Pasted image 20260315095306.png" data-canonical-src="https://pic.myla.eu.org/file/BhtQ3mtE.png" style="max-width: 100%;"></a></p>
 <h3>2、父子分段</h3>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c4f3efa919924e6215729a44893a85dc733ce8aa523568e4c3b82efbd6a3471c/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f756e417a343878502e706e67"><img src="https://camo.githubusercontent.com/c4f3efa919924e6215729a44893a85dc733ce8aa523568e4c3b82efbd6a3471c/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f756e417a343878502e706e67" alt="Pasted image 20260315105146.png" data-canonical-src="https://pic.myla.eu.org/file/unAz48xP.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/c6e07778ce98212bfd6c9d1f1ca77549130fa966ad3a7df797f47b49770a2603/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f756e417a343878502e706e67"><img src="https://camo.githubusercontent.com/c6e07778ce98212bfd6c9d1f1ca77549130fa966ad3a7df797f47b49770a2603/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f756e417a343878502e706e67" alt="Pasted image 20260315105146.png" data-canonical-src="https://pic.myla.eu.org/file/unAz48xP.png" style="max-width: 100%;"></a></p>
 <h2>RAG检索设置</h2>
 <h3>向量检索</h3>
 <ul>
@@ -121,7 +121,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>优点：兼顾语义理解和关键词精确匹配，通常是最稳妥的通用方案。</li>
 <li>缺点：配置更复杂，若启用 Rerank 还会额外消耗模型成本。</li>
 <li>适用场景：大多数正式生产场景，尤其文档类型复杂时。<br>
-<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/6e3b0a5d8ca62b133100447de196e9677fdc488b9293854dc8628d62d3494df2/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f6a356a4330527a4c2e706e67"><img src="https://camo.githubusercontent.com/6e3b0a5d8ca62b133100447de196e9677fdc488b9293854dc8628d62d3494df2/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f6a356a4330527a4c2e706e67" alt="Pasted image 20260315114322.png" data-canonical-src="https://pic.myla.eu.org/file/j5jC0RzL.png" style="max-width: 100%;"></a></li>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/86191887612bb8a0ae26e35a9f2aaaeafe988366661116d815910dd66c547cd0/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f6a356a4330527a4c2e706e67"><img src="https://camo.githubusercontent.com/86191887612bb8a0ae26e35a9f2aaaeafe988366661116d815910dd66c547cd0/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f6a356a4330527a4c2e706e67" alt="Pasted image 20260315114322.png" data-canonical-src="https://pic.myla.eu.org/file/j5jC0RzL.png" style="max-width: 100%;"></a></li>
 </ul>
 <p><strong>总结：</strong></p>
 <ul>
@@ -130,7 +130,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>混合检索两者都找，再挑更好的结果。</li>
 </ul>
 <h3>Rerank模型</h3>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/a1318bb5cca9268b3c13b167c875c09f269cfeec18b0180ae2fef51d5398adc2/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f326a717a45584d712e706e67"><img src="https://camo.githubusercontent.com/a1318bb5cca9268b3c13b167c875c09f269cfeec18b0180ae2fef51d5398adc2/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f326a717a45584d712e706e67" alt="Pasted image 20260315122342.png" data-canonical-src="https://pic.myla.eu.org/file/2jqzEXMq.png" style="max-width: 100%;"></a></p></div>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/83616ccd8a99c2dd71262648813b0d38e8c278dfc766ad8160a8d3ddf7e973f5/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f326a717a45584d712e706e67"><img src="https://camo.githubusercontent.com/83616ccd8a99c2dd71262648813b0d38e8c278dfc766ad8160a8d3ddf7e973f5/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f326a717a45584d712e706e67" alt="Pasted image 20260315122342.png" data-canonical-src="https://pic.myla.eu.org/file/2jqzEXMq.png" style="max-width: 100%;"></a></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

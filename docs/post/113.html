@@ -123,7 +123,7 @@ Gitea的首要目标是创建一个极易安装，运行非常快速，安装和
 <div class="highlight highlight-source-shell"><pre class="notranslate">docker compose -f /opt/gitea/docker-compose.yml up -d</pre></div>
 <p>然后访问服务器IP的3000端口即可进入安装页面</p>
 <p>如果没什么要求，直接滑到下面直接点击安装即可，gitea有汉化翻译，下面选中即可<br>
-<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/ea1e18f42a2a23e753f76d491627e70e1325bcb6dafb7a93d131a128714ea2a3/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f56304a38524a664a2e706e67"><img src="https://camo.githubusercontent.com/ea1e18f42a2a23e753f76d491627e70e1325bcb6dafb7a93d131a128714ea2a3/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f56304a38524a664a2e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/V0J8RJfJ.png" style="max-width: 100%;"></a></p>
+<a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/4cb87ac8a499909a1b5d072180b6248db56c921fcf3b8a691b979147b8b6589c/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f56304a38524a664a2e706e67"><img src="https://camo.githubusercontent.com/4cb87ac8a499909a1b5d072180b6248db56c921fcf3b8a691b979147b8b6589c/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f56304a38524a664a2e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/V0J8RJfJ.png" style="max-width: 100%;"></a></p>
 <h3>调整配置</h3>
 <p>安装完成后，如果没在安装的时候设置admin账号，那么注册的第一个用户就是admin账户</p>
 <p>安装好之后的配置文件安装位置在<code class="notranslate">/opt/gitea/data/gitea/conf/app.ini</code></p>
@@ -136,7 +136,7 @@ REQUIRE_SIGNIN_VIEW  = false
 <p>我理解的runner就是gitea产生流水线任务的时候，会交给runner，runner会自己执行或者创建docker容器来执行</p>
 <p>官方介绍地址<a href="https://docs.gitea.com/zh-cn/usage/actions/act-runner" rel="nofollow">https://docs.gitea.com/zh-cn/usage/actions/act-runner</a></p>
 <p>先获取注册token</p>
-<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/36225e0ea404dc43baaf9239e43cb4ba87e3155498abc4d59c1afb2106134694/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f515a4b565376684e2e706e67"><img src="https://camo.githubusercontent.com/36225e0ea404dc43baaf9239e43cb4ba87e3155498abc4d59c1afb2106134694/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f515a4b565376684e2e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/QZKVSvhN.png" style="max-width: 100%;"></a></p>
+<p><a target="_blank" rel="noopener noreferrer nofollow" href="https://camo.githubusercontent.com/85988a510b34127227c5096d8314af32f1b412e0c1d4d0df6f0cdd03b5a866fe/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f515a4b565376684e2e706e67"><img src="https://camo.githubusercontent.com/85988a510b34127227c5096d8314af32f1b412e0c1d4d0df6f0cdd03b5a866fe/68747470733a2f2f7069632e6d796c612e65752e6f72672f66696c652f515a4b565376684e2e706e67" alt="image.png" data-canonical-src="https://pic.myla.eu.org/file/QZKVSvhN.png" style="max-width: 100%;"></a></p>
 <p>我这里是使用docker来执行，所以后续操作都要在已安装docker的机器上进行</p>
 <p>创建安装目录</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">mkdir /opt/act_runner/</pre></div>
