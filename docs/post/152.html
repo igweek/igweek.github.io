@@ -25,7 +25,7 @@
 <meta property="og:url" content="https://bbs.017121.xyz/post/152.html">
 <meta property="og:image" content="/img/123.png">
 <title>阿里云SLB负载均衡</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
 </head>
@@ -274,40 +274,37 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <h2>六、Step4：ECS部署Nginx+配置差异化首页</h2>
 <p>两台ECS均安装Nginx，分别配置“我是web1”“我是web2”首页，用于验证负载均衡效果。</p>
 <h3>6.1 两台ECS通用操作（安装Nginx）</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 更新软件源
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 更新软件源</span>
 sudo apt update -y
 
-# 安装Nginx
+<span class="pl-c"><span class="pl-c">#</span> 安装Nginx</span>
 sudo apt install nginx -y
 
-# 启动Nginx并设置开机自启
+<span class="pl-c"><span class="pl-c">#</span> 启动Nginx并设置开机自启</span>
 sudo systemctl start nginx
-sudo systemctl enable nginx
+sudo systemctl <span class="pl-c1">enable</span> nginx
 
-# 放行系统防火墙80端口（Ubuntu/Debian默认UFW防火墙）
+<span class="pl-c"><span class="pl-c">#</span> 放行系统防火墙80端口（Ubuntu/Debian默认UFW防火墙）</span>
 sudo ufw allow 80/tcp
-sudo ufw reload
-</code></pre>
+sudo ufw reload</pre></div>
 <h3>6.2 Web1 ECS配置专属首页</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 覆盖Nginx默认首页
-echo "我是web1" | sudo tee /var/www/html/index.html
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 覆盖Nginx默认首页</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>我是web1<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /var/www/html/index.html
 
-# 重启Nginx生效
+<span class="pl-c"><span class="pl-c">#</span> 重启Nginx生效</span>
 sudo systemctl restart nginx
 
-# 本地验证（出现“我是web1”即为成功）
-curl localhost
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 本地验证（出现“我是web1”即为成功）</span>
+curl localhost</pre></div>
 <h3>6.3 Web2 ECS配置专属首页</h3>
-<pre lang="bash" class="notranslate"><code class="notranslate"># 覆盖Nginx默认首页
-echo "我是web2" | sudo tee /var/www/html/index.html
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 覆盖Nginx默认首页</span>
+<span class="pl-c1">echo</span> <span class="pl-s"><span class="pl-pds">"</span>我是web2<span class="pl-pds">"</span></span> <span class="pl-k">|</span> sudo tee /var/www/html/index.html
 
-# 重启Nginx生效
+<span class="pl-c"><span class="pl-c">#</span> 重启Nginx生效</span>
 sudo systemctl restart nginx
 
-# 本地验证（出现“我是web2”即为成功）
-curl localhost
-</code></pre>
+<span class="pl-c"><span class="pl-c">#</span> 本地验证（出现“我是web2”即为成功）</span>
+curl localhost</pre></div>
 <p>至此，两台后端Web服务部署完成，且仅对内网开放，等待SLB转发流量。</p>
 <hr>
 <h2>七、Step5：创建公网SLB+配置监听（核心负载均衡）</h2>
